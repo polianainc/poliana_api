@@ -15,7 +15,7 @@ class Collection:
         self.API_KEY = 'e2f50697b79a43cfa3aac99e421e3322'
         self.location = os.path.join(
             os.path.dirname(__file__),
-            '../data/s744-113.json'
+            '../../data/s744-113.json'
         )
 
     def get_votes(self, bill_id=None, body='senate'):

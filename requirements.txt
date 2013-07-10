@@ -1,3 +1,5 @@
 wsgiref==0.1.2
 python-transparencydata
 numpy==1.7.1
+mrjob
+boto==2.9.7

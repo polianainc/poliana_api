@@ -9,9 +9,12 @@ Install Hive (brew)
 export HiveHome in shell config
 
 brew install maven
+<br>
 mvn clean install
+<br>
 mvn assembly:single -> packages it into an executable jar
-
+<br>
+<br>
 run hive server ($ hive --service hiveserver)
 run mongo server (mongod)
 

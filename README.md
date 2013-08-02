@@ -8,7 +8,7 @@ The data processing portion of our project
 Install Hive (brew)
 export HiveHome in shell config
 
-install maven
+brew install maven
 mvn clean install
 mvn assembly:single -> packages it into an executable jar
 

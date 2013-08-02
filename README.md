@@ -8,12 +8,17 @@ The data processing portion of our project
 Install Hive (brew)
 export HiveHome in shell config
 
-install maven
+brew install maven
+<br>
 mvn clean install
+<br>
 mvn assembly:single -> packages it into an executable jar
-
+<br>
+<br>
 run hive server ($ hive --service hiveserver)
+<br>
 run mongo server (mongod)
-
+<br>
 navigate to target/
+<br>
 run executable (java -jar PolianaJarName)

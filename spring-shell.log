@@ -30,3 +30,59 @@ run --item bill
 // Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-01 12:23:53
 // Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-01 12:40:42
 // Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-01 12:41:12
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-16 23:04:58
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-17 11:14:01
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-17 11:15:04
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-17 11:26:42
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-17 11:33:49
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-17 13:28:23
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-18 14:30:29
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-18 14:51:17
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-18 14:53:52
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-18 15:25:40
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-18 15:27:53
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-18 15:44:50
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-18 15:45:19
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-18 15:45:40
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-18 15:45:55
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-18 15:46:45
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-18 15:48:23
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-18 15:52:21
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-19 12:51:10
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-19 12:54:09
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-19 12:58:28
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-19 13:10:41
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-19 13:15:35
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-19 13:16:07
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-20 09:22:17
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-20 09:23:47
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-20 09:25:52
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-20 10:08:20
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-20 10:11:41
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-20 10:28:22
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-27 15:06:50
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-28 14:15:06
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-28 15:29:48
+// [failed] select --bill s743_financials
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-28 15:54:59
+select --bill s743_financials
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-28 16:19:36
+select --bill s743_financials
+// [failed] select --bill s743_financials --limit 10
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-28 16:22:44
+select --bill s743_financials
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-28 16:24:41
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-28 16:26:00
+// [failed] select --bill s743_financials
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-30 22:42:24
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-30 22:43:32
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-31 08:19:57
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-31 08:43:22
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-31 08:47:34
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-31 08:48:38
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-31 19:05:55
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-31 19:07:13
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-31 19:11:00
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-31 19:14:06
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-08-31 20:26:13
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-09-01 09:44:14

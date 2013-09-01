@@ -1,0 +1,1 @@
+SELECT * FROM s743_financials LIMIT 10;

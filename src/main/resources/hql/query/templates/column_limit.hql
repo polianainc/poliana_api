@@ -1,0 +1,1 @@
+SELECT ${hiveconf:column} FROM ${hiveconf:table} LIMIT ${hiveconf:limit};

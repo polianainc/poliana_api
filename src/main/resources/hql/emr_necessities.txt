@@ -1,0 +1,37 @@
+./elastic-mapreduce --ssh j-2HNCZ8L6XMSLO  --key-pair-file cloudera.pem
+
+sudo apt-get install python-pip python-dev build-essential 
+sudo pip install --upgrade pip 
+sudo pip install --upgrade virtualenv 
+
+
+from boto.s3.connection import S3Connection
+conn = S3Connection('AKIAI27OS66EVU7XE57A', '8o8zba04hd7o+vXA591stiamJCFut4c4cXENm5cE')
+mybucket = conn.get_bucket('contributiondata')
+from boto.s3.key import Key
+key = Key(mybucket)
+
+./elastic-mapreduce --create --alive --name "Hivish" --hive-interactive --hive-site=s3://myawsbucket/conf/hive-site.xml--key-pair cloudera
+
+./elastic-mapreduce --create --alive --instance-type m2.4xlarge --num-instances 4 \
+--hive-interactive --hive-versions latest
+
+
+./elastic-mapreduce --create --alive \
+  --name "Hive cluster"    \
+  --hive-interactive \
+
+
+
+./elastic-mapreduce -v \
+--create \
+ --alive \
+--name "The Hell?" \
+--instance-group MASTER \
+--instance-count 1 \
+--instance-type m1.large \
+--instance-group CORE \
+--instance-count 1 \
+--instance-type m1.large \
+--hbase \
+-key-pair cloudera

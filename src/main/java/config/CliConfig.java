@@ -21,7 +21,8 @@ public class CliConfig {
     private static StopWatch sw = new StopWatch("Spring Shell");
 
     public CliConfig(AnnotationConfigApplicationContext ctx) throws IOException {
-        //setupLogging();
+        initCommandContext(ctx);
+
         this.ctx = ctx;
 
         shell = ctx.getBean("shell", JLineShellComponent.class);
@@ -73,7 +74,7 @@ public class CliConfig {
         return exitShellRequest;
     }
 
-    public static void initCommandContext(AnnotationConfigApplicationContext annctx) {
+    public void initCommandContext(AnnotationConfigApplicationContext annctx) {
         createAndRegisterBeanDefinition(annctx, org.springframework.shell.converters.StringConverter.class);
         createAndRegisterBeanDefinition(annctx,
                 org.springframework.shell.converters.AvailableCommandsConverter.class);

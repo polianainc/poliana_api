@@ -1,14 +1,55 @@
 package poliana.data.models.bill;
 
 public class Contribution {
-
+    private String billIntroduction;
+    private String bioguideId;
+    private String recipientExtId;
+    private String firstName;
+    private String lastName;
     private String industryId;
-    private int totalYea;
-    private int totalNay;
-    private int distinctYea;
-    private int distinctNay;
-    private int sumYea;
-    private int sumNay;
+    private String transactionId;
+    private long amount;
+    private String dates;
+
+    public String getBillIntroduction() {
+        return billIntroduction;
+    }
+
+    public void setBillIntroduction(String billIntroduction) {
+        this.billIntroduction = billIntroduction;
+    }
+
+    public String getBioguideId() {
+        return bioguideId;
+    }
+
+    public void setBioguideId(String bioguideId) {
+        this.bioguideId = bioguideId;
+    }
+
+    public String getRecipientExtId() {
+        return recipientExtId;
+    }
+
+    public void setRecipientExtId(String recipientExtId) {
+        this.recipientExtId = recipientExtId;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
     public String getIndustryId() {
         return industryId;
@@ -18,52 +59,41 @@ public class Contribution {
         this.industryId = industryId;
     }
 
-    public int getTotalYea() {
-        return totalYea;
+    public String getTransactionId() {
+        return transactionId;
     }
 
-    public void setTotalYea(int totalYea) {
-        this.totalYea = totalYea;
+    public void setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
     }
 
-    public int getTotalNay() {
-        return totalNay;
+    public long getAmount() {
+        return amount;
     }
 
-    public void setTotalNay(int totalNay) {
-        this.totalNay = totalNay;
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 
-    public int getDistinctYea() {
-        return distinctYea;
+    public String getDates() {
+        return dates;
     }
 
-    public void setDistinctYea(int distinctYea) {
-        this.distinctYea = distinctYea;
+    public void setDates(String dates) {
+        this.dates = dates;
     }
 
-    public int getDistinctNay() {
-        return distinctNay;
-    }
-
-    public void setDistinctNay(int distinctNay) {
-        this.distinctNay = distinctNay;
-    }
-
-    public int getSumYea() {
-        return sumYea;
-    }
-
-    public void setSumYea(int sumYea) {
-        this.sumYea = sumYea;
-    }
-
-    public int getSumNay() {
-        return sumNay;
-    }
-
-    public void setSumNay(int sumNay) {
-        this.sumNay = sumNay;
+    public String toString() {
+        return "\n" +
+            "billIntroduction: " + billIntroduction + "\n" +
+            "bioguideId: " + bioguideId + "\n" +
+            "recipientExtId: " + recipientExtId + "\n" +
+            "firstName: " + firstName + "\n" +
+            "lastName: " + lastName + "\n" +
+            "industryId: " + industryId + "\n" +
+            "transactionId: " + transactionId + "\n" +
+            "amount: " + amount + "\n" +
+            "dates: " + dates;
     }
 
 }

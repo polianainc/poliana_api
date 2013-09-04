@@ -10,6 +10,8 @@ CREATE EXTERNAL TABLE bill_contributions_external(
     bill_introduction STRING,
     bioguide_id STRING,
     recipient_ext_id STRING,
+    first_name STRING,
+    last_name STRING,
     industry_id STRING,
     transaction_id STRING,
     amount INT,
@@ -23,6 +25,8 @@ CREATE VIEW s743_113_yeas(
     bill_introduction,
     bioguide_id,
     recipient_ext_id,
+    first_name,
+    last_name,
     industry_id,
     transaction_id,
     vote,
@@ -34,6 +38,8 @@ as SELECT
     votes.introduced_on,
     pols.bioguide_id,
     crp.recip_id,
+    pols.first_name,
+    pols.last_name,
     crp.real_code,
     crp.fec_trans_id,
     votes.vote,
@@ -45,16 +51,18 @@ FROM individual_contr crp JOIN politicians_metadata pols
         ON votes.bill_id = 's743-113' AND pols.bioguide_id = votes.bioguide_id AND votes.vote = 'yea';
 
 INSERT OVERWRITE TABLE bill_contributions_external
-    PARTITION (bill_id = "s743-113", vote = 'yea') 
-    SELECT 
-     bill_introduction, 
-     bioguide_id, 
-     recipient_ext_id, 
-     industry_id, 
-     transaction_id, 
-     amount, 
-     dates 
-    FROM 
+    PARTITION (bill_id = "s743-113", vote = 'yea')
+    SELECT
+     bill_introduction,
+     bioguide_id,
+     recipient_ext_id,
+     first_name,
+     last_name,
+     industry_id,
+     transaction_id,
+     amount,
+     dates
+    FROM
      s743_113_yeas;
 
 --Grab industry contributions to politicians voting yes 
@@ -62,12 +70,15 @@ CREATE VIEW industry_contr_s743_113_yeas_6months(
      bill_introduction,
      bioguide_id,
      recipient_ext_id,
+     first_name,
+     last_name,
      industry_id,
      transaction_id,
      amount,
      dates
 )
-as SELECT bill_introduction, bioguide_id, recipient_ext_id, industry_id, transaction_id, amount, dates
+as SELECT bill_introduction, bioguide_id, recipient_ext_id, first_name,
+        last_name, industry_id, transaction_id, amount, dates
     FROM bill_contributions_external
     WHERE
     bill_id = 's743-113'
@@ -76,14 +87,13 @@ as SELECT bill_introduction, bioguide_id, recipient_ext_id, industry_id, transac
     AND
     slash_timestamp(dates) BETWEEN months_previous(bill_introduction, 6) AND liberal_timestamp(bill_introduction);
 
-
-
-
 CREATE VIEW s743_113_nays(
     bill_id,
     bill_introduction,
     bioguide_id,
     recipient_ext_id,
+    first_name,
+    last_name,
     industry_id,
     transaction_id,
     vote,
@@ -95,6 +105,8 @@ as SELECT
     votes.introduced_on,
     pols.bioguide_id,
     crp.recip_id,
+    pols.first_name,
+    pols.last_name,
     crp.real_code,
     crp.fec_trans_id,
     votes.vote,
@@ -111,6 +123,8 @@ INSERT OVERWRITE TABLE bill_contributions_external
      bill_introduction,
      bioguide_id,
      recipient_ext_id,
+     first_name,
+     last_name,
      industry_id,
      transaction_id,
      amount,
@@ -123,12 +137,15 @@ CREATE VIEW industry_contr_s743_113_nays_6months(
      bill_introduction,
      bioguide_id,
      recipient_ext_id,
+     first_name,
+     last_name,
      industry_id,
      transaction_id,
      amount,
      dates
 )
-as SELECT bill_introduction, bioguide_id, recipient_ext_id, industry_id, transaction_id, amount, dates
+as SELECT bill_introduction, bioguide_id, recipient_ext_id, first_name,
+        last_name, industry_id, transaction_id, amount, dates
     FROM bill_contributions_external
     WHERE
     bill_id = 's743-113'

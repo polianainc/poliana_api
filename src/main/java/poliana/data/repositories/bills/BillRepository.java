@@ -4,10 +4,10 @@ package poliana.data.repositories.bills;
 import java.util.List;
 
 public interface BillRepository {
-    List<String> allContributions(String billId);
-    List<String> allContributions(String billId, Integer limit);
-    List<String> selectColumn(String billId, String column);
-    List<String> selectColumn(String billId, String column, Integer limit);
-    List<String> selectColumns(String billId, List<String> columns);
-    List<String> selectColumns(String billId, List<String> columns, Integer limit);
+    List<Object> allContributions(String billId);
+    List<Object> allContributions(String billId, Integer limit);
+    List<Object> selectColumn(String billId, String column);
+    List<Object> selectColumn(String billId, String column, Integer limit);
+    List<Object> selectColumns(String billId, List<String> columns);
+    List<Object> selectColumns(String billId, List<String> columns, Integer limit);
 }

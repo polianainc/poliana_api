@@ -34,7 +34,7 @@ CREATE EXTERNAL TABLE bills_json (
     sponsor_id STRING,
     nays_ids ARRAY<STRING>,
     bill_id STRING
-)
+) PARTITIONED BY (congress STRING, vote STRING)
 ROW FORMAT SERDE 'com.proofpoint.hive.serde.JsonSerde'
  WITH SERDEPROPERTIES ('errors.ignore' = 'true')
-LOCATION 's3n://polianatest/full/billsvotes/json/';
+LOCATION 's3n://polianatest/full/data/';

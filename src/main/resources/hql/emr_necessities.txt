@@ -11,7 +11,8 @@ mybucket = conn.get_bucket('contributiondata')
 from boto.s3.key import Key
 key = Key(mybucket)
 
-./elastic-mapreduce --create --alive --name "Hivish" --hive-interactive --hive-site=s3://myawsbucket/conf/hive-site.xml--key-pair cloudera
+./elastic-mapreduce --create --alive --name "Hivish" --hive-interactive --key-pair cloudera
+--hive-site=s3://myawsbucket/conf/hive-site.xml
 
 ./elastic-mapreduce --create --alive --instance-type m2.4xlarge --num-instances 4 \
 --hive-interactive --hive-versions latest
@@ -23,15 +24,10 @@ key = Key(mybucket)
 
 
 
-./elastic-mapreduce -v \
---create \
- --alive \
---name "The Hell?" \
---instance-group MASTER \
---instance-count 1 \
---instance-type m1.large \
---instance-group CORE \
---instance-count 1 \
---instance-type m1.large \
---hbase \
--key-pair cloudera
+./elastic-mapreduce --create --alive --master-instance-type m1.medium --slave-instance-type m1.medium --num-instances 2 --info '{ami64: "ami-29d49640", amiHvm64: "ami-09d69460", hadoopVersion: "2.0.2", hadoopConfigurationVersion: "3.0"}' --ssh --bootstrap-action s3://beta.elasticmapreduce/bootstrap-actions/setup-impala --key-pair cloudera
+
+./elastic-mapreduce --create --alive --master-instance-type m1.large --slave-instance-type m1.medium --num-instances 1 --info '{ami64: "ami-29d49640", amiHvm64: "ami-09d69460", hadoopVersion: "2.0.2", hadoopConfigurationVersion: "3.0"}' --bootstrap-action s3://beta.elasticmapreduce/bootstrap-actions/setup-impala --key-pair cloudera
+
+
+
+ --key-pair-file cloudera.pem

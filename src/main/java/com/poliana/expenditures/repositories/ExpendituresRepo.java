@@ -11,12 +11,12 @@ import java.util.List;
 @Repository
 public class ExpendituresRepo {
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private JdbcTemplate hiveTemplate;
 
     private final String databasePrefix = "local.";
     private final String expendituresTable = databasePrefix + "expenditures";
 
     public List<Expenditure> expenditures() {
-        return jdbcTemplate.query("SELECT * FROM " + expendituresTable, new ExpenditureMapper());
+        return hiveTemplate.query("SELECT * FROM " + expendituresTable, new ExpenditureMapper());
     }
 }

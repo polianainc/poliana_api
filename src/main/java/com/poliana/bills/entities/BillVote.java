@@ -1,53 +1,20 @@
 package com.poliana.bills.entities;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@SuppressWarnings("serial")
+@Document(collection = "voter")
 public class BillVote {
-    private String billId;
-    private String sponsorId;
-    private String result;
-    private String congress;
-    private String inttroducedOn;
+
+    @Id
     private String bioguideId;
-    private String vote;
 
-    public String getBillId() {
-        return billId;
-    }
-
-    public void setBillId(String billId) {
-        this.billId = billId;
-    }
-
-    public String getSponsorId() {
-        return sponsorId;
-    }
-
-    public void setSponsorId(String sponsorId) {
-        this.sponsorId = sponsorId;
-    }
-
-    public String getResult() {
-        return result;
-    }
-
-    public void setResult(String result) {
-        this.result = result;
-    }
-
-    public String getCongress() {
-        return congress;
-    }
-
-    public void setCongress(String congress) {
-        this.congress = congress;
-    }
-
-    public String getInttroducedOn() {
-        return inttroducedOn;
-    }
-
-    public void setIntroducedOn(String inttroducedOn) {
-        this.inttroducedOn = inttroducedOn;
-    }
+    private String displayName;
+    private String firstName;
+    private String lastName;
+    private String party;
+    private String state;
 
     public String getBioguideId() {
         return bioguideId;
@@ -57,11 +24,43 @@ public class BillVote {
         this.bioguideId = bioguideId;
     }
 
-    public String getVote() {
-        return vote;
+    public String getDisplayName() {
+        return displayName;
     }
 
-    public void setVote(String vote) {
-        this.vote = vote;
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getParty() {
+        return party;
+    }
+
+    public void setParty(String party) {
+        this.party = party;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 }

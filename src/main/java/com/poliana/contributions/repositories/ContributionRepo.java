@@ -1,6 +1,6 @@
 package com.poliana.contributions.repositories;
 
-import com.poliana.contributions.entities.mappers.*;
+import com.poliana.contributions.mappers.*;
 import com.poliana.contributions.models.Bill;
 import com.poliana.contributions.models.Recipient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +15,7 @@ import java.util.List;
 public class ContributionRepo {
 
     @Autowired
-    protected JdbcTemplate jdbcTemplate;
-    @Autowired
+    protected JdbcTemplate hiveTemplate;
     protected FileSystemResourceLoader resourceLoader;
 
     private final String database = "local";
@@ -28,8 +27,8 @@ public class ContributionRepo {
 
     public ContributionRepo() {}
 
-    public ContributionRepo(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public ContributionRepo(JdbcTemplate hiveTemplate) {
+        this.hiveTemplate = hiveTemplate;
         this.resourceLoader = new FileSystemResourceLoader();
     }
 
@@ -43,7 +42,7 @@ public class ContributionRepo {
         if (limit != 0)
             lim = " LIMIT " + limit;
 
-        List<Bill> table = jdbcTemplate.query("SELECT * FROM " +
+        List<Bill> table = hiveTemplate.query("SELECT * FROM " +
                 "industry_contr_" + billId + "_113_" + vote + "_6months" + lim, new IndustryContributionMapper());
         return table;
     }
@@ -54,7 +53,7 @@ public class ContributionRepo {
         if (limit != 0)
             lim = " LIMIT " + limit;
 
-        List<Recipient> topRecipients = jdbcTemplate.query("" +
+        List<Recipient> topRecipients = hiveTemplate.query("" +
                 "SELECT industry_id, bioguide_id, first_name, last_name, sum(amount) AS sum " +
                 "FROM industry_contr_" + billId + "_113_" + vote + "_6months" +
                 " GROUP BY industry_id, bioguide_id, first_name, last_name" + lim,
@@ -67,34 +66,34 @@ public class ContributionRepo {
     }
 
     public int countDistinctIndustryContributions(String billId, String vote) {
-        return jdbcTemplate.queryForInt("SELECT count(distinct(bioguide_id)) FROM " +
+        return hiveTemplate.queryForInt("SELECT count(distinct(bioguide_id)) FROM " +
                 "industry_contr_" + billId + "_113_" + vote + "_6months");
     }
 
     public int sumIndustryContributions(String billId, String vote) {
-        return jdbcTemplate.queryForInt("SELECT sum(" + vote + "_sum)FROM " + billId + "_trends");
+        return hiveTemplate.queryForInt("SELECT sum(" + vote + "_sum)FROM " + billId + "_trends");
     }
 
     public List<IndustryContrTotals> industryContributionTotals(String billId) {
-        List<IndustryContrTotals> table = jdbcTemplate.query("SELECT * FROM "
+        List<IndustryContrTotals> table = hiveTemplate.query("SELECT * FROM "
                 + billId + "_trends", new IndustryContrTotalsMapper());
         return table;
     }
 
     public List<FecContribution> fecContributions() {
-        return jdbcTemplate.query("SELECT * FROM " + fecTable, new FecContributionMapper());
+        return hiveTemplate.query("SELECT * FROM " + fecTable, new FecContributionMapper());
     }
 
     public List<IndividualContribution> individualContributions() {
-        return jdbcTemplate.query("SELECT * FROM " + individualsTable, new IndividualContrMapper());
+        return hiveTemplate.query("SELECT * FROM " + individualsTable, new IndividualContrMapper());
     }
 
     public List<PacToCandidateContribution> pacToCandidateContributions() {
-        return jdbcTemplate.query("SELECT * FROM " + pacToCandidateTable, new PacToCandidateContrMapper());
+        return hiveTemplate.query("SELECT * FROM " + pacToCandidateTable, new PacToCandidateContrMapper());
     }
 
     public List<PacToPacContribution> pacToPacContributions() {
-        return jdbcTemplate.query("SELECT * FROM " + pacToPacTable, new PacToPacContrMapper());
+        return hiveTemplate.query("SELECT * FROM " + pacToPacTable, new PacToPacContrMapper());
     }
 
 

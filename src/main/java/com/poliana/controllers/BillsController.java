@@ -1,5 +1,8 @@
 package com.poliana.controllers;
 
+import com.poliana.bills.entities.BillAction;
+import com.poliana.bills.services.BillService;
+import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.core.CommandMarker;
 import org.springframework.shell.core.annotation.CliAvailabilityIndicator;
@@ -16,6 +19,8 @@ public class BillsController implements CommandMarker {
 
     @Autowired
     private BillAnalysis billAnalysis;
+    @Autowired
+    private BillService billService;
 
     private boolean simpleCommandExecuted = false;
 
@@ -24,7 +29,7 @@ public class BillsController implements CommandMarker {
         return true;
     }
 
-    @CliCommand(value = "select", help = "Run a job")
+    @CliCommand(value = "bill_overview", help = "Run a job")
     public String billAnalysis(
             @CliOption(key = { "bill" }, mandatory = true) final String billId) throws IOException {
 
@@ -32,12 +37,15 @@ public class BillsController implements CommandMarker {
         return jsonObj.toString();
     }
 
-    @CliCommand(value = "select", help = "Run a job")
+    @CliCommand(value = "actions", help = "Run a job")
     public String actions(
             @CliOption(key = { "bill" }, mandatory = true) final String billId) throws IOException {
 
-        JSONObject jsonObj = new JSONObject( billAnalysis.billTopList(billId) );
-        return jsonObj.toString();
+        JSONArray actionArray = new JSONArray();
+        for(BillAction billAction : billService.billActions(billId)) {
+            actionArray.put(new JSONObject(billAction));
+        }
+        return actionArray.toString();
     }
 
 }

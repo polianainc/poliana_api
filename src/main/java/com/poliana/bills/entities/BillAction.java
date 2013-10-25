@@ -1,5 +1,6 @@
 package com.poliana.bills.entities;
 
+
 public class BillAction {
     private String billId;
     private String actedAt;

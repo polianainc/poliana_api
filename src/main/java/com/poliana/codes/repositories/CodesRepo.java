@@ -11,25 +11,25 @@ import java.util.List;
 @Repository
 public class CodesRepo {
     @Autowired
-    protected JdbcTemplate jdbcTemplate;
+    protected JdbcTemplate hiveTemplate;
 
     public List<Industry> getIndustries() {
-        return jdbcTemplate.query("SELECT * FROM industry_codes", new IndustryMapper());
+        return hiveTemplate.query("SELECT * FROM industry_codes", new IndustryMapper());
     }
 
     public List<CongCommittee> getCongCommitties() {
-        return jdbcTemplate.query("SELECT * FROM cong_cmte_codes", new CongCommitteeMapper());
+        return hiveTemplate.query("SELECT * FROM cong_cmte_codes", new CongCommitteeMapper());
     }
 
     public List<CandidateIds> getCandidateIds() {
-        return jdbcTemplate.query("SELECT * FROM candidate_ids", new CandidateIdsMapper());
+        return hiveTemplate.query("SELECT * FROM candidate_ids", new CandidateIdsMapper());
     }
 
     public List<CandidateContributor> getCandidateContributors() {
-        return jdbcTemplate.query("SELECT * FROM candidate_contr", new CandidateContributorMapper());
+        return hiveTemplate.query("SELECT * FROM candidate_contr", new CandidateContributorMapper());
     }
 
     public List<CommitteeContributor> getCommitteeContributors() {
-        return jdbcTemplate.query("SELECT * FROM committee_contr", new CommitteeContributorMapper());
+        return hiveTemplate.query("SELECT * FROM committee_contr", new CommitteeContributorMapper());
     }
 }

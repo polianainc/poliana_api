@@ -1,9 +1,4 @@
-set fs.s3n.awsAccessKeyId=AKIAI27OS66EVU7XE57A;
-set fs.s3n.awsSecretAccessKey=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;
-
-add jar csv-serde-1.1.2.jar;
-
-CREATE EXTERNAL TABLE pac_to_pac_contr ( 
+CREATE EXTERNAL TABLE campaign_finance.pac_to_pac_contributions_external (
     cycle STRING,
     fec_rec_no STRING,
     file_rid STRING,

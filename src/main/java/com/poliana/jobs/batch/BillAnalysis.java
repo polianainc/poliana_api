@@ -1,11 +1,11 @@
 package com.poliana.jobs.batch;
 
+import com.poliana.entities.entities.Legislator;
 import org.springframework.stereotype.Component;
 import com.poliana.jobs.JobBase;
 import com.poliana.contributions.models.IndustryContributor;
 import com.poliana.contributions.models.IndustryInfl;
 import com.poliana.contributions.models.InfluenceGraph;
-import com.poliana.politicitans.entities.Politician;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ public class BillAnalysis extends JobBase {
         contributionService.setCatNameMap();
         contributionService.setPoliticianMap();
 
-        List<Politician> politicians = politicianHiveJdbcRepo.getPoliticians();
+        List<Legislator> legislators = entitiesHiveRepo.getAllLegislators();
         InfluenceGraph graph = new InfluenceGraph();
 
         //Set bill id

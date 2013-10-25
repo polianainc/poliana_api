@@ -14,8 +14,8 @@ key = Key(mybucket)
 ./elastic-mapreduce --create --alive --name "Hivish" --hive-interactive --key-pair cloudera
 --hive-site=s3://myawsbucket/conf/hive-site.xml
 
-./elastic-mapreduce --create --alive --instance-type m2.4xlarge --num-instances 4 \
---hive-interactive --hive-versions latest
+./elastic-mapreduce --create --alive --instance-type m1.large --num-instances 4 \
+--hive-interactive --hive-versions latest --key-pair cloudera
 
 
 ./elastic-mapreduce --create --alive \
@@ -26,8 +26,9 @@ key = Key(mybucket)
 
 ./elastic-mapreduce --create --alive --master-instance-type m1.medium --slave-instance-type m1.medium --num-instances 2 --info '{ami64: "ami-29d49640", amiHvm64: "ami-09d69460", hadoopVersion: "2.0.2", hadoopConfigurationVersion: "3.0"}' --ssh --bootstrap-action s3://beta.elasticmapreduce/bootstrap-actions/setup-impala --key-pair cloudera
 
-./elastic-mapreduce --create --alive --master-instance-type m1.large --slave-instance-type m1.medium --num-instances 1 --info '{ami64: "ami-29d49640", amiHvm64: "ami-09d69460", hadoopVersion: "2.0.2", hadoopConfigurationVersion: "3.0"}' --bootstrap-action s3://beta.elasticmapreduce/bootstrap-actions/setup-impala --key-pair cloudera
+./elastic-mapreduce --create --alive --master-instance-type m1.large --slave-instance-type m1.large --num-instances 5 --info '{ami64: "ami-29d49640", amiHvm64: "ami-09d69460", hadoopVersion: "2.0.2", hadoopConfigurationVersion: "3.0"}' --bootstrap-action s3://beta.elasticmapreduce/bootstrap-actions/setup-impala --key-pair cloudera
 
 
+for i in */; do zip -r "${i%/}.zip" "$i"; done
 
  --key-pair-file cloudera.pem

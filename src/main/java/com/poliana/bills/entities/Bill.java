@@ -1,65 +1,78 @@
 package com.poliana.bills.entities;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
-public class Bill
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@SuppressWarnings("serial")
+@Document(collection = "bills")
+public class Bill implements Serializable
 {
-    private String id;
+    @Id
+    private String billId;
 
-    private String billType;
-    private String shortTitle;
-    private String popularTitle;
+    @DBRef
+    private BillVotes votes;
+
+    private String voteId;
     private String officialTitle;
-    private int congress;
-    private int number;
+    private String popularTitle;
+    private String shortTitle;
     private String sponsor;
-    private String enactedAs;
-    private String introducedAt;
-    private String status;
-    private String statusAt;
-    private List<String> subjects;
+    private String sponsorState;
+    private String sponsorId;
+    private List<String> cosponsorIds;
     private String topSubject;
-    private BillSummary summary;
-    private BillTitle title;
-    private String updatedAt;
-    private List<String> relatedBills;
-    private List<BillAction> billActions;
-    private List<BillAmendment> billAmendments;
-    private List<BillCoSponsor> billCoSponsors;
-    private List<BillCommittee> billCommittees;
-    private List<BillVote> billVotes;
-    private BillHistory billHistory;
+    private List<String> subjects;
+    private String summary;
+    private int introducedAt;
+    private String housePassageResult;
+    private int housePassageResultAt;
+    private String senateClotureResult;
+    private int senateClotureResultAt;
+    private String senatePassageResult;
+    private int senatePassageResultAt;
+    private boolean awaitingSignature;
+    private boolean enacted;
+    private boolean vetoed;
+    private int enactedAt;
+    private String status;
+    private int statusAt;
+    private int congress;
+    private String billType;
+    private int year;
+    private int month;
 
-    public String getId() {
-        return id;
+    public String getBillId() {
+        return billId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setBillId(String billId) {
+        this.billId = billId;
     }
 
-    public String getBillType() {
-        return billType;
+    public BillVotes getVotes() {
+        return votes;
     }
 
-    public void setBillType(String billType) {
-        this.billType = billType;
+    public void setVotes(BillVotes votes) {
+        this.votes = votes;
     }
 
-    public String getShortTitle() {
-        return shortTitle;
+    public String getVoteId() {
+        return voteId;
     }
 
-    public void setShortTitle(String shortTitle) {
-        this.shortTitle = shortTitle;
-    }
-
-    public String getPopularTitle() {
-        return popularTitle;
-    }
-
-    public void setPopularTitle(String popularTitle) {
-        this.popularTitle = popularTitle;
+    public void setVoteId(String voteId) {
+        this.voteId = voteId;
     }
 
     public String getOfficialTitle() {
@@ -70,20 +83,20 @@ public class Bill
         this.officialTitle = officialTitle;
     }
 
-    public int getCongress() {
-        return congress;
+    public String getPopularTitle() {
+        return popularTitle;
     }
 
-    public void setCongress(int congress) {
-        this.congress = congress;
+    public void setPopularTitle(String popularTitle) {
+        this.popularTitle = popularTitle;
     }
 
-    public int getNumber() {
-        return number;
+    public String getShortTitle() {
+        return shortTitle;
     }
 
-    public void setNumber(int number) {
-        this.number = number;
+    public void setShortTitle(String shortTitle) {
+        this.shortTitle = shortTitle;
     }
 
     public String getSponsor() {
@@ -94,44 +107,45 @@ public class Bill
         this.sponsor = sponsor;
     }
 
-    public String getEnactedAs() {
-        return enactedAs;
+    public String getSponsorState() {
+        return sponsorState;
     }
 
-    public void setEnactedAs(String enactedAs) {
-        this.enactedAs = enactedAs;
+    public void setSponsorState(String sponsorState) {
+        this.sponsorState = sponsorState;
     }
 
-    public String getIntroducedAt() {
-        return introducedAt;
+    public String getSponsorId() {
+        return sponsorId;
     }
 
-    public void setIntroducedAt(String introducedAt) {
-        this.introducedAt = introducedAt;
+    public void setSponsorId(String sponsorId) {
+        this.sponsorId = sponsorId;
     }
 
-    public String getStatus() {
-        return status;
+    public List<String> getCosponsorIds() {
+        return cosponsorIds;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setCosponsorIds(List<String> cosponsorIds) {
+        this.cosponsorIds = cosponsorIds;
     }
 
-    public String getStatusAt() {
-        return statusAt;
+    public void setCosponsorIdsJson(String cosponsorIds) {
+        try {
+            JSONArray jsonArray = new JSONArray(cosponsorIds);
+            List<String> list = new LinkedList<String>();
+            for (int i=0; i<jsonArray.length(); i++) {
+                list.add( jsonArray.getString(i) );
+            }
+            this.cosponsorIds = list;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void setStatusAt(String statusAt) {
-        this.statusAt = statusAt;
-    }
-
-    public List<String> getSubjects() {
-        return subjects;
-    }
-
-    public void setSubjects(List<String> subjects) {
-        this.subjects = subjects;
+    public void setCosponsorIdsPipeDelim(String cosponsorIds) {
+        this.cosponsorIds = new ArrayList<>(Arrays.asList(cosponsorIds.split("\u0002")));
     }
 
     public String getTopSubject() {
@@ -142,83 +156,172 @@ public class Bill
         this.topSubject = topSubject;
     }
 
-    public BillSummary getSummary() {
+    public List<String> getSubjects() {
+        return subjects;
+    }
+
+    public void setSubjects(List<String> subjects) {
+        this.subjects = subjects;
+    }
+
+    public void setSubjectsJson(String subjects) {
+        try {
+            JSONArray jsonArray = new JSONArray(subjects);
+            List<String> list = new LinkedList<>();
+            for (int i=0; i<jsonArray.length(); i++) {
+                list.add( jsonArray.getString(i) );
+            }
+            this.subjects = list;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setSubjectsPipeDelim(String subjects) {
+        this.subjects = new ArrayList<>(Arrays.asList(subjects.split("\u0002")));
+    }
+
+    public String getSummary() {
         return summary;
     }
 
-    public void setSummary(BillSummary summary) {
+    public void setSummary(String summary) {
         this.summary = summary;
     }
 
-    public BillTitle getTitle() {
-        return title;
+    public int getIntroducedAt() {
+        return introducedAt;
     }
 
-    public void setTitle(BillTitle title) {
-        this.title = title;
+    public void setIntroducedAt(int introducedAt) {
+        this.introducedAt = introducedAt;
     }
 
-    public String getUpdatedAt() {
-        return updatedAt;
+    public String getHousePassageResult() {
+        return housePassageResult;
     }
 
-    public void setUpdatedAt(String updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setHousePassageResult(String housePassageResult) {
+        this.housePassageResult = housePassageResult;
     }
 
-    public List<String> getRelatedBills() {
-        return relatedBills;
+    public int getHousePassageResultAt() {
+        return housePassageResultAt;
     }
 
-    public void setRelatedBills(List<String> relatedBills) {
-        this.relatedBills = relatedBills;
+    public void setHousePassageResultAt(int housePassageResultAt) {
+        this.housePassageResultAt = housePassageResultAt;
     }
 
-    public List<BillAction> getBillActions() {
-        return billActions;
+    public String getSenateClotureResult() {
+        return senateClotureResult;
     }
 
-    public void setBillActions(List<BillAction> billActions) {
-        this.billActions = billActions;
+    public void setSenateClotureResult(String senateClotureResult) {
+        this.senateClotureResult = senateClotureResult;
     }
 
-    public List<BillAmendment> getBillAmendments() {
-        return billAmendments;
+    public int getSenateClotureResultAt() {
+        return senateClotureResultAt;
     }
 
-    public void setBillAmendments(List<BillAmendment> billAmendments) {
-        this.billAmendments = billAmendments;
+    public void setSenateClotureResultAt(int senateClotureResultAt) {
+        this.senateClotureResultAt = senateClotureResultAt;
     }
 
-    public List<BillCoSponsor> getBillCoSponsors() {
-        return billCoSponsors;
+    public String getSenatePassageResult() {
+        return senatePassageResult;
     }
 
-    public void setBillCoSponsors(List<BillCoSponsor> billCoSponsors) {
-        this.billCoSponsors = billCoSponsors;
+    public void setSenatePassageResult(String senatePassageResult) {
+        this.senatePassageResult = senatePassageResult;
     }
 
-    public List<BillCommittee> getBillCommittees() {
-        return billCommittees;
+    public int getSenatePassageResultAt() {
+        return senatePassageResultAt;
     }
 
-    public void setBillCommittees(List<BillCommittee> billCommittees) {
-        this.billCommittees = billCommittees;
+    public void setSenatePassageResultAt(int senatePassageResultAt) {
+        this.senatePassageResultAt = senatePassageResultAt;
     }
 
-    public List<BillVote> getBillVotes() {
-        return billVotes;
+    public boolean isAwaitingSignature() {
+        return awaitingSignature;
     }
 
-    public void setBillVotes(List<BillVote> billVotes) {
-        this.billVotes = billVotes;
+    public void setAwaitingSignature(boolean awaitingSignature) {
+        this.awaitingSignature = awaitingSignature;
     }
 
-    public BillHistory getBillHistory() {
-        return billHistory;
+    public boolean isEnacted() {
+        return enacted;
     }
 
-    public void setBillHistory(BillHistory billHistory) {
-        this.billHistory = billHistory;
+    public void setEnacted(boolean enacted) {
+        this.enacted = enacted;
+    }
+
+    public boolean isVetoed() {
+        return vetoed;
+    }
+
+    public void setVetoed(boolean vetoed) {
+        this.vetoed = vetoed;
+    }
+
+    public int getEnactedAt() {
+        return enactedAt;
+    }
+
+    public void setEnactedAt(int enactedAt) {
+        this.enactedAt = enactedAt;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public int getStatusAt() {
+        return statusAt;
+    }
+
+    public void setStatusAt(int statusAt) {
+        this.statusAt = statusAt;
+    }
+
+    public int getCongress() {
+        return congress;
+    }
+
+    public void setCongress(int congress) {
+        this.congress = congress;
+    }
+
+    public String getBillType() {
+        return billType;
+    }
+
+    public void setBillType(String billType) {
+        this.billType = billType;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public void setMonth(int month) {
+        this.month = month;
     }
 }

@@ -1,7 +1,4 @@
-set fs.s3n.awsAccessKeyId=AKIAI27OS66EVU7XE57A;
-set fs.s3n.awsSecretAccessKey=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;
-
-CREATE EXTERNAL TABLE fec_contributions ( 
+CREATE EXTERNAL TABLE campaign_finance.fec_contributions_external (
     id STRING,
     import_reference_id STRING,
     cycle STRING,
@@ -45,5 +42,5 @@ CREATE EXTERNAL TABLE fec_contributions (
     seat_status STRING,
     seat_result STRING
 )
-ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+ROW FORMAT SERDE 'com.bizo.hive.serde.csv.CSVSerde'
 LOCATION 's3n://polianatest/full/contributions/sunlight/';

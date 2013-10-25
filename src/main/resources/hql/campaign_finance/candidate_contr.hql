@@ -1,9 +1,4 @@
-set fs.s3n.awsAccessKeyId=AKIAI27OS66EVU7XE57A;
-set fs.s3n.awsSecretAccessKey=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;
-
-add jar csv-serde-1.1.2.jar;
-
-CREATE EXTERNAL TABLE candidate_contr ( 
+CREATE EXTERNAL TABLE campaign_finance.candidate_contributions_crp_ext (
     cycle STRING,
     fec_candi_id STRING,
     cid STRING,
@@ -22,4 +17,4 @@ row format serde 'com.bizo.hive.serde.csv.CSVSerde'
    "separatorChar" = ",",
    "quoteChar"     = "|"
   )
-LOCATION 's3n://polianatest/full/contributions/crp/candidates/';
+LOCATION 's3n://polianaprod/campaign_finance/candidate_contributions_crp/';

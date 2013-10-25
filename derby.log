@@ -1,6 +1,6 @@
 ----------------------------------------------------------------
-2013-09-24 02:01:04.299 GMT:
- Booting Derby version The Apache Software Foundation - Apache Derby - 10.4.2.0 - (689064): instance a816c00e-0141-4db2-c2a0-00000503a560
-on database directory /usr/local/hive/metastore_db  
+2013-10-14 21:52:43.630 GMT:
+ Booting Derby version The Apache Software Foundation - Apache Derby - 10.4.2.0 - (689064): instance a816c00e-0141-b8f4-f51b-000003ae09f8
+on database directory /Users/dagilmore/Dev/polianalytics/poliana_processing/metastore_db  
 
 Database Class Loader started - derby.database.classpath=''

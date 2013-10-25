@@ -7,7 +7,7 @@ import com.poliana.contributions.models.IndustryContributor;
 import com.poliana.contributions.models.Recipient;
 import com.poliana.contributions.repositories.ContributionRepo;
 import com.poliana.codes.services.IndustryService;
-import com.poliana.politicitans.services.PoliticianService;
+import com.poliana.entities.services.PoliticianService;
 
 import java.util.*;
 

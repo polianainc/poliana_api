@@ -1,21 +1,16 @@
 package com.poliana.bills.repositories;
 
-import com.poliana.bills.entities.BillAction;
-import com.poliana.bills.entities.mappers.BillActionMapper;
+import com.poliana.bills.entities.BillVotes;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Repository;
-
-import java.sql.*;
-import java.util.List;
 
 @Repository
 public class BillRepo {
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private MongoTemplate mongoTemplate;
 
-    public List<BillAction> billActions(String billId) {
-        return jdbcTemplate.query("SELECT * " +
-                "FROM bills_prod.bills_actions WHERE bill_id = \'" + billId + "\'", new BillActionMapper());
+    public void saveBillVotes(BillVotes billVotes) {
+        mongoTemplate.save(billVotes, "bill_votes");
     }
 }

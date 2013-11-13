@@ -1,0 +1,744 @@
+{
+   "winner":"yea",
+   "data":{
+      "mainTouched":68,
+      "mainChildren":[
+         {
+            "mainTouched":51,
+            "mainChildren":[
+               {
+                  "party":"D",
+                  "contribution":201977,
+                  "id":"C001070",
+                  "name":"Robert Casey"
+               },
+               {
+                  "party":"D",
+                  "contribution":181916,
+                  "id":"K000384",
+                  "name":"Timothy Kaine"
+               },
+               {
+                  "party":"D",
+                  "contribution":109435,
+                  "id":"B000944",
+                  "name":"Sherrod Brown"
+               },
+               {
+                  "party":"D",
+                  "contribution":98080,
+                  "id":"L000550",
+                  "name":"Mary Landrieu"
+               },
+               {
+                  "party":"D",
+                  "contribution":91609,
+                  "id":"M001170",
+                  "name":"Claire McCaskill"
+               }
+            ],
+            "industryID":"K1000",
+            "name":"Attorneys & law firms",
+            "offTouched":14,
+            "winner":true,
+            "mainTotal":1374938,
+            "offTotal":206443,
+            "offChildren":[
+               {
+                  "party":"D",
+                  "contribution":77850,
+                  "id":"T000464",
+                  "name":"Jon Tester"
+               },
+               {
+                  "party":"R",
+                  "contribution":32051,
+                  "id":"F000444",
+                  "name":"Jeff Flake"
+               },
+               {
+                  "party":"R",
+                  "contribution":31700,
+                  "id":"C001098",
+                  "name":"Ted Cruz"
+               },
+               {
+                  "party":"D",
+                  "contribution":22950,
+                  "id":"B000243",
+                  "name":"Max Baucus"
+               },
+               {
+                  "party":"R",
+                  "contribution":10625,
+                  "id":"H001041",
+                  "name":"Dean Heller"
+               }
+            ]
+         },
+         {
+            "mainTouched":14,
+            "mainChildren":[
+               {
+                  "party":"D",
+                  "contribution":119419,
+                  "id":"M001170",
+                  "name":"Claire McCaskill"
+               },
+               {
+                  "party":"D",
+                  "contribution":103085,
+                  "id":"B001230",
+                  "name":"Tammy Baldwin"
+               },
+               {
+                  "party":"D",
+                  "contribution":98217,
+                  "id":"W000817",
+                  "name":"Elizabeth Warren"
+               },
+               {
+                  "party":"D",
+                  "contribution":54027,
+                  "id":"K000384",
+                  "name":"Timothy Kaine"
+               },
+               {
+                  "party":"D",
+                  "contribution":31814,
+                  "id":"B000944",
+                  "name":"Sherrod Brown"
+               }
+            ],
+            "industryID":"J7400",
+            "name":"Women's issues",
+            "offTouched":4,
+            "winner":true,
+            "mainTotal":474234,
+            "offTotal":26809,
+            "offChildren":[
+               {
+                  "party":"D",
+                  "contribution":24476,
+                  "id":"T000464",
+                  "name":"Jon Tester"
+               },
+               {
+                  "party":"D",
+                  "contribution":2333,
+                  "id":"S001181",
+                  "name":"Jeanne Shaheen"
+               },
+               {
+                  "party":"",
+                  "contribution":0,
+                  "id":"",
+                  "name":""
+               },
+               {
+                  "party":"",
+                  "contribution":0,
+                  "id":"",
+                  "name":""
+               },
+               {
+                  "party":"",
+                  "contribution":0,
+                  "id":"",
+                  "name":""
+               }
+            ]
+         },
+         {
+            "mainTouched":32,
+            "mainChildren":[
+               {
+                  "party":"D",
+                  "contribution":66975,
+                  "id":"W000817",
+                  "name":"Elizabeth Warren"
+               },
+               {
+                  "party":"D",
+                  "contribution":43523,
+                  "id":"K000384",
+                  "name":"Timothy Kaine"
+               },
+               {
+                  "party":"D",
+                  "contribution":37055,
+                  "id":"B000944",
+                  "name":"Sherrod Brown"
+               },
+               {
+                  "party":"D",
+                  "contribution":36679,
+                  "id":"B001230",
+                  "name":"Tammy Baldwin"
+               },
+               {
+                  "party":"D",
+                  "contribution":27983,
+                  "id":"M001170",
+                  "name":"Claire McCaskill"
+               }
+            ],
+            "industryID":"H5100",
+            "name":"Schools & colleges",
+            "offTouched":8,
+            "winner":true,
+            "mainTotal":337747,
+            "offTotal":26600,
+            "offChildren":[
+               {
+                  "party":"D",
+                  "contribution":14050,
+                  "id":"T000464",
+                  "name":"Jon Tester"
+               },
+               {
+                  "party":"R",
+                  "contribution":5800,
+                  "id":"H001041",
+                  "name":"Dean Heller"
+               },
+               {
+                  "party":"D",
+                  "contribution":2500,
+                  "id":"B000243",
+                  "name":"Max Baucus"
+               },
+               {
+                  "party":"R",
+                  "contribution":1250,
+                  "id":"F000444",
+                  "name":"Jeff Flake"
+               },
+               {
+                  "party":"D",
+                  "contribution":1250,
+                  "id":"S001181",
+                  "name":"Jeanne Shaheen"
+               }
+            ]
+         },
+         {
+            "mainTouched":27,
+            "mainChildren":[
+               {
+                  "party":"D",
+                  "contribution":20857,
+                  "id":"B001230",
+                  "name":"Tammy Baldwin"
+               },
+               {
+                  "party":"D",
+                  "contribution":20150,
+                  "id":"W000817",
+                  "name":"Elizabeth Warren"
+               },
+               {
+                  "party":"D",
+                  "contribution":19532,
+                  "id":"M001170",
+                  "name":"Claire McCaskill"
+               },
+               {
+                  "party":"D",
+                  "contribution":16999,
+                  "id":"K000384",
+                  "name":"Timothy Kaine"
+               },
+               {
+                  "party":"D",
+                  "contribution":14450,
+                  "id":"C001070",
+                  "name":"Robert Casey"
+               }
+            ],
+            "industryID":"C1100",
+            "name":"Book newspaper & periodical publishing ",
+            "offTouched":5,
+            "winner":true,
+            "mainTotal":150773,
+            "offTotal":14150,
+            "offChildren":[
+               {
+                  "party":"D",
+                  "contribution":9650,
+                  "id":"T000464",
+                  "name":"Jon Tester"
+               },
+               {
+                  "party":"R",
+                  "contribution":2300,
+                  "id":"F000444",
+                  "name":"Jeff Flake"
+               },
+               {
+                  "party":"R",
+                  "contribution":19532,
+                  "id":"C001098",
+                  "name":"Ted Cruz"
+               },
+               {
+                  "party":"R",
+                  "contribution":1000,
+                  "id":"M000355",
+                  "name":"Mitch McConnell"
+               },
+               {
+                  "party":"R",
+                  "contribution":200,
+                  "id":"K000360",
+                  "name":"Mark Kirk"
+               }
+            ]
+         },
+         {
+            "mainTouched":15,
+            "mainChildren":[
+               {
+                  "party":"D",
+                  "contribution":4200,
+                  "id":"B000944",
+                  "name":"Sherrod Brown"
+               },
+               {
+                  "party":"D",
+                  "contribution":1200,
+                  "id":"B001230",
+                  "name":"Tammy Baldwin"
+               },
+               {
+                  "party":"D",
+                  "contribution":900,
+                  "id":"K000384",
+                  "name":"Timothy Kaine"
+               },
+               {
+                  "party":"D",
+                  "contribution":850,
+                  "id":"M001169",
+                  "name":"Christopher Murphy"
+               },
+               {
+                  "party":"D",
+                  "contribution":700,
+                  "id":"M001170",
+                  "name":"Claire McCaskill"
+               }
+            ],
+            "industryID":"X7000",
+            "name":"Churches",
+            "offTouched":1,
+            "winner":true,
+            "mainTotal":11300,
+            "offTotal":250,
+            "offChildren":[
+               {
+                  "party":"R",
+                  "contribution":250,
+                  "id":"F000444",
+                  "name":"Jeff Flake"
+               },
+               {
+                  "party":"",
+                  "contribution":0,
+                  "id":"",
+                  "name":""
+               },
+               {
+                  "party":"",
+                  "contribution":0,
+                  "id":"",
+                  "name":""
+               },
+               {
+                  "party":"",
+                  "contribution":0,
+                  "id":"",
+                  "name":""
+               },
+               {
+                  "party":"",
+                  "contribution":0,
+                  "id":"",
+                  "name":""
+               }
+            ]
+         }
+      ],
+      "offTouched":68,
+      "mainTotal":0,
+      "offTotal":0,
+      "offChildren":[
+         {
+            "mainTouched":7,
+            "mainChildren":[
+               {
+                  "party":"R",
+                  "contribution":2500,
+                  "id":"C001098",
+                  "name":"Ted Cruz"
+               },
+               {
+                  "party":"R",
+                  "contribution":2000,
+                  "id":"V000127",
+                  "name":"David Vitter"
+               },
+               {
+                  "party":"R",
+                  "contribution":1500,
+                  "id":"F000444",
+                  "name":"Jeff Flake"
+               },
+               {
+                  "party":"R",
+                  "contribution":500,
+                  "id":"H001041",
+                  "name":"Dean Heller"
+               },
+               {
+                  "party":"",
+                  "contribution":0,
+                  "id":"",
+                  "name":""
+               }
+            ],
+            "industryID":"E1120",
+            "name":"Independent oil & gas producers",
+            "offTouched":4,
+            "winner":false,
+            "mainTotal":6500,
+            "offTotal":44800,
+            "offChildren":[
+               {
+                  "party":"R",
+                  "contribution":27500,
+                  "id":"C001098",
+                  "name":"Ted Cruz"
+               },
+               {
+                  "party":"R",
+                  "contribution":7500,
+                  "id":"V000127",
+                  "name":"David Vitter"
+               },
+               {
+                  "party":"R",
+                  "contribution":5500,
+                  "id":"F000444",
+                  "name":"Jeff Flake"
+               },
+               {
+                  "party":"R",
+                  "contribution":2500,
+                  "id":"H001041",
+                  "name":"Dean Heller"
+               },
+               {
+                  "party":"R",
+                  "contribution":1000,
+                  "id":"I000024",
+                  "name":"James Inhofe"
+               }
+            ]
+         },
+         {
+            "mainTouched":22,
+            "mainChildren":[
+               {
+                  "party":"D",
+                  "contribution":6750,
+                  "id":"K000384",
+                  "name":"Timothy Kaine"
+               },
+               {
+                  "party":"D",
+                  "contribution":4500,
+                  "id":"D000607",
+                  "name":"Joe Donnelly"
+               },
+               {
+                  "party":"D",
+                  "contribution":3750,
+                  "id":"B001230",
+                  "name":"Tammy Baldwin"
+               },
+               {
+                  "party":"R",
+                  "contribution":3000,
+                  "id":"F000463",
+                  "name":"Deb Fischer"
+               },
+               {
+                  "party":"D",
+                  "contribution":2750,
+                  "id":"C001070",
+                  "name":"Robert Casey"
+               }
+            ],
+            "industryID":"F1100",
+            "name":"Commercial banks & bank holding companies",
+            "offTouched":10,
+            "winner":false,
+            "mainTotal":38300,
+            "offTotal":78110,
+            "offChildren":[
+               {
+                  "party":"R",
+                  "contribution":47500,
+                  "id":"M000355",
+                  "name":"Mitch McConnell"
+               },
+               {
+                  "party":"R",
+                  "contribution":13950,
+                  "id":"F000444",
+                  "name":"Jeff Flake"
+               },
+               {
+                  "party":"R",
+                  "contribution":5000,
+                  "id":"H000338",
+                  "name":"Orrin Hatch"
+               },
+               {
+                  "party":"R",
+                  "contribution":4000,
+                  "id":"T000461",
+                  "name":"Patrick Toomey"
+               },
+               {
+                  "party":"R",
+                  "contribution":2500,
+                  "id":"R000595",
+                  "name":"Marco Rubio"
+               }
+            ]
+         },
+         {
+            "mainTouched":10,
+            "mainChildren":[
+               {
+                  "party":"D",
+                  "contribution":2750,
+                  "id":"M001170",
+                  "name":"Claire McCaskill"
+               },
+               {
+                  "party":"D",
+                  "contribution":2500,
+                  "id":"S000148",
+                  "name":"Charles Schumer"
+               },
+               {
+                  "party":"D",
+                  "contribution":1600,
+                  "id":"L000550",
+                  "name":"Mary Landrieu"
+               },
+               {
+                  "party":"D",
+                  "contribution":1500,
+                  "id":"C001070",
+                  "name":"Robert Casey"
+               },
+               {
+                  "party":"D",
+                  "contribution":1000,
+                  "id":"D000607",
+                  "name":"Joe Donnelly"
+               }
+            ],
+            "industryID":"H3000",
+            "name":"Health care services",
+            "offTouched":2,
+            "winner":false,
+            "mainTotal":25170,
+            "offTotal":12000,
+            "offChildren":[
+               {
+                  "party":"D",
+                  "contribution":20170,
+                  "id":"B000243",
+                  "name":"Max Baucus"
+               },
+               {
+                  "party":"R",
+                  "contribution":5000,
+                  "id":"F000444",
+                  "name":"Jeff Flake"
+               },
+               {
+                  "party":"",
+                  "contribution":0,
+                  "id":"",
+                  "name":""
+               },
+               {
+                  "party":"",
+                  "contribution":0,
+                  "id":"",
+                  "name":""
+               },
+               {
+                  "party":"",
+                  "contribution":0,
+                  "id":"",
+                  "name":""
+               }
+            ]
+         },
+         {
+            "mainTouched":2,
+            "mainChildren":[
+               {
+                  "party":"D",
+                  "contribution":1000,
+                  "id":"N000032",
+                  "name":"Bill Nelson"
+               },
+               {
+                  "party":"R",
+                  "contribution":500,
+                  "id":"C001071",
+                  "name":"Bob Corker"
+               },
+               {
+                  "party":"",
+                  "contribution":0,
+                  "id":"",
+                  "name":""
+               },
+               {
+                  "party":"",
+                  "contribution":0,
+                  "id":"",
+                  "name":""
+               },
+               {
+                  "party":"",
+                  "contribution":0,
+                  "id":"",
+                  "name":""
+               }
+            ],
+            "industryID":"G5230",
+            "name":"Outdoor advertising services",
+            "offTouched":2,
+            "winner":false,
+            "mainTotal":1500,
+            "offTotal":15000,
+            "offChildren":[
+               {
+                  "party":"D",
+                  "contribution":14500,
+                  "id":"B000243",
+                  "name":"Max Baucus"
+               },
+               {
+                  "party":"R",
+                  "contribution":500,
+                  "id":"F000444",
+                  "name":"Jeff Flake"
+               },
+               {
+                  "party":"",
+                  "contribution":0,
+                  "id":"",
+                  "name":""
+               },
+               {
+                  "party":"",
+                  "contribution":0,
+                  "id":"",
+                  "name":""
+               },
+               {
+                  "party":"",
+                  "contribution":0,
+                  "id":"",
+                  "name":""
+               }
+            ]
+         },
+         {
+            "mainTouched":5,
+            "mainChildren":[
+               {
+                  "party":"D",
+                  "contribution":15000,
+                  "id":"C001070",
+                  "name":"Robert Casey"
+               },
+               {
+                  "party":"D",
+                  "contribution":3500,
+                  "id":"D000607",
+                  "name":"Joe Donnelly"
+               },
+               {
+                  "party":"D",
+                  "contribution":2900,
+                  "id":"M001183",
+                  "name":"Joe Manchin"
+               },
+               {
+                  "party":"D",
+                  "contribution":1000,
+                  "id":"M000639",
+                  "name":"Robert Menndez"
+               },
+               {
+                  "party":"D",
+                  "contribution":250,
+                  "id":"C000127",
+                  "name":"Maria Cantwell"
+               }
+            ],
+            "industryID":"E1210",
+            "name":"Coal mining",
+            "offTouched":4,
+            "winner":false,
+            "mainTotal":22650,
+            "offTotal":37714,
+            "offChildren":[
+               {
+                  "party":"R",
+                  "contribution":12964,
+                  "id":"C001098",
+                  "name":"Ted Cruz"
+               },
+               {
+                  "party":"R",
+                  "contribution":12500,
+                  "id":"F000444",
+                  "name":"Jeff Flake"
+               },
+               {
+                  "party":"R",
+                  "contribution":8250,
+                  "id":"M000355",
+                  "name":"Mitch McConnell"
+               },
+               {
+                  "party":"R",
+                  "contribution":4000,
+                  "id":"T000461",
+                  "name":"Patrick Toomey"
+               },
+               {
+                  "party":"",
+                  "contribution":0,
+                  "id":"",
+                  "name":""
+               }
+            ]
+         }
+      ]
+   },
+   "id":"s473-113"
+}

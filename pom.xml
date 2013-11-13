@@ -88,6 +88,13 @@
             <version>${hive.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.elasticsearch</groupId>
+            <artifactId>elasticsearch</artifactId>
+            <version>0.90.5</version>
+        </dependency>
+
+
         <!--<dependency>-->
             <!--<artifactId>hive-jdbc</artifactId>-->
             <!--<groupId>org.apache.hive</groupId>-->
@@ -146,6 +153,11 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
             <version>3.2.4.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <version>3.1</version>
         </dependency>
 
     </dependencies>

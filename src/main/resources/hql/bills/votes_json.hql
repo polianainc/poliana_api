@@ -65,7 +65,8 @@ CREATE TABLE bills.votes_json (
     >
 )
 ROW FORMAT SERDE 'com.proofpoint.hive.serde.JsonSerde'
- WITH SERDEPROPERTIES ('errors.ignore' = 'true');
+ WITH SERDEPROPERTIES ('errors.ignore' = 'true')
+;
 
 LOAD DATA LOCAL INPATH '/mnt/new_data/votes.tar.bz2'
 OVERWRITE INTO TABLE bills.votes_json;
@@ -119,7 +120,7 @@ as SELECT
 FROM bills_tmp.bills_json
 LATERAL VIEW explode(actions) actions AS action;
 
-CREATE EXTERNAL TABLE bills.votes_json_external (
+CREATE EXTERNAL TABLE bills_external.votes_json (
     category STRING,
     chamber STRING,
     congress INT,
@@ -187,7 +188,7 @@ CREATE EXTERNAL TABLE bills.votes_json_external (
 )
 ROW FORMAT SERDE 'com.proofpoint.hive.serde.JsonSerde'
  WITH SERDEPROPERTIES ('errors.ignore' = 'true')
-LOCATION 's3n://polianaprod/legislation/votes/';
+LOCATION 's3n://polianaprod/legislation/votes_json/';
 
 CREATE TABLE bills.votes_json (
     category STRING,

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * Poliana's Banner provider.
  */
 @Component
-@Profile("production")
+//@Profile("production")
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class BannerConfig implements BannerProvider {
 

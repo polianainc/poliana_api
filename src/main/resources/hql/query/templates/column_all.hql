@@ -1,1 +1,0 @@
-SELECT ${hiveconf:column} FROM ${hiveconf:table};

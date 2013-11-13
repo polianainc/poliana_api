@@ -11,8 +11,8 @@ import java.util.List;
 public class BillVotes {
 
     @Id
+    private String id;
     private String voteId;
-
     private String billId;
     private int yeaTotal;
     private int nayTotal;
@@ -22,8 +22,17 @@ public class BillVotes {
     private List<BillVote> nays;
     private List<BillVote> notVoting;
     private List<BillVote> present;
+    private String chamber;
     private int year;
     private int month;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getVoteId() {
         return voteId;
@@ -121,6 +130,14 @@ public class BillVotes {
         this.present = present;
     }
 
+    public String getChamber() {
+        return chamber;
+    }
+
+    public void setChamber(String chamber) {
+        this.chamber = chamber;
+    }
+
     public int getYear() {
         return year;
     }
@@ -138,6 +155,8 @@ public class BillVotes {
     }
 
     private List<BillVote> explodeVotes(String embeddedList) {
+
+        String chamber = this.getChamber();
         if (null != embeddedList) {
             String[] voteStrings = embeddedList.split("\u0002");
             int len = voteStrings.length;
@@ -147,11 +166,19 @@ public class BillVotes {
                 String[] voteString = voteStrings[i].split(",");
 
                 vote.setBioguideId(voteString[0]);
-                vote.setDisplayName(voteString[1]);
-                vote.setFirstName(voteString[2]);
-                vote.setLastName(voteString[3]);
-                vote.setParty(voteString[4]);
-                vote.setState(voteString[5]);
+                int j = 1;
+                String i1 = voteString[j];
+                if (i1.contains(".") || i1.contains(" ")) {
+                    vote.setDisplayName(i1);
+                    j++;
+                }
+                vote.setFirstName(voteString[j++]);
+                vote.setLastName(voteString[j++]);
+                vote.setParty(voteString[j++]);
+                vote.setState(voteString[j++]);
+                System.out.println(voteString[0] + voteString[1] + voteString[2] + voteString[3] + voteString[4] + voteString[5]);
+                if (null != this.chamber && chamber.equals("h"))
+                    vote.setDistrict(new Integer(voteString[j++]).intValue());
 
                 votes.add(vote);
             }

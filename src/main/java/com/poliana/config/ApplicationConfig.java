@@ -7,7 +7,7 @@ import org.springframework.shell.plugin.PromptProvider;
 
 @Configuration
 @Import({ImpalaConfig.class, HiveConfig.class, MongoConfig.class})
-@Profile("production")
+//@Profile("production")
 @ComponentScan("com.poliana")
 public class ApplicationConfig {
     @Bean

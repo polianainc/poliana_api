@@ -13,11 +13,11 @@ public class BillVotesMapper implements RowMapper<BillVotes> {
         billVotes.setYeaTotal(rs.getInt("yea_total"));
         billVotes.setNayTotal(rs.getInt("nay_total"));
         billVotes.setNotVotingTotal(rs.getInt("not_voting_total"));
-        billVotes.setPresentTotal(rs.getInt("present_total"));
+        billVotes.setPresentTotal(rs.getInt("not_present_total"));
         billVotes.setYeas(rs.getString("yea_votes"));
         billVotes.setNays(rs.getString("nay_votes"));
         billVotes.setNotVoting(rs.getString("not_voting"));
-        billVotes.setPresent(rs.getString("present"));
+        billVotes.setPresent(rs.getString("not_present"));
         billVotes.setYear(rs.getInt("year"));
         billVotes.setMonth(rs.getInt("month"));
         return billVotes;

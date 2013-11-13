@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
  * Prompt for the interactive shell
  */
 @Component
-@Profile("production")
+//@Profile("production")
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class PromptConfig implements PromptProvider {
 

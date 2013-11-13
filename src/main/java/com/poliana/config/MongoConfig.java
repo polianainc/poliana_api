@@ -14,7 +14,8 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 @EnableMongoRepositories(basePackages = "com.poliana")
-@PropertySource(value={"classpath:mongo.prod.properties"})
+@PropertySource(value={"classpath:mongo.properties"})
+//@Profile("production")
 public class MongoConfig extends AbstractMongoConfiguration {
 
     @Autowired

@@ -17,11 +17,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Bill implements Serializable
 {
     @Id
-    private String billId;
+    private String id;
 
     @DBRef
     private BillVotes votes;
-
+    private String billId;
     private String voteId;
     private String officialTitle;
     private String popularTitle;
@@ -50,6 +50,14 @@ public class Bill implements Serializable
     private String billType;
     private int year;
     private int month;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getBillId() {
         return billId;

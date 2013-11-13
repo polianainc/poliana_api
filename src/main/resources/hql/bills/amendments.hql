@@ -1,4 +1,4 @@
-CREATE EXTERNAL TABLE bills.amendments_json_external (
+CREATE EXTERNAL TABLE bills_external.amendments_json (
     actions ARRAY<STRUCT<
         acted_at: STRING,
         references: ARRAY<STRING>,

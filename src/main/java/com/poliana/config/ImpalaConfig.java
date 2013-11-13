@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
 import javax.sql.DataSource;
-import java.sql.SQLException;
+import java.sql.*;
 
 /**
  * @author David Gilmore

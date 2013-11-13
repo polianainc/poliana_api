@@ -224,33 +224,7 @@ INSERT OVERWRITE TABLE bills.votes_flat_nays_thomas PARTITION (year, month) SELE
 INSERT OVERWRITE TABLE bills.votes_flat_not_voting_thomas PARTITION (year, month) SELECT * FROM bills.view_votes_flatten_novote_thomas_ids;
 INSERT OVERWRITE TABLE bills.votes_flat_present_thomas PARTITION (year, month) SELECT * FROM bills.view_votes_flatten_present_thomas_ids;
 
-CREATE VIEW bills.view_votes_flat_yeas (
-    vote_id,
-    date,
-    yea_display_name,
-    yea_first_name,
-    yea_id,
-    yea_last_name,
-    yea_party,
-    yea_state,
-    year,
-    month
-)
-as SELECT
-    v.vote_id,
-    v.date,
-    v.yea_display_name,
-    v.yea_first_name,
-    l.bioguide_id,
-    v.yea_last_name,
-    v.yea_party,
-    v.yea_state,
-    v.year,
-    v.month
-FROM bills.votes_flat_yeas_thomas v JOIN entities.legislators l
-    ON v.yea_id = l.lis_id;
-
-CREATE TABLE bills.votes_flat_yeas (
+CREATE TABLE bills.votes_flat_yeas_thomas (
     vote_id STRING,
     date STRING,
     yea_display_name STRING,
@@ -262,6 +236,51 @@ CREATE TABLE bills.votes_flat_yeas (
 )
 PARTITIONED BY (year INT, month INT)
 STORED AS SEQUENCEFILE;
+
+CREATE VIEW bills.view_house_votes_flat_yeas (
+    vote_id,
+    date,
+    yea_display_name,
+    yea_first_name,
+    yea_bioguide_id,
+    yea_last_name,
+    yea_party,
+    yea_state,
+    year,
+    month
+)
+as SELECT * FROM bills.votes_flat_yeas_thomas WHERE SUBSTR(vote_id, 0, 1) = 'h';
+
+CREATE EXTERNAL TABLE bills.senate_votes_flat_yeas_external LIKE bills.house_votes_flat_yeas_external
+LOCATION 's3n://polianaprod/legislation/senate_votes_yeas_flat/';
+
+nohup hive -e 'INSERT OVERWRITE TABLE bills.house_votes_flat_yeas_external PARTITION (year, month) SELECT * FROM bills.view_house_votes_flat_yeas;'
+
+CREATE VIEW bills.view_senate_votes_flat_yeas (
+    vote_id,
+    date,
+    yea_display_name,
+    yea_first_name,
+    yea_bioguide_id,
+    yea_last_name,
+    yea_party,
+    yea_state,
+    year,
+    month
+)
+as SELECT * FROM bills.votes_flat_yeas_thomas WHERE SUBSTR(vote_id, 0, 1) = 's';
+
+CREATE EXTERNAL TABLE bills.senate_votes_flat_yeas_external LIKE bills.house_votes_flat_yeas_external
+LOCATION 's3n://polianaprod/legislation/senate_votes_yeas_flat/';
+
+nohup hive -e 'INSERT OVERWRITE TABLE bills.house_votes_flat_yeas_external PARTITION (year, month) SELECT * FROM bills.view_house_votes_flat_yeas;'
+
+nohup hive -e 'INSERT OVERWRITE TABLE bills.house_votes_flat_yeas_external PARTITION (year, month) SELECT * FROM bills.view_house_votes_flat_yeas;'
+
+CREATE EXTERNAL TABLE bills.senate_votes_flat_yeas_external LIKE bills.house_votes_flat_yeas_external
+LOCATION 's3n://polianaprod/legislation/senate_votes_yeas_flat/';
+
+nohup hive -e 'INSERT OVERWRITE TABLE bills.senate_votes_flat_yeas_external PARTITION (year, month) SELECT * FROM bills.view_senate_votes_flat_yeas;'
 
 CREATE EXTERNAL TABLE bills.votes_flat_yeas_external (
     vote_id STRING,
@@ -335,7 +354,6 @@ CREATE VIEW bills.view_votes_flat_not_voting (
     date,
     not_voting_display_name,
     not_voting_first_name,
-    not_voting_id,
     not_voting_last_name,
     not_voting_party,
     not_voting_state,

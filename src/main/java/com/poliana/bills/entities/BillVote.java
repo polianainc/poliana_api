@@ -8,13 +8,22 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class BillVote {
 
     @Id
+    private String id;
     private String bioguideId;
-
     private String displayName;
     private String firstName;
     private String lastName;
     private String party;
     private String state;
+    private int district;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getBioguideId() {
         return bioguideId;
@@ -62,5 +71,13 @@ public class BillVote {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public int getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(int district) {
+        this.district = district;
     }
 }

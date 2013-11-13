@@ -1,1 +1,0 @@
-SELECT * FROM ${hiveconf:table} LIMIT ${hiveconf:limit};

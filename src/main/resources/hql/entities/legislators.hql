@@ -1,4 +1,4 @@
-CREATE EXTERNAL TABLE SE (
+CREATE EXTERNAL TABLE entities.legislators_json_external (
     bio STRUCT<
         gender: STRING,
         birthday: STRING,
@@ -47,7 +47,7 @@ ROW FORMAT SERDE 'com.proofpoint.hive.serde.JsonSerde'
  WITH SERDEPROPERTIES ('errors.ignore' = 'true')
 LOCATION 's3n://polianatest/full/legislators/';
 
-CREATE TABLE entities.legislators_flat_terms (
+CREATE EXTERNAL TABLE entities.legislators_flat_terms_external (
     first_name STRING,
     last_name STRING,
     official_full STRING,
@@ -69,12 +69,23 @@ CREATE TABLE entities.legislators_flat_terms (
     gender STRING,
     birthday STRING,
     religion STRING,
-    term_start STRING,
-    term_end STRING,
+    term_start INT,
+    term_end INT,
     term_state STRING,
     term_type STRING,
+    district STRING,
     term_state_rank STRING
-);
+)
+LOCATION 's3n://polianaprod/entities/legislators_flat_terms/';
+
+CREATE EXTERNAL TABLE entities.senate_terms_external LIKE entities.legislators_flat_terms_external
+ LOCATION 's3n://polianaprod/entities/senate_terms/';
+
+CREATE EXTERNAL TABLE entities.house_terms_external LIKE entities.legislators_flat_terms_external
+ LOCATION 's3n://polianaprod/entities/house_terms/';
+
+nohup hive -e 'INSERT OVERWRITE TABLE entities.senate_terms_external SELECT * FROM entities.view_senate_terms;INSERT OVERWRITE TABLE entities.house_terms_external SELECT * FROM entities.view_house_terms;'
+nohup hive -e 'INSERT OVERWRITE TABLE entities.house_terms_external SELECT * FROM entities.view_house_terms;'
 
 CREATE TABLE entities.legislators (
     first_name STRING,
@@ -98,7 +109,8 @@ CREATE TABLE entities.legislators (
     gender STRING,
     birthday STRING,
     religion STRING
-);
+)
+STORED AS SEQUENCEFILE;
 
 CREATE EXTERNAL TABLE entities.legislators_external (
     first_name STRING,
@@ -125,7 +137,7 @@ CREATE EXTERNAL TABLE entities.legislators_external (
 )
 LOCATION 's3n://polianaprod/entities/legislators_flat/';
 
-CREATE VIEW entities.view_legislators_flat_terms (
+CREATE VIEW entities.view_senate_terms (
     first_name,
     last_name,
     official_full,
@@ -151,37 +163,41 @@ CREATE VIEW entities.view_legislators_flat_terms (
     term_end,
     term_state,
     term_type,
+    district,
     term_state_rank
 )
-as SELECT
-    name.first,
-    name.last,
-    name.official_full,
-    term.party,
-    id.thomas,
-    id.bioguide,
-    id.opensecrets,
-    id.fec,
-    id.votesmart,
-    id.ballotpedia,
-    id.lis,
-    id.wikipedia,
-    id.govtrack,
-    id.maplight,
-    id.icpsr,
-    id.cspan,
-    id.house_history,
-    id.washington_post,
-    bio.gender,
-    bio.birthday,
-    bio.religion,
-    term.start,
-    term.term_end,
-    term.state,
-    term.type,
-    term.state_rank
-FROM entities.legislators_json_external
-LATERAL VIEW explode(terms) terms AS term;
+as SELECT * FROM entities.legislators_flat_terms_external WHERE term_type = 'sen';
+
+CREATE VIEW entities.view_house_terms (
+    first_name,
+    last_name,
+    official_full,
+    party,
+    thomas_id,
+    bioguide_id,
+    opensecrets_id,
+    fec_id,
+    votesmart_id,
+    ballotpedia,
+    lis_id,
+    wikipedia_id,
+    govtrack_id,
+    maplight_id,
+    icpsr_id,
+    cspan_id,
+    house_history_id,
+    washington_post_id,
+    gender,
+    birthday,
+    religion,
+    term_start,
+    term_end,
+    term_state,
+    term_type,
+    district,
+    term_state_rank
+)
+as SELECT * FROM entities.legislators_flat_terms_external WHERE term_type = 'rep';
 
 CREATE VIEW entities.view_legislators (
     first_name,
@@ -231,5 +247,5 @@ as SELECT DISTINCT
 FROM entities.legislators_json_external;
 
 
-INSERT OVERWRITE TABLE entities.legislators_flat_terms SELECT * FROM entities.view_legislators_flat_terms;
+INSERT OVERWRITE TABLE entities.legislators_flat_terms_external SELECT * FROM entities.view_legislators_flat_terms;
 INSERT OVERWRITE TABLE entities.legislators SELECT * FROM entities.view_legislators;

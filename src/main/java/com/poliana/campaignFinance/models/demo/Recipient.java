@@ -1,4 +1,4 @@
-package com.poliana.campaignFinance.models;
+package com.poliana.campaignFinance.models.demo;
 
 public class Recipient {
     private String industryId;

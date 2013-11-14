@@ -17,8 +17,8 @@ public class EntitiesHadoopRepo {
 
 
     public List<String> bioguideIds() {
-        return impalaTemplate.queryForList("SELECT distinct(bioguide_id) FROM " +
-                "entities.legislators_flat_terms", String.class);
+        String query = "SELECT distinct(bioguide_id) FROM entities.legislators_flat_terms";
+        return impalaTemplate.queryForList(query, String.class);
     }
 
     public List<String> senateBioguideIdsByYear(int year) {
@@ -27,6 +27,11 @@ public class EntitiesHadoopRepo {
                 " BETWEEN year(from_unixtime(term_start)) AND year(from_unixtime(term_start)) + 2" +
                 " AND bioguide_id IS NOT NULL",
                 String.class);
+    }
+
+    public List<Legislator> getAllLegistlators() {
+        String query = "SELECT * FROM entities.legislators_flat_terms";
+        return impalaTemplate.query(query, new LegislatorMapper());
     }
 
     public List<Industry> getIndustries() {

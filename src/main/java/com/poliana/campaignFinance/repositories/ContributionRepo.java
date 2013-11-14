@@ -1,10 +1,8 @@
 package com.poliana.campaignFinance.repositories;
 
 import com.poliana.campaignFinance.mappers.*;
-import com.poliana.campaignFinance.models.Bill;
-import com.poliana.campaignFinance.models.Recipient;
+import com.poliana.campaignFinance.models.demo.Recipient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResourceLoader;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import com.poliana.campaignFinance.entities.*;

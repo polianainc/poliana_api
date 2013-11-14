@@ -3,9 +3,9 @@ package com.poliana.jobs.batch;
 import com.poliana.entities.entities.Legislator;
 import org.springframework.stereotype.Component;
 import com.poliana.jobs.JobBase;
-import com.poliana.campaignFinance.models.IndustryContributor;
-import com.poliana.campaignFinance.models.IndustryInfl;
-import com.poliana.campaignFinance.models.InfluenceGraph;
+import com.poliana.campaignFinance.models.demo.IndustryContributor;
+import com.poliana.campaignFinance.models.demo.IndustryInfl;
+import com.poliana.campaignFinance.models.demo.InfluenceGraph;
 
 import java.util.List;
 

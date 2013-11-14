@@ -1,6 +1,6 @@
 package com.poliana.campaignFinance.mappers;
 
-import com.poliana.campaignFinance.models.Bill;
+import com.poliana.campaignFinance.models.demo.Bill;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

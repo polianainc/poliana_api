@@ -12,6 +12,7 @@ public class BillVotes {
 
     @Id
     private String id;
+
     private String voteId;
     private String billId;
     private int yeaTotal;

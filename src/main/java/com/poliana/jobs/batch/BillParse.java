@@ -3,7 +3,7 @@ package com.poliana.jobs.batch;
 
 import org.springframework.stereotype.Component;
 import com.poliana.jobs.JobBase;
-import com.poliana.campaignFinance.models.InfluenceGraph;
+import com.poliana.campaignFinance.models.demo.InfluenceGraph;
 
 @Component
 public class BillParse extends JobBase {

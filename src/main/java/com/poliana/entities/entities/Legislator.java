@@ -8,13 +8,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Legislator {
 
     @Id
-    private String bioguideId;
+    private String id;
 
     private String firstName;
     private String lastName;
     private String officialFull;
     private String party;
     private String thomasId;
+    private String bioguideId;
     private String opensecretsId;
     private String fecId;
     private String votesmartId;
@@ -24,19 +25,25 @@ public class Legislator {
     private String govtrackId;
     private String maplightId;
     private String icsprId;
-    private String cspan;
+    private String cspanId;
     private String houseHistoryId;
     private String washingtonPostId;
     private String gender;
     private String birthday;
     private String religion;
+    private int termStart;
+    private int termEnd;
+    private String termState;
+    private String termType;
+    private int district;
+    private String termStateRank;
 
-    public String getBioguideId() {
-        return bioguideId;
+    public String getId() {
+        return id;
     }
 
-    public void setBioguideId(String bioguideId) {
-        this.bioguideId = bioguideId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getFirstName() {
@@ -77,6 +84,14 @@ public class Legislator {
 
     public void setThomasId(String thomasId) {
         this.thomasId = thomasId;
+    }
+
+    public String getBioguideId() {
+        return bioguideId;
+    }
+
+    public void setBioguideId(String bioguideId) {
+        this.bioguideId = bioguideId;
     }
 
     public String getOpensecretsId() {
@@ -151,12 +166,12 @@ public class Legislator {
         this.icsprId = icsprId;
     }
 
-    public String getCspan() {
-        return cspan;
+    public String getCspanId() {
+        return cspanId;
     }
 
-    public void setCspan(String cspan) {
-        this.cspan = cspan;
+    public void setCspanId(String cspanId) {
+        this.cspanId = cspanId;
     }
 
     public String getHouseHistoryId() {
@@ -197,5 +212,63 @@ public class Legislator {
 
     public void setReligion(String religion) {
         this.religion = religion;
+    }
+
+    public int getTermStart() {
+        return termStart;
+    }
+
+    public void setTermStart(int termStart) {
+        this.termStart = termStart;
+    }
+
+    public int getTermEnd() {
+        return termEnd;
+    }
+
+    public void setTermEnd(int termEnd) {
+        this.termEnd = termEnd;
+    }
+
+    public String getTermState() {
+        return termState;
+    }
+
+    public void setTermState(String termState) {
+        this.termState = termState;
+    }
+
+    public String getTermType() {
+        return termType;
+    }
+
+    public void setTermType(String termType) {
+        this.termType = termType;
+    }
+
+    public int getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(int district) {
+        this.district = district;
+    }
+
+    public void setDistrict(String district) {
+        try {
+            this.district = Integer.getInteger(district).intValue();
+        }
+        catch (NullPointerException e) {
+            this.district = 0;
+        }
+
+    }
+
+    public String getTermStateRank() {
+        return termStateRank;
+    }
+
+    public void setTermStateRank(String termStateRank) {
+        this.termStateRank = termStateRank;
     }
 }

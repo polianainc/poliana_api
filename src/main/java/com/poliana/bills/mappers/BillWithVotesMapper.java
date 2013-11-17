@@ -32,7 +32,7 @@ public class BillWithVotesMapper implements RowMapper<Bill> {
         billVotes.setYear(rs.getInt("year"));
         billVotes.setMonth(rs.getInt("month"));
 
-        bill.setVotes(billVotes);
+
         bill.setVoteId(rs.getString("vote_id"));
         bill.setOfficialTitle(rs.getString("official_title"));
         bill.setPopularTitle(rs.getString("popular_title"));
@@ -40,9 +40,9 @@ public class BillWithVotesMapper implements RowMapper<Bill> {
         bill.setSponsor(rs.getString("sponsor_name"));
         bill.setSponsorState(rs.getString("sponsor_state"));
         bill.setSponsorId(rs.getString("sponsor_id"));
-        bill.setCosponsorIdsPipeDelim(rs.getString("cosponsor_ids"));
+        bill.setCosponsorIdsDelim(rs.getString("cosponsor_ids"));
         bill.setTopSubject(rs.getString("top_subject"));
-        bill.setSubjectsPipeDelim(rs.getString("subjects"));
+        bill.setSubjectsDelim(rs.getString("subjects"));
         bill.setSummary(rs.getString("summary"));
         bill.setIntroducedAt(rs.getInt("introduced_at"));
         bill.setHousePassageResult(rs.getString("house_passage_result"));

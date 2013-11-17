@@ -1,18 +1,23 @@
 package com.poliana.jobs;
 
+import com.poliana.bills.entities.Bill;
 import com.poliana.bills.entities.VoteGT.VoteGT;
+import com.poliana.bills.models.Vote;
+import com.poliana.bills.repositories.BillCRUDRepo;
 import com.poliana.bills.repositories.BillHadoopRepo;
-import com.poliana.bills.repositories.VoteRepo;
-import com.poliana.campaignFinance.entities.IndPartyTotals;
-import com.poliana.campaignFinance.entities.IndToPolContrTotals;
-import com.poliana.campaignFinance.repositories.ContributionRepo;
-import com.poliana.entities.entities.Legislator;
+import com.poliana.bills.repositories.VoteGTRepo;
+import com.poliana.bills.repositories.VotesCRUDRepo;
+import com.poliana.campaignFinance.repositories.ContributionHadoopRepo;
+import com.poliana.campaignFinance.repositories.IndustryCRUDRepo;
+import com.poliana.entities.models.Industry;
 import com.poliana.entities.repositories.EntitiesHadoopRepo;
 import com.poliana.entities.repositories.LegislatorsCRUDRepo;
+import com.poliana.jobs.batch.MapBillRelationships;
 import com.poliana.jobs.batch.GenerateTestData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -25,32 +30,39 @@ public class OnStart implements ApplicationListener<ContextRefreshedEvent> {
     @Autowired
     private BillHadoopRepo billHadoopRepo;
     @Autowired
+    private BillCRUDRepo billCRUDRepo;
+    @Autowired
     private EntitiesHadoopRepo entitiesHadoopRepo;
     @Autowired
-    private ContributionRepo contributionRepo;
+    private ContributionHadoopRepo contributionHadoopRepo;
     @Autowired
-    private VoteRepo voteRepo;
+    private VoteGTRepo voteGTRepo;
+    @Autowired
+    private VotesCRUDRepo votesCRUDRepo;
     @Autowired
     private LegislatorsCRUDRepo legislatorsCRUDRepo;
+    @Autowired
+    private MapBillRelationships gtProcess;
+    @Autowired
+    private IndustryCRUDRepo industryCRUDRepo;
+    @Autowired
+    private MongoTemplate mongoTemplate;
+
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
 
-        List<IndToPolContrTotals> industryContributions =
-                contributionRepo.topIndToPolContrTotalsByYearMonth(2012, 1, 5, "total");
-        List<IndToPolContrTotals> industryContributionsByIndustryId =
-                contributionRepo.topIndToPolContrTotalsByIndustryYearMonth("X1200", 2012, 1, 5, "total");
+//        System.out.println("Loading bills from impala");
+//        List<Bill> bills = billHadoopRepo.billsHavingVotesByCongress(113, 0);
+//        System.out.println("Processing bills");
+//        billCRUDRepo.save(gtProcess.processBills(bills));
+        gtProcess.mapVotesToBills();
 
-        List<IndToPolContrTotals> indToPolContrTotalsByBioguideId =
-                contributionRepo.topIndToPolContrTotalsByBioguideYearMonth("G000225", 2012, 1, 5, "total");
-        List<IndPartyTotals> partyIndustryTotals =
-                contributionRepo.indPartyContrTotalsByIndustryYearMonth("X1200", 2012, 1);
-        List<VoteGT> votes = voteRepo.findAll();
+//        List<Industry> industries = entitiesHadoopRepo.getIndustries();
+//        industryCRUDRepo.save(industries);
 
-//        List<Legislator> legislators = entitiesHadoopRepo.getAllLegistlators();
-//        legislatorsCRUDRepo.save(legislators);
-
-//        List<Legislator> legislator = legislatorsCRUDRepo.findByLisId("S307");
+//        List<VoteGT> voteGTs = voteGTRepo.findAllByCongress(113);
+//        votesCRUDRepo.save(gtProcess.processVotes(voteGTs));
 
         System.out.println("yay!");
     }

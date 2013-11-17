@@ -1,5 +1,8 @@
 package com.poliana.config;
 
+import com.google.code.morphia.Datastore;
+import com.google.code.morphia.Morphia;
+import com.mongodb.DB;
 import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
 import com.mongodb.WriteConcern;
@@ -42,6 +45,22 @@ public class MongoConfig extends AbstractMongoConfiguration {
     @Bean
     public MongoTemplate mongoTemplate() throws Exception {
         return new MongoTemplate(mongo(), env.getProperty("mongo.dbname"), getUserCredentials());
+    }
+
+    @Bean
+    public DB mongoDb() throws Exception {
+        DB db =  mongo().getDB(env.getProperty("mongo.dbname"));
+        db.authenticate(env.getProperty("mongo.username"),env.getProperty("mongo.password").toCharArray());
+        return db;
+    }
+
+    @Bean
+    public Datastore mongoStore() throws Exception {
+        return new Morphia().createDatastore(
+                mongo(),
+                env.getProperty("mongo.dbname"),
+                env.getProperty("mongo.username"),
+                env.getProperty("mongo.password").toCharArray());
     }
 
     @Override

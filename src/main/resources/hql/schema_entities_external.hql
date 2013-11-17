@@ -110,3 +110,18 @@ CREATE EXTERNAL TABLE IF NOT EXISTS entities_external.senate_terms LIKE entities
 
 CREATE EXTERNAL TABLE IF NOT EXISTS entities_external.house_terms LIKE entities_external.legislators_flat_terms
  LOCATION 's3n://polianaprod/entities/house_terms/';
+
+CREATE EXTERNAL TABLE entities_external.recip_id_to_bioguide_ids (
+    bioguide_id STRING,
+    recipient_ext_id STRING,
+    chamber STRING,
+    state_name STRING,
+    first_name STRING,
+    last_name STRING,
+    party STRING,
+    in_office STRING,
+    website STRING,
+    contact_form STRING
+)
+ROW FORMAT SERDE 'com.bizo.hive.serde.csv.CSVSerde'
+LOCATION 's3n://polianaprod/entities/recip_ids_to_bioguide/';

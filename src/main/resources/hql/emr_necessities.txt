@@ -22,7 +22,7 @@ key = Key(mybucket)
   --name "Hive cluster"    \
   --hive-interactive \
 
-
+sed -i 's/old_link/new_link/g' *
 
 ./elastic-mapreduce --create --alive --master-instance-type m1.medium --slave-instance-type m1.medium --num-instances 2 --info '{ami64: "ami-29d49640", amiHvm64: "ami-09d69460", hadoopVersion: "2.0.2", hadoopConfigurationVersion: "3.0"}' --ssh --bootstrap-action s3://beta.elasticmapreduce/bootstrap-actions/setup-impala --key-pair cloudera
 

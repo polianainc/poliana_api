@@ -89,9 +89,23 @@ CREATE TABLE IF NOT EXISTS entities.senate_terms LIKE entities.legislators_flat_
 
 CREATE TABLE IF NOT EXISTS entities.house_terms LIKE entities.legislators_flat_terms;
 
+CREATE TABLE entities.recip_id_to_bioguide_ids (
+    bioguide_id STRING,
+    recipient_ext_id STRING,
+    chamber STRING,
+    state_name STRING,
+    first_name STRING,
+    last_name STRING,
+    party STRING,
+    in_office STRING,
+    website STRING,
+    contact_form STRING
+);
+
 INSERT OVERWRITE TABLE entities.candidate_ids SELECT * FROM entities_external.candidate_ids;
 INSERT OVERWRITE TABLE entities.congressional_committee_ids SELECT * FROM entities_external.congressional_committee_ids;
 INSERT OVERWRITE TABLE entities.legislators SELECT * FROM entities_external.legislators;
 INSERT OVERWRITE TABLE entities.legislators_flat_terms SELECT * FROM entities_external.legislators_flat_terms;
 INSERT OVERWRITE TABLE entities.senate_terms SELECT * FROM entities_external.senate_terms;
 INSERT OVERWRITE TABLE entities.house_terms SELECT * FROM entities_external.house_terms;
+INSERT OVERWRITE TABLE entities.recip_id_to_bioguide_ids SELECT * FROM entities_external.recip_id_to_bioguide_ids;

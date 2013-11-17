@@ -1,4 +1,4 @@
-package com.poliana.entities.entities;
+package com.poliana.entities.models;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;

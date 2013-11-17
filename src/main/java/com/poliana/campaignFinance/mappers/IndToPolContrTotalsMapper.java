@@ -13,8 +13,6 @@ import java.sql.SQLException;
 public class IndToPolContrTotalsMapper implements RowMapper<IndToPolContrTotals> {
     public IndToPolContrTotals mapRow(ResultSet rs, int rowNum) throws SQLException {
         IndToPolContrTotals totals = new IndToPolContrTotals();
-        totals.setBioguideId(rs.getString("bioguide_id"));
-        totals.setParty(rs.getString("party"));
         totals.setIndustryId(rs.getString("industry_id"));
         totals.setContributionsCount(rs.getInt("contributions_count"));
         totals.setContributionsCount(rs.getInt("contributions_total"));

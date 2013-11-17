@@ -1,4 +1,5 @@
-package com.poliana.bills.entities;
+package com.poliana.bills.models;
+
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -6,15 +7,19 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.poliana.bills.models.Vote;
+import com.poliana.entities.models.Legislator;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+/**
+ * @author David Gilmore
+ * @date 11/14/13
+ */
 @SuppressWarnings("serial")
-@Document(collection = "bills_govtrack")
+@Document(collection = "bills")
 public class Bill implements Serializable
 {
     @Id
@@ -27,10 +32,10 @@ public class Bill implements Serializable
     private String officialTitle;
     private String popularTitle;
     private String shortTitle;
-    private String sponsor;
-    private String sponsorState;
-    private String sponsorId;
-    private List<String> cosponsorIds;
+    @DBRef
+    private Legislator sponsor;
+    @DBRef
+    private List<Legislator> cosponsors;
     private String topSubject;
     private List<String> subjects;
     private String summary;
@@ -108,53 +113,22 @@ public class Bill implements Serializable
         this.shortTitle = shortTitle;
     }
 
-    public String getSponsor() {
+    public Legislator getSponsor() {
         return sponsor;
     }
 
-    public void setSponsor(String sponsor) {
+    public void setSponsor(Legislator sponsor) {
         this.sponsor = sponsor;
     }
 
-    public String getSponsorState() {
-        return sponsorState;
+
+
+    public List<Legislator> getCosponsors() {
+        return cosponsors;
     }
 
-    public void setSponsorState(String sponsorState) {
-        this.sponsorState = sponsorState;
-    }
-
-    public String getSponsorId() {
-        return sponsorId;
-    }
-
-    public void setSponsorId(String sponsorId) {
-        this.sponsorId = sponsorId;
-    }
-
-    public List<String> getCosponsorIds() {
-        return cosponsorIds;
-    }
-
-    public void setCosponsorIds(List<String> cosponsorIds) {
-        this.cosponsorIds = cosponsorIds;
-    }
-
-    public void setCosponsorIdsJson(String cosponsorIds) {
-        try {
-            JSONArray jsonArray = new JSONArray(cosponsorIds);
-            List<String> list = new LinkedList<String>();
-            for (int i=0; i<jsonArray.length(); i++) {
-                list.add( jsonArray.getString(i) );
-            }
-            this.cosponsorIds = list;
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void setCosponsorIdsDelim(String cosponsorIds) {
-        this.cosponsorIds = new ArrayList<>(Arrays.asList(cosponsorIds.split("\u0002")));
+    public void setCosponsors(List<Legislator> cosponsors) {
+        this.cosponsors = cosponsors;
     }
 
     public String getTopSubject() {
@@ -334,3 +308,4 @@ public class Bill implements Serializable
         this.month = month;
     }
 }
+

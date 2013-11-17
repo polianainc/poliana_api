@@ -10,11 +10,11 @@ public class IndToPolContrTotals {
 
     @Id
     private String id;
-    private String bioguideId;
-    private String party;
+
     private String industryId;
     private int contributionsCount;
     private int contributionTotal;
+    private int timeStamp;
     private int year;
     private int month;
 
@@ -24,22 +24,6 @@ public class IndToPolContrTotals {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getBioguideId() {
-        return bioguideId;
-    }
-
-    public void setBioguideId(String bioguideId) {
-        this.bioguideId = bioguideId;
-    }
-
-    public String getParty() {
-        return party;
-    }
-
-    public void setParty(String party) {
-        this.party = party;
     }
 
     public String getIndustryId() {
@@ -64,6 +48,14 @@ public class IndToPolContrTotals {
 
     public void setContributionTotal(int contributionTotal) {
         this.contributionTotal = contributionTotal;
+    }
+
+    public int getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(int timeStamp) {
+        this.timeStamp = timeStamp;
     }
 
     public int getYear() {

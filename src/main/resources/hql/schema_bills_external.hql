@@ -132,6 +132,28 @@ ROW FORMAT SERDE 'com.proofpoint.hive.serde.JsonSerde'
  WITH SERDEPROPERTIES ('errors.ignore' = 'true')
  LOCATION 's3n://polianaprod/legislation/amendments_json/';
 
+CREATE TABLE IF NOT EXISTS bills_external.amendments_json_embedded (
+    actions STRING,
+    amendment_id STRING,
+    amendment_type STRING,
+    amends_amendment STRING,
+    amends_bill STRING,
+    amends_treaty STRING,
+    chamber STRING,
+    congress STRING,
+    description STRING,
+    house_number INT,
+    introduced_at STRING,
+    number INT,
+    purpose STRING,
+    sponsor STRING,
+    status STRING,
+    status_at STRING,
+    updated_at STRING
+);
+
+
+
 CREATE EXTERNAL TABLE IF NOT EXISTS bills_external.bill_meta_embedded (
     bill_id STRING,
     vote_id STRING,

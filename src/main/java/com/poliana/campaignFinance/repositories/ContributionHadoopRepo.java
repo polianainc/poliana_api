@@ -10,7 +10,7 @@ import com.poliana.campaignFinance.entities.*;
 import java.util.List;
 
 @Repository
-public class ContributionRepo {
+public class ContributionHadoopRepo {
 
     @Autowired
     protected JdbcTemplate hiveTemplate;

@@ -7,7 +7,7 @@ package com.poliana.bills.entities.VoteGT;
 public class Voter {
     private String display_name;
     private String first_name;
-    private String id;
+    private String politician_id;
     private String last_name;
     private String party;
     private String state;
@@ -28,12 +28,12 @@ public class Voter {
         this.first_name = first_name;
     }
 
-    public String getId() {
-        return id;
+    public String getPoliticianId() {
+        return politician_id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setPoliticianId(String politicianId) {
+        this.politician_id = politicianId;
     }
 
     public String getLastName() {

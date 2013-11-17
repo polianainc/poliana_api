@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Calendar;
 
 public class BillMapper implements RowMapper<Bill> {
     public Bill mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -17,11 +18,10 @@ public class BillMapper implements RowMapper<Bill> {
         bill.setSponsor(rs.getString("sponsor_name"));
         bill.setSponsorState(rs.getString("sponsor_state"));
         bill.setSponsorId(rs.getString("sponsor_id"));
-        bill.setCosponsorIdsJson(rs.getString("cosponsor_ids"));
+        bill.setCosponsorIdsDelim(rs.getString("cosponsor_ids"));
         bill.setTopSubject(rs.getString("top_subject"));
-        bill.setSubjectsJson(rs.getString("subjects"));
+        bill.setSubjectsDelim(rs.getString("subjects"));
         bill.setSummary(rs.getString("summary"));
-        bill.setIntroducedAt(rs.getInt("introduced_at"));
         bill.setHousePassageResult(rs.getString("house_passage_result"));
         bill.setHousePassageResultAt(rs.getInt("house_passage_result_at"));
         bill.setSenateClotureResult(rs.getString("senate_cloture_result"));
@@ -34,6 +34,17 @@ public class BillMapper implements RowMapper<Bill> {
         bill.setEnactedAt(rs.getInt("enacted_at"));
         bill.setCongress(rs.getInt("congress"));
         bill.setBillType(rs.getString("bill_type"));
+
+
+        int timeStamp = rs.getInt("introduced_at");
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis((long)timeStamp*1000L);
+
+        bill.setIntroducedAt(timeStamp);
+        bill.setYear(cal.get(Calendar.YEAR));
+        bill.setMonth(cal.get(Calendar.MONTH+1));
+
         return bill;
     }
 }

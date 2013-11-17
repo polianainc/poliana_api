@@ -2,13 +2,13 @@ package com.poliana.bills.repositories;
 
 import com.poliana.bills.entities.Bill;
 import com.poliana.bills.entities.BillAction;
+import com.poliana.bills.models.Vote;
 import com.poliana.bills.mappers.*;
 import com.poliana.bills.entities.BillVotes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.sql.ResultSet;
 import java.util.List;
 
 /**
@@ -94,6 +94,58 @@ public class BillHadoopRepo {
                 "bills.bill_meta_embedded b JOIN bills.votes_by_bill_embedded v " +
                 "ON b.vote_id = v.vote_id WHERE congress = " + congress + lim,
                 new BillWithVotesMapper());
+    }
+
+    /**
+     * Returns a list of Bill objects which have votes from the given congress.
+     * Bill meta alone is populated.
+     * Selects from a join of bills.bill_meta_embedded.
+     * and bills.votes_by_bill_embedded.
+     * Impala is data source.
+     *
+     * @param congress  {int} Query parameter to the congress field.
+     * @param limit     {int} Specify limit. A limit of 0 returns all records
+     *
+     * @see             Bill
+     * @see             BillMapper
+     */
+    public List<Bill> billsHavingVotesByCongress(int congress, int limit) {
+        String lim = "";
+        if (limit > 0)
+            lim = " LIMIT " + limit;
+
+        return impalaTemplate.query("" +
+                "SELECT * FROM " +
+                "bills.bill_meta_embedded b JOIN bills.votes_by_bill v " +
+                "ON b.vote_id = v.vote_id WHERE congress = " + congress + lim,
+                new BillMapper());
+    }
+
+
+    /**
+     * Returns a list of Bill objects which have votes from the given congress.
+     * Bill meta alone is populated.
+     * Selects from a join of bills.bill_meta_embedded.
+     * and bills.votes_by_bill_embedded.
+     * Impala is data source.
+     *
+     * @param congress  {int} Query parameter to the congress field.
+     * @param limit     {int} Specify limit. A limit of 0 returns all records
+     *
+     * @see             Bill
+     * @see             BillMapper
+     */
+    public List<Bill> billsHavingVotesByCongressChamber(int congress, int limit, String chamber) {
+        String lim = "";
+        if (limit > 0)
+            lim = " LIMIT " + limit;
+
+        return impalaTemplate.query("" +
+                "SELECT * FROM " +
+                "bills.bill_meta_embedded b JOIN bills.votes_by_bill v " +
+                "ON b.vote_id = v.vote_id WHERE congress = " + congress +
+                " AND chamber = \'" + chamber + "\'" + lim,
+                new BillMapper());
     }
 
     /**
@@ -266,7 +318,7 @@ public class BillHadoopRepo {
         if(bills.size() > 1)
             System.out.println("hello there");
         for (Bill bill : bills) {
-            BillVotes votes = bill.getVotes();
+            Vote votes = bill.getVotes();
             int tmp = votes.getYeaTotal() + votes.getNayTotal() +
                     votes.getNotVotingTotal() + votes.getPresentTotal();
             if (tmp > size) {

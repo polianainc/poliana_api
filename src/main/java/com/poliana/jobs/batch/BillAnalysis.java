@@ -1,6 +1,6 @@
 package com.poliana.jobs.batch;
 
-import com.poliana.entities.entities.Legislator;
+import com.poliana.entities.models.Legislator;
 import org.springframework.stereotype.Component;
 import com.poliana.jobs.JobBase;
 import com.poliana.campaignFinance.models.demo.IndustryContributor;
@@ -16,9 +16,9 @@ public class BillAnalysis extends JobBase {
 
     public InfluenceGraph billTopList(String billId) {
 
-        contributionService.setIndustryNameMap();
-        contributionService.setCatNameMap();
-        contributionService.setPoliticianMap();
+        DEMOContributionService.setIndustryNameMap();
+        DEMOContributionService.setCatNameMap();
+        DEMOContributionService.setPoliticianMap();
 
         List<Legislator> legislators = null;
         InfluenceGraph graph = new InfluenceGraph();
@@ -33,16 +33,16 @@ public class BillAnalysis extends JobBase {
         IndustryInfl industryInfl = new IndustryInfl();
 
         //Make data
-        List<IndustryContributor> mainChildren = contributionService.getYeasByDistinctDiff(billId, 15);
+        List<IndustryContributor> mainChildren = DEMOContributionService.getYeasByDistinctDiff(billId, 15);
         industryInfl.setMainChildren((mainChildren));
-        industryInfl.setMainTotal(contributionService.getMainTotal(billId));
-        industryInfl.setMainTouched(contributionService.getMainTouched(billId));
+        industryInfl.setMainTotal(DEMOContributionService.getMainTotal(billId));
+        industryInfl.setMainTouched(DEMOContributionService.getMainTouched(billId));
 
 
-        List<IndustryContributor> offChildren = contributionService.getNaysByDistinctDiff(billId, 15);
+        List<IndustryContributor> offChildren = DEMOContributionService.getNaysByDistinctDiff(billId, 15);
         industryInfl.setOffChildren((offChildren));
-        industryInfl.setOffTotal(contributionService.getOffTotal(billId));
-        industryInfl.setOffTouched(contributionService.getOffTouched(billId));
+        industryInfl.setOffTotal(DEMOContributionService.getOffTotal(billId));
+        industryInfl.setOffTouched(DEMOContributionService.getOffTouched(billId));
 
         graph.setData(industryInfl);
 

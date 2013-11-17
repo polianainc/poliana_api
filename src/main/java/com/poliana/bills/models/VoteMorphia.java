@@ -1,7 +1,13 @@
-package com.poliana.bills.entities;
+package com.poliana.bills.models;
 
+import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Indexed;
+import com.google.code.morphia.annotations.Property;
+import com.google.code.morphia.annotations.Reference;
+import com.poliana.bills.entities.VoteGT.AmendmentRef;
+import com.poliana.bills.entities.VoteGT.BillRef;
 import com.poliana.bills.entities.VoteGT.Nomination;
-import com.poliana.entities.entities.Legislator;
+import com.poliana.entities.models.LegislatorMorphia;
 import org.springframework.data.annotation.Id;
 
 import java.util.List;
@@ -10,37 +16,58 @@ import java.util.List;
  * @author David Gilmore
  * @date 11/13/13
  */
-public class Vote {
+@Entity("votes")
+public class VoteMorphia {
 
     @Id
     private String id;
 
+    @Reference
+    private BillMorphia bill;
+    @Indexed @Property("vote_id")
     private String voteId;
+    @Indexed @Property("bill_id")
+    private String billId;
     private String category;
     private String congress;
     private int date;
+    @Property("bill_info")
+    private BillRef billInfo;
+    private AmendmentRef amendment;
     private Nomination nomination;
     private String number;
     private String question;
     private String requires;
     private String result;
+    @Property("result_text")
     private String resultText;
     private String session;
+    @Property("source_url")
     private String sourceUrl;
     private String subject;
     private String type;
+    @Property("updated_at")
     private String updatedAt;
-    private int yeaTotal;
-    private int nayTotal;
-    private int notVotingTotal;
-    private int presentTotal;
-    private List<Legislator> yeas;
-    private List<Legislator> nays;
-    private List<Legislator> notVoting;
-    private List<Legislator> present;
     private String chamber;
     private int year;
     private int month;
+    @Property("yea_total")
+    private int yeaTotal;
+    @Property("nay_total")
+    private int nayTotal;
+    @Property("not_voting_total")
+    private int notVotingTotal;
+    @Property("present_total")
+    private int presentTotal;
+
+    @Reference
+    private List<LegislatorMorphia> yeas;
+    @Reference
+    private List<LegislatorMorphia> nays;
+    @Reference @Property("not_voting")
+    private List<LegislatorMorphia> notVoting;
+    @Reference
+    private List<LegislatorMorphia> present;
 
     public String getId() {
         return id;
@@ -50,12 +77,28 @@ public class Vote {
         this.id = id;
     }
 
+    public BillMorphia getBill() {
+        return bill;
+    }
+
+    public void setBill(BillMorphia bill) {
+        this.bill = bill;
+    }
+
     public String getVoteId() {
         return voteId;
     }
 
     public void setVoteId(String voteId) {
         this.voteId = voteId;
+    }
+
+    public String getBillId() {
+        return billId;
+    }
+
+    public void setBillId(String billId) {
+        this.billId = billId;
     }
 
     public String getCategory() {
@@ -80,6 +123,22 @@ public class Vote {
 
     public void setDate(int date) {
         this.date = date;
+    }
+
+    public BillRef getBillInfo() {
+        return billInfo;
+    }
+
+    public void setBillInfo(BillRef billInfo) {
+        this.billInfo = billInfo;
+    }
+
+    public AmendmentRef getAmendment() {
+        return amendment;
+    }
+
+    public void setAmendment(AmendmentRef amendment) {
+        this.amendment = amendment;
     }
 
     public Nomination getNomination() {
@@ -170,6 +229,30 @@ public class Vote {
         this.updatedAt = updatedAt;
     }
 
+    public String getChamber() {
+        return chamber;
+    }
+
+    public void setChamber(String chamber) {
+        this.chamber = chamber;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public void setMonth(int month) {
+        this.month = month;
+    }
+
     public int getYeaTotal() {
         return yeaTotal;
     }
@@ -202,59 +285,35 @@ public class Vote {
         this.presentTotal = presentTotal;
     }
 
-    public List<Legislator> getYeas() {
+    public List<LegislatorMorphia> getYeas() {
         return yeas;
     }
 
-    public void setYeas(List<Legislator> yeas) {
+    public void setYeas(List<LegislatorMorphia> yeas) {
         this.yeas = yeas;
     }
 
-    public List<Legislator> getNays() {
+    public List<LegislatorMorphia> getNays() {
         return nays;
     }
 
-    public void setNays(List<Legislator> nays) {
+    public void setNays(List<LegislatorMorphia> nays) {
         this.nays = nays;
     }
 
-    public List<Legislator> getNotVoting() {
+    public List<LegislatorMorphia> getNotVoting() {
         return notVoting;
     }
 
-    public void setNotVoting(List<Legislator> notVoting) {
+    public void setNotVoting(List<LegislatorMorphia> notVoting) {
         this.notVoting = notVoting;
     }
 
-    public List<Legislator> getPresent() {
+    public List<LegislatorMorphia> getPresent() {
         return present;
     }
 
-    public void setPresent(List<Legislator> present) {
+    public void setPresent(List<LegislatorMorphia> present) {
         this.present = present;
-    }
-
-    public String getChamber() {
-        return chamber;
-    }
-
-    public void setChamber(String chamber) {
-        this.chamber = chamber;
-    }
-
-    public int getYear() {
-        return year;
-    }
-
-    public void setYear(int year) {
-        this.year = year;
-    }
-
-    public int getMonth() {
-        return month;
-    }
-
-    public void setMonth(int month) {
-        this.month = month;
     }
 }

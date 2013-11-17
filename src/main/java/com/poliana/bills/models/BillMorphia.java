@@ -1,36 +1,33 @@
-package com.poliana.bills.entities;
+package com.poliana.bills.models;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
+import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Id;
+import com.google.code.morphia.annotations.Reference;
+import com.poliana.entities.models.LegislatorMorphia;
+
 import java.util.List;
 
-import com.poliana.bills.models.Vote;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
+/**
+ * @author David Gilmore
+ * @date 11/16/13
+ */
+@Entity("bills")
+public class BillMorphia {
 
-@SuppressWarnings("serial")
-@Document(collection = "bills_govtrack")
-public class Bill implements Serializable
-{
     @Id
     private String id;
 
-    @DBRef
-    private Vote votes;
+    @Reference
+    private VoteMorphia votes;
     private String billId;
     private String voteId;
     private String officialTitle;
     private String popularTitle;
     private String shortTitle;
-    private String sponsor;
-    private String sponsorState;
-    private String sponsorId;
-    private List<String> cosponsorIds;
+    @Reference
+    private LegislatorMorphia sponsor;
+    @Reference
+    private List<LegislatorMorphia> cosponsors;
     private String topSubject;
     private List<String> subjects;
     private String summary;
@@ -60,20 +57,20 @@ public class Bill implements Serializable
         this.id = id;
     }
 
+    public VoteMorphia getVotes() {
+        return votes;
+    }
+
+    public void setVotes(VoteMorphia votes) {
+        this.votes = votes;
+    }
+
     public String getBillId() {
         return billId;
     }
 
     public void setBillId(String billId) {
         this.billId = billId;
-    }
-
-    public Vote getVotes() {
-        return votes;
-    }
-
-    public void setVotes(Vote votes) {
-        this.votes = votes;
     }
 
     public String getVoteId() {
@@ -108,53 +105,20 @@ public class Bill implements Serializable
         this.shortTitle = shortTitle;
     }
 
-    public String getSponsor() {
+    public LegislatorMorphia getSponsor() {
         return sponsor;
     }
 
-    public void setSponsor(String sponsor) {
+    public void setSponsor(LegislatorMorphia sponsor) {
         this.sponsor = sponsor;
     }
 
-    public String getSponsorState() {
-        return sponsorState;
+    public List<LegislatorMorphia> getCosponsors() {
+        return cosponsors;
     }
 
-    public void setSponsorState(String sponsorState) {
-        this.sponsorState = sponsorState;
-    }
-
-    public String getSponsorId() {
-        return sponsorId;
-    }
-
-    public void setSponsorId(String sponsorId) {
-        this.sponsorId = sponsorId;
-    }
-
-    public List<String> getCosponsorIds() {
-        return cosponsorIds;
-    }
-
-    public void setCosponsorIds(List<String> cosponsorIds) {
-        this.cosponsorIds = cosponsorIds;
-    }
-
-    public void setCosponsorIdsJson(String cosponsorIds) {
-        try {
-            JSONArray jsonArray = new JSONArray(cosponsorIds);
-            List<String> list = new LinkedList<String>();
-            for (int i=0; i<jsonArray.length(); i++) {
-                list.add( jsonArray.getString(i) );
-            }
-            this.cosponsorIds = list;
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void setCosponsorIdsDelim(String cosponsorIds) {
-        this.cosponsorIds = new ArrayList<>(Arrays.asList(cosponsorIds.split("\u0002")));
+    public void setCosponsors(List<LegislatorMorphia> cosponsors) {
+        this.cosponsors = cosponsors;
     }
 
     public String getTopSubject() {
@@ -171,23 +135,6 @@ public class Bill implements Serializable
 
     public void setSubjects(List<String> subjects) {
         this.subjects = subjects;
-    }
-
-    public void setSubjectsJson(String subjects) {
-        try {
-            JSONArray jsonArray = new JSONArray(subjects);
-            List<String> list = new LinkedList<>();
-            for (int i=0; i<jsonArray.length(); i++) {
-                list.add( jsonArray.getString(i) );
-            }
-            this.subjects = list;
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void setSubjectsDelim(String subjects) {
-        this.subjects = new ArrayList<>(Arrays.asList(subjects.split("\u0002")));
     }
 
     public String getSummary() {

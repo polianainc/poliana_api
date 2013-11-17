@@ -3,18 +3,18 @@ package com.poliana.bills.entities.VoteGT;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.List;
-
 /**
  * @author David Gilmore
  * @date 11/12/13
  */
 @SuppressWarnings("serial")
-@Document(collection = "votes_thomas")
+@Document(collection = "votes_govtrack")
 public class VoteGT {
 
     @Id
     private String id;
+    private BillRef bill;
+    private AmendmentRef amendment;
     private String category;
     private String chamber;
     private String congress;
@@ -31,7 +31,7 @@ public class VoteGT {
     private String type;
     private String updated_at;
     private String vote_id;
-    private Voters voters;
+    private Voters votes;
 
     public String getId() {
         return id;
@@ -41,6 +41,22 @@ public class VoteGT {
         this.id = id;
     }
 
+    public BillRef getBill() {
+        return bill;
+    }
+
+    public void setBill(BillRef bill) {
+        this.bill = bill;
+    }
+
+    public AmendmentRef getAmendment() {
+        return amendment;
+    }
+
+    public void setAmendment(AmendmentRef amendment) {
+        this.amendment = amendment;
+    }
+
     public String getCategory() {
         return category;
     }
@@ -48,6 +64,7 @@ public class VoteGT {
     public void setCategory(String category) {
         this.category = category;
     }
+
 
     public String getChamber() {
         return chamber;
@@ -169,11 +186,11 @@ public class VoteGT {
         this.vote_id = vote_id;
     }
 
-    public Voters getVoters() {
-        return voters;
+    public Voters getVotes() {
+        return votes;
     }
 
-    public void setVoters(Voters voters) {
-        this.voters = voters;
+    public void setVotes(Voters votes) {
+        this.votes = votes;
     }
 }

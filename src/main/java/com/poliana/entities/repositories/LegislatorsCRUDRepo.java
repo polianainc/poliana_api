@@ -1,6 +1,6 @@
 package com.poliana.entities.repositories;
 
-import com.poliana.entities.entities.Legislator;
+import com.poliana.entities.models.Legislator;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;

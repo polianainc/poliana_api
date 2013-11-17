@@ -2,6 +2,8 @@ package com.poliana.entities.repositories;
 
 import com.poliana.entities.entities.*;
 import com.poliana.entities.mappers.*;
+import com.poliana.entities.models.Industry;
+import com.poliana.entities.models.Legislator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -34,8 +36,21 @@ public class EntitiesHadoopRepo {
         return impalaTemplate.query(query, new LegislatorMapper());
     }
 
+    public List<Legislator> getAllLegistlators(String condition) {
+        String where = " WHERE " + condition;
+        String query = "SELECT * FROM entities.legislators_flat_terms" + where;
+        return impalaTemplate.query(query, new LegislatorMapper());
+    }
+
+    public List<Legislator> legislatorByLisId(String lisId) {
+        String query = "SELECT * FROM entities.legislators_flat_terms " +
+                "WHERE lis_id = \'" + lisId +"\'";
+
+        return impalaTemplate.query(query, new LegislatorMapper());
+    }
+
     public List<Industry> getIndustries() {
-        return hiveTemplate.query("SELECT * FROM industry_codes", new IndustryMapper());
+        return impalaTemplate.query("SELECT * FROM entities.industry_codes", new IndustryMapper());
     }
 
     public List<CongCommittee> getCongCommitties() {

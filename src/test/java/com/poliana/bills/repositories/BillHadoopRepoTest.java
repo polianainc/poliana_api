@@ -1,8 +1,7 @@
 package com.poliana.bills.repositories;
 
-import com.poliana.bills.entities.Bill;
+import com.poliana.bills.entities.BillPojo;
 import com.poliana.bills.entities.BillVotes;
-import com.poliana.bills.mappers.BillWithVotesMapper;
 import com.poliana.config.StandaloneConfig;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +14,6 @@ import static org.easymock.EasyMock.*;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,7 +43,7 @@ public class BillHadoopRepoTest {
 //        expect(impalaTemplateMock.query("SELECT * FROM bills.bill_meta_embedded b " +
 //                "JOIN bills.votes_by_bill v ON b.vote_id = v.vote_id " +
 //                "WHERE b.bill_id = \'s743-113\'", new BillWithVotesMapper())).
-//                andReturn(new ArrayList<Bill>());
+//                andReturn(new ArrayList<BillPojo>());
 //        replay(impalaTemplateMock);
 //        billHadoopRepo.billsWithVotesByBillId("s743-113");
 //        verify(impalaTemplateMock);
@@ -53,7 +51,7 @@ public class BillHadoopRepoTest {
 
     @Test
     public void testBillsWithVotesByCongress() throws Exception {
-//        List<Bill> billWithVotes = billHadoopRepo.billsWithVotesByCongress(113, 15);
+//        List<BillPojo> billWithVotes = billHadoopRepo.billsWithVotesByCongress(113, 15);
 //        System.out.println("wow");
         assert(true);
     }
@@ -61,13 +59,13 @@ public class BillHadoopRepoTest {
     @Test
     public void testBillMetaByBillId() throws Exception {
         String billId = billIds.get(0);
-        Bill billMeta = billHadoopRepo.billMetaByBillId(billId);
+        BillPojo billMeta = billHadoopRepo.billMetaByBillId(billId);
         Assert.assertEquals(billId, billMeta.getBillId());
     }
 
     @Test
     public void testBillMetaByCongress() throws Exception {
-        List<Bill> billMeta = billHadoopRepo.billMetaByCongress(113, 15);
+        List<BillPojo> billMeta = billHadoopRepo.billMetaByCongress(113, 15);
         Assert.assertEquals(15, billMeta.size());
     }
 

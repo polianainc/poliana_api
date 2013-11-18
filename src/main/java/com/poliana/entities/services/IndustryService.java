@@ -1,11 +1,13 @@
 package com.poliana.entities.services;
 
+import com.poliana.entities.repositories.EntitiesRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.poliana.entities.models.Industry;
+import com.poliana.entities.entities.Industry;
 import com.poliana.entities.repositories.EntitiesHadoopRepo;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -13,15 +15,10 @@ import java.util.Map;
 public class IndustryService {
     @Autowired
     protected EntitiesHadoopRepo entitiesHadoopRepo;
+    @Autowired
+    private EntitiesRepo entitiesRepo;
 
-    public Map<String, String> industryNameMap() {
-        List<Industry> industries = entitiesHadoopRepo.getIndustries();
-        Map<String, String> industryMap = new HashMap<>(industries.size());
-        for(Industry industry : industries) {
-            industryMap.put(industry.getCategoryId(), industry.getIndustry());
-        }
-        return industryMap;
-    }
+    private HashMap<String, Industry> industryMap;
 
     public Map<String, String> catNameMap() {
         List<Industry> industries = entitiesHadoopRepo.getIndustries();
@@ -29,6 +26,20 @@ public class IndustryService {
         for(Industry industry : industries) {
             industryMap.put(industry.getCategoryId(), industry.getName());
         }
+        return industryMap;
+    }
+
+    public void setIndustryMap() {
+        Iterator<Industry> industryList = entitiesRepo.allIndustries();
+        industryMap = new HashMap<String, Industry>(500);
+        while (industryList.hasNext()) {
+            Industry industry = industryList.next();
+            industryMap.put(industry.getCategoryId(),industry);
+        }
+    }
+    public HashMap<String, Industry> getIndustryMap() {
+        if (industryMap == null)
+            setIndustryMap();
         return industryMap;
     }
 }

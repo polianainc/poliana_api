@@ -1,4 +1,4 @@
-package com.poliana.controllers;
+package com.poliana.bills.controllers;
 
 import com.poliana.bills.entities.BillAction;
 import com.poliana.bills.services.BillService;
@@ -8,17 +8,14 @@ import org.springframework.shell.core.CommandMarker;
 import org.springframework.shell.core.annotation.CliAvailabilityIndicator;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.core.annotation.CliOption;
-import org.springframework.stereotype.Component;
-import com.poliana.jobs.batch.BillAnalysis;
 import org.json.JSONObject;
+import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
 
-@Component
+@Controller
 public class BillsController implements CommandMarker {
 
-    @Autowired
-    private BillAnalysis billAnalysis;
     @Autowired
     private BillService billService;
 
@@ -29,13 +26,6 @@ public class BillsController implements CommandMarker {
         return true;
     }
 
-    @CliCommand(value = "bill_overview", help = "Run a job")
-    public String billAnalysis(
-            @CliOption(key = { "bill" }, mandatory = true) final String billId) throws IOException {
-
-        JSONObject jsonObj = new JSONObject( billAnalysis.billTopList(billId) );
-        return jsonObj.toString();
-    }
 
     @CliCommand(value = "actions", help = "Run a job")
     public String actions(

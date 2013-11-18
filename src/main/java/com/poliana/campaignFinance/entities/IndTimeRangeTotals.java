@@ -1,7 +1,11 @@
-package com.poliana.campaignFinance.models;
+package com.poliana.campaignFinance.entities;
 
-import com.poliana.campaignFinance.entities.IndToPolContrTotals;
-import org.springframework.data.annotation.Id;
+import com.google.code.morphia.annotations.Embedded;
+import com.google.code.morphia.annotations.Id;
+import com.google.code.morphia.annotations.Property;
+import com.google.code.morphia.annotations.Reference;
+import com.poliana.entities.entities.Industry;
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
@@ -12,27 +16,64 @@ import java.util.Map;
  * @date 11/15/13
  */
 @SuppressWarnings("serial")
-@Document(collection = "industry_contribution_totals")
-public class IndustryContrTotals {
+@Document(collection = "industry_time_range_totals")
+public class IndTimeRangeTotals {
 
     @Id
-    private String id;
+    private ObjectId id;
 
+    @Reference
+    private Industry industry;
+    private int congress;
+    @Property("range_length")
+    private int rangeLength;
+    @Property("republican_count")
     private int republicanCount;
+    @Property("republican_count")
     private int republicanSum;
+    @Property("democrat_count")
     private int democratCount;
-    private int demoncratSum;
+    @Property("democrat_sum")
+    private int democratSum;
+    @Property("independent_count")
     private int independentCount;
+    @Property("independent_sum")
     private int independentSum;
+    @Reference("top_recipients")
     private List<IndToPolContrTotals> topRecipients;
+    @Embedded("state_averages")
     private Map<String,Integer> stateAverages;
 
-    public String getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(ObjectId id) {
         this.id = id;
+    }
+
+    public Industry getIndustry() {
+        return industry;
+    }
+
+    public void setIndustry(Industry industry) {
+        this.industry = industry;
+    }
+
+    public int getCongress() {
+        return congress;
+    }
+
+    public void setCongress(int congress) {
+        this.congress = congress;
+    }
+
+    public int getRangeLength() {
+        return rangeLength;
+    }
+
+    public void setRangeLength(int rangeLength) {
+        this.rangeLength = rangeLength;
     }
 
     public int getRepublicanCount() {
@@ -59,12 +100,12 @@ public class IndustryContrTotals {
         this.democratCount = democratCount;
     }
 
-    public int getDemoncratSum() {
-        return demoncratSum;
+    public int getDemocratSum() {
+        return democratSum;
     }
 
-    public void setDemoncratSum(int demoncratSum) {
-        this.demoncratSum = demoncratSum;
+    public void setDemocratSum(int democratSum) {
+        this.democratSum = democratSum;
     }
 
     public int getIndependentCount() {

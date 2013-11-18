@@ -1,12 +1,11 @@
-package com.poliana.bills.models;
+package com.poliana.bills.entities;
 
+import com.google.code.morphia.annotations.*;
 import com.poliana.bills.entities.VoteGT.AmendmentRef;
 import com.poliana.bills.entities.VoteGT.BillRef;
 import com.poliana.bills.entities.VoteGT.Nomination;
-import com.poliana.entities.models.Legislator;
+import com.poliana.entities.entities.Legislator;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
@@ -14,19 +13,22 @@ import java.util.List;
  * @author David Gilmore
  * @date 11/13/13
  */
-@SuppressWarnings("serial")
-@Document(collection = "votes")
+@Entity("votes")
 public class Vote {
 
     @Id
     private String id;
 
-    @DBRef
+    @Reference
     private Bill bill;
+    @Indexed @Property("vote_id")
     private String voteId;
+    @Indexed @Property("bill_id")
+    private String billId;
     private String category;
-    private String congress;
+    private int congress;
     private int date;
+    @Embedded("bill_info")
     private BillRef billInfo;
     private AmendmentRef amendment;
     private Nomination nomination;
@@ -34,27 +36,34 @@ public class Vote {
     private String question;
     private String requires;
     private String result;
+    @Property("result_text")
     private String resultText;
     private String session;
+    @Property("source_url")
     private String sourceUrl;
     private String subject;
     private String type;
+    @Property("updated_at")
     private String updatedAt;
     private String chamber;
     private int year;
     private int month;
+    @Property("yea_total")
     private int yeaTotal;
+    @Property("nay_total")
     private int nayTotal;
+    @Property("not_voting_total")
     private int notVotingTotal;
+    @Property("present_total")
     private int presentTotal;
 
-    @DBRef
+    @Reference
     private List<Legislator> yeas;
-    @DBRef
+    @Reference
     private List<Legislator> nays;
-    @DBRef
+    @Reference("not_voting")
     private List<Legislator> notVoting;
-    @DBRef
+    @Reference
     private List<Legislator> present;
 
     public String getId() {
@@ -81,6 +90,14 @@ public class Vote {
         this.voteId = voteId;
     }
 
+    public String getBillId() {
+        return billId;
+    }
+
+    public void setBillId(String billId) {
+        this.billId = billId;
+    }
+
     public String getCategory() {
         return category;
     }
@@ -89,11 +106,11 @@ public class Vote {
         this.category = category;
     }
 
-    public String getCongress() {
+    public int getCongress() {
         return congress;
     }
 
-    public void setCongress(String congress) {
+    public void setCongress(int congress) {
         this.congress = congress;
     }
 
@@ -296,5 +313,4 @@ public class Vote {
     public void setPresent(List<Legislator> present) {
         this.present = present;
     }
-
 }

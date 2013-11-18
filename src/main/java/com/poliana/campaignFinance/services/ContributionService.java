@@ -1,12 +1,9 @@
 package com.poliana.campaignFinance.services;
 
-import com.poliana.campaignFinance.repositories.IndustryCRUDRepo;
-import com.poliana.entities.models.Industry;
-import com.poliana.entities.models.IndustryProfile;
+import com.poliana.campaignFinance.entities.IndTimeRangeTotals;
+import com.poliana.campaignFinance.repositories.ContributionHadoopRepo;
+import com.poliana.entities.repositories.EntitiesRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * @author David Gilmore
@@ -15,18 +12,16 @@ import java.util.List;
 public class ContributionService {
 
     @Autowired
-    private IndustryCRUDRepo industryCRUDRepo;
+    private EntitiesRepo entitiesRepo;
+    @Autowired
+    private ContributionHadoopRepo contributionRepo;
 
-    private HashMap<String,Industry> industryMap;
+    public IndTimeRangeTotals industryTimeRangeTotalsByIndustryCongress(
+            String industry, int congress) {
 
 
-//    public IndustryProfile
-
-    public void setIndustryMap() {
-        List<Industry> industryList = industryCRUDRepo.findAll();
-        industryMap = new HashMap<String, Industry>(industryList.size());
-        for (Industry industry : industryList) {
-            industryMap.put(industry.getCategoryId(),industry);
-        }
+        return null;
     }
+
+
 }

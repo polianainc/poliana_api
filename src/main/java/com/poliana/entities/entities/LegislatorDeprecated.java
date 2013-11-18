@@ -1,11 +1,11 @@
-package com.poliana.entities.models;
+package com.poliana.entities.entities;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @SuppressWarnings("serial")
 @Document(collection = "legislators")
-public class Legislator {
+public class LegislatorDeprecated {
 
     @Id
     private String id;

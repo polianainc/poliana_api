@@ -1,6 +1,6 @@
 package com.poliana.entities.mappers;
 
-import com.poliana.entities.models.Legislator;
+import com.poliana.entities.entities.Legislator;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

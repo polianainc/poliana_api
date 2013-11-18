@@ -2,8 +2,8 @@ package com.poliana.entities.repositories;
 
 import com.poliana.entities.entities.*;
 import com.poliana.entities.mappers.*;
-import com.poliana.entities.models.Industry;
-import com.poliana.entities.models.Legislator;
+import com.poliana.entities.entities.Industry;
+import com.poliana.entities.entities.Legislator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -13,9 +13,9 @@ import java.util.List;
 @Repository
 public class EntitiesHadoopRepo {
     @Autowired
-    protected JdbcTemplate hiveTemplate;
+    private JdbcTemplate hiveTemplate;
     @Autowired
-    protected JdbcTemplate impalaTemplate;
+    private JdbcTemplate impalaTemplate;
 
 
     public List<String> bioguideIds() {

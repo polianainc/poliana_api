@@ -1,52 +1,75 @@
-package com.poliana.entities.models;
+package com.poliana.entities.entities;
 
 import com.google.code.morphia.annotations.Entity;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import com.google.code.morphia.annotations.Id;
+import com.google.code.morphia.annotations.Indexed;
+import com.google.code.morphia.annotations.Property;
+import org.bson.types.ObjectId;
 
 /**
  * @author David Gilmore
  * @date 11/16/13
  */
 @Entity("legislators")
-public class LegislatorMorphia {
+public class Legislator {
 
     @Id
-    private String id;
+    private ObjectId id;
 
+    @Property("first_name")
     private String firstName;
+    @Property("last_name")
     private String lastName;
+    @Property("official_full")
     private String officialFull;
     private String party;
+    @Indexed @Property("thomas_id")
     private String thomasId;
+    @Indexed @Property("bioguide_id")
     private String bioguideId;
+    @Property("opensecrets_id")
     private String opensecretsId;
+    @Property("fec_id")
     private String fecId;
+    @Property("votesmart_id")
     private String votesmartId;
     private String ballotpedia;
+    @Indexed @Property("lis_id")
     private String lisId;
+    @Property("wikipedia_id")
     private String wikipediaId;
+    @Indexed @Property("govtrack_id")
     private String govtrackId;
+    @Property("maplight_id")
     private String maplightId;
+    @Property("icspr_id")
     private String icsprId;
+    @Property("cspan_id")
     private String cspanId;
+    @Property("house_history_id")
     private String houseHistoryId;
+    @Property("washington_post_id")
     private String washingtonPostId;
     private String gender;
     private String birthday;
     private String religion;
+    @Property("term_start")
     private int termStart;
+    @Property("term_end")
     private int termEnd;
+    @Property("term_state")
     private String termState;
+    @Property("term_type")
     private String termType;
     private int district;
+    @Property("term_state_rank")
     private String termStateRank;
 
-    public String getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 

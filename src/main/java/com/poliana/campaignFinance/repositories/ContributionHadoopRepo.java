@@ -1,7 +1,6 @@
 package com.poliana.campaignFinance.repositories;
 
 import com.poliana.campaignFinance.mappers.*;
-import com.poliana.campaignFinance.models.demo.Recipient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -155,6 +154,22 @@ public class ContributionHadoopRepo {
     }
 
     /**
+     * Returns a list of industry to politician contributions for each party
+     * for a given industry and congress with totals summed for the given time range.
+     * Impala is data source.
+     *
+     * @param industryId{String} Query parameter to the industry_id field
+     * @param congress  {int} Congressional session
+     * @param range     {int} Time range given in seconds
+     */
+    public List<IndPartyTotals> indPartyContrTotalsByIndustryCongressTimeRange(
+            String industryId, int congress, int range) {
+
+        String query = "";
+        return impalaTemplate.query(query, new IndPartyTotalsMapper());
+    }
+
+    /**
      * Returns a list of industry to politician contributions
      * for a given year and month. If month and/or limit are to be ignored,
      * call them with values zero.
@@ -183,45 +198,4 @@ public class ContributionHadoopRepo {
     }
 
 
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-    public List<Recipient> topIndustryRecipients(String billId, String vote, int limit) {
-        String lim = "";
-
-        if (limit != 0)
-            lim = " LIMIT " + limit;
-
-        List<Recipient> topRecipients = hiveTemplate.query("" +
-                "SELECT industry_id, bioguide_id, first_name, last_name, sum(amount) AS sum " +
-                "FROM industry_contr_" + billId + "_113_" + vote + "_6months" +
-                " GROUP BY industry_id, bioguide_id, first_name, last_name" + lim,
-                new RecipientMapper());
-        return topRecipients;
-    }
-
-    public List<Recipient> topIndustryRecipients(String billId, String vote) {
-        return topIndustryRecipients(billId, vote, 0);
-    }
-
-    public int countDistinctIndustryContributions(String billId, String vote) {
-        return hiveTemplate.queryForInt("SELECT count(distinct(bioguide_id)) FROM " +
-                "industry_contr_" + billId + "_113_" + vote + "_6months");
-    }
-
-    public int sumIndustryContributions(String billId, String vote) {
-        return hiveTemplate.queryForInt("SELECT sum(" + vote + "_sum)FROM " + billId + "_trends");
-    }
-
-    public List<IndustryContrTotals> industryContributionTotals(String billId) {
-        List<IndustryContrTotals> table = hiveTemplate.query("SELECT * FROM "
-                + billId + "_trends", new IndustryContrTotalsMapper());
-        return table;
-    }
 }

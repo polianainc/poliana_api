@@ -1,24 +1,27 @@
-package com.poliana.entities.models;
+package com.poliana.entities.entities;
 
+import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Property;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author David Gilmore
  * @date 11/12/13
  */
-@SuppressWarnings("serial")
-@Document(collection = "industry_meta")
+@Entity("industries")
 public class Industry {
 
     @Id
-    private String id;
+    private ObjectId id;
 
+    @Property("category_id")
     private String categoryId;
     private String name;
     private String order;
     private String industry;
     private String sector;
+    @Property("sector_long")
     private String sectorLong;
 
     public String getCategoryId() {

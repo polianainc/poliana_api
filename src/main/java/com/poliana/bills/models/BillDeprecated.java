@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.poliana.entities.models.Legislator;
+import com.poliana.entities.entities.LegislatorDeprecated;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.springframework.data.annotation.Id;
@@ -20,22 +20,22 @@ import org.springframework.data.mongodb.core.mapping.Document;
  */
 @SuppressWarnings("serial")
 @Document(collection = "bills")
-public class Bill implements Serializable
+public class BillDeprecated implements Serializable
 {
     @Id
     private String id;
 
     @DBRef
-    private Vote votes;
+    private VoteDeprecated votes;
     private String billId;
     private String voteId;
     private String officialTitle;
     private String popularTitle;
     private String shortTitle;
     @DBRef
-    private Legislator sponsor;
+    private LegislatorDeprecated sponsor;
     @DBRef
-    private List<Legislator> cosponsors;
+    private List<LegislatorDeprecated> cosponsors;
     private String topSubject;
     private List<String> subjects;
     private String summary;
@@ -73,11 +73,11 @@ public class Bill implements Serializable
         this.billId = billId;
     }
 
-    public Vote getVotes() {
+    public VoteDeprecated getVotes() {
         return votes;
     }
 
-    public void setVotes(Vote votes) {
+    public void setVotes(VoteDeprecated votes) {
         this.votes = votes;
     }
 
@@ -113,21 +113,21 @@ public class Bill implements Serializable
         this.shortTitle = shortTitle;
     }
 
-    public Legislator getSponsor() {
+    public LegislatorDeprecated getSponsor() {
         return sponsor;
     }
 
-    public void setSponsor(Legislator sponsor) {
+    public void setSponsor(LegislatorDeprecated sponsor) {
         this.sponsor = sponsor;
     }
 
 
 
-    public List<Legislator> getCosponsors() {
+    public List<LegislatorDeprecated> getCosponsors() {
         return cosponsors;
     }
 
-    public void setCosponsors(List<Legislator> cosponsors) {
+    public void setCosponsors(List<LegislatorDeprecated> cosponsors) {
         this.cosponsors = cosponsors;
     }
 

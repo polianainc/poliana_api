@@ -1,6 +1,6 @@
 package com.poliana.entities.mappers;
 
-import com.poliana.entities.models.Industry;
+import com.poliana.entities.entities.Industry;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

@@ -1,14 +1,12 @@
 package com.poliana.bills.models;
 
-import com.google.code.morphia.annotations.Entity;
-import com.google.code.morphia.annotations.Indexed;
-import com.google.code.morphia.annotations.Property;
-import com.google.code.morphia.annotations.Reference;
 import com.poliana.bills.entities.VoteGT.AmendmentRef;
 import com.poliana.bills.entities.VoteGT.BillRef;
 import com.poliana.bills.entities.VoteGT.Nomination;
-import com.poliana.entities.models.LegislatorMorphia;
+import com.poliana.entities.entities.LegislatorDeprecated;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
@@ -16,22 +14,19 @@ import java.util.List;
  * @author David Gilmore
  * @date 11/13/13
  */
-@Entity("votes")
-public class VoteMorphia {
+@SuppressWarnings("serial")
+@Document(collection = "votes")
+public class VoteDeprecated {
 
     @Id
     private String id;
 
-    @Reference
-    private BillMorphia bill;
-    @Indexed @Property("vote_id")
+    @DBRef
+    private BillDeprecated bill;
     private String voteId;
-    @Indexed @Property("bill_id")
-    private String billId;
     private String category;
     private String congress;
     private int date;
-    @Property("bill_info")
     private BillRef billInfo;
     private AmendmentRef amendment;
     private Nomination nomination;
@@ -39,35 +34,28 @@ public class VoteMorphia {
     private String question;
     private String requires;
     private String result;
-    @Property("result_text")
     private String resultText;
     private String session;
-    @Property("source_url")
     private String sourceUrl;
     private String subject;
     private String type;
-    @Property("updated_at")
     private String updatedAt;
     private String chamber;
     private int year;
     private int month;
-    @Property("yea_total")
     private int yeaTotal;
-    @Property("nay_total")
     private int nayTotal;
-    @Property("not_voting_total")
     private int notVotingTotal;
-    @Property("present_total")
     private int presentTotal;
 
-    @Reference
-    private List<LegislatorMorphia> yeas;
-    @Reference
-    private List<LegislatorMorphia> nays;
-    @Reference @Property("not_voting")
-    private List<LegislatorMorphia> notVoting;
-    @Reference
-    private List<LegislatorMorphia> present;
+    @DBRef
+    private List<LegislatorDeprecated> yeas;
+    @DBRef
+    private List<LegislatorDeprecated> nays;
+    @DBRef
+    private List<LegislatorDeprecated> notVoting;
+    @DBRef
+    private List<LegislatorDeprecated> present;
 
     public String getId() {
         return id;
@@ -77,11 +65,11 @@ public class VoteMorphia {
         this.id = id;
     }
 
-    public BillMorphia getBill() {
+    public BillDeprecated getBill() {
         return bill;
     }
 
-    public void setBill(BillMorphia bill) {
+    public void setBill(BillDeprecated bill) {
         this.bill = bill;
     }
 
@@ -91,14 +79,6 @@ public class VoteMorphia {
 
     public void setVoteId(String voteId) {
         this.voteId = voteId;
-    }
-
-    public String getBillId() {
-        return billId;
-    }
-
-    public void setBillId(String billId) {
-        this.billId = billId;
     }
 
     public String getCategory() {
@@ -285,35 +265,36 @@ public class VoteMorphia {
         this.presentTotal = presentTotal;
     }
 
-    public List<LegislatorMorphia> getYeas() {
+    public List<LegislatorDeprecated> getYeas() {
         return yeas;
     }
 
-    public void setYeas(List<LegislatorMorphia> yeas) {
+    public void setYeas(List<LegislatorDeprecated> yeas) {
         this.yeas = yeas;
     }
 
-    public List<LegislatorMorphia> getNays() {
+    public List<LegislatorDeprecated> getNays() {
         return nays;
     }
 
-    public void setNays(List<LegislatorMorphia> nays) {
+    public void setNays(List<LegislatorDeprecated> nays) {
         this.nays = nays;
     }
 
-    public List<LegislatorMorphia> getNotVoting() {
+    public List<LegislatorDeprecated> getNotVoting() {
         return notVoting;
     }
 
-    public void setNotVoting(List<LegislatorMorphia> notVoting) {
+    public void setNotVoting(List<LegislatorDeprecated> notVoting) {
         this.notVoting = notVoting;
     }
 
-    public List<LegislatorMorphia> getPresent() {
+    public List<LegislatorDeprecated> getPresent() {
         return present;
     }
 
-    public void setPresent(List<LegislatorMorphia> present) {
+    public void setPresent(List<LegislatorDeprecated> present) {
         this.present = present;
     }
+
 }

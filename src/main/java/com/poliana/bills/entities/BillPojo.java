@@ -1,33 +1,26 @@
-package com.poliana.bills.models;
+package com.poliana.bills.entities;
 
-import com.google.code.morphia.annotations.Entity;
-import com.google.code.morphia.annotations.Id;
-import com.google.code.morphia.annotations.Reference;
-import com.poliana.entities.models.LegislatorMorphia;
-
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
-/**
- * @author David Gilmore
- * @date 11/16/13
- */
-@Entity("bills")
-public class BillMorphia {
+import com.poliana.bills.models.VoteDeprecated;
+import org.json.JSONArray;
+import org.json.JSONException;
 
-    @Id
-    private String id;
-
-    @Reference
-    private VoteMorphia votes;
+public class BillPojo
+{
+    private VoteDeprecated votes;
     private String billId;
     private String voteId;
     private String officialTitle;
     private String popularTitle;
     private String shortTitle;
-    @Reference
-    private LegislatorMorphia sponsor;
-    @Reference
-    private List<LegislatorMorphia> cosponsors;
+    private String sponsor;
+    private String sponsorState;
+    private String sponsorId;
+    private List<String> cosponsorIds;
     private String topSubject;
     private List<String> subjects;
     private String summary;
@@ -49,28 +42,20 @@ public class BillMorphia {
     private int year;
     private int month;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public VoteMorphia getVotes() {
-        return votes;
-    }
-
-    public void setVotes(VoteMorphia votes) {
-        this.votes = votes;
-    }
-
     public String getBillId() {
         return billId;
     }
 
     public void setBillId(String billId) {
         this.billId = billId;
+    }
+
+    public VoteDeprecated getVotes() {
+        return votes;
+    }
+
+    public void setVotes(VoteDeprecated votes) {
+        this.votes = votes;
     }
 
     public String getVoteId() {
@@ -105,20 +90,53 @@ public class BillMorphia {
         this.shortTitle = shortTitle;
     }
 
-    public LegislatorMorphia getSponsor() {
+    public String getSponsor() {
         return sponsor;
     }
 
-    public void setSponsor(LegislatorMorphia sponsor) {
+    public void setSponsor(String sponsor) {
         this.sponsor = sponsor;
     }
 
-    public List<LegislatorMorphia> getCosponsors() {
-        return cosponsors;
+    public String getSponsorState() {
+        return sponsorState;
     }
 
-    public void setCosponsors(List<LegislatorMorphia> cosponsors) {
-        this.cosponsors = cosponsors;
+    public void setSponsorState(String sponsorState) {
+        this.sponsorState = sponsorState;
+    }
+
+    public String getSponsorId() {
+        return sponsorId;
+    }
+
+    public void setSponsorId(String sponsorId) {
+        this.sponsorId = sponsorId;
+    }
+
+    public List<String> getCosponsorIds() {
+        return cosponsorIds;
+    }
+
+    public void setCosponsorIds(List<String> cosponsorIds) {
+        this.cosponsorIds = cosponsorIds;
+    }
+
+    public void setCosponsorIdsJson(String cosponsorIds) {
+        try {
+            JSONArray jsonArray = new JSONArray(cosponsorIds);
+            List<String> list = new LinkedList<String>();
+            for (int i=0; i<jsonArray.length(); i++) {
+                list.add( jsonArray.getString(i) );
+            }
+            this.cosponsorIds = list;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setCosponsorIdsDelim(String cosponsorIds) {
+        this.cosponsorIds = new ArrayList<>(Arrays.asList(cosponsorIds.split("\u0002")));
     }
 
     public String getTopSubject() {
@@ -135,6 +153,23 @@ public class BillMorphia {
 
     public void setSubjects(List<String> subjects) {
         this.subjects = subjects;
+    }
+
+    public void setSubjectsJson(String subjects) {
+        try {
+            JSONArray jsonArray = new JSONArray(subjects);
+            List<String> list = new LinkedList<>();
+            for (int i=0; i<jsonArray.length(); i++) {
+                list.add( jsonArray.getString(i) );
+            }
+            this.subjects = list;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setSubjectsDelim(String subjects) {
+        this.subjects = new ArrayList<>(Arrays.asList(subjects.split("\u0002")));
     }
 
     public String getSummary() {

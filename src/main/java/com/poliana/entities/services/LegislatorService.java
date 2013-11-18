@@ -1,39 +1,30 @@
 package com.poliana.entities.services;
 
-import com.poliana.entities.models.Legislator;
+import com.poliana.entities.entities.Legislator;
 import com.poliana.entities.repositories.EntitiesHadoopRepo;
-import com.poliana.entities.repositories.LegislatorsCRUDRepo;
+import com.poliana.entities.repositories.EntitiesRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class LegislatorService {
     @Autowired
     protected EntitiesHadoopRepo entitiesHadoopRepo;
     @Autowired
-    protected LegislatorsCRUDRepo legislatorsCRUDRepo;
+    private EntitiesRepo entitiesRepo;
 
     private Map<String, List<Legislator>> lisCache;
     private Map<String, List<Legislator>> bioguideCache;
     private Map<String, List<Legislator>> thomasCache;
 
     public Map<String, String> politicianMap() {
-//        List<Legislator> legislators = entitiesHadoopRepo.
-//        Map<String, String> politicianMap = new HashMap<>(legislators.size());
-//        for(Legislator legislator : legislators) {
-//            politicianMap.put(legislator.getBioguideId(), legislator.getParty());
-//        }
-//        return politicianMap;
         return null;
     }
 
     public Legislator legislatorByIdTimestamp(String id, int timeStamp) {
-        
+
         List<Legislator> legislators;
 
         if (lisCache == null) { setCacheLis(); }
@@ -69,12 +60,14 @@ public class LegislatorService {
     }
 
     public void setCacheLis() {
-        List<Legislator> legislators = legislatorsCRUDRepo.findAll();
+        Iterator<Legislator> legislators =
+                entitiesRepo.allLegislatorTerms();
 
-        lisCache = new HashMap<String, List<Legislator>>(legislators.size());
+        lisCache = new HashMap<>(43000);
 
         String currLis;
-        for (Legislator legislator: legislators) {
+        while (legislators.hasNext()) {
+            Legislator legislator = legislators.next();
             List<Legislator> currLegislators;
             currLis = legislator.getLisId();
             if(lisCache.containsKey(currLis))
@@ -89,11 +82,13 @@ public class LegislatorService {
     }
 
     public void setCacheBioguide() {
-        List<Legislator> legislators = legislatorsCRUDRepo.findAll();
-        bioguideCache = new HashMap<String, List<Legislator>>(legislators.size());
+        Iterator<Legislator> legislators =
+                entitiesRepo.allLegislatorTerms();
+        bioguideCache = new HashMap<>(43000);
 
         String currBioguide;
-        for (Legislator legislator: legislators) {
+        while (legislators.hasNext()) {
+            Legislator legislator = legislators.next();
             List<Legislator> currLegislators;
             currBioguide = legislator.getBioguideId();
             if(bioguideCache.containsKey(currBioguide))
@@ -107,11 +102,13 @@ public class LegislatorService {
     }
 
     public void setCacheThomas() {
-        List<Legislator> legislators = legislatorsCRUDRepo.findAll();
-        thomasCache = new HashMap<String, List<Legislator>>(legislators.size());
+        Iterator<Legislator> legislators =
+                entitiesRepo.allLegislatorTerms();
+        thomasCache = new HashMap<>(43000);
 
         String currThomas;
-        for (Legislator legislator: legislators) {
+        while (legislators.hasNext()) {
+            Legislator legislator = legislators.next();
             List<Legislator> currLegislators;
             currThomas = legislator.getThomasId();
             if(thomasCache.containsKey(currThomas))

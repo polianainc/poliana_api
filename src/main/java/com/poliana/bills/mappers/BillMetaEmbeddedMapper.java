@@ -1,18 +1,19 @@
 package com.poliana.bills.mappers;
 
-import com.poliana.bills.entities.Bill;
+import com.poliana.bills.entities.BillPojo;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Calendar;
 
 /**
  * @author David Gilmore
  * @date 10/20/13
  */
-public class BillMetaEmbeddedMapper implements RowMapper<Bill> {
-    public Bill mapRow(ResultSet rs, int rowNum) throws SQLException {
-        Bill bill = new Bill();
+public class BillMetaEmbeddedMapper implements RowMapper<BillPojo> {
+    public BillPojo mapRow(ResultSet rs, int rowNum) throws SQLException {
+        BillPojo bill = new BillPojo();
         bill.setBillId(rs.getString("bill_id"));
         bill.setVoteId(rs.getString("vote_id"));
         bill.setOfficialTitle(rs.getString("official_title"));
@@ -25,7 +26,9 @@ public class BillMetaEmbeddedMapper implements RowMapper<Bill> {
         bill.setTopSubject(rs.getString("top_subject"));
         bill.setSubjectsDelim(rs.getString("subjects"));
         bill.setSummary(rs.getString("summary"));
-        bill.setIntroducedAt(rs.getInt("introduced_at"));
+
+        int timeStamp = rs.getInt("introduced_at");
+        bill.setIntroducedAt(timeStamp);
         bill.setHousePassageResult(rs.getString("house_passage_result"));
         bill.setHousePassageResultAt(rs.getInt("house_passage_result_at"));
         bill.setSenateClotureResult(rs.getString("senate_cloture_result"));
@@ -38,6 +41,13 @@ public class BillMetaEmbeddedMapper implements RowMapper<Bill> {
         bill.setEnactedAt(rs.getInt("enacted_at"));
         bill.setCongress(rs.getInt("congress"));
         bill.setBillType(rs.getString("bill_type"));
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis((long) timeStamp * 1000L);
+
+        bill.setYear(cal.get(Calendar.YEAR));
+        bill.setMonth(cal.get(Calendar.MONTH + 1));
+
         return bill;
     }
 }

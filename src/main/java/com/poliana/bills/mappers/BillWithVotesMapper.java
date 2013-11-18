@@ -1,6 +1,6 @@
 package com.poliana.bills.mappers;
 
-import com.poliana.bills.entities.Bill;
+import com.poliana.bills.entities.BillPojo;
 import com.poliana.bills.entities.BillVotes;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -11,9 +11,9 @@ import java.sql.SQLException;
  * @author David Gilmore
  * @date 10/20/13
  */
-public class BillWithVotesMapper implements RowMapper<Bill> {
-    public Bill mapRow(ResultSet rs, int rowNum) throws SQLException {
-        Bill bill = new Bill();
+public class BillWithVotesMapper implements RowMapper<BillPojo> {
+    public BillPojo mapRow(ResultSet rs, int rowNum) throws SQLException {
+        BillPojo bill = new BillPojo();
         String billId = rs.getString("bill_id");
         bill.setBillId(billId);
 

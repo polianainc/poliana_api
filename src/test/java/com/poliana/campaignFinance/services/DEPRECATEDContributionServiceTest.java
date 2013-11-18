@@ -8,7 +8,7 @@ import org.junit.Test;
  * @author David Gilmore
  * @date 10/18/13
  */
-public class DEMOContributionServiceTest {
+public class DEPRECATEDContributionServiceTest {
     @Before
     public void setUp() throws Exception {
 

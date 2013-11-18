@@ -1,8 +1,8 @@
 package com.poliana.bills.repositories;
 
-import com.poliana.bills.entities.Bill;
+import com.poliana.bills.entities.BillPojo;
 import com.poliana.bills.entities.BillAction;
-import com.poliana.bills.models.Vote;
+import com.poliana.bills.models.VoteDeprecated;
 import com.poliana.bills.mappers.*;
 import com.poliana.bills.entities.BillVotes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,19 +51,19 @@ public class BillHadoopRepo {
     }
 
     /**
-     * Returns a Bill object from the given congress.
-     * Bill meta and vote information is populated.
+     * Returns a BillPojo object from the given congress.
+     * BillPojo meta and vote information is populated.
      * Selects from a join of bills.bill_meta_embedded
      * and bills.votes_by_bill_embedded.
      * Impala is data source.
      *
      * @param billId    {String} Query parameter to the bill_id field.
      *
-     * @see             Bill
+     * @see             com.poliana.bills.entities.BillPojo
      * @see             BillWithVotesMapper
      */
-    public Bill billsWithVotesByBillId(String billId) {
-        List<Bill> billList = impalaTemplate.query("" +
+    public BillPojo billsWithVotesByBillId(String billId) {
+        List<BillPojo> billList = impalaTemplate.query("" +
                 "SELECT * FROM " +
                 "bills.bill_meta_embedded b JOIN bills.votes_by_bill v " +
                 "ON b.vote_id = v.vote_id WHERE b.bill_id = \'" + billId + "\'",
@@ -72,8 +72,8 @@ public class BillHadoopRepo {
     }
 
     /**
-     * Returns a list of Bill objects from the given congress.
-     * Bill meta and vote information is populated.
+     * Returns a list of BillPojo objects from the given congress.
+     * BillPojo meta and vote information is populated.
      * Selects from a join of bills.bill_meta_embedded.
      * and bills.votes_by_bill_embedded.
      * Impala is data source.
@@ -81,10 +81,10 @@ public class BillHadoopRepo {
      * @param congress  {int} Query parameter to the congress field.
      * @param limit     {int} Specify limit. A limit of 0 returns all records
      *
-     * @see             Bill
+     * @see             com.poliana.bills.entities.BillPojo
      * @see             BillWithVotesMapper
      */
-    public List<Bill> billsWithVotesByCongress(int congress, int limit) {
+    public List<BillPojo> billsWithVotesByCongress(int congress, int limit) {
         String lim = "";
         if (limit > 0)
             lim = " LIMIT " + limit;
@@ -97,8 +97,8 @@ public class BillHadoopRepo {
     }
 
     /**
-     * Returns a list of Bill objects which have votes from the given congress.
-     * Bill meta alone is populated.
+     * Returns a list of BillPojo objects which have votes from the given congress.
+     * BillPojo meta alone is populated.
      * Selects from a join of bills.bill_meta_embedded.
      * and bills.votes_by_bill_embedded.
      * Impala is data source.
@@ -106,10 +106,10 @@ public class BillHadoopRepo {
      * @param congress  {int} Query parameter to the congress field.
      * @param limit     {int} Specify limit. A limit of 0 returns all records
      *
-     * @see             Bill
+     * @see             com.poliana.bills.entities.BillPojo
      * @see             BillMapper
      */
-    public List<Bill> billsHavingVotesByCongress(int congress, int limit) {
+    public List<BillPojo> billsHavingVotesByCongress(int congress, int limit) {
         String lim = "";
         if (limit > 0)
             lim = " LIMIT " + limit;
@@ -123,8 +123,8 @@ public class BillHadoopRepo {
 
 
     /**
-     * Returns a list of Bill objects which have votes from the given congress.
-     * Bill meta alone is populated.
+     * Returns a list of BillPojo objects which have votes from the given congress.
+     * BillPojo meta alone is populated.
      * Selects from a join of bills.bill_meta_embedded.
      * and bills.votes_by_bill_embedded.
      * Impala is data source.
@@ -132,10 +132,10 @@ public class BillHadoopRepo {
      * @param congress  {int} Query parameter to the congress field.
      * @param limit     {int} Specify limit. A limit of 0 returns all records
      *
-     * @see             Bill
+     * @see             com.poliana.bills.entities.BillPojo
      * @see             BillMapper
      */
-    public List<Bill> billsHavingVotesByCongressChamber(int congress, int limit, String chamber) {
+    public List<BillPojo> billsHavingVotesByCongressChamber(int congress, int limit, String chamber) {
         String lim = "";
         if (limit > 0)
             lim = " LIMIT " + limit;
@@ -149,8 +149,8 @@ public class BillHadoopRepo {
     }
 
     /**
-     * Returns a list of Bill objects from the given congress.
-     * Bill meta and vote information is populated.
+     * Returns a list of BillPojo objects from the given congress.
+     * BillPojo meta and vote information is populated.
      * Selects from a join of bills.bill_meta_embedded.
      * and bills.votes_by_bill_embedded.
      * Impala is data source.
@@ -158,10 +158,10 @@ public class BillHadoopRepo {
      * @param billType  {String} Query parameter to the bill_type field.
      * @param limit     {int} Specify limit. A limit of 0 returns all records
      *
-     * @see             Bill
+     * @see             com.poliana.bills.entities.BillPojo
      * @see             BillWithVotesMapper
      */
-    public List<Bill> billsWithVotesByBillType(String billType, int limit) {
+    public List<BillPojo> billsWithVotesByBillType(String billType, int limit) {
         String lim = "";
         if (limit > 0)
             lim = " LIMIT " + limit;
@@ -174,8 +174,8 @@ public class BillHadoopRepo {
     }
 
     /**
-     * Returns a list of Bill objects from the given congress.
-     * Bill meta and vote information is populated.
+     * Returns a list of BillPojo objects from the given congress.
+     * BillPojo meta and vote information is populated.
      * Selects from a join of bills.bill_meta_embedded.
      * and bills.votes_by_bill_embedded.
      * Impala is data source.
@@ -183,10 +183,10 @@ public class BillHadoopRepo {
      * @param billType  {String} Query parameter to the bill_type field.
      * @param limit     {int} Specify limit. A limit of 0 returns all records
      *
-     * @see             Bill
+     * @see             com.poliana.bills.entities.BillPojo
      * @see             BillWithVotesMapper
      */
-    public List<Bill> billsWithVotesByBillTypeAndCongress(String billType, int congress, int limit) {
+    public List<BillPojo> billsWithVotesByBillTypeAndCongress(String billType, int congress, int limit) {
         String lim = "";
         if (limit > 0)
             lim = " LIMIT " + limit;
@@ -200,24 +200,24 @@ public class BillHadoopRepo {
     }
 
     /**
-     * Returns a Bill object matching the given billId.
+     * Returns a BillPojo object matching the given billId.
      * Only meta information will be populated, no votes.
      * Selects from bills.bill_meta_embedded table
      * Impala is data source.
      *
      * @param billId    {String} Query parameter to the bill_id field.
      *
-     * @see             Bill
+     * @see             com.poliana.bills.entities.BillPojo
      * @see             BillMetaEmbeddedMapper
      */
-    public Bill billMetaByBillId(String billId) {
+    public BillPojo billMetaByBillId(String billId) {
         return impalaTemplate.queryForObject("SELECT * " +
                 "FROM bills.bill_meta_embedded WHERE bill_id = \'" + billId + "\'",
                 new BillMetaEmbeddedMapper());
     }
 
     /**
-     * Returns a list of Bill objects matching the given billId.
+     * Returns a list of BillPojo objects matching the given billId.
      * Only meta information will be populated, no votes.
      * Selects from bills.bill_meta_embedded table
      * Impala is data source.
@@ -225,10 +225,10 @@ public class BillHadoopRepo {
      * @param congress  {int} Query parameter to the congress field.
      * @param limit     {int} Specify limit. A limit of 0 returns all matching records.
      *
-     * @see             Bill
+     * @see             com.poliana.bills.entities.BillPojo
      * @see             BillMetaEmbeddedMapper
      */
-    public List<Bill> billMetaByCongress(int congress, int limit) {
+    public List<BillPojo> billMetaByCongress(int congress, int limit) {
         String lim = "";
         if (limit > 0)
             lim = " LIMIT " + limit;
@@ -244,10 +244,10 @@ public class BillHadoopRepo {
      * @param congress  {int} Query parameter to the bill_type field.
      * @param limit     {int} Specify limit. A limit of 0 returns all records
      *
-     * @see             Bill
+     * @see             com.poliana.bills.entities.BillPojo
      * @see             BillWithVotesMapper
      */
-    public List<Bill> billMetaByBillTypeAndCongress(String billType, int congress, int limit) {
+    public List<BillPojo> billMetaByBillTypeAndCongress(String billType, int congress, int limit) {
         String lim = "";
         if (limit > 0)
             lim = " LIMIT " + limit;
@@ -309,7 +309,7 @@ public class BillHadoopRepo {
                 new BillActionMapper());
     }
 
-    private Bill maxVoteRecord(List<Bill> bills) {
+    private BillPojo maxVoteRecord(List<BillPojo> bills) {
         if (null == bills)
             return null;
         int index = 0;
@@ -317,8 +317,8 @@ public class BillHadoopRepo {
         int max = 0;
         if(bills.size() > 1)
             System.out.println("hello there");
-        for (Bill bill : bills) {
-            Vote votes = bill.getVotes();
+        for (BillPojo bill : bills) {
+            VoteDeprecated votes = bill.getVotes();
             int tmp = votes.getYeaTotal() + votes.getNayTotal() +
                     votes.getNotVotingTotal() + votes.getPresentTotal();
             if (tmp > size) {

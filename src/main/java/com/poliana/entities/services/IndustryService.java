@@ -30,7 +30,7 @@ public class IndustryService {
     }
 
     public void setIndustryMap() {
-        Iterator<Industry> industryList = entitiesMongoRepo.allIndustries();
+        Iterator<Industry> industryList = entitiesMongoRepo.getIndustries();
         industryMap = new HashMap<String, Industry>(500);
         while (industryList.hasNext()) {
             Industry industry = industryList.next();

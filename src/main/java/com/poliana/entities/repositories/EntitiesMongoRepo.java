@@ -3,6 +3,7 @@ package com.poliana.entities.repositories;
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.Key;
 import com.google.code.morphia.query.Query;
+import com.poliana.entities.entities.CongCommittee;
 import com.poliana.entities.entities.Industry;
 import com.poliana.entities.entities.Legislator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class EntitiesMongoRepo {
         return mongoStore.save(legislators);
     }
 
-    public Iterator<Industry> allIndustries() {
+    public Iterator<Industry> getIndustries() {
         Query<Industry> query = mongoStore.createQuery(Industry.class);
         return query.iterator();
     }
@@ -40,6 +41,16 @@ public class EntitiesMongoRepo {
     }
 
     public Industry industry(String industryId) {
-        return mongoStore.find(Industry.class).filter("industryId",industryId).get();
+        return mongoStore.find(Industry.class).filter("industryId", industryId).get();
     }
+
+    public Iterator<CongCommittee> getCommittees() {
+        Query<CongCommittee> query = mongoStore.createQuery(CongCommittee.class);
+        return query.iterator();
+    }
+
+    public Iterable<Key<CongCommittee>> saveCommittees(List<CongCommittee> congCommittee) {
+        return mongoStore.save(congCommittee);
+    }
+
 }

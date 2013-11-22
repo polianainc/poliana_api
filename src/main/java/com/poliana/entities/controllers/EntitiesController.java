@@ -1,7 +1,6 @@
 package com.poliana.entities.controllers;
 
-import com.poliana.entities.jobs.IndustryJobs;
-import com.poliana.entities.jobs.LegislatorJobs;
+import com.poliana.entities.jobs.EntityJobs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.core.CommandMarker;
 import org.springframework.shell.core.annotation.CliCommand;
@@ -15,18 +14,20 @@ import org.springframework.stereotype.Controller;
 public class EntitiesController implements CommandMarker {
 
     @Autowired
-    private IndustryJobs industryJobs;
-
-    @Autowired
-    private LegislatorJobs legislatorJobs;
+    private EntityJobs entityJobs;
 
     @CliCommand(value = "populateIndustries")
     public void populateIndustries() {
-        industryJobs.loadIndustriesToMongo();
+        entityJobs.loadIndustriesToMongo();
     }
 
     @CliCommand(value = "populateLegislators")
     public void populateLegislators() {
-        legislatorJobs.loadLegislatorsToMongo();
+        entityJobs.loadLegislatorsToMongo();
+    }
+
+    @CliCommand(value = "populateCommittees")
+    public void populateCommittees() {
+        entityJobs.loadCommitteesToMongo();
     }
 }

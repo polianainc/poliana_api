@@ -54,7 +54,8 @@ public class EntitiesHadoopRepo {
     }
 
     public List<CongCommittee> getCongCommitties() {
-        return hiveTemplate.query("SELECT * FROM cong_cmte_codes", new CongCommitteeMapper());
+        return hiveTemplate.query("SELECT * FROM entities.congressional_committee_ids",
+                new CongCommitteeMapper());
     }
 
     public List<CandidateIds> getCandidateIds() {

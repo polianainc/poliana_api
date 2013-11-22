@@ -115,3 +115,5 @@ populateIndustries
 // Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-21 22:32:59
 // Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-21 22:33:59
 indContrOverview --id F2600 --congress 112 --range 24
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-22 04:25:56
+populateCommittees

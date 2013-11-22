@@ -1,10 +1,13 @@
 package com.poliana.bills.jobs;
 
 import com.poliana.bills.entities.BillPojo;
-import com.poliana.bills.entities.VoteGT.*;
 import com.poliana.bills.entities.Bill;
+import com.poliana.bills.entities.govtrack.votes.BillRef;
+import com.poliana.bills.entities.govtrack.votes.VoteGt;
 import com.poliana.bills.entities.Vote;
-import com.poliana.bills.repositories.BillMorphiaRepo;
+import com.poliana.bills.entities.govtrack.votes.Voter;
+import com.poliana.bills.entities.govtrack.votes.Voters;
+import com.poliana.bills.repositories.BillMongoRepo;
 import com.poliana.entities.entities.Legislator;
 import com.poliana.entities.services.LegislatorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,19 +28,19 @@ public class MapBillRelationships {
     @Autowired
     private LegislatorService legislatorService;
     @Autowired
-    private BillMorphiaRepo billMorphiaRepo;
+    private BillMongoRepo billMongoRepo;
 
 
     public List<Vote> processGovtrackVotesByCongress(int congress) {
 
         try {
 
-            Iterator<VoteGtMorphia> gtVotes = billMorphiaRepo.govtrackVotesByCongress(congress);
+            Iterator<VoteGt> gtVotes = billMongoRepo.govtrackVotesByCongress(congress);
 
             List<Vote> votes = new LinkedList<>();
 
             while( gtVotes.hasNext()) {
-                VoteGtMorphia gtVote = gtVotes.next();
+                VoteGt gtVote = gtVotes.next();
 
                 Vote vote = processVote(gtVote);
 
@@ -48,11 +51,11 @@ public class MapBillRelationships {
                     String billId =
                             billRef.getType() + billRef.getNumber() + "-" + billRef.getCongress();
 
-                    Bill bill = billMorphiaRepo.billByBillId(billId);
+                    Bill bill = billMongoRepo.billByBillId(billId);
 
                     if(bill != null) {
                         vote.setBill(bill);
-                        billMorphiaRepo.updateBill(bill, "vote_id", vote.getVoteId());
+                        billMongoRepo.updateBill(bill, "vote_id", vote.getVoteId());
                     }
                 }
                 votes.add(vote);
@@ -65,7 +68,7 @@ public class MapBillRelationships {
 
     }
 
-    public Vote processVote(VoteGtMorphia voteGt) {
+    public Vote processVote(VoteGt voteGt) {
 
         Vote vote = new Vote();
 

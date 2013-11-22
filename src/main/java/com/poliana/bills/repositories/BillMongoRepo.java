@@ -5,7 +5,7 @@ import com.google.code.morphia.Key;
 import com.google.code.morphia.query.Query;
 import com.google.code.morphia.query.UpdateOperations;
 import com.google.code.morphia.query.UpdateResults;
-import com.poliana.bills.entities.VoteGT.VoteGtMorphia;
+import com.poliana.bills.entities.govtrack.votes.VoteGt;
 import com.poliana.bills.entities.Bill;
 import com.poliana.bills.entities.Vote;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ import java.util.List;
  * @date 11/17/13
  */
 @Repository
-public class BillMorphiaRepo {
+public class BillMongoRepo {
 
     @Autowired
     private Datastore mongoStore;
@@ -30,9 +30,9 @@ public class BillMorphiaRepo {
         return voteQuery.get();
     }
 
-    public Iterator<VoteGtMorphia> govtrackVotesByCongress(int congress) {
-        Query<VoteGtMorphia> query =
-                mongoStore.find(VoteGtMorphia.class, "congress", congress);
+    public Iterator<VoteGt> govtrackVotesByCongress(int congress) {
+        Query<VoteGt> query =
+                mongoStore.find(VoteGt.class, "congress", congress);
         return query.iterator();
     }
 

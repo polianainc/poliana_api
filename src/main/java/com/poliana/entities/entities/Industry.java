@@ -1,9 +1,10 @@
 package com.poliana.entities.entities;
 
 import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Property;
 import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
+
 
 /**
  * @author David Gilmore
@@ -15,8 +16,8 @@ public class Industry {
     @Id
     private ObjectId id;
 
-    @Property("category_id")
-    private String categoryId;
+    @Property("industry_id")
+    private String industryId;
     private String name;
     private String order;
     private String industry;
@@ -24,12 +25,12 @@ public class Industry {
     @Property("sector_long")
     private String sectorLong;
 
-    public String getCategoryId() {
-        return categoryId;
+    public String getIndustryId() {
+        return industryId;
     }
 
-    public void setCategoryId(String categoryId) {
-        this.categoryId = categoryId;
+    public void setIndustryId(String industryId) {
+        this.industryId = industryId;
     }
 
     public String getName() {

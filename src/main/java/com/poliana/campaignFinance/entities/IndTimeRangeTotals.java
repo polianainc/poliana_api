@@ -1,22 +1,18 @@
 package com.poliana.campaignFinance.entities;
 
-import com.google.code.morphia.annotations.Embedded;
-import com.google.code.morphia.annotations.Id;
-import com.google.code.morphia.annotations.Property;
-import com.google.code.morphia.annotations.Reference;
+import com.google.code.morphia.annotations.*;
 import com.poliana.entities.entities.Industry;
 import org.bson.types.ObjectId;
-import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author David Gilmore
  * @date 11/15/13
  */
 @SuppressWarnings("serial")
-@Document(collection = "industry_time_range_totals")
+@Entity("industry_time_range_totals")
 public class IndTimeRangeTotals {
 
     @Id
@@ -25,8 +21,6 @@ public class IndTimeRangeTotals {
     @Reference
     private Industry industry;
     private int congress;
-    @Property("range_length")
-    private int rangeLength;
     @Property("republican_count")
     private int republicanCount;
     @Property("republican_count")
@@ -39,10 +33,25 @@ public class IndTimeRangeTotals {
     private int independentCount;
     @Property("independent_sum")
     private int independentSum;
-    @Reference("top_recipients")
-    private List<IndToPolContrTotals> topRecipients;
+    @Embedded("top_recipients")
+    private List<Recipient> topRecipients;
     @Embedded("state_averages")
-    private Map<String,Integer> stateAverages;
+    private HashMap<String,Recipient> stateAverages;
+
+    public IndTimeRangeTotals() {}
+
+    public IndTimeRangeTotals(IndTimeRangeTotals indTimeRangeTotals) {
+        this.setIndustry(indTimeRangeTotals.getIndustry());
+        this.setCongress(indTimeRangeTotals.getCongress());
+        this.setRepublicanCount(indTimeRangeTotals.getRepublicanCount());
+        this.setRepublicanSum(indTimeRangeTotals.getRepublicanSum());
+        this.setDemocratCount(indTimeRangeTotals.getDemocratCount());
+        this.setDemocratSum(indTimeRangeTotals.getDemocratSum());
+        this.setIndependentCount(indTimeRangeTotals.getIndependentCount());
+        this.setIndependentSum(indTimeRangeTotals.getIndependentSum());
+        this.setTopRecipients(indTimeRangeTotals.getTopRecipients());
+        this.setStateAverages(indTimeRangeTotals.getStateAverages());
+    }
 
     public ObjectId getId() {
         return id;
@@ -66,14 +75,6 @@ public class IndTimeRangeTotals {
 
     public void setCongress(int congress) {
         this.congress = congress;
-    }
-
-    public int getRangeLength() {
-        return rangeLength;
-    }
-
-    public void setRangeLength(int rangeLength) {
-        this.rangeLength = rangeLength;
     }
 
     public int getRepublicanCount() {
@@ -124,19 +125,19 @@ public class IndTimeRangeTotals {
         this.independentSum = independentSum;
     }
 
-    public List<IndToPolContrTotals> getTopRecipients() {
+    public List<Recipient> getTopRecipients() {
         return topRecipients;
     }
 
-    public void setTopRecipients(List<IndToPolContrTotals> topRecipients) {
+    public void setTopRecipients(List<Recipient> topRecipients) {
         this.topRecipients = topRecipients;
     }
 
-    public Map<String, Integer> getStateAverages() {
+    public HashMap<String, Recipient> getStateAverages() {
         return stateAverages;
     }
 
-    public void setStateAverages(Map<String, Integer> stateAverages) {
+    public void setStateAverages(HashMap<String, Recipient> stateAverages) {
         this.stateAverages = stateAverages;
     }
 }

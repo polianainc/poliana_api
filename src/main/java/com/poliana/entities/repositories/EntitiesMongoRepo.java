@@ -16,7 +16,7 @@ import java.util.List;
  * @date 11/17/13
  */
 @Repository
-public class EntitiesRepo {
+public class EntitiesMongoRepo {
     @Autowired
     private Datastore mongoStore;
 
@@ -33,5 +33,13 @@ public class EntitiesRepo {
     public Iterator<Industry> allIndustries() {
         Query<Industry> query = mongoStore.createQuery(Industry.class);
         return query.iterator();
+    }
+
+    public Iterable<Key<Industry>> saveIndustries(List<Industry> industries) {
+        return mongoStore.save(industries);
+    }
+
+    public Industry industry(String industryId) {
+        return mongoStore.find(Industry.class).filter("industryId",industryId).get();
     }
 }

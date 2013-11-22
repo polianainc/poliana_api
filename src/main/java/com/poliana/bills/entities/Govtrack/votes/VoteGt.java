@@ -1,4 +1,4 @@
-package com.poliana.bills.entities.VoteGT;
+package com.poliana.bills.entities.govtrack.votes;
 
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Property;
@@ -9,12 +9,12 @@ import org.springframework.data.annotation.Id;
  * @date 11/17/13
  */
 @Entity("votes_govtrack")
-public class VoteGtMorphia {
+public class VoteGt {
 
     @Id
     private String id;
     private BillRef bill;
-    private AmendmentRef amendment;
+    private VoteAmendmentRef amendment;
     private String category;
     private String chamber;
     private int congress;
@@ -53,11 +53,11 @@ public class VoteGtMorphia {
         this.bill = bill;
     }
 
-    public AmendmentRef getAmendment() {
+    public VoteAmendmentRef getAmendment() {
         return amendment;
     }
 
-    public void setAmendment(AmendmentRef amendment) {
+    public void setAmendment(VoteAmendmentRef amendment) {
         this.amendment = amendment;
     }
 

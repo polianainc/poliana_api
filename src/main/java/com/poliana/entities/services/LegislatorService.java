@@ -2,7 +2,7 @@ package com.poliana.entities.services;
 
 import com.poliana.entities.entities.Legislator;
 import com.poliana.entities.repositories.EntitiesHadoopRepo;
-import com.poliana.entities.repositories.EntitiesRepo;
+import com.poliana.entities.repositories.EntitiesMongoRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +13,7 @@ public class LegislatorService {
     @Autowired
     protected EntitiesHadoopRepo entitiesHadoopRepo;
     @Autowired
-    private EntitiesRepo entitiesRepo;
+    private EntitiesMongoRepo entitiesMongoRepo;
 
     private Map<String, List<Legislator>> lisCache;
     private Map<String, List<Legislator>> bioguideCache;
@@ -61,7 +61,7 @@ public class LegislatorService {
 
     public void setCacheLis() {
         Iterator<Legislator> legislators =
-                entitiesRepo.allLegislatorTerms();
+                entitiesMongoRepo.allLegislatorTerms();
 
         lisCache = new HashMap<>(43000);
 
@@ -83,7 +83,7 @@ public class LegislatorService {
 
     public void setCacheBioguide() {
         Iterator<Legislator> legislators =
-                entitiesRepo.allLegislatorTerms();
+                entitiesMongoRepo.allLegislatorTerms();
         bioguideCache = new HashMap<>(43000);
 
         String currBioguide;
@@ -103,7 +103,7 @@ public class LegislatorService {
 
     public void setCacheThomas() {
         Iterator<Legislator> legislators =
-                entitiesRepo.allLegislatorTerms();
+                entitiesMongoRepo.allLegislatorTerms();
         thomasCache = new HashMap<>(43000);
 
         String currThomas;

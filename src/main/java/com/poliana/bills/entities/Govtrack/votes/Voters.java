@@ -1,4 +1,4 @@
-package com.poliana.bills.entities.VoteGT;
+package com.poliana.bills.entities.govtrack.votes;
 
 import java.util.List;
 

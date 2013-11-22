@@ -1,6 +1,6 @@
 package com.poliana.entities.services;
 
-import com.poliana.entities.repositories.EntitiesRepo;
+import com.poliana.entities.repositories.EntitiesMongoRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.poliana.entities.entities.Industry;
@@ -16,7 +16,7 @@ public class IndustryService {
     @Autowired
     protected EntitiesHadoopRepo entitiesHadoopRepo;
     @Autowired
-    private EntitiesRepo entitiesRepo;
+    private EntitiesMongoRepo entitiesMongoRepo;
 
     private HashMap<String, Industry> industryMap;
 
@@ -24,19 +24,20 @@ public class IndustryService {
         List<Industry> industries = entitiesHadoopRepo.getIndustries();
         Map<String, String> industryMap = new HashMap<>(industries.size());
         for(Industry industry : industries) {
-            industryMap.put(industry.getCategoryId(), industry.getName());
+            industryMap.put(industry.getIndustryId(), industry.getName());
         }
         return industryMap;
     }
 
     public void setIndustryMap() {
-        Iterator<Industry> industryList = entitiesRepo.allIndustries();
+        Iterator<Industry> industryList = entitiesMongoRepo.allIndustries();
         industryMap = new HashMap<String, Industry>(500);
         while (industryList.hasNext()) {
             Industry industry = industryList.next();
-            industryMap.put(industry.getCategoryId(),industry);
+            industryMap.put(industry.getIndustryId(),industry);
         }
     }
+
     public HashMap<String, Industry> getIndustryMap() {
         if (industryMap == null)
             setIndustryMap();

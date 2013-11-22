@@ -5,7 +5,7 @@ import com.poliana.bills.jobs.MapBillRelationships;
 import com.poliana.bills.entities.Bill;
 import com.poliana.bills.entities.Vote;
 import com.poliana.bills.repositories.BillHadoopRepo;
-import com.poliana.bills.repositories.BillMorphiaRepo;
+import com.poliana.bills.repositories.BillMongoRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.core.CommandMarker;
 import org.springframework.shell.core.annotation.CliCommand;
@@ -25,7 +25,7 @@ public class BillJobs implements CommandMarker {
     @Autowired
     private MapBillRelationships gtProcess;
     @Autowired
-    private BillMorphiaRepo billMorphiaRepo;
+    private BillMongoRepo billMongoRepo;
 
     @CliCommand(value = "populateBills")
     public void populateBills(
@@ -34,13 +34,13 @@ public class BillJobs implements CommandMarker {
 
         List<BillPojo> rawBills = billHadoopRepo.billMetaByCongress(congress,limit);
         List<Bill>  bills = gtProcess.processBills(rawBills);
-        billMorphiaRepo.saveBills(bills);
+        billMongoRepo.saveBills(bills);
     }
 
     @CliCommand(value = "processGovtrackVotes")
     public void processGovtrackVotes(
             @CliOption(key = { "congress"}, mandatory = true) final int congress ) {
         List<Vote> votes = gtProcess.processGovtrackVotesByCongress(113);
-        billMorphiaRepo.saveVotes(votes);
+        billMongoRepo.saveVotes(votes);
     }
 }

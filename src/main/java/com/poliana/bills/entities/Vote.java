@@ -1,9 +1,9 @@
 package com.poliana.bills.entities;
 
 import com.google.code.morphia.annotations.*;
-import com.poliana.bills.entities.VoteGT.AmendmentRef;
-import com.poliana.bills.entities.VoteGT.BillRef;
-import com.poliana.bills.entities.VoteGT.Nomination;
+import com.poliana.bills.entities.govtrack.votes.VoteAmendmentRef;
+import com.poliana.bills.entities.govtrack.votes.BillRef;
+import com.poliana.bills.entities.govtrack.votes.Nomination;
 import com.poliana.entities.entities.Legislator;
 import org.springframework.data.annotation.Id;
 
@@ -30,7 +30,7 @@ public class Vote {
     private int date;
     @Embedded("bill_info")
     private BillRef billInfo;
-    private AmendmentRef amendment;
+    private VoteAmendmentRef amendment;
     private Nomination nomination;
     private String number;
     private String question;
@@ -130,11 +130,11 @@ public class Vote {
         this.billInfo = billInfo;
     }
 
-    public AmendmentRef getAmendment() {
+    public VoteAmendmentRef getAmendment() {
         return amendment;
     }
 
-    public void setAmendment(AmendmentRef amendment) {
+    public void setAmendment(VoteAmendmentRef amendment) {
         this.amendment = amendment;
     }
 

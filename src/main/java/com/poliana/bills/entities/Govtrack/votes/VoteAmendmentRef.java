@@ -1,10 +1,10 @@
-package com.poliana.bills.entities.VoteGT;
+package com.poliana.bills.entities.govtrack.votes;
 
 /**
  * @author David Gilmore
  * @date 11/15/13
  */
-public class AmendmentRef {
+public class VoteAmendmentRef {
     private int number;
     private String purpose;
     private String type;

@@ -1,11 +1,13 @@
 package com.poliana.legislation.entities.bills;
 
+import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Property;
 
 /**
  * @author David Gilmore
  * @date 11/22/13
  */
+@Embedded
 public class BillHistory {
 
     private boolean active;

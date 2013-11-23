@@ -2,7 +2,10 @@ package com.poliana.entities.repositories;
 
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.Key;
+import com.google.code.morphia.query.Criteria;
+import com.google.code.morphia.query.CriteriaContainerImpl;
 import com.google.code.morphia.query.Query;
+import com.mongodb.DBObject;
 import com.poliana.entities.entities.CongCommittee;
 import com.poliana.entities.entities.Industry;
 import com.poliana.entities.entities.Legislator;
@@ -24,6 +27,18 @@ public class EntitiesMongoRepo {
     public Iterator<Legislator> allLegislatorTerms() {
         Query<Legislator> query =
                 mongoStore.createQuery(Legislator.class);
+        return query.iterator();
+    }
+
+    public Iterator<Legislator> getLegislator(String legislatorId) {
+        Query<Legislator> query = mongoStore.find(Legislator.class);
+        query.or(
+                query.criteria("thomasId").equal(legislatorId),
+                query.criteria("bioguideId").equal(legislatorId),
+                query.criteria("opensecretsId").equal(legislatorId),
+                query.criteria("fecId").equal(legislatorId),
+                query.criteria("lisId").equal(legislatorId),
+                query.criteria("govtrackId").equal(legislatorId));
         return query.iterator();
     }
 

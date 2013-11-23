@@ -40,7 +40,7 @@ public class BillMongoRepo {
 
     public Iterator<BillGt> govtrackBillsByCongress(int congress) {
         Query<BillGt> query =
-                mongoStore.find(BillGt.class, "congress", congress);
+                mongoStore.find(BillGt.class, "congress", congress+"");
         return query.iterator();
     }
 

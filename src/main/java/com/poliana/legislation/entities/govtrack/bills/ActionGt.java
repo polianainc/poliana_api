@@ -1,7 +1,8 @@
-package com.poliana.legislation.entities.bills;
+package com.poliana.legislation.entities.govtrack.bills;
 
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Property;
+import com.poliana.legislation.entities.bills.Reference;
 
 import java.util.List;
 
@@ -9,10 +10,9 @@ import java.util.List;
  * @author David Gilmore
  * @date 11/22/13
  */
-@Embedded
-public class Action {
+public class ActionGt {
     @Property("acted_at")
-    private int actedAt;
+    private String actedAt;
     @Embedded("bill_ids")
     private List<String> billIds;
     @Embedded
@@ -22,7 +22,7 @@ public class Action {
     private String type;
     private String roll;
     private String under;
-    private int number;
+    private String number;
     private String how;
     private String result;
     private String status;
@@ -31,11 +31,11 @@ public class Action {
     @Property("vote_type")
     private String voteType;
 
-    public int getActedAt() {
+    public String getActedAt() {
         return actedAt;
     }
 
-    public void setActedAt(int actedAt) {
+    public void setActedAt(String actedAt) {
         this.actedAt = actedAt;
     }
 
@@ -95,11 +95,11 @@ public class Action {
         this.under = under;
     }
 
-    public int getNumber() {
+    public String getNumber() {
         return number;
     }
 
-    public void setNumber(int number) {
+    public void setNumber(String number) {
         this.number = number;
     }
 

@@ -1,10 +1,12 @@
 package com.poliana.legislation.entities.govtrack.votes;
 
+import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Property;
 import com.poliana.legislation.entities.votes.BillRef;
 import com.poliana.legislation.entities.votes.Nomination;
 import com.poliana.legislation.entities.votes.VoteAmendmentRef;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 
 /**
@@ -15,13 +17,16 @@ import org.springframework.data.annotation.Id;
 public class VoteGt {
 
     @Id
-    private String id;
+    private ObjectId id;
+    @Embedded
     private BillRef bill;
+    @Embedded
     private VoteAmendmentRef amendment;
     private String category;
     private String chamber;
     private int congress;
     private String date;
+    @Embedded
     private Nomination nomination;
     private String number;
     private String question;
@@ -38,13 +43,14 @@ public class VoteGt {
     private String updatedAt;
     @Property("vote_id")
     private String voteId;
+    @Embedded
     private Voters votes;
 
-    public String getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 

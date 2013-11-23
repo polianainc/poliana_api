@@ -1,18 +1,12 @@
 package com.poliana.legislation.controllers;
 
-import com.poliana.legislation.entities.deprecated.BillPojo;
-import com.poliana.legislation.jobs.MapBillRelationships;
-import com.poliana.legislation.entities.bills.Bill;
-import com.poliana.legislation.entities.votes.Vote;
-import com.poliana.legislation.repositories.BillHadoopRepo;
-import com.poliana.legislation.repositories.BillMongoRepo;
+import com.poliana.legislation.jobs.IngestGovtrack;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.core.CommandMarker;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.core.annotation.CliOption;
 import org.springframework.stereotype.Controller;
 
-import java.util.List;
 
 /**
  * @author David Gilmore
@@ -20,27 +14,23 @@ import java.util.List;
  */
 @Controller
 public class BillJobs implements CommandMarker {
+
     @Autowired
-    private BillHadoopRepo billHadoopRepo;
-    @Autowired
-    private MapBillRelationships gtProcess;
-    @Autowired
-    private BillMongoRepo billMongoRepo;
+    private IngestGovtrack gtProcess;
+
 
     @CliCommand(value = "populateBills")
     public void populateBills(
             @CliOption(key = { "congress" }, mandatory = true ) final int congress,
             @CliOption(key = { "limit" }, mandatory = false ) final int limit) {
 
-        List<BillPojo> rawBills = billHadoopRepo.billMetaByCongress(congress,limit);
-        List<Bill>  bills = gtProcess.processBills(rawBills);
-        billMongoRepo.saveBills(bills);
+        gtProcess.processBills(congress);
+
     }
 
-    @CliCommand(value = "processGovtrackVotes")
+    @CliCommand(value = "populateVotes")
     public void processGovtrackVotes(
             @CliOption(key = { "congress"}, mandatory = true) final int congress ) {
-        List<Vote> votes = gtProcess.processGovtrackVotesByCongress(113);
-        billMongoRepo.saveVotes(votes);
+        gtProcess.processGovtrackVotesByCongress(congress);
     }
 }

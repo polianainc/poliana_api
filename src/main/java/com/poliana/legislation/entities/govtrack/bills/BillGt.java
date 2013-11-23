@@ -20,7 +20,7 @@ public class BillGt {
     private ObjectId id;
 
     @Embedded
-    private List<Action> actions;
+    private List<ActionGt> actionGts;
     @Embedded
     private List<BillAmendmentRef> amendments;
     @Property("bill_id")
@@ -28,7 +28,7 @@ public class BillGt {
     @Property("bill_type")
     private String billType;
     private List<Committee> committees;
-    private int congress;
+    private String congress;
     private Sponsor sponsor;
     private List<Sponsor> cosponsors;
     @Property("enacted_as")
@@ -53,7 +53,7 @@ public class BillGt {
     @Property("subjects_top_term")
     private String subjectsTopTerm;
     @Embedded
-    private BillSummary summary;
+    private BillSummaryGt summary;
     @Embedded
     private List<BillTitle> titles;
     @Property("updated_at")
@@ -67,12 +67,12 @@ public class BillGt {
         this.id = id;
     }
 
-    public List<Action> getActions() {
-        return actions;
+    public List<ActionGt> getActionGts() {
+        return actionGts;
     }
 
-    public void setActions(List<Action> actions) {
-        this.actions = actions;
+    public void setActionGts(List<ActionGt> actionGts) {
+        this.actionGts = actionGts;
     }
 
     public List<BillAmendmentRef> getAmendments() {
@@ -107,16 +107,12 @@ public class BillGt {
         this.committees = committees;
     }
 
-    public int getCongress() {
+    public String getCongress() {
         return congress;
     }
 
-    public void setCongress(int congress) {
-        this.congress = congress;
-    }
-
     public void setCongress(String congress) {
-        this.congress = Integer.getInteger(congress).intValue();
+        this.congress = congress;
     }
 
     public Sponsor getSponsor() {
@@ -231,11 +227,11 @@ public class BillGt {
         this.subjectsTopTerm = subjectsTopTerm;
     }
 
-    public BillSummary getSummary() {
+    public BillSummaryGt getSummary() {
         return summary;
     }
 
-    public void setSummary(BillSummary summary) {
+    public void setSummary(BillSummaryGt summary) {
         this.summary = summary;
     }
 

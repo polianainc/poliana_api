@@ -1,9 +1,12 @@
 package com.poliana.legislation.entities.votes;
 
+import com.google.code.morphia.annotations.Embedded;
+
 /**
  * @author David Gilmore
  * @date 11/15/13
  */
+@Embedded
 public class BillRef {
     private String congress;
     private String number;

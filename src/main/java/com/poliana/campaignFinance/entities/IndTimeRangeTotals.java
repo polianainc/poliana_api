@@ -12,7 +12,7 @@ import java.util.List;
  * @date 11/15/13
  */
 @SuppressWarnings("serial")
-@Entity("industry_time_range_totals")
+@Entity("industry_monthly_totals")
 public class IndTimeRangeTotals {
 
     @Id

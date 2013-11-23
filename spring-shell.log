@@ -117,3 +117,103 @@ populateIndustries
 indContrOverview --id F2600 --congress 112 --range 24
 // Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-22 04:25:56
 populateCommittees
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-22 11:00:30
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-22 11:06:54
+// [failed] populateBills --congress 113 --limit 0
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-22 11:18:40
+// [failed] populateBills --congress 113 --limit 0
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-22 11:46:05
+// [failed] populateBills --congress 113 --limit 0
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-22 11:50:40
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-22 11:54:11
+// [failed] populateBills --congress 113 --limit 0
+// [failed] populateBills --congress 113 --limit 0
+// [failed] populateBills --congress 113 --limit 0
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-22 12:05:39
+// [failed] populateBills --congress 113 --limit 0
+// [failed] populateBills --congress 113 --limit 0
+// [failed] populateBills --congress 113 --limit 0
+// [failed] populateBills --congress 113 --limit 0
+// [failed] populateBills --congress 113 --limit 0
+// [failed] populateBills --congress 113 --limit 0
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-22 12:13:37
+// [failed] populateBills --congress 113 --limit 0
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-22 12:16:12
+// [failed] populateBills --congress 113 --limit 0
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-22 12:33:52
+// [failed] populateBills --congress 113 --limit 0
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-22 12:35:23
+// [failed] populateBills --congress 113 --limit 0
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-22 12:37:35
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-22 12:38:17
+// [failed] populateBills --congress 113 --limit 0
+// [failed] populateBills --congress 113 --limit 0
+// [failed] populateBills --congress 113 --limit 0
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-22 12:49:27
+populateBills --congress 113 --limit 0
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-22 14:30:48
+// [failed] populateBills --congress 113 --limit 0
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-22 14:35:18
+// [failed] populateBills --congress 113 --limit 0
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-22 14:36:57
+// [failed] populateBills --congress 113 --limit 0
+// [failed] populateBills --congress 113 --limit 0
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-22 14:37:57
+// [failed] populateBills --congress 113 --limit 0
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-22 14:38:55
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-22 14:40:27
+// [failed] populateBills --congress 113 --limit 0
+// [failed] populateBills --congress 113 --limit 0
+// [failed] populateBills --congress 113 --limit 0
+// [failed] populateBills --congress 113 --limit 0
+indContrOverview --id E2000 --congress 112 --range 24
+// [failed] populateBills --congress 113 --limit 0
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-22 17:57:15
+populateBills --congress 113 --limit 0
+populateBills --congress 113 --limit 0
+populateVotes --congress 112
+// [failed] populateVotes --congress 113
+// [failed] populateVotes --congress 113
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-22 18:13:00
+// [failed] populateVotes --congress 113
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-22 18:14:47
+// [failed] populateVotes --congress 113
+// [failed] populateVotes --congress 113
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-22 18:27:09
+// [failed] populateVotes --congress 113
+// [failed] populateVotes --congress 113
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-23 08:57:49
+// [failed] populateVotes --congress 113
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-23 09:05:47
+populateVotes --congress 113
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-23 09:35:40
+populateVotes --congress 113
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-23 09:37:04
+populateVotes --congress 113
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-23 09:38:54
+populateVotes --congress 113
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-23 13:49:31
+populateVotes --congress 113
+populateVotes --congress 113
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-23 14:02:03
+populateVotes --congress 113
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-23 16:53:48
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-23 16:55:24
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-23 17:00:21
+// [failed] indContributions --congress 112
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-23 17:18:51
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-23 17:21:58
+// [failed] indContributions --congress 112
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-23 17:23:01
+indContributions --congress 112
+indContributions --congress 112
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-23 17:26:27
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-23 17:28:27
+populateIndustries
+populateCommittees
+// [failed] indContributions --congress 112
+// [failed] indContributions --congress 112
+// [failed] indContributions --congress 112
+// [failed] indContributions --congress 112
+// [failed] indContributions --congress 112
+// Poliana Danger Shell 1.0.0.RELEASE log opened at 2013-11-23 17:37:34

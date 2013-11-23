@@ -1,9 +1,12 @@
 package com.poliana.legislation.entities.votes;
 
+import com.google.code.morphia.annotations.Embedded;
+
 /**
  * @author David Gilmore
  * @date 11/13/13
  */
+@Embedded
 public class Nomination {
     private String number;
     private String title;

@@ -12,7 +12,8 @@ public class Sponsor {
     @Property("sponsored_at")
     private String sponsoredAt;
     private String state;
-    private String id;
+    @Property("thomas_id")
+    private String thomasId;
     private String title;
     @Property("withdrawn_at")
     private String withdrawnAt;
@@ -49,12 +50,12 @@ public class Sponsor {
         this.state = state;
     }
 
-    public String getId() {
-        return id;
+    public String getThomasId() {
+        return thomasId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setThomasId(String thomasId) {
+        this.thomasId = thomasId;
     }
 
     public String getTitle() {

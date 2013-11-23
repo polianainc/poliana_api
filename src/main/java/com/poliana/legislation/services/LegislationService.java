@@ -43,7 +43,7 @@ public class LegislationService {
         return legislators;
     }
 
-    public List<Legislator> gtVoterToLegislator(List<Voter> votersGt, int timeStamp) {
+    public List<Legislator> gtVotersToLegislators(List<Voter> votersGt, int timeStamp) {
         List<Legislator> legislators = new LinkedList<>();
 
         try {
@@ -59,8 +59,16 @@ public class LegislationService {
     }
 
     public int getTimestamp(String dateString) {
+        if (dateString == null)
+            return 0;
         try {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+            SimpleDateFormat formatter = new SimpleDateFormat();
+            if (dateString.length() <= 10) {
+                formatter.applyPattern("yyyy-MM-dd");
+            }
+            else {
+                formatter.applyPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
+            }
             Date date = formatter.parse(dateString);
             long time = date.getTime();
             return (int) (time/1000L);

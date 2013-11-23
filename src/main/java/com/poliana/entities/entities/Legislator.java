@@ -10,7 +10,7 @@ import org.bson.types.ObjectId;
  * @author David Gilmore
  * @date 11/16/13
  */
-@Entity("legislators")
+@Entity("legislators_112313")
 public class Legislator {
 
     @Id

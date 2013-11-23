@@ -1,11 +1,14 @@
 package com.poliana.legislation.entities.govtrack.votes;
 
+import com.google.code.morphia.annotations.Embedded;
+
 import java.util.List;
 
 /**
  * @author David Gilmore
  * @date 11/13/13
  */
+@Embedded
 public class Voters {
     private List<Voter> nay;
     private List<Voter> not_voting;

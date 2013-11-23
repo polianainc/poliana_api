@@ -74,6 +74,7 @@ public class ContributionService {
             Recipient recipient = recipients.get(bioguideId);
             recipient.setCount(recipient.getCount() + contribution.getContributionsCount());
             recipient.setSum(recipient.getSum() + contribution.getContributionSum());
+            recipient.setSeriesAverage(recipient.getSum()/numSeries);
         }
         else {
             Recipient recipient = new Recipient();
@@ -116,6 +117,7 @@ public class ContributionService {
             Recipient recipient = stateAverages.get(state);
             recipient.setCount(recipient.getCount() + contribution.getContributionsCount());
             recipient.setSum(recipient.getSum() + contribution.getContributionSum());
+            recipient.setSeriesAverage(recipient.getSum()/numSeries);
         }
         else {
             Recipient recipient = new Recipient();
@@ -147,7 +149,12 @@ public class ContributionService {
             }
         });
 
-        return recipientList.subList(0,10);
+
+        List<Recipient> retList;
+        if (recipientList.size() > 10)
+            return recipientList.subList(0,10);
+        else
+            return recipientList;
     }
 
 }

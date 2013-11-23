@@ -27,19 +27,28 @@ public class LegislatorService {
 
         List<Legislator> legislators;
 
-        if (lisCache == null) { setCacheLis(); }
-        if (bioguideCache == null) { setCacheBioguide(); }
-        if (thomasCache == null) { setCacheThomas(); }
 
         int idLength = id.length();
-        if(idLength == 4)
+        if(idLength == 4) {
+            if (lisCache == null) { setCacheLis(); }
             legislators = lisCache.get(id);
-        else if (idLength == 7)
+        }
+        else if (idLength == 7) {
+            if (bioguideCache == null) { setCacheBioguide(); }
             legislators = bioguideCache.get(id);
-        else if (idLength == 5)
+        }
+        else if (idLength == 5) {
+            if (thomasCache == null) { setCacheThomas(); }
             legislators = thomasCache.get(id);
-        else
-            return null;
+        }
+        else {
+            legislators = new LinkedList<>();
+            Iterator<Legislator> iterator = entitiesMongoRepo.getLegislator(id);
+            while (iterator.hasNext()) {
+                Legislator legislator = iterator.next();
+                legislators.add(legislator);
+            }
+        }
 
         int correctTerm = 0;
         int closestTimeStamp = 0;
@@ -47,16 +56,21 @@ public class LegislatorService {
         int termStart;
         int index = 0;
 
-        for (Legislator legislator: legislators) {
-            termStart = legislator.getTermStart();
-            diff = Math.abs(timeStamp) - Math.abs(termStart);
-            if ( timeStamp > termStart && diff > (closestTimeStamp-termStart)) {
-                correctTerm = index;
-                closestTimeStamp = termStart;
+        if (legislators != null) {
+            for (Legislator legislator: legislators) {
+                termStart = legislator.getTermStart();
+                diff = Math.abs(timeStamp) - Math.abs(termStart);
+                if ( timeStamp > termStart && diff > (closestTimeStamp-termStart)) {
+                    correctTerm = index;
+                    closestTimeStamp = termStart;
+                }
+                index++;
             }
-            index++;
+
+            return legislators.get(correctTerm);
         }
-        return legislators.get(correctTerm);
+
+        return null;
     }
 
     public void setCacheLis() {

@@ -24,7 +24,7 @@ public class AmendmentGt {
     private ObjectId id;
 
     @Embedded
-    private List<Action> actions;
+    private List<Action> actionGts;
     @Property("amendment_id")
     private String amendmentId;
     @Property("amendment_type")
@@ -61,12 +61,12 @@ public class AmendmentGt {
         this.id = id;
     }
 
-    public List<Action> getActions() {
-        return actions;
+    public List<Action> getActionGts() {
+        return actionGts;
     }
 
-    public void setActions(List<Action> actions) {
-        this.actions = actions;
+    public void setActionGts(List<Action> actionGts) {
+        this.actionGts = actionGts;
     }
 
     public String getAmendmentId() {

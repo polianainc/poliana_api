@@ -1,12 +1,12 @@
-package com.poliana.legislation.entities.bills;
+package com.poliana.legislation.entities.govtrack.bills;
 
 /**
  * @author David Gilmore
  * @date 11/22/13
  */
-public class BillSummary {
+public class BillSummaryGt {
     private String as;
-    private int date;
+    private String date;
     private String text;
 
     public String getAs() {
@@ -17,11 +17,11 @@ public class BillSummary {
         this.as = as;
     }
 
-    public int getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(int date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

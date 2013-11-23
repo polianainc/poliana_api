@@ -3,7 +3,8 @@ package com.poliana.legislation.entities.votes;
 import com.google.code.morphia.annotations.*;
 import com.poliana.legislation.entities.bills.Bill;
 import com.poliana.entities.entities.Legislator;
-import org.springframework.data.annotation.Id;
+import org.bson.types.ObjectId;
+
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ import java.util.List;
 public class Vote {
 
     @Id
-    private String id;
+    private ObjectId id;
 
     @Reference
     private Bill bill;
@@ -28,7 +29,9 @@ public class Vote {
     private int date;
     @Embedded("bill_info")
     private BillRef billInfo;
+    @Embedded
     private VoteAmendmentRef amendment;
+    @Embedded
     private Nomination nomination;
     private String number;
     private String question;
@@ -64,11 +67,11 @@ public class Vote {
     @Reference
     private List<Legislator> present;
 
-    public String getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 

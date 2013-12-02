@@ -1,6 +1,5 @@
 package com.poliana.config;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.shell.plugin.PromptProvider;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Component;
  * Prompt for the interactive shell
  */
 @Component
-//@Profile("production")
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class PromptConfig implements PromptProvider {
 

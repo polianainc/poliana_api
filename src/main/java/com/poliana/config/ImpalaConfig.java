@@ -14,8 +14,7 @@ import java.sql.*;
  * @author David Gilmore
  * @date 10/19/13
  */
-@Configuration
-@ComponentScan(basePackages = "{com.poliana}")
+@ComponentScan(basePackages = "com.poliana.core")
 @PropertySource(value={"classpath:impala.properties"})
 public class ImpalaConfig {
 

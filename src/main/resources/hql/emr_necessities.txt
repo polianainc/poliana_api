@@ -14,7 +14,7 @@ key = Key(mybucket)
 ./elastic-mapreduce --create --alive --name "Hivish" --hive-interactive --key-pair cloudera
 --hive-site=s3://myawsbucket/conf/hive-site.xml
 
-./elastic-mapreduce --create --alive --instance-type m1.medium --num-instances 4 \
+./elastic-mapreduce --create --alive --instance-type m1.small --num-instances 2 \
 --hive-interactive --hive-versions latest --key-pair cloudera
 
 

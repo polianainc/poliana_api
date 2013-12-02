@@ -1,4 +1,4 @@
-package com.poliana.core.common;
+package com.poliana.core.common.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

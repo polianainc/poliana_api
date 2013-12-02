@@ -1,7 +1,7 @@
 package com.poliana.core.legislation.services;
 
-import com.poliana.core.common.TimeUtils;
 import com.poliana.core.common.db.MahoutUtil;
+import com.poliana.core.common.util.TimeUtils;
 import com.poliana.core.entities.entities.Legislator;
 import com.poliana.core.entities.repositories.EntitiesMongoRepo;
 import com.poliana.core.entities.services.LegislatorService;

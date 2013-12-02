@@ -2,7 +2,7 @@ package com.poliana.core.legislation.jobs;
 
 import com.google.code.morphia.Key;
 import com.google.code.morphia.mapping.MappingException;
-import com.poliana.core.common.TimeUtils;
+import com.poliana.core.common.util.TimeUtils;
 import com.poliana.core.entities.entities.Legislator;
 import com.poliana.core.entities.services.LegislatorService;
 import com.poliana.core.legislation.entities.bills.Action;

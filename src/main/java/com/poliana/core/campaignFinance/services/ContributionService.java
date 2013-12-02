@@ -4,7 +4,7 @@ import com.poliana.core.campaignFinance.entities.IndTimeRangeTotals;
 import com.poliana.core.campaignFinance.entities.IndToPolContrTotals;
 import com.poliana.core.campaignFinance.entities.Recipient;
 import com.poliana.core.campaignFinance.repositories.ContributionHadoopRepo;
-import com.poliana.core.common.TimeUtils;
+import com.poliana.core.common.util.TimeUtils;
 import com.poliana.core.entities.entities.Industry;
 import com.poliana.core.entities.entities.Legislator;
 import com.poliana.core.entities.repositories.EntitiesMongoRepo;

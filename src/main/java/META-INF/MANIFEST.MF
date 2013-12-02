@@ -1,2 +1,2 @@
 Manifest-Version: 1.0
-Main-Class: poliana.data.Start
+Main-Class: poliana.data.StartCli

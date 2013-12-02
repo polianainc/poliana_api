@@ -1,0 +1,16 @@
+//        List<IndToPolContrTotals> industryContributions =
+//                contributionRepo.topIndToPolContrTotalsByYearMonth(2012, 1, 5, "total");
+//        List<IndToPolContrTotals> industryContributionsByIndustryId =
+//                contributionRepo.topIndToPolContrTotalsByIndustryYearMonth("X1200", 2012, 1, 5, "total");
+//
+//        List<IndToPolContrTotals> indToPolContrTotalsByBioguideId =
+//                contributionRepo.topIndToPolContrTotalsByBioguideYearMonth("G000225", 2012, 1, 5, "total");
+//        List<IndPartyTotals> partyIndustryTotals =
+//                contributionRepo.indPartyContrTotalsByIndustryYearMonth("X1200", 2012, 1);
+
+//        List<Legislator> legislators = entitiesHadoopRepo.getAllLegistlators();
+//        legislatorsCRUDRepo.save(legislators);
+
+//        List<VoteGT> votesGt = voteGTRepo.findAll();
+//        List<Vote> votes = gtProcess.processVotes(votesGt);
+//        votesCRUDRepo.save(votes);

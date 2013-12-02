@@ -14,7 +14,7 @@ import org.springframework.data.authentication.UserCredentials;
 import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
-@EnableMongoRepositories(basePackages = "com.poliana")
+@EnableMongoRepositories(basePackages = "com.poliana.core")
 @PropertySource(value={"classpath:mongo.properties"})
 public class MongoConfig extends AbstractMongoConfiguration {
 

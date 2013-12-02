@@ -1,6 +1,5 @@
 package com.poliana.config;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.shell.plugin.BannerProvider;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Component;
  * Poliana's Banner provider.
  */
 @Component
-//@Profile("production")
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class BannerConfig implements BannerProvider {
 

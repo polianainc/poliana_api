@@ -16,8 +16,7 @@ import java.sql.SQLException;
  * @author David Gilmore
  * @date 09/03/13
  */
-@Configuration
-@ComponentScan(basePackages = "{com.poliana}")
+@ComponentScan(basePackages = "com.poliana.core")
 @PropertySource(value={"classpath:hive.properties"})
 public class HiveConfig {
 

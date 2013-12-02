@@ -1,4 +1,4 @@
-package com.poliana.controllers;
+package com.poliana.common;
 
 import org.springframework.shell.core.CommandMarker;
 import org.springframework.shell.core.annotation.CliAvailabilityIndicator;

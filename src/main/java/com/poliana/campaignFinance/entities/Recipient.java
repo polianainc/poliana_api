@@ -1,7 +1,6 @@
 package com.poliana.campaignFinance.entities;
 
 import com.google.code.morphia.annotations.Property;
-import com.google.code.morphia.annotations.Transient;
 
 /**
  * @author David Gilmore
@@ -12,8 +11,11 @@ public class Recipient {
     @Property("bioguide_id")
     private String bioguideId;
     private String state;
-    @Transient
     private String party;
+    @Property("first_name")
+    private String firstName;
+    @Property("last_name")
+    private String lastName;
     private int sum;
     private int count;
     @Property("series_average")
@@ -41,6 +43,22 @@ public class Recipient {
 
     public void setParty(String party) {
         this.party = party;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public int getSum() {

@@ -1,6 +1,7 @@
 package com.poliana.legislation.controllers;
 
 import com.poliana.legislation.jobs.IngestGovtrack;
+import com.poliana.legislation.services.LegislationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.core.CommandMarker;
 import org.springframework.shell.core.annotation.CliCommand;
@@ -18,6 +19,9 @@ public class BillJobs implements CommandMarker {
     @Autowired
     private IngestGovtrack gtProcess;
 
+    @Autowired
+    private LegislationService legislationService;
+
 
     @CliCommand(value = "populateBills")
     public void populateBills(
@@ -32,5 +36,12 @@ public class BillJobs implements CommandMarker {
     public void processGovtrackVotes(
             @CliOption(key = { "congress"}, mandatory = true) final int congress ) {
         gtProcess.processGovtrackVotesByCongress(congress);
+    }
+
+    @CliCommand(value = "sponsorshipAnalysis")
+    public String sponsorshipAnalysis(
+            @CliOption(key = { "chamber" }, mandatory = true ) final String chamber,
+            @CliOption(key = { "congress" }, mandatory = true ) final int congress) {
+        return null;
     }
 }

@@ -1,4 +1,4 @@
-package com.poliana.jobs.cron;
+package com.poliana.common.jobs.cron;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;

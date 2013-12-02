@@ -1,8 +1,9 @@
 package com.poliana.campaignFinance.entities;
 
-import com.google.code.morphia.annotations.*;
-import com.poliana.entities.entities.Industry;
-import org.bson.types.ObjectId;
+import com.google.code.morphia.annotations.Embedded;
+import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Id;
+import com.google.code.morphia.annotations.Property;
 
 import java.util.HashMap;
 import java.util.List;
@@ -12,18 +13,18 @@ import java.util.List;
  * @date 11/15/13
  */
 @SuppressWarnings("serial")
-@Entity("industry_monthly_totals")
+@Entity("industry_monthly_totals_120113")
 public class IndTimeRangeTotals {
 
     @Id
-    private ObjectId id;
+    private String id;
 
-    @Reference
-    private Industry industry;
+
+    private String industry;
     private int congress;
     @Property("republican_count")
     private int republicanCount;
-    @Property("republican_count")
+    @Property("republican_sum")
     private int republicanSum;
     @Property("democrat_count")
     private int democratCount;
@@ -35,8 +36,10 @@ public class IndTimeRangeTotals {
     private int independentSum;
     @Embedded("top_recipients")
     private List<Recipient> topRecipients;
-    @Embedded("state_averages")
-    private HashMap<String,Recipient> stateAverages;
+    @Embedded("bottom_recipients")
+    private List<Recipient> bottomRecipients;
+    @Embedded("states")
+    private HashMap<String,Recipient> states;
 
     public IndTimeRangeTotals() {}
 
@@ -50,22 +53,22 @@ public class IndTimeRangeTotals {
         this.setIndependentCount(indTimeRangeTotals.getIndependentCount());
         this.setIndependentSum(indTimeRangeTotals.getIndependentSum());
         this.setTopRecipients(indTimeRangeTotals.getTopRecipients());
-        this.setStateAverages(indTimeRangeTotals.getStateAverages());
+        this.setStates(indTimeRangeTotals.getStates());
     }
 
-    public ObjectId getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(ObjectId id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Industry getIndustry() {
+    public String getIndustry() {
         return industry;
     }
 
-    public void setIndustry(Industry industry) {
+    public void setIndustry(String industry) {
         this.industry = industry;
     }
 
@@ -133,11 +136,19 @@ public class IndTimeRangeTotals {
         this.topRecipients = topRecipients;
     }
 
-    public HashMap<String, Recipient> getStateAverages() {
-        return stateAverages;
+    public List<Recipient> getBottomRecipients() {
+        return bottomRecipients;
     }
 
-    public void setStateAverages(HashMap<String, Recipient> stateAverages) {
-        this.stateAverages = stateAverages;
+    public void setBottomRecipients(List<Recipient> bottomRecipients) {
+        this.bottomRecipients = bottomRecipients;
+    }
+
+    public HashMap<String, Recipient> getStates() {
+        return states;
+    }
+
+    public void setStates(HashMap<String, Recipient> states) {
+        this.states = states;
     }
 }

@@ -29,6 +29,10 @@ PARTITIONED BY (congress INT, bill_type STRING)
 STORED AS SEQUENCEFILE
 LOCATION 's3n://polianaprod/legislation/bills_meta/';
 
+for file in os.listdir("."):
+    w = open("tmp/{0}".format(file),'wb')
+    w.write(open(file,'rb').read().rstrip('\n'))
+
 CREATE VIEW bills.view_bill_sponsorship_flat (
     bill_id,
     sponsor_id,
@@ -93,7 +97,17 @@ GROUP BY
     year,
     month;
 
-CREATE TABLE bills.bill_sponsorship_counts_monthly_external (
+ 
+
+CREATE TABLE bills.bill_sponsorship_counts_monthly (
+    sponsor_id STRING,
+    cosponsor_id STRING,
+    cosponsor_count INT,    
+    bill_type STRING
+)
+PARTITIONED BY (congress INT, year INT, month INT);
+
+CREATE EXTERNAL TABLE bills.bill_sponsorship_counts_monthly (
     sponsor_id STRING,
     cosponsor_id STRING,
     cosponsor_count INT,    

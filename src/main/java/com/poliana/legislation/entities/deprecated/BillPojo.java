@@ -1,14 +1,15 @@
 package com.poliana.legislation.entities.deprecated;
 
+import com.poliana.legislation.models.VoteDeprecated;
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.poliana.legislation.models.VoteDeprecated;
-import org.json.JSONArray;
-import org.json.JSONException;
-
+@Deprecated
 public class BillPojo
 {
     private VoteDeprecated votes;

@@ -23,7 +23,7 @@ public class LegislatorService {
         return null;
     }
 
-    public Legislator legislatorByIdTimestamp(String id, int timeStamp) {
+    public Legislator legislatorByIdTimestamp(String id, int timestamp) {
 
         List<Legislator> legislators;
 
@@ -59,8 +59,8 @@ public class LegislatorService {
         if (legislators != null) {
             for (Legislator legislator: legislators) {
                 termStart = legislator.getTermStart();
-                diff = Math.abs(timeStamp) - Math.abs(termStart);
-                if ( timeStamp > termStart && diff > (closestTimeStamp-termStart)) {
+                diff = Math.abs(timestamp) - Math.abs(termStart);
+                if ( timestamp > termStart && diff > (closestTimeStamp-termStart)) {
                     correctTerm = index;
                     closestTimeStamp = termStart;
                 }

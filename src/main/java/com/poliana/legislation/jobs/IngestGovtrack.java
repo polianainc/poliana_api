@@ -2,6 +2,7 @@ package com.poliana.legislation.jobs;
 
 import com.google.code.morphia.Key;
 import com.google.code.morphia.mapping.MappingException;
+import com.poliana.common.TimeUtils;
 import com.poliana.entities.entities.Legislator;
 import com.poliana.entities.services.LegislatorService;
 import com.poliana.legislation.entities.bills.Action;
@@ -60,7 +61,7 @@ public class IngestGovtrack {
             bill.setSubjects(billGt.getSubjects());
             bill.setSummary(gtSummaryConvert(billGt.getSummary()));
 
-            int introducedAt = legislationService.getTimestamp(billGt.getIntroducedAt());
+            int introducedAt = TimeUtils.getTimestamp(billGt.getIntroducedAt());
             Legislator sponsor =
                     legislatorService.legislatorByIdTimestamp(billGt.getSponsor().getThomasId(), introducedAt);
             bill.setSponsor(sponsor);
@@ -81,7 +82,7 @@ public class IngestGovtrack {
             bill.setIntroducedAt(introducedAt);
             bill.setStatus(billGt.getStatus());
             if (billGt.getStatusAt() != null) {
-                bill.setStatusAt(legislationService.getTimestamp(billGt.getStatusAt()));
+                bill.setStatusAt(TimeUtils.getTimestamp(billGt.getStatusAt()));
             }
             bill.setCongress(Integer.parseInt(billGt.getCongress()));
             bill.setBillType(billGt.getBillType());
@@ -155,8 +156,8 @@ public class IngestGovtrack {
         vote.setCategory(voteGt.getCategory());
         vote.setCongress(voteGt.getCongress());
 
-        int timeStamp = legislationService.getTimestamp(voteGt.getDate());
-        vote.setDate(timeStamp);
+        int timestamp = TimeUtils.getTimestamp(voteGt.getDate());
+        vote.setDate(timestamp);
         vote.setBillInfo(voteGt.getBill());
         vote.setAmendment(voteGt.getAmendment());
         vote.setNomination(voteGt.getNomination());
@@ -173,16 +174,16 @@ public class IngestGovtrack {
         vote.setChamber(voteGt.getChamber());
 
         Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis((long) timeStamp * 1000L);
+        cal.setTimeInMillis((long) timestamp * 1000L);
 
         vote.setYear(cal.get(Calendar.YEAR));
         vote.setMonth(cal.get(Calendar.MONTH+1));
 
         Voters votersGt = voteGt.getVotes();
-        List<Legislator> yeas = legislationService.gtVotersToLegislators(votersGt.getYea(), timeStamp);
-        List<Legislator> nays = legislationService.gtVotersToLegislators(votersGt.getNay(), timeStamp);
-        List<Legislator> notVoting = legislationService.gtVotersToLegislators(votersGt.getNotVoting(), timeStamp);
-        List<Legislator> present = legislationService.gtVotersToLegislators(votersGt.getPresent(), timeStamp);
+        List<Legislator> yeas = legislationService.gtVotersToLegislators(votersGt.getYea(), timestamp);
+        List<Legislator> nays = legislationService.gtVotersToLegislators(votersGt.getNay(), timestamp);
+        List<Legislator> notVoting = legislationService.gtVotersToLegislators(votersGt.getNotVoting(), timestamp);
+        List<Legislator> present = legislationService.gtVotersToLegislators(votersGt.getPresent(), timestamp);
 
         vote.setYeaTotal(yeas.size());
         vote.setNayTotal(nays.size());
@@ -201,19 +202,19 @@ public class IngestGovtrack {
         BillHistory billHistory = new BillHistory();
 
         billHistory.setActive(billHistoryGt.isActive());
-        billHistory.setActiveAt(legislationService.getTimestamp(billHistoryGt.getActiveAt()));
+        billHistory.setActiveAt(TimeUtils.getTimestamp(billHistoryGt.getActiveAt()));
         billHistory.setAwaitingSignature(billHistoryGt.isAwaitingSignature());
-        billHistory.setAwaitingSignatureSince(legislationService.getTimestamp(billHistoryGt.getAwaitingSignatureSince()));
+        billHistory.setAwaitingSignatureSince(TimeUtils.getTimestamp(billHistoryGt.getAwaitingSignatureSince()));
         billHistory.setEnacted(billHistoryGt.isEnacted());
-        billHistory.setEnactedAt(legislationService.getTimestamp(billHistoryGt.getEnactedAt()));
+        billHistory.setEnactedAt(TimeUtils.getTimestamp(billHistoryGt.getEnactedAt()));
         billHistory.setHousePassageResult(billHistoryGt.getHousePassageResult());
-        billHistory.setHousePassageResultAt(legislationService.getTimestamp(billHistoryGt.getHousePassageResultAt()));
+        billHistory.setHousePassageResultAt(TimeUtils.getTimestamp(billHistoryGt.getHousePassageResultAt()));
         billHistory.setSenatePassageResult(billHistoryGt.getSenatePassageResult());
-        billHistory.setSenatePassageResultAt(legislationService.getTimestamp(billHistoryGt.getSenatePassageResultAt()));
+        billHistory.setSenatePassageResultAt(TimeUtils.getTimestamp(billHistoryGt.getSenatePassageResultAt()));
         billHistory.setHouseOverrideResult(billHistoryGt.getHouseOverrideResult());
         billHistory.setSenateOverrideResult(billHistoryGt.getSenateOverrideResult());
         billHistory.setVetoed(billHistory.isVetoed());
-        billHistory.setVetoedAt(legislationService.getTimestamp(billHistoryGt.getVetoedAt()));
+        billHistory.setVetoedAt(TimeUtils.getTimestamp(billHistoryGt.getVetoedAt()));
 
         return billHistory;
     }
@@ -225,7 +226,7 @@ public class IngestGovtrack {
             if (billSummaryGt.getAs() != null)
                 billSummary.setAs(billSummaryGt.getAs());
             if (billSummaryGt.getDate() != null)
-                billSummary.setDate(legislationService.getTimestamp(billSummaryGt.getDate()));
+                billSummary.setDate(TimeUtils.getTimestamp(billSummaryGt.getDate()));
             billSummary.setText(billSummaryGt.getText());
         }
 
@@ -242,7 +243,7 @@ public class IngestGovtrack {
                 Action action = new Action();
 
                 if (actionGt.getActedAt() != null)
-                    action.setActedAt(legislationService.getTimestamp(actionGt.getActedAt()));
+                    action.setActedAt(TimeUtils.getTimestamp(actionGt.getActedAt()));
                 action.setBillIds(actionGt.getBillIds());
                 action.setReferences(actionGt.getReferences());
                 action.setCalendar(actionGt.getCalendar());

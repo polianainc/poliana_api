@@ -85,6 +85,52 @@ CREATE TABLE IF NOT EXISTS entities.legislators_flat_terms (
     term_state_rank STRING
 );
 
+CREATE VIEW IF NOT EXISTS entities.view_legislators (
+    first_name,
+    last_name,
+    official_full,
+    party,
+    thomas_id,
+    bioguide_id,
+    opensecrets_id,
+    fec_id,
+    votesmart_id,
+    ballotpedia,
+    lis_id,
+    wikipedia_id,
+    govtrack_id,
+    maplight_id,
+    icpsr_id,
+    cspan_id,
+    house_history_id,
+    washington_post_id,
+    gender,
+    birthday,
+    religion
+) as SELECT DISTINCT
+    first_name,
+    last_name,
+    official_full,
+    party,
+    thomas_id,
+    bioguide_id,
+    opensecrets_id,
+    fec_id,
+    votesmart_id,
+    ballotpedia,
+    lis_id,
+    wikipedia_id,
+    govtrack_id,
+    maplight_id,
+    icpsr_id,
+    cspan_id,
+    house_history_id,
+    washington_post_id,
+    gender,
+    birthday,
+    religion
+FROM entities.legislators_flat_terms;
+
 CREATE TABLE IF NOT EXISTS entities.senate_terms LIKE entities.legislators_flat_terms;
 
 CREATE TABLE IF NOT EXISTS entities.house_terms LIKE entities.legislators_flat_terms;

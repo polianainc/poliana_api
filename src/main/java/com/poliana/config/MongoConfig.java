@@ -52,7 +52,8 @@ public class MongoConfig extends AbstractMongoConfiguration {
                 mongo(),
                 env.getProperty("mongo.dbname"),
                 env.getProperty("mongo.username"),
-                env.getProperty("mongo.password").toCharArray());
+                env.getProperty("mongo.password").toCharArray()
+        );
     }
 
 

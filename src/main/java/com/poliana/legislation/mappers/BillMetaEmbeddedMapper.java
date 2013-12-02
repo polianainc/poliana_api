@@ -27,8 +27,8 @@ public class BillMetaEmbeddedMapper implements RowMapper<BillPojo> {
         bill.setSubjectsDelim(rs.getString("subjects"));
         bill.setSummary(rs.getString("summary"));
 
-        int timeStamp = rs.getInt("introduced_at");
-        bill.setIntroducedAt(timeStamp);
+        int timestamp = rs.getInt("introduced_at");
+        bill.setIntroducedAt(timestamp);
         bill.setHousePassageResult(rs.getString("house_passage_result"));
         bill.setHousePassageResultAt(rs.getInt("house_passage_result_at"));
         bill.setSenateClotureResult(rs.getString("senate_cloture_result"));
@@ -43,7 +43,7 @@ public class BillMetaEmbeddedMapper implements RowMapper<BillPojo> {
         bill.setBillType(rs.getString("bill_type"));
 
         Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis((long) timeStamp * 1000L);
+        cal.setTimeInMillis((long) timestamp * 1000L);
 
         bill.setYear(cal.get(Calendar.YEAR));
         bill.setMonth(cal.get(Calendar.MONTH + 1));

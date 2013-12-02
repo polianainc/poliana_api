@@ -1,4 +1,4 @@
-CREATE EXTERNAL TABLE IF NOT EXISTS bills_external.bills_json (
+CREATE EXTERNAL TABLE IF NOT EXISTS bills_external.bills_json_test (
     actions ARRAY<STRUCT<
         acted_at: STRING,
         committee: STRING,
@@ -300,6 +300,45 @@ CREATE EXTERNAL TABLE bills_external.vote_arrays (
 PARTITIONED BY (year INT, month INT)
 STORED AS SEQUENCEFILE
 LOCATION 's3n://polianaprod/legislation/vote_arrays/';
+
+CREATE TABLE bills.bill_sponsorship_flat (
+    bill_id STRING,
+    bill_type STRING,
+    sponsor_name STRING,
+    sponsor_district STRING,
+    sponsor_state STRING,
+    sponsor_thomas_id STRING,
+    sponsor_title STRING,
+    sponsor_type STRING,
+    cosponsor_district STRING,
+    cosponsor_name STRING,
+    cosponsor_state STRING,
+    cosponsor_thomas_id STRING,
+    cosponsor_title STRING,
+    cosponsor_withdrawn_at STRING,
+    introduced_at STRING,
+    congress STRING
+);
+
+CREATE EXTERNAL TABLE IF NOT EXISTS bills_external.bill_sponsorship_flat (
+    bill_id STRING,
+    bill_type STRING,
+    sponsor_name STRING,
+    sponsor_district STRING,
+    sponsor_state STRING,
+    sponsor_thomas_id STRING,
+    sponsor_title STRING,
+    sponsor_type STRING,
+    cosponsor_district STRING,
+    cosponsor_name STRING,
+    cosponsor_state STRING,
+    cosponsor_thomas_id STRING,
+    cosponsor_title STRING,
+    cosponsor_withdrawn_at STRING,
+    introduced_at STRING,
+    congress STRING
+)
+LOCATION 's3n://polianaprod/legislation/bill_sponsorship_flat/';
 
 CREATE EXTERNAL TABLE IF NOT EXISTS bills_external.votes_by_bill_embedded (
     vote_id STRING,

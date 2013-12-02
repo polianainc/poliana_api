@@ -216,6 +216,4 @@ public class ContributionHadoopRepo {
 
         return impalaTemplate.query(query, new IndToPolContrTotalsMapper());
     }
-
-
 }

@@ -3,6 +3,7 @@ package com.poliana.legislation.entities.deprecated;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+@Deprecated
 @SuppressWarnings("serial")
 @Document(collection = "voter")
 public class BillVote {

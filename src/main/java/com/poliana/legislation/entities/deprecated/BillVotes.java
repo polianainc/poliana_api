@@ -1,12 +1,12 @@
 package com.poliana.legislation.entities.deprecated;
 
-import com.poliana.legislation.entities.deprecated.BillVote;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 @SuppressWarnings("serial")
 @Document(collection = "bill_votes")
 public class BillVotes {

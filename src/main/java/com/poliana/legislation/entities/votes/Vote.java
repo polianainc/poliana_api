@@ -3,7 +3,6 @@ package com.poliana.legislation.entities.votes;
 import com.google.code.morphia.annotations.*;
 import com.poliana.legislation.entities.bills.Bill;
 import com.poliana.entities.entities.Legislator;
-import org.bson.types.ObjectId;
 
 
 import java.util.List;
@@ -12,11 +11,11 @@ import java.util.List;
  * @author David Gilmore
  * @date 11/13/13
  */
-@Entity("votes")
+@Entity("votes_120113")
 public class Vote {
 
     @Id
-    private ObjectId id;
+    private String id;
 
     @Reference
     private Bill bill;
@@ -67,11 +66,11 @@ public class Vote {
     @Reference
     private List<Legislator> present;
 
-    public ObjectId getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(ObjectId id) {
+    public void setId(String id) {
         this.id = id;
     }
 

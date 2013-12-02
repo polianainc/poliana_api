@@ -1,8 +1,26 @@
+# Python
 env/
 .env/
-.idea/
 *.pyc
-*.pem
+
+# Intellij
+.idea/
 *.iml
+*.iws
+
+# Mac
+.DS_Store
+
+# Maven
+log/
+target/
+
+#data
+data/
+
+.pem
 target/
 out/
+spring-shell.log
+.DS_Store
+derby.log

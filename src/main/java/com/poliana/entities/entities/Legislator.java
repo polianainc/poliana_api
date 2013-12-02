@@ -4,17 +4,16 @@ import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Indexed;
 import com.google.code.morphia.annotations.Property;
-import org.bson.types.ObjectId;
 
 /**
  * @author David Gilmore
  * @date 11/16/13
  */
-@Entity("legislators_112313")
+@Entity("legislators_120113")
 public class Legislator {
 
     @Id
-    private ObjectId id;
+    private String id;
 
     @Property("first_name")
     private String firstName;
@@ -65,11 +64,11 @@ public class Legislator {
     @Property("term_state_rank")
     private String termStateRank;
 
-    public ObjectId getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(ObjectId id) {
+    public void setId(String id) {
         this.id = id;
     }
 

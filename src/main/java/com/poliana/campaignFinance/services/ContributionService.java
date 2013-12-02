@@ -4,6 +4,8 @@ import com.poliana.campaignFinance.entities.IndTimeRangeTotals;
 import com.poliana.campaignFinance.entities.IndToPolContrTotals;
 import com.poliana.campaignFinance.entities.Recipient;
 import com.poliana.campaignFinance.repositories.ContributionHadoopRepo;
+import com.poliana.common.TimeUtils;
+import com.poliana.entities.entities.Industry;
 import com.poliana.entities.entities.Legislator;
 import com.poliana.entities.repositories.EntitiesMongoRepo;
 import com.poliana.entities.services.LegislatorService;
@@ -30,13 +32,14 @@ public class ContributionService {
             String industryId, int congress, int numSeries) {
 
         List<IndToPolContrTotals> contributionTotals =
-                contributionRepo.industryContrTotals(industryId, congressToYears(congress));
+                contributionRepo.industryContrTotals(industryId, TimeUtils.congressToYears(congress));
 
 
         IndTimeRangeTotals timeRangeTotals = new IndTimeRangeTotals();
 
         timeRangeTotals.setCongress(congress);
-        timeRangeTotals.setIndustry(entitiesMongoRepo.industry(industryId));
+        Industry industry = entitiesMongoRepo.industry(industryId);
+        timeRangeTotals.setIndustry(industry.getId());
 
         HashMap<String,Recipient> recipients = new HashMap<>(500);
         HashMap<String,Recipient> stateAverages = new HashMap<>(60);
@@ -48,17 +51,11 @@ public class ContributionService {
         }
 
 
-        timeRangeTotals.setStateAverages(stateAverages);
-        timeRangeTotals.setTopRecipients(topRecipients(recipients));
+        timeRangeTotals.setStates(stateAverages);
+        timeRangeTotals.setTopRecipients(topRecipients(recipients, 5));
+        timeRangeTotals.setBottomRecipients(bottomRecipients(recipients, 5));
 
         return timeRangeTotals;
-    }
-
-    public int[] congressToYears(int congress) {
-        int[] years = new int[2];
-        years[0] = (congress*2) + 1787;
-        years[1] = years[0] + 1;
-        return years;
     }
 
 /*********************************************************************************************************/
@@ -85,8 +82,10 @@ public class ContributionService {
             recipient.setCount(contributionCount);
             recipient.setSum(contributionSum);
             recipient.setBioguideId(bioguideId);
-            recipient.setSeriesAverage(contributionSum/numSeries);
+            recipient.setSeriesAverage(contributionSum / numSeries);
             recipient.setParty(legislator.getParty());
+            recipient.setFirstName(legislator.getFirstName());
+            recipient.setLastName(legislator.getLastName());
             recipients.put(bioguideId, recipient);
         }
     }
@@ -94,15 +93,15 @@ public class ContributionService {
     private void partyCount(IndToPolContrTotals contribution, IndTimeRangeTotals totals) {
         switch(contribution.getParty()) {
             case "Republican":
-                totals.setRepublicanCount(totals.getRepublicanCount() + contribution.getContributionSum());
-                totals.setRepublicanSum(totals.getRepublicanCount() + contribution.getContributionSum());
+                totals.setRepublicanCount(totals.getRepublicanCount() + contribution.getContributionsCount());
+                totals.setRepublicanSum(totals.getRepublicanSum() + contribution.getContributionSum());
                 break;
             case "Democrat":
                 totals.setDemocratCount(totals.getDemocratCount() + contribution.getContributionsCount());
                 totals.setDemocratSum(totals.getDemocratSum() + contribution.getContributionSum());
                 break;
             case "Independent":
-                totals.setIndependentCount(totals.getIndependentCount() + contribution.getContributionSum());
+                totals.setIndependentCount(totals.getIndependentCount() + contribution.getContributionsCount());
                 totals.setIndependentSum(totals.getIndependentSum() + contribution.getContributionSum());
                 break;
         }
@@ -135,11 +134,11 @@ public class ContributionService {
     private Legislator getLegislator(IndToPolContrTotals contribution) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(contribution.getYear(),contribution.getMonth(),2);
-        long timeStamp = calendar.getTimeInMillis()/1000;
-        return legislatorService.legislatorByIdTimestamp(contribution.getBioguideId(),(int)timeStamp);
+        long timestamp = calendar.getTimeInMillis()/1000;
+        return legislatorService.legislatorByIdTimestamp(contribution.getBioguideId(),(int)timestamp);
     }
 
-    private List<Recipient> topRecipients(HashMap<String,Recipient> recipients) {
+    private List<Recipient> topRecipients(HashMap<String,Recipient> recipients, int limit) {
         List<Recipient> recipientList = new ArrayList<>(recipients.values());
 
         Collections.sort(recipientList, new Comparator<Recipient>() {
@@ -149,12 +148,42 @@ public class ContributionService {
             }
         });
 
-
-        List<Recipient> retList;
-        if (recipientList.size() > 10)
-            return recipientList.subList(0,10);
+        if (recipientList.size() > limit)
+            return recipientList.subList(0,limit);
         else
             return recipientList;
     }
 
+    private List<Recipient> bottomRecipients(HashMap<String,Recipient> recipients, int limit) {
+        List<Recipient> recipientList = new ArrayList<>(recipients.values());
+
+        Collections.sort(recipientList, new Comparator<Recipient>() {
+
+            public int compare(Recipient r1, Recipient r2) {
+                return r1.getSum() - r2.getSum();
+            }
+        });
+
+        int recipientsCount = recipientList.size();
+        int index = 0;
+        int firstPositive = 0;
+        Iterator<Recipient> recipientIterator = recipientList.iterator();
+        while (recipientIterator.hasNext() && firstPositive < recipientsCount - limit) {
+            Recipient recipient = recipientIterator.next();
+            if (recipient.getSum() > 0) {
+                firstPositive = index;
+                break;
+            }
+            index++;
+        }
+
+        if (recipientsCount > limit + firstPositive)
+            return recipientList.subList(firstPositive,limit+firstPositive);
+        else if (recipientsCount <= limit)
+            return recipientList;
+        else {
+            int offset = (firstPositive - recipientsCount) + limit;
+            return recipientList.subList(firstPositive-offset,firstPositive-offset);
+        }
+    }
 }

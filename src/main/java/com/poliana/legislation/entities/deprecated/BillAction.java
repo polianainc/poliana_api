@@ -1,6 +1,7 @@
 package com.poliana.legislation.entities.deprecated;
 
 
+@Deprecated
 public class BillAction {
     private String billId;
     private String actedAt;

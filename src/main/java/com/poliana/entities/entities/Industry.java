@@ -3,7 +3,6 @@ package com.poliana.entities.entities;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Property;
-import org.bson.types.ObjectId;
 
 
 /**
@@ -14,7 +13,7 @@ import org.bson.types.ObjectId;
 public class Industry {
 
     @Id
-    private ObjectId id;
+    private String id;
 
     @Property("industry_id")
     private String industryId;
@@ -24,6 +23,14 @@ public class Industry {
     private String sector;
     @Property("sector_long")
     private String sectorLong;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getIndustryId() {
         return industryId;

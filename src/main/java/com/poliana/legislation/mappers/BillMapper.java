@@ -36,12 +36,12 @@ public class BillMapper implements RowMapper<BillPojo> {
         bill.setBillType(rs.getString("bill_type"));
 
 
-        int timeStamp = rs.getInt("introduced_at");
+        int timestamp = rs.getInt("introduced_at");
 
         Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis((long)timeStamp*1000L);
+        cal.setTimeInMillis((long)timestamp*1000L);
 
-        bill.setIntroducedAt(timeStamp);
+        bill.setIntroducedAt(timestamp);
         bill.setYear(cal.get(Calendar.YEAR));
         bill.setMonth(cal.get(Calendar.MONTH+1));
 

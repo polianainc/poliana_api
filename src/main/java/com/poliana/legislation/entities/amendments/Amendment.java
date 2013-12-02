@@ -4,7 +4,6 @@ import com.google.code.morphia.annotations.*;
 import com.poliana.legislation.entities.bills.Action;
 import com.poliana.legislation.entities.bills.Bill;
 import com.poliana.legislation.entities.govtrack.bills.Sponsor;
-import org.bson.types.ObjectId;
 
 import java.util.List;
 
@@ -12,11 +11,11 @@ import java.util.List;
  * @author David Gilmore
  * @date 11/22/13
  */
-@Entity("amendments")
+@Entity("amendments_120113")
 public class Amendment {
 
     @Id
-    private ObjectId id;
+    private String id;
 
     @Embedded
     private List<Action> actionGts;
@@ -50,11 +49,11 @@ public class Amendment {
     @Property("updated_at")
     private int updatedAt;
 
-    public ObjectId getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(ObjectId id) {
+    public void setId(String id) {
         this.id = id;
     }
 

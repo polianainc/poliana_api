@@ -11,7 +11,7 @@ public class IndToPolContrTotals {
     private String industryId;
     private int contributionsCount;
     private int contributionSum;
-    private int timeStamp;
+    private int timestamp;
     private int year;
     private int month;
 
@@ -55,12 +55,12 @@ public class IndToPolContrTotals {
         this.contributionSum = contributionSum;
     }
 
-    public int getTimeStamp() {
-        return timeStamp;
+    public int getTimestamp() {
+        return timestamp;
     }
 
-    public void setTimeStamp(int timeStamp) {
-        this.timeStamp = timeStamp;
+    public void setTimestamp(int timestamp) {
+        this.timestamp = timestamp;
     }
 
     public int getYear() {

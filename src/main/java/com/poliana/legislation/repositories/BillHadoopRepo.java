@@ -1,10 +1,11 @@
 package com.poliana.legislation.repositories;
 
-import com.poliana.legislation.entities.deprecated.BillPojo;
+import com.poliana.legislation.entities.Sponsorship;
+import com.poliana.legislation.mappers.IndividualSponsorshipMapper;
 import com.poliana.legislation.entities.deprecated.BillAction;
-import com.poliana.legislation.models.VoteDeprecated;
-import com.poliana.legislation.mappers.*;
+import com.poliana.legislation.entities.deprecated.BillPojo;
 import com.poliana.legislation.entities.deprecated.BillVotes;
+import com.poliana.legislation.mappers.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -48,27 +49,6 @@ public class BillHadoopRepo {
                 "bills.bill_meta_embedded b JOIN bills.votes_by_bill v " +
                 "ON b.vote_id = v.vote_id WHERE congress = " + congress,
                 String.class);
-    }
-
-    /**
-     * Returns a BillPojo object from the given congress.
-     * BillPojo meta and vote information is populated.
-     * Selects from a join of bills.bill_meta_embedded
-     * and bills.votes_by_bill_embedded.
-     * Impala is data source.
-     *
-     * @param billId    {String} Query parameter to the bill_id field.
-     *
-     * @see             com.poliana.legislation.entities.deprecated.BillPojo
-     * @see             BillWithVotesMapper
-     */
-    public BillPojo billsWithVotesByBillId(String billId) {
-        List<BillPojo> billList = impalaTemplate.query("" +
-                "SELECT * FROM " +
-                "bills.bill_meta_embedded b JOIN bills.votes_by_bill v " +
-                "ON b.vote_id = v.vote_id WHERE b.bill_id = \'" + billId + "\'",
-                new BillWithVotesMapper());
-        return maxVoteRecord(billList);
     }
 
     /**
@@ -309,25 +289,12 @@ public class BillHadoopRepo {
                 new BillActionMapper());
     }
 
-    private BillPojo maxVoteRecord(List<BillPojo> bills) {
-        if (null == bills)
-            return null;
-        int index = 0;
-        int size = 0;
-        int max = 0;
-        if(bills.size() > 1)
-            System.out.println("hello there");
-        for (BillPojo bill : bills) {
-            VoteDeprecated votes = bill.getVotes();
-            int tmp = votes.getYeaTotal() + votes.getNayTotal() +
-                    votes.getNotVotingTotal() + votes.getPresentTotal();
-            if (tmp > size) {
-                size = tmp;
-                max = index;
-            }
-            index++;
-        }
-        return bills.get(max);
+    public List<Sponsorship> getSponsorships(String chamber, int congress) {
+        String query = "SELECT s.bioguide_id, c.bioguide_id, count(c.bioguide_id) FROM " +
+                "bills.bill_sponsorship_flat b JOIN entities.view_legislators s ON b.sponsor_thomas_id = s.thomas_id " +
+                "JOIN entities.view_legislators c ON b.cosponsor_thomas_id = c.thomas_id WHERE congress = \"" + congress + "\" " +
+                "AND SUBSTR(bill_type,1,1) = \"" + chamber +"\" GROUP BY s.bioguide_id, c.bioguide_id";
+        return impalaTemplate.query(query, new IndividualSponsorshipMapper(chamber,congress));
     }
 
     public void setImpalaTemplate(JdbcTemplate impalaTemplate) {

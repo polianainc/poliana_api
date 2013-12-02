@@ -37,5 +37,4 @@ public class BillsController implements CommandMarker {
         }
         return actionArray.toString();
     }
-
 }

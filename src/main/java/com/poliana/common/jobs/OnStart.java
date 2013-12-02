@@ -1,4 +1,4 @@
-package com.poliana.jobs;
+package com.poliana.common.jobs;
 
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;

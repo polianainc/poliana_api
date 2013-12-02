@@ -1,4 +1,4 @@
-package com.poliana.jobs.batch;
+package com.poliana.common.jobs.batch;
 
 import org.h2.tools.Csv;
 import org.springframework.beans.factory.annotation.Autowired;

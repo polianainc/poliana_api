@@ -1,5 +1,7 @@
 package com.poliana.config;
 
+import com.google.code.morphia.Datastore;
+import com.google.code.morphia.Morphia;
 import org.h2.jdbcx.JdbcDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -15,7 +17,7 @@ import java.sql.SQLException;
 * @date 10/23/13
 */
 @Configuration
-@ComponentScan("com.poliana")
+@ComponentScan("com.poliana.core")
 public class StandaloneConfig {
 
     @Bean
@@ -34,5 +36,10 @@ public class StandaloneConfig {
     public JdbcTemplate hiveTemplate() throws ClassNotFoundException, SQLException, InstantiationException, IllegalAccessException, NamingException {
         JdbcTemplate hiveTemplate = new JdbcTemplate(dataSource());
         return hiveTemplate;
+    }
+
+    @Bean
+    public Datastore mongoStore() {
+        return new Morphia().createDatastore("");
     }
 }

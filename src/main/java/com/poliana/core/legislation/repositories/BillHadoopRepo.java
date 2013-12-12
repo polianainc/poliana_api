@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -289,11 +290,30 @@ public class BillHadoopRepo {
                 new BillActionMapper());
     }
 
+    public List<String> uniqueVoters(String chamber, int beginTimestamp, int endTimestamp) {
+        String c = (chamber.contains("s")) ? "sen" : "rep";
+
+        Calendar cal = Calendar.getInstance();
+
+        cal.setTimeInMillis((long)beginTimestamp*1000);
+        int beginYear = cal.get(cal.YEAR);
+        int beginMonth = cal.get(cal.MONTH);
+
+        cal.setTimeInMillis((long)endTimestamp*1000);
+        int endYear = cal.get(cal.YEAR);
+        int endMonth = cal.get(cal.MONTH);
+
+        String query = "SELECT DISTINCT id FROM bills.votes_flat v JOIN entities.legislators_flat_terms l " +
+                "ON v.id = l.bioguide_id WHERE year >= " + beginYear + " AND year <= " + endYear + " AND " +
+                "term_type = \'" + c + "\'";
+        return impalaTemplate.queryForList(query, String.class);
+    }
+
     public List<Sponsorship> getSponsorships(String chamber, int congress) {
         String query = "SELECT s.bioguide_id, c.bioguide_id, count(c.bioguide_id) FROM " +
                 "bills.bill_sponsorship_flat b JOIN entities.view_legislators s ON b.sponsor_thomas_id = s.thomas_id " +
-                "JOIN entities.view_legislators c ON b.cosponsor_thomas_id = c.thomas_id WHERE congress = \"" + congress + "\" " +
-                "AND SUBSTR(bill_type,1,1) = \"" + chamber +"\" GROUP BY s.bioguide_id, c.bioguide_id";
+                "JOIN entities.view_legislators c ON b.cosponsor_thomas_id = c.thomas_id WHERE congress = \"" +
+                congress + "\" " + "AND SUBSTR(bill_type,1,1) = \"" + chamber +"\" GROUP BY s.bioguide_id, c.bioguide_id";
         return impalaTemplate.query(query, new IndividualSponsorshipMapper(chamber,congress));
     }
 }

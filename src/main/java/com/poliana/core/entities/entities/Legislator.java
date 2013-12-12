@@ -9,7 +9,7 @@ import com.google.code.morphia.annotations.Property;
  * @author David Gilmore
  * @date 11/16/13
  */
-@Entity("legislators_120113")
+@Entity("legislators")
 public class Legislator {
 
     @Id

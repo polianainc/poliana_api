@@ -1,4 +1,4 @@
-package com.poliana.core.legislation.cli;
+package com.poliana.cli.controllers;
 
 import com.poliana.core.legislation.jobs.IngestGovtrack;
 import com.poliana.core.legislation.services.LegislationService;

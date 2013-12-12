@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import com.poliana.core.campaignFinance.entities.*;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Repository
@@ -215,5 +216,34 @@ public class ContributionHadoopRepo {
                 "WHERE year = " + year + mon + lim;
 
         return impalaTemplate.query(query, new IndToPolContrTotalsMapper());
+    }
+
+    /**
+     * Returns industry_ids mapped to the sum of their contributions to the given politician over the specified
+     * time period.
+     *
+     * @param bioguideId      {String}
+     * @param beginTimestamp  {int}
+     * @param endTimestamp    {int}
+     *
+     * @see             com.poliana.core.campaignFinance.mappers.LegislatorRecievedIndustryTotals
+     */
+    public HashMap<String,Integer> legislatorRecievedIndustryTotals(String bioguideId, int beginTimestamp,
+                                                                    int endTimestamp) {
+
+        //Impala 1.1 has limited timestamp, UDF, and string functionality. Had to fall back to REGEX. Slow,
+        //But gets the job done for now
+        String query = "SELECT bioguide_id, real_code, sum(amount) FROM campaign_finance.individual_contributions c " +
+                "JOIN entities.legislators l ON c.recip_id = l.opensecrets_id \n" +
+                "WHERE bioguide_id = \'" + bioguideId + "\' AND " +
+                "unix_timestamp(concat(regexp_extract(dates,'[\\\\d+]{4}',0),\"-\"," +
+                    "substr(regexp_extract(dates,'\\\\d+\\/',0),1,2),\"-\"," +
+                    "substr(regexp_extract(dates,'\\/\\\\d+\\/',0),2,2),\" 01:01:01.000000000\")) > " + beginTimestamp +
+                " AND unix_timestamp(concat(regexp_extract(dates,'[\\\\d+]{4}',0),\"-\"," +
+                    "substr(regexp_extract(dates,'\\\\d+\\/',0),1,2),\"-\"," +
+                    "substr(regexp_extract(dates,'\\/\\\\d+\\/',0),2,2),\" 01:01:01.000000000\")) < " + endTimestamp +
+                " GROUP BY bioguide_id, real_code;";
+
+        return impalaTemplate.query(query, new LegislatorRecievedIndustryTotals());
     }
 }

@@ -1,4 +1,4 @@
-package com.poliana.core.entities.cli;
+package com.poliana.cli.controllers;
 
 import com.poliana.core.entities.jobs.EntityJobs;
 import org.springframework.beans.factory.annotation.Autowired;

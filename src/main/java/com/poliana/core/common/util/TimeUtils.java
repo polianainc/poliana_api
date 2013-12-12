@@ -62,6 +62,13 @@ public class TimeUtils {
         return thisTerm-oneYear()*4;
     }
 
+    public static int timestampToCongress(int timestamp) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis((long)timestamp*1000);
+        int year = cal.get(cal.YEAR);
+        return (year-1787)/2;
+    }
+
     public static int[] termRanges(int congress) {
         int[] years = congressToYears(congress);
         Calendar cal = Calendar.getInstance();

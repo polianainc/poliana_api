@@ -19,8 +19,6 @@ public class LegislationService {
 
     @Autowired
     private LegislatorService legislatorService;
-    @Autowired
-    private IdeologyAnalysis ideologyAnalysis;
 
     public List<Legislator> bioguideToLegislator(List<String> bioguideIds, int timestamp) {
 

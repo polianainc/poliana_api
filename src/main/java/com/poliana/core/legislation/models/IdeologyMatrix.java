@@ -1,10 +1,13 @@
 package com.poliana.core.legislation.models;
 
+import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Transient;
+import com.poliana.core.entities.entities.Legislator;
 import org.apache.commons.math3.linear.SingularValueDecomposition;
 
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author David Gilmore
@@ -18,9 +21,12 @@ public class IdeologyMatrix {
     private int endDate;
     private double[][] sponsorshipMatrix;
     private double[][] u;
+    private double[][] vt;
     @Transient
     private SingularValueDecomposition svd;
-    private HashMap<String,Integer> indices;
+    private HashMap<String,Integer> idToIndex;
+    @Embedded
+    private List<Legislator> legislators;
 
     public String getChamber() {
         return chamber;
@@ -62,6 +68,14 @@ public class IdeologyMatrix {
         this.u = u;
     }
 
+    public double[][] getVt() {
+        return vt;
+    }
+
+    public void setVt(double[][] vt) {
+        this.vt = vt;
+    }
+
     public SingularValueDecomposition getSvd() {
         return svd;
     }
@@ -70,11 +84,19 @@ public class IdeologyMatrix {
         this.svd = svd;
     }
 
-    public HashMap<String, Integer> getIndices() {
-        return indices;
+    public HashMap<String, Integer> getIdToIndex() {
+        return idToIndex;
     }
 
-    public void setIndices(HashMap<String, Integer> indices) {
-        this.indices = indices;
+    public void setIdToIndex(HashMap<String, Integer> idToIndex) {
+        this.idToIndex = idToIndex;
+    }
+
+    public List<Legislator> getLegislators() {
+        return legislators;
+    }
+
+    public void setLegislators(List<Legislator> legislators) {
+        this.legislators = legislators;
     }
 }

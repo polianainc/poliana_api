@@ -1,6 +1,3 @@
-
-
-
 CREATE EXTERNAL TABLE IF NOT EXISTS entities.legislators_mongo (
     id STRING,
     class_name STRING,

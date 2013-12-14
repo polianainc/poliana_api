@@ -11,6 +11,11 @@ import java.util.Date;
  */
 public class TimeUtils {
 
+    /**
+     *
+     * @param dateString
+     * @return
+     */
     public static int getTimestamp(String dateString) {
         if (dateString == null)
             return 0;
@@ -32,6 +37,11 @@ public class TimeUtils {
         return 0;
     }
 
+    /**
+     *
+     * @param congress
+     * @return
+     */
     public static int[] congressToYears(int congress) {
         int[] years = new int[2];
         //1st congress was 1789, they last two years
@@ -40,6 +50,11 @@ public class TimeUtils {
         return years;
     }
 
+    /**
+     *
+     * @param timestamp
+     * @return
+     */
     public static int nearestTermStart(int timestamp) {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis((long)timestamp*1000);
@@ -49,19 +64,33 @@ public class TimeUtils {
             year -= 1;
         //Set the last term start to January 1st at midnight
         //to ensure inclusion of all official start times
-        cal.set(year,1,3,0,0,0);
-        return (int)cal.getTimeInMillis()/1000;
+        cal.set(year,0,3,0,0,0);
+        return (int)(cal.getTimeInMillis()/1000);
     }
 
+    /**
+     *
+     * @return
+     */
     public static int oneYear() {
         return 31556900;
     }
 
+    /**
+     *
+     * @param timestamp
+     * @return
+     */
     public static int termBeginning(int timestamp) {
         int thisTerm = nearestTermStart(timestamp);
         return thisTerm-oneYear()*4;
     }
 
+    /**
+     *
+     * @param timestamp
+     * @return
+     */
     public static int timestampToCongress(int timestamp) {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis((long)timestamp*1000);
@@ -69,15 +98,32 @@ public class TimeUtils {
         return (year-1787)/2;
     }
 
-    public static int[] termRanges(int congress) {
-        int[] years = congressToYears(congress);
+    /**
+     *
+     * @param congress
+     * @return
+     */
+    public static int[] yearTimestamps(int congress) {
+
         Calendar cal = Calendar.getInstance();
-        cal.set(years[0],1,3,0,0,0);
-        int begin = nearestTermStart((int)cal.getTimeInMillis()/1000);
+
+        //Get the corresponding years for a given congress
+        int[] years = congressToYears(congress);
+
+        //Set the begin timestamp to january 1 at 12am of the first year for this session
+        cal.set(years[0],0,1,0,0,0);
+        long begin = cal.getTimeInMillis();
+
+        //Set the begin timestamp to December 31 at 11:59am of the second year of this session
+        cal.set(years[1]-1,12,31,0,0,0);
+        long end = cal.getTimeInMillis();
+
         int[] timestamps = new int[2];
-        timestamps[0] = begin;
-        cal.set(years[1]+1,1,3,0,0,0);
-        timestamps[1] = (int)cal.getTimeInMillis()/1000;
+
+        //Convert the milisecond timestamps to seconds
+        timestamps[0] = (int)(begin/1000);
+        timestamps[1] = (int)(end/1000);
+
         return timestamps;
     }
 }

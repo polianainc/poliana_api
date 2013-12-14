@@ -1,9 +1,8 @@
 package com.poliana.core.entities.entities;
 
-import com.google.code.morphia.annotations.Entity;
-import com.google.code.morphia.annotations.Id;
-import com.google.code.morphia.annotations.Indexed;
-import com.google.code.morphia.annotations.Property;
+import com.google.code.morphia.annotations.*;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * @author David Gilmore
@@ -63,6 +62,8 @@ public class Legislator {
     private int district;
     @Property("term_state_rank")
     private String termStateRank;
+    @Transient
+    private int index;
 
     public String getId() {
         return id;
@@ -286,5 +287,13 @@ public class Legislator {
 
     public void setTermStateRank(String termStateRank) {
         this.termStateRank = termStateRank;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 }

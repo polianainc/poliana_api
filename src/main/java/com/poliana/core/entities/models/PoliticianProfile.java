@@ -21,9 +21,9 @@ public class PoliticianProfile {
     private String firstName;
     @Property("last_name")
     private String lastName;
-    private String religion;
+
     @Reference
-    private List<String> terms;
+    private List<String> sessions;
 
     public String getId() {
         return id;
@@ -57,19 +57,11 @@ public class PoliticianProfile {
         this.lastName = lastName;
     }
 
-    public String getReligion() {
-        return religion;
+    public List<String> getSessions() {
+        return sessions;
     }
 
-    public void setReligion(String religion) {
-        this.religion = religion;
-    }
-
-    public List<String> getTerms() {
-        return terms;
-    }
-
-    public void setTerms(List<String> terms) {
-        this.terms = terms;
+    public void setSessions(List<String> sessions) {
+        this.sessions = sessions;
     }
 }

@@ -95,6 +95,12 @@ public class ContributionHadoopRepo {
         return impalaTemplate.query(query, new IndToPolContrTotalsMapper());
     }
 
+    /**
+     *
+     * @param industryId
+     * @param years
+     * @return
+     */
     public List<IndToPolContrTotals> industryContrTotals(String industryId, int[] years) {
         String yrs = "";
         if (years.length > 1) {
@@ -228,21 +234,31 @@ public class ContributionHadoopRepo {
      *
      * @see             com.poliana.core.campaignFinance.mappers.LegislatorRecievedIndustryTotals
      */
-    public HashMap<String,Integer> legislatorRecievedIndustryTotals(String bioguideId, int beginTimestamp,
+    public HashMap<String,Integer> legislatorReceivedIndustryTotals(String bioguideId, int beginTimestamp,
                                                                     int endTimestamp) {
+        return legislatorReceivedIndustryTotals(bioguideId, beginTimestamp, endTimestamp,0);
+    }
 
-        //Impala 1.1 has limited timestamp, UDF, and string functionality. Had to fall back to REGEX. Slow,
-        //But gets the job done for now
-        String query = "SELECT bioguide_id, real_code, sum(amount) FROM campaign_finance.individual_contributions c " +
-                "JOIN entities.legislators l ON c.recip_id = l.opensecrets_id \n" +
-                "WHERE bioguide_id = \'" + bioguideId + "\' AND " +
-                "unix_timestamp(concat(regexp_extract(dates,'[\\\\d+]{4}',0),\"-\"," +
-                    "substr(regexp_extract(dates,'\\\\d+\\/',0),1,2),\"-\"," +
-                    "substr(regexp_extract(dates,'\\/\\\\d+\\/',0),2,2),\" 01:01:01.000000000\")) > " + beginTimestamp +
-                " AND unix_timestamp(concat(regexp_extract(dates,'[\\\\d+]{4}',0),\"-\"," +
-                    "substr(regexp_extract(dates,'\\\\d+\\/',0),1,2),\"-\"," +
-                    "substr(regexp_extract(dates,'\\/\\\\d+\\/',0),2,2),\" 01:01:01.000000000\")) < " + endTimestamp +
-                " GROUP BY bioguide_id, real_code;";
+    /**
+     *
+     * @param bioguideId
+     * @param beginTimestamp
+     * @param endTimestamp
+     * @param limit
+     * @return
+     */
+    public HashMap<String,Integer> legislatorReceivedIndustryTotals(String bioguideId,
+                                                                    int beginTimestamp, int endTimestamp, int limit) {
+        String lim = "";
+        if (limit != 0)
+            lim = " LIMIT " + limit;
+
+        // TODO: fix! Impala 1.1 has limited timestamp, UDF, and string functionality. Had to fall back to REGEX. Slow!
+
+        String query = "SELECT bioguide_id, real_code, sum(amount) FROM campaign_finance." +
+                "individual_contributions_timestamped c JOIN entities.legislators l ON c.recip_id = l.opensecrets_id" +
+                " WHERE bioguide_id = \'" + bioguideId +"\' AND dates > " + beginTimestamp + " AND dates < "
+                + endTimestamp + " GROUP BY bioguide_id, real_code" + lim;
 
         return impalaTemplate.query(query, new LegislatorRecievedIndustryTotals());
     }

@@ -28,6 +28,48 @@ public class ContributionService {
     @Autowired
     private ContributionHadoopRepo contributionRepo;
 
+    /**
+     *
+     * @param bioguideId
+     * @param congress
+     * @return
+     */
+    public HashMap<String,Integer> legislatorReceivedIndustryTotals(String bioguideId, int congress) {
+        int[] yearTimestamps = TimeUtils.yearTimestamps(congress);
+        return legislatorReceivedIndustryTotals(bioguideId, yearTimestamps[0], yearTimestamps[1], 0);
+    }
+
+    /**
+     *
+     * @param bioguideId
+     * @param beginTimestamp
+     * @param endTimestamp
+     * @param limit
+     * @return
+     */
+    public HashMap<String,Integer> legislatorReceivedIndustryTotals(String bioguideId,
+                                                                    int beginTimestamp, int endTimestamp, int limit) {
+        return contributionRepo.legislatorReceivedIndustryTotals(bioguideId, beginTimestamp, endTimestamp, limit);
+    }
+
+    /**
+     *
+     * @param bioguideId
+     * @param beginTimestamp
+     * @param endTimestamp
+     * @return
+     */
+    public HashMap<String,Integer> legislatorReceivedIndustryTotals(String bioguideId,
+                                                                    int beginTimestamp, int endTimestamp) {
+        return contributionRepo.legislatorReceivedIndustryTotals(bioguideId, beginTimestamp, endTimestamp);
+    }
+
+    /**
+     * @param industryId
+     * @param congress
+     * @param numSeries
+     * @return
+     */
     public IndTimeRangeTotals industryTimeRangeTotals(
             String industryId, int congress, int numSeries) {
 
@@ -62,7 +104,11 @@ public class ContributionService {
 
 /**********************************************************************************************************************/
 
-    private void recipientMap(IndToPolContrTotals contribution,
+    protected boolean assertBioguide(String bioguideId) {
+        return (bioguideId.length() == 7);
+    }
+
+    protected void recipientMap(IndToPolContrTotals contribution,
                               HashMap<String,Recipient> recipients, int numSeries) {
 
         String bioguideId = contribution.getBioguideId();
@@ -90,7 +136,7 @@ public class ContributionService {
         }
     }
 
-    private void partyCount(IndToPolContrTotals contribution, IndTimeRangeTotals totals) {
+    protected void partyCount(IndToPolContrTotals contribution, IndTimeRangeTotals totals) {
         switch(contribution.getParty()) {
             case "Republican":
                 totals.setRepublicanCount(totals.getRepublicanCount() + contribution.getContributionsCount());
@@ -107,7 +153,7 @@ public class ContributionService {
         }
     }
 
-    private void stateCount(IndToPolContrTotals contribution,
+    protected void stateCount(IndToPolContrTotals contribution,
                             HashMap<String,Recipient> stateAverages, int numSeries) {
         Legislator legislator = getLegislator(contribution);
         String state = legislator.getTermState();
@@ -131,14 +177,14 @@ public class ContributionService {
         }
     }
 
-    private Legislator getLegislator(IndToPolContrTotals contribution) {
+    protected Legislator getLegislator(IndToPolContrTotals contribution) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(contribution.getYear(),contribution.getMonth(),2);
         long timestamp = calendar.getTimeInMillis()/1000;
         return legislatorService.legislatorByIdTimestamp(contribution.getBioguideId(),(int)timestamp);
     }
 
-    private List<Recipient> topRecipients(HashMap<String,Recipient> recipients, int limit) {
+    protected List<Recipient> topRecipients(HashMap<String,Recipient> recipients, int limit) {
         List<Recipient> recipientList = new ArrayList<>(recipients.values());
 
         Collections.sort(recipientList, new Comparator<Recipient>() {
@@ -154,7 +200,7 @@ public class ContributionService {
             return recipientList;
     }
 
-    private List<Recipient> bottomRecipients(HashMap<String,Recipient> recipients, int limit) {
+    protected List<Recipient> bottomRecipients(HashMap<String,Recipient> recipients, int limit) {
         List<Recipient> recipientList = new ArrayList<>(recipients.values());
 
         Collections.sort(recipientList, new Comparator<Recipient>() {

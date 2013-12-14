@@ -1,4 +1,4 @@
-package com.poliana.core.campaignFinance.cli;
+package com.poliana.cli.controllers;
 
 import com.poliana.core.campaignFinance.jobs.IndContrSessionBatch;
 import org.springframework.beans.factory.annotation.Autowired;

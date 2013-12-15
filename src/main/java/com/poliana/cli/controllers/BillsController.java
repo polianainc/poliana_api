@@ -61,8 +61,7 @@ public class BillsController implements CommandMarker {
         String message;
         try {
 
-            FileWriter file = new FileWriter("../data/" + chamber + "_" + beginTimestamp +
-                    "_" + endTimestamp + "ideology.json");
+            FileWriter file = new FileWriter(path);
             ideology.write(file);
             file.flush();
             file.close();

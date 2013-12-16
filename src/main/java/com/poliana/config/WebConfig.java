@@ -1,25 +1,20 @@
 package com.poliana.config;
 
-import org.apache.log4j.Logger;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ViewResolver;
-import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
+import org.springframework.web.servlet.config.annotation.*;
+import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
-import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.springframework.web.servlet.view.JstlView;
 
-import java.util.Locale;
-import java.util.Properties;
 
 /**
  * Contains controllers, view resolvers, locale resolvers, and other web-related beans.
@@ -28,80 +23,50 @@ import java.util.Properties;
  * @date 12/15/13
  */
 @Configuration
+@EnableWebMvc
 @ComponentScan(basePackages = { "com.poliana.web" })
 @Import({ImpalaConfig.class, HiveConfig.class, MongoConfig.class})
 public class WebConfig extends WebMvcConfigurerAdapter {
 
-    private static final Logger logger = Logger.getLogger(WebConfig.class);
-
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        logger.debug("addResourceHandlers");
-        registry.addResourceHandler("/resources/").addResourceLocations(
-                "/resources/**");
+        registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
     }
 
     @Override
-    public void configureDefaultServletHandling(
-            DefaultServletHandlerConfigurer configurer) {
-        logger.debug("configureDefaultServletHandling");
-        configurer.enable();
-    }
+    public void addInterceptors(InterceptorRegistry registry) {
 
-    @Override
-    public void addInterceptors(final InterceptorRegistry registry) {
-        logger.debug("addInterceptors");
         LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
         localeChangeInterceptor.setParamName("lang");
         registry.addInterceptor(localeChangeInterceptor);
     }
 
     @Bean
-    public SimpleMappingExceptionResolver simpleMappingExceptionResolver() {
-        logger.debug("simpleMappingExceptionResolver");
+    public LocaleResolver localeResolver() {
 
-        SimpleMappingExceptionResolver b = new SimpleMappingExceptionResolver();
-        Properties mappings = new Properties();
-        mappings.put("org.springframework.web.servlet.PageNotFound", "p404");
-        mappings.put("org.springframework.dao.DataAccessException",
-                "dataAccessFailure");
-        mappings.put("org.springframework.transaction.TransactionException",
-                "dataAccessFailure");
-        b.setExceptionMappings(mappings);
-
-        return b;
+        CookieLocaleResolver cookieLocaleResolver = new CookieLocaleResolver();
+        cookieLocaleResolver.setDefaultLocale(StringUtils.parseLocaleString("en"));
+        return cookieLocaleResolver;
     }
 
     @Bean
     public ViewResolver viewResolver() {
-        logger.debug("viewResolver");
 
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-        viewResolver.setPrefix("/WEB-INF/pages/");
+        viewResolver.setViewClass(JstlView.class);
+        viewResolver.setPrefix("/WEB-INF/views");
         viewResolver.setSuffix(".jsp");
-
         return viewResolver;
     }
 
     @Bean
     public MessageSource messageSource() {
-        logger.debug("messageSource");
 
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-        messageSource.setBasenames("classpath:messages/messages");
-        messageSource.setCacheSeconds(5);
+        messageSource.setBasenames("classpath:messages/messages", "classpath:messages/validation");
+        messageSource.setUseCodeAsDefaultMessage(true);
         messageSource.setDefaultEncoding("UTF-8");
-
+        messageSource.setCacheSeconds(0);
         return messageSource;
-    }
-
-    @Bean
-    public LocaleResolver localeResolver() {
-        logger.debug("localeResolver");
-
-        SessionLocaleResolver lr = new org.springframework.web.servlet.i18n.SessionLocaleResolver();
-        lr.setDefaultLocale(Locale.ENGLISH);
-
-        return lr;
     }
 }

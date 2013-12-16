@@ -43,6 +43,7 @@ public class IdeologyAnalysis {
      * @return
      */
     public IdeologyMatrix getIdeologyMatrix(String chamber, int congress) {
+
         int[] timeRanges = TimeUtils.yearTimestamps(congress);
         IdeologyMatrix ideologyMatrix = getIdeologyMatrix(chamber, timeRanges[0], timeRanges[1]);
         return ideologyMatrix;
@@ -56,13 +57,33 @@ public class IdeologyAnalysis {
      * @return
      */
     public IdeologyMatrix getIdeologyMatrix(String chamber, int beginTimestamp, int endTimestamp) {
+
+        IdeologyMatrix ideologyMatrix = getSponsorshipMatrix(chamber,beginTimestamp,endTimestamp);
+
+        SingularValueDecomposition svd = svdAnalysisCommons(ideologyMatrix.getSponsorshipMatrix());
+        ideologyMatrix.setSvd(svd);
+        ideologyMatrix.setU(svd.getU().getData());
+        ideologyMatrix.setVt(svd.getVT().getData());
+
+        return ideologyMatrix;
+    }
+
+    /**
+     *
+     * @param chamber
+     * @param beginTimestamp
+     * @param endTimestamp
+     * @return
+     */
+    public IdeologyMatrix getSponsorshipMatrix(String chamber, int beginTimestamp, int endTimestamp) {
+
         IdeologyMatrix ideologyMatrix = new IdeologyMatrix();
 
         List<Sponsorship> sponsorships =
                 billHadoopRepo.getSponsorships(chamber,TimeUtils.timestampToCongress(beginTimestamp));
         Iterator<Legislator> legislatorIterator = entitiesMongoRepo.getLegislators(chamber,beginTimestamp,endTimestamp);
 
-         SponsorshipData sponsorshipData = getUniqueLegislators(sponsorships,legislatorIterator,
+        SponsorshipData sponsorshipData = getUniqueLegislators(sponsorships,legislatorIterator,
                 beginTimestamp,endTimestamp);
         HashMap<String,Legislator> legislatorHashMap = sponsorshipData.legislatorHashMap;
 
@@ -72,11 +93,6 @@ public class IdeologyAnalysis {
         ideologyMatrix.setBeginDate(beginTimestamp);
         ideologyMatrix.setEndDate(endTimestamp);
         ideologyMatrix.setSponsorshipMatrix(sponsorshipData.matrix);
-
-        SingularValueDecomposition svd = svdAnalysisCommons(sponsorshipData.matrix);
-        ideologyMatrix.setSvd(svd);
-        ideologyMatrix.setU(svd.getU().getData());
-        ideologyMatrix.setVt(svd.getVT().getData());
         ideologyMatrix.setIdToIndex(sponsorshipData.indices);
         ideologyMatrix.setLegislators(sponsorshipData.legislatorList);
 
@@ -97,8 +113,8 @@ public class IdeologyAnalysis {
         HashMap<String,Integer> indices = new HashMap<>(size);
         double[][] matrix = MatrixUtils.createRealIdentityMatrix(size).getData();
 
-        int i = 0;
-        int j = 0;
+        int i;
+        int j;
         for (Sponsorship sponsorship: sponsorships) {
             try {
                 Legislator sponsor = legislatorHashMap.get(sponsorship.getSponsor());
@@ -125,6 +141,7 @@ public class IdeologyAnalysis {
      * @return
      */
     public double ideologyScore(String bioguideId, String chamber, int beginTimestamp, int endTimestamp) {
+
         IdeologyMatrix ideologyMatrix = getIdeologyMatrix(chamber, beginTimestamp, endTimestamp);
         int index = ideologyMatrix.getIdToIndex().get(bioguideId);
         return ideologyMatrix.getU()[1][index];
@@ -136,6 +153,7 @@ public class IdeologyAnalysis {
      * @return
      */
     public SingularValueDecomposition svdAnalysisCommons(double[][] sponsorshipMatrix) {
+
         RealMatrix m = new BlockRealMatrix(sponsorshipMatrix);
         SingularValueDecomposition svd = new SingularValueDecomposition(m);
         return svd;
@@ -147,6 +165,7 @@ public class IdeologyAnalysis {
      * @return
      */
     public HashMap<String,Integer> getLegislatorIndexMap(List<Legislator> legislators) {
+
         return getLegislatorIndexMap(legislators, "h");
     }
 
@@ -157,6 +176,7 @@ public class IdeologyAnalysis {
      * @return
      */
     public HashMap<String,Integer> getLegislatorIndexMap(List<Legislator> legislators, String chamber) {
+
         int mapSize;
         if (chamber.contains("h"))
             mapSize = 450;
@@ -177,6 +197,7 @@ public class IdeologyAnalysis {
 /**********************************************************************************************************************/
 
     protected class SponsorshipData {
+
         HashMap<String,Integer> indices;
         HashMap<String,Legislator> legislatorHashMap;
         double[][] matrix;
@@ -218,22 +239,23 @@ public class IdeologyAnalysis {
 
         SponsorshipData sponsorshipData = new SponsorshipData();
         HashMap<String,Legislator> legislatorMap = new HashMap<>(500);
-        List<Legislator> legislatorList = new ArrayList<>(500);
 
         int index = 0;
         while (legislatorIterator.hasNext()) {
             Legislator legislator = legislatorIterator.next();
-            legislator.setIndex(index);
-            legislatorMap.put(legislator.getBioguideId(),legislator);
-            legislatorList.add(index,legislator);
+            if(!legislatorMap.containsKey(legislator.getBioguideId())) {
+                legislator.setIndex(index++);
+                legislatorMap.put(legislator.getBioguideId(),legislator);
+            }
         }
         sponsorshipData.legislatorHashMap = legislatorMap;
-        sponsorshipData.legislatorList = legislatorList;
+        sponsorshipData.legislatorList = new ArrayList(legislatorMap.values());
 
         return sponsorshipData;
     }
 
     protected HashMap<String,Integer> legislatorIndices(List<Sponsorship> sponsorships, int timeStamp) {
+
         HashMap<String,Integer> legislatorIndices = new HashMap<>(500);
         int index = 0;
         for (Sponsorship sponsorship: sponsorships) {

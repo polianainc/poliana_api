@@ -1,8 +1,6 @@
 package com.poliana.core.entities.entities;
 
 import com.google.code.morphia.annotations.*;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * @author David Gilmore
@@ -52,9 +50,13 @@ public class Legislator {
     private String birthday;
     private String religion;
     @Property("term_start")
-    private int termStart;
+    private String termStart;
     @Property("term_end")
-    private int termEnd;
+    private String termEnd;
+    @Property("begin_timestamp")
+    private int beginTimestamp;
+    @Property("end_timestamp")
+    private int endTimestamp;
     @Property("term_state")
     private String termState;
     @Property("term_type")
@@ -241,20 +243,36 @@ public class Legislator {
         this.religion = religion;
     }
 
-    public int getTermStart() {
+    public String getTermStart() {
         return termStart;
     }
 
-    public void setTermStart(int termStart) {
+    public void setTermStart(String termStart) {
         this.termStart = termStart;
     }
 
-    public int getTermEnd() {
+    public String getTermEnd() {
         return termEnd;
     }
 
-    public void setTermEnd(int termEnd) {
+    public void setTermEnd(String termEnd) {
         this.termEnd = termEnd;
+    }
+
+    public int getBeginTimestamp() {
+        return beginTimestamp;
+    }
+
+    public void setBeginTimestamp(int beginTimestamp) {
+        this.beginTimestamp = beginTimestamp;
+    }
+
+    public int getEndTimestamp() {
+        return endTimestamp;
+    }
+
+    public void setEndTimestamp(int endTimestamp) {
+        this.endTimestamp = endTimestamp;
     }
 
     public String getTermState() {

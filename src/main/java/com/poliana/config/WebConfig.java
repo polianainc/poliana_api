@@ -17,11 +17,11 @@ import org.springframework.web.servlet.view.JstlView;
 
 
 /**
- * Contains controllers, view resolvers, locale resolvers, and other web-related beans.
- *
- * @author David Gilmore
- * @date 12/15/13
- */
+* Contains controllers, view resolvers, locale resolvers, and other web-related beans.
+*
+* @author David Gilmore
+* @date 12/15/13
+*/
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = { "com.poliana.web" })

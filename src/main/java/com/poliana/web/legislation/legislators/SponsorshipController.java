@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
+
 /**
  * @author David Gilmore
  * @date 12/15/13
@@ -37,22 +39,31 @@ public class SponsorshipController {
 
         try {
             ideology.put("chamber",ideologyMatrix.getChamber());
-            ideology.put("beginTimestamp",ideologyMatrix.getBeginDate());
-            ideology.put("endTimestamp",ideologyMatrix.getEndDate());
-            ideology.put("sponsorshipMatrix",ideologyMatrix.getSponsorshipMatrix());
-            ideology.put("idToIndex",ideologyMatrix.getIdToIndex());
-
-            JSONArray legislators = new JSONArray();
-            for (Legislator legislator: ideologyMatrix.getLegislators()) {
-                legislators.put(new JSONObject(legislator));
-            }
-            ideology.put("legislators",legislators);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
+            ideology.put("begin_timestamp",ideologyMatrix.getBeginDate());
+            ideology.put("end_timestamp",ideologyMatrix.getEndDate());
+            ideology.put("sponsorship_matrix",ideologyMatrix.getSponsorshipMatrix());
+            ideology.put("id_to_index",ideologyMatrix.getIdToIndex());
+            ideology.put("legislators",legislatorsFormat(ideologyMatrix.getLegislators()));
+        } catch (JSONException e) {}
 
         return ideology.toString();
     }
 
+
+    private JSONArray legislatorsFormat(List<Legislator> legislatorsList) {
+
+        JSONArray legislatorsJson = new JSONArray();
+        for (Legislator legislator: legislatorsList) {
+            JSONObject jsonLegislator = new JSONObject();
+            try {
+                jsonLegislator.put("bioguide_id", legislator.getBioguideId());
+                jsonLegislator.put("name", legislator.getFirstName() + " " + legislator.getLastName());
+                jsonLegislator.put("party", legislator.getParty());
+                jsonLegislator.put("religion", legislator.getReligion());
+                jsonLegislator.put("index", legislator.getIndex());
+            } catch (JSONException e) {}
+            legislatorsJson.put(jsonLegislator);
+        }
+        return legislatorsJson;
+    }
 }

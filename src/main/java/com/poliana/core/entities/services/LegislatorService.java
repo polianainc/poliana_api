@@ -5,7 +5,6 @@ import com.poliana.core.entities.models.PoliticianProfile;
 import com.poliana.core.entities.models.TermTotals;
 import com.poliana.core.entities.repositories.EntitiesHadoopRepo;
 import com.poliana.core.entities.repositories.EntitiesMongoRepo;
-import com.poliana.core.legislation.services.IdeologyAnalysis;
 import com.poliana.core.legislation.services.LegislationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -111,7 +110,7 @@ public class LegislatorService {
 
         if (legislators != null) {
             for (Legislator legislator: legislators) {
-                termStart = legislator.getTermStart();
+                termStart = legislator.getBeginTimestamp();
                 diff = Math.abs(timestamp) - Math.abs(termStart);
                 if ( timestamp > termStart && diff > (closestTimeStamp-termStart)) {
                     correctTerm = index;

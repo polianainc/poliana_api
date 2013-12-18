@@ -4,9 +4,9 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
 
 
 /**
- * @author David Gilmore
- * @date 12/15/13
- */
+* @author David Gilmore
+* @date 12/15/13
+*/
 public class WebInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
     @Override

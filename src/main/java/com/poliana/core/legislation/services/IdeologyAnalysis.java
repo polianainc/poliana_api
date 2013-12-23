@@ -85,7 +85,7 @@ public class IdeologyAnalysis {
 
         SponsorshipData sponsorshipData = getUniqueLegislators(sponsorships,legislatorIterator,
                 beginTimestamp,endTimestamp);
-        HashMap<String,Legislator> legislatorHashMap = sponsorshipData.legislatorHashMap;
+        HashMap<String, Legislator> legislatorHashMap = sponsorshipData.legislatorHashMap;
 
         sponsorshipData = constructMatrix(sponsorships,sponsorshipData);
 
@@ -107,7 +107,7 @@ public class IdeologyAnalysis {
      */
     public SponsorshipData constructMatrix(List<Sponsorship> sponsorships, SponsorshipData sponsorshipData) {
 
-        HashMap<String,Legislator> legislatorHashMap = sponsorshipData.legislatorHashMap;
+        HashMap<String, Legislator> legislatorHashMap = sponsorshipData.legislatorHashMap;
         int size = legislatorHashMap.size();
 
         HashMap<String,Integer> indices = new HashMap<>(size);
@@ -199,7 +199,7 @@ public class IdeologyAnalysis {
     protected class SponsorshipData {
 
         HashMap<String,Integer> indices;
-        HashMap<String,Legislator> legislatorHashMap;
+        HashMap<String, Legislator> legislatorHashMap;
         double[][] matrix;
         List<Legislator> legislatorList;
     }
@@ -208,7 +208,7 @@ public class IdeologyAnalysis {
             Iterator<Legislator> legislatorIterator, int beginTimestamp, int endTimestamp) {
 
         SponsorshipData sponsorshipData = legislatorMap(legislatorIterator);
-        HashMap<String,Legislator> legislatorHashMap = sponsorshipData.legislatorHashMap;
+        HashMap<String, Legislator> legislatorHashMap = sponsorshipData.legislatorHashMap;
 
         for (Sponsorship sponsorship: sponsorships) {
             updateLegislatorMap(sponsorship.getSponsor(),legislatorHashMap,beginTimestamp,endTimestamp);
@@ -219,11 +219,11 @@ public class IdeologyAnalysis {
     }
 
     protected void updateLegislatorMap(String bioguideId,
-        HashMap<String,Legislator> legislatorHashMap, int beginTimestamp, int endTimestamp) {
+        HashMap<String, Legislator> legislatorHashMap, int beginTimestamp, int endTimestamp) {
 
         if (!legislatorHashMap.containsKey(bioguideId)) {
             Legislator legislator = legislatorService.
-                    legislatorByIdTimestamp(bioguideId,beginTimestamp);
+                    legislatorByIdTimestamp(bioguideId, beginTimestamp);
             if (legislator == null)
                 legislator = legislatorService.
                         legislatorByIdTimestamp(bioguideId,endTimestamp);
@@ -238,7 +238,7 @@ public class IdeologyAnalysis {
     protected SponsorshipData legislatorMap(Iterator<Legislator> legislatorIterator) {
 
         SponsorshipData sponsorshipData = new SponsorshipData();
-        HashMap<String,Legislator> legislatorMap = new HashMap<>(500);
+        HashMap<String, Legislator> legislatorMap = new HashMap<>(500);
 
         int index = 0;
         while (legislatorIterator.hasNext()) {

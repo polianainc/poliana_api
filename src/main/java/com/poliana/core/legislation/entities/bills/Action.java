@@ -11,6 +11,8 @@ import java.util.List;
  */
 @Embedded
 public class Action {
+    @Property("acted_ts")
+    private int actedTs;
     @Property("acted_at")
     private int actedAt;
     @Embedded("bill_ids")
@@ -30,6 +32,14 @@ public class Action {
     private String where;
     @Property("vote_type")
     private String voteType;
+
+    public int getActedTs() {
+        return actedTs;
+    }
+
+    public void setActedTs(int actedTs) {
+        this.actedTs = actedTs;
+    }
 
     public int getActedAt() {
         return actedAt;

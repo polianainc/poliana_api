@@ -58,13 +58,13 @@ public class Vote {
     private int presentTotal;
 
     @Reference
-    private List<Legislator> yeas;
+    private List<String> yeas;
     @Reference
-    private List<Legislator> nays;
+    private List<String> nays;
     @Reference("not_voting")
-    private List<Legislator> notVoting;
+    private List<String> notVoting;
     @Reference
-    private List<Legislator> present;
+    private List<String> present;
 
     public String getId() {
         return id;
@@ -282,35 +282,35 @@ public class Vote {
         this.presentTotal = presentTotal;
     }
 
-    public List<Legislator> getYeas() {
+    public List<String> getYeas() {
         return yeas;
     }
 
-    public void setYeas(List<Legislator> yeas) {
+    public void setYeas(List<String> yeas) {
         this.yeas = yeas;
     }
 
-    public List<Legislator> getNays() {
+    public List<String> getNays() {
         return nays;
     }
 
-    public void setNays(List<Legislator> nays) {
+    public void setNays(List<String> nays) {
         this.nays = nays;
     }
 
-    public List<Legislator> getNotVoting() {
+    public List<String> getNotVoting() {
         return notVoting;
     }
 
-    public void setNotVoting(List<Legislator> notVoting) {
+    public void setNotVoting(List<String> notVoting) {
         this.notVoting = notVoting;
     }
 
-    public List<Legislator> getPresent() {
+    public List<String> getPresent() {
         return present;
     }
 
-    public void setPresent(List<Legislator> present) {
+    public void setPresent(List<String> present) {
         this.present = present;
     }
 }

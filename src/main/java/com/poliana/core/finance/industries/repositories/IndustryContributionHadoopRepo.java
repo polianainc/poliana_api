@@ -178,7 +178,7 @@ public class IndustryContributionHadoopRepo {
     public List<IndPartyTotals> indPartyContrTotals(
             String industryId, int year, int month) {
         String query = "SELECT l.party, count(l.party), sum(c.amount), c.year, c.month FROM " +
-                "campaign_finance.individual_contributions c JOIN entities.candidate_ids l " +
+                "campaign_finance.individual_contributions_timestamped c JOIN entities.candidate_ids l " +
                 "ON c.recip_id = l.recipient_ext_id WHERE year = " + year + " AND month = " + month +
                 " AND real_code = \'" + industryId + "\' GROUP BY l.party, c.year, c.month";
 

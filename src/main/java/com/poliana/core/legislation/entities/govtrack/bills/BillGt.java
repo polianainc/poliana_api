@@ -5,7 +5,6 @@ import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Property;
 import com.poliana.core.legislation.entities.bills.*;
-import org.bson.types.ObjectId;
 
 import java.util.List;
 
@@ -17,7 +16,7 @@ import java.util.List;
 public class BillGt {
 
     @Id
-    private ObjectId id;
+    private String id;
 
     @Embedded
     private List<ActionGt> actionGts;
@@ -59,11 +58,11 @@ public class BillGt {
     @Property("updated_at")
     private String updatedAt;
 
-    public ObjectId getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(ObjectId id) {
+    public void setId(String id) {
         this.id = id;
     }
 

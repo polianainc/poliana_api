@@ -81,6 +81,14 @@ public class LegislatorService {
 
         //TODO: evaluate big-O, determine best solution
         int idLength = id.length();
+        if (idLength < 4) {
+            try {
+                int num = Integer.parseInt(id);
+                id = String.format("%05d", num);
+                idLength = id.length();
+            }
+            catch (NumberFormatException e) {}
+        }
         if(idLength == 4) {
             if (lisCache == null) { setCacheLis(); }
             legislators = lisCache.get(id);

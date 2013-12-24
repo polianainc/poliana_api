@@ -31,8 +31,10 @@ public class LegislatorMapper implements RowMapper<Legislator> {
         legislator.setGender(rs.getString("gender"));
         legislator.setBirthday(rs.getString("birthday"));
         legislator.setReligion(rs.getString("religion"));
-        legislator.setTermStart(rs.getInt("term_start"));
-        legislator.setTermEnd(rs.getInt("term_end"));
+        legislator.setTermStart(rs.getString("term_start"));
+        legislator.setTermEnd(rs.getString("term_end"));
+        legislator.setBeginTimestamp(rs.getInt("begin_timestamp"));
+        legislator.setEndTimestamp(rs.getInt("end_timestamp"));
         legislator.setTermState(rs.getString("term_state"));
         legislator.setTermType(rs.getString("term_type"));
         legislator.setDistrict(rs.getInt("district"));

@@ -43,8 +43,8 @@ public class EntitiesMongoRepo {
         Query<Legislator> query = mongoStore.find(Legislator.class);
         query.and(
                 query.criteria("termType").contains(chamber),
-                query.criteria("termStart").lessThan(timestampEnd),
-                query.criteria("termEnd").greaterThan(timestampBegin)
+                query.criteria("beginTimestamp").lessThan(timestampEnd),
+                query.criteria("endTimestamp").greaterThan(timestampBegin)
         );
         return query.iterator();
     }

@@ -92,7 +92,7 @@ import java.util.regex.Pattern;
  * (user, item, preference) must be added or deleted.</p>
  *
  * @author Fernando Tapia Rico - fertapric@gmail.com - www.fernandotapiarico.com
- * Paradigma Tecnológico
+ * Paradigma Tecnologico
  */
 public final class MongoDBDataModel implements DataModel {
 

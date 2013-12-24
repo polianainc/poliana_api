@@ -23,6 +23,7 @@ public class TermTotals {
     private String chamber;
     @Property("term_start")
     private int termStart;
+    private String religion;
     @Property("ideology_score")
     private double ideologyScore;
     @Property("leadership_score")
@@ -31,6 +32,46 @@ public class TermTotals {
     private HashMap<String,Integer> topIndustryContributions;
     @Property("top_pac_contributions")
     private HashMap<String,Integer> topPACContributions;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public int getCongress() {
+        return congress;
+    }
+
+    public void setCongress(int congress) {
+        this.congress = congress;
+    }
+
+    public String getChamber() {
+        return chamber;
+    }
+
+    public void setChamber(String chamber) {
+        this.chamber = chamber;
+    }
+
+    public int getTermStart() {
+        return termStart;
+    }
+
+    public void setTermStart(int termStart) {
+        this.termStart = termStart;
+    }
+
+    public String getReligion() {
+        return religion;
+    }
+
+    public void setReligion(String religion) {
+        this.religion = religion;
+    }
 
     public double getIdeologyScore() {
         return ideologyScore;

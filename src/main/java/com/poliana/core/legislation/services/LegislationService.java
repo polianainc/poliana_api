@@ -19,8 +19,6 @@ public class LegislationService {
 
     @Autowired
     private LegislatorService legislatorService;
-    @Autowired
-    private IdeologyAnalysis ideologyAnalysis;
 
     public List<Legislator> bioguideToLegislator(List<String> bioguideIds, int timestamp) {
 
@@ -38,14 +36,14 @@ public class LegislationService {
         return legislators;
     }
 
-    public List<Legislator> gtVotersToLegislators(List<Voter> votersGt, int timestamp) {
-        List<Legislator> legislators = new LinkedList<>();
+    public List<String> gtVotersToLegislators(List<Voter> votersGt, int timestamp) {
+        List<String> legislators = new LinkedList<>();
 
         try {
             for (Voter voter : votersGt) {
                 Legislator legislator =
                         legislatorService.legislatorByIdTimestamp(voter.getPoliticianId(), timestamp);
-                legislators.add(legislator);
+                legislators.add(legislator.getId());
             }
         }
         catch (NullPointerException e) {}

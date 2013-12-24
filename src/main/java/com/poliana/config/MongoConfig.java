@@ -50,12 +50,11 @@ public class MongoConfig extends AbstractMongoConfiguration {
     public Datastore mongoStore() throws Exception {
         return new Morphia().createDatastore(
                 mongo(),
-                env.getProperty("mongo.dbname")//,
-//                env.getProperty("mongo.username"),
-//                env.getProperty("mongo.password").toCharArray()
+                env.getProperty("mongo.dbname"),
+                env.getProperty("mongo.username"),
+                env.getProperty("mongo.password").toCharArray()
         );
     }
-
 
     @Override
     public String getMappingBasePackage() {

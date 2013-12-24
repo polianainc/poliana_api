@@ -11,30 +11,40 @@ import com.google.code.morphia.annotations.Property;
 public class BillHistory {
 
     private boolean active;
+    @Property("active_ts")
+    private int activeTs;
     @Property("active_at")
-    private int activeAt;
+    private String activeAt;
     @Property("awaiting_signature")
     private boolean awaitingSignature;
     @Property("awaiting_signature_since")
     private int awaitingSignatureSince;
     private boolean enacted;
+    @Property("enacted_ts")
+    private int enactedTs;
     @Property("enacted_at")
-    private int enactedAt;
+    private String enactedAt;
     @Property("house_passage_result")
     private String housePassageResult;
+    @Property("house_passage_result_ts")
+    private int housePassageResultTs;
     @Property("house_passage_result_at")
-    private int housePassageResultAt;
+    private String housePassageResultAt;
     @Property("senate_passage_result")
     private String senatePassageResult;
+    @Property("senate_passage_result_ts")
+    private int senatePassageResultTs;
     @Property("senate_passage_result_at")
-    private int senatePassageResultAt;
+    private String senatePassageResultAt;
     @Property("house_override_result")
     private String houseOverrideResult;
     @Property("senate_override_result")
     private String senateOverrideResult;
     private boolean vetoed;
+    @Property("vetoed_ts")
+    private int vetoedTs;
     @Property("vetoed_at")
-    private int vetoedAt;
+    private String vetoedAt;
 
     public boolean isActive() {
         return active;
@@ -44,11 +54,19 @@ public class BillHistory {
         this.active = active;
     }
 
-    public int getActiveAt() {
+    public int getActiveTs() {
+        return activeTs;
+    }
+
+    public void setActiveTs(int activeTs) {
+        this.activeTs = activeTs;
+    }
+
+    public String getActiveAt() {
         return activeAt;
     }
 
-    public void setActiveAt(int activeAt) {
+    public void setActiveAt(String activeAt) {
         this.activeAt = activeAt;
     }
 
@@ -76,11 +94,19 @@ public class BillHistory {
         this.enacted = enacted;
     }
 
-    public int getEnactedAt() {
+    public int getEnactedTs() {
+        return enactedTs;
+    }
+
+    public void setEnactedTs(int enactedTs) {
+        this.enactedTs = enactedTs;
+    }
+
+    public String getEnactedAt() {
         return enactedAt;
     }
 
-    public void setEnactedAt(int enactedAt) {
+    public void setEnactedAt(String enactedAt) {
         this.enactedAt = enactedAt;
     }
 
@@ -92,11 +118,19 @@ public class BillHistory {
         this.housePassageResult = housePassageResult;
     }
 
-    public int getHousePassageResultAt() {
+    public int getHousePassageResultTs() {
+        return housePassageResultTs;
+    }
+
+    public void setHousePassageResultTs(int housePassageResultTs) {
+        this.housePassageResultTs = housePassageResultTs;
+    }
+
+    public String getHousePassageResultAt() {
         return housePassageResultAt;
     }
 
-    public void setHousePassageResultAt(int housePassageResultAt) {
+    public void setHousePassageResultAt(String housePassageResultAt) {
         this.housePassageResultAt = housePassageResultAt;
     }
 
@@ -108,11 +142,19 @@ public class BillHistory {
         this.senatePassageResult = senatePassageResult;
     }
 
-    public int getSenatePassageResultAt() {
+    public int getSenatePassageResultTs() {
+        return senatePassageResultTs;
+    }
+
+    public void setSenatePassageResultTs(int senatePassageResultTs) {
+        this.senatePassageResultTs = senatePassageResultTs;
+    }
+
+    public String getSenatePassageResultAt() {
         return senatePassageResultAt;
     }
 
-    public void setSenatePassageResultAt(int senatePassageResultAt) {
+    public void setSenatePassageResultAt(String senatePassageResultAt) {
         this.senatePassageResultAt = senatePassageResultAt;
     }
 
@@ -140,11 +182,19 @@ public class BillHistory {
         this.vetoed = vetoed;
     }
 
-    public int getVetoedAt() {
+    public int getVetoedTs() {
+        return vetoedTs;
+    }
+
+    public void setVetoedTs(int vetoedTs) {
+        this.vetoedTs = vetoedTs;
+    }
+
+    public String getVetoedAt() {
         return vetoedAt;
     }
 
-    public void setVetoedAt(int vetoedAt) {
+    public void setVetoedAt(String vetoedAt) {
         this.vetoedAt = vetoedAt;
     }
 }

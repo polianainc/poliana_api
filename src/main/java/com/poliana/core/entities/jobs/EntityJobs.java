@@ -38,4 +38,6 @@ public class EntityJobs {
         List<CongCommittee> committees = entitiesHadoopRepo.getCongCommitties();
         return entitiesMongoRepo.saveCommittees(committees);
     }
+
+
 }

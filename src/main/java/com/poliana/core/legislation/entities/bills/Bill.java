@@ -3,7 +3,6 @@ package com.poliana.core.legislation.entities.bills;
 import com.google.code.morphia.annotations.*;
 import com.google.code.morphia.annotations.Reference;
 import com.poliana.core.entities.entities.CongCommittee;
-import com.poliana.core.entities.entities.Legislator;
 
 import java.util.List;
 
@@ -35,14 +34,18 @@ public class Bill {
     @Embedded
     private BillSummary summary;
     @Reference
-    private Legislator sponsor;
+    private String sponsor;
     @Reference
-    private List<Legislator> cosponsors;
+    private List<String> cosponsors;
+    @Property("introduced_ts")
+    private int introducedTs;
     @Property("introduced_at")
-    private int introducedAt;
+    private String introducedAt;
     private String status;
+    @Property("status_ts")
+    private int statusTs;
     @Property("status_at")
-    private int statusAt;
+    private String statusAt;
     private int congress;
     @Property("bill_type")
     private String billType;
@@ -56,6 +59,10 @@ public class Bill {
     private BillHistory history;
     @Reference
     private List<CongCommittee> committees;
+    @Property("updated_at")
+    private String updatedAt;
+    @Property("updated_ts")
+    private int updatedTs;
 
     public String getId() {
         return id;
@@ -137,27 +144,35 @@ public class Bill {
         this.summary = summary;
     }
 
-    public Legislator getSponsor() {
+    public String getSponsor() {
         return sponsor;
     }
 
-    public void setSponsor(Legislator sponsor) {
+    public void setSponsor(String sponsor) {
         this.sponsor = sponsor;
     }
 
-    public List<Legislator> getCosponsors() {
+    public List<String> getCosponsors() {
         return cosponsors;
     }
 
-    public void setCosponsors(List<Legislator> cosponsors) {
+    public void setCosponsors(List<String> cosponsors) {
         this.cosponsors = cosponsors;
     }
 
-    public int getIntroducedAt() {
+    public int getIntroducedTs() {
+        return introducedTs;
+    }
+
+    public void setIntroducedTs(int introducedTs) {
+        this.introducedTs = introducedTs;
+    }
+
+    public String getIntroducedAt() {
         return introducedAt;
     }
 
-    public void setIntroducedAt(int introducedAt) {
+    public void setIntroducedAt(String introducedAt) {
         this.introducedAt = introducedAt;
     }
 
@@ -169,11 +184,19 @@ public class Bill {
         this.status = status;
     }
 
-    public int getStatusAt() {
+    public int getStatusTs() {
+        return statusTs;
+    }
+
+    public void setStatusTs(int statusTs) {
+        this.statusTs = statusTs;
+    }
+
+    public String getStatusAt() {
         return statusAt;
     }
 
-    public void setStatusAt(int statusAt) {
+    public void setStatusAt(String statusAt) {
         this.statusAt = statusAt;
     }
 
@@ -239,5 +262,21 @@ public class Bill {
 
     public void setCommittees(List<CongCommittee> committees) {
         this.committees = committees;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public int getUpdatedTs() {
+        return updatedTs;
+    }
+
+    public void setUpdatedTs(int updatedTs) {
+        this.updatedTs = updatedTs;
     }
 }

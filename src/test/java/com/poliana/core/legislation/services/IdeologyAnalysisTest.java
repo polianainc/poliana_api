@@ -20,7 +20,6 @@ import java.util.*;
 
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.springframework.test.util.ReflectionTestUtils.setField;
 
@@ -59,14 +58,15 @@ public class IdeologyAnalysisTest {
 
         ideologyAnalysis = mock(IdeologyAnalysis.class);
 
-        when(ideologyAnalysis.getIdeologyMatrix("chamber",1)).thenCallRealMethod();
-        when(ideologyAnalysis.getIdeologyMatrix(anyString(),anyInt(),anyInt())).thenCallRealMethod();
-        when(ideologyAnalysis.constructMatrix(anyList(),any(HashMap.class),any(HashMap.class)))
-                .thenReturn(sponsorshipMatrix);
         when(entitiesMongoRepo.getLegislators(anyString(), anyInt(), anyInt())).thenReturn(legislatorIterator);
         when(billHadoopRepo.getSponsorships(anyString(),anyInt())).thenReturn(sponsorsMock(legislatorsList));
+
+        when(ideologyAnalysis.getIdeologyMatrix("chamber",1)).thenCallRealMethod();
+        when(ideologyAnalysis.getIdeologyMatrix(anyString(),anyInt(),anyInt())).thenCallRealMethod();
+//        when(ideologyAnalysis.constructMatrix(anyList(),any(HashMap.class),any(HashMap.class)))
+//                .thenReturn(sponsorshipMatrix);
         when(ideologyAnalysis.svdAnalysisCommons(sponsorshipMatrix)).thenCallRealMethod();
-        when(ideologyAnalysis.legislatorMap(any(HashMap.class),anyInt())).thenReturn(bioguideMap);
+//        when(ideologyAnalysis.legislatorMap(any(HashMap.class),anyInt())).thenReturn(bioguideMap);
         when(ideologyAnalysis.legislatorIndices(anyList(),anyInt())).thenReturn(legislatorIndices);
 
         setField(ideologyAnalysis, "entitiesMongoRepo", entitiesMongoRepo, EntitiesMongoRepo.class);
@@ -78,7 +78,7 @@ public class IdeologyAnalysisTest {
 
     @Test
     public void testContructMatrix() {
-        double[][] sponsorshipMatrix = ideologyAnalysis.constructMatrix(sponsorships,legislatorIndices,bioguideMap);
+//        double[][] sponsorshipMatrix = ideologyAnalysis.constructMatrix(sponsorships,legislatorIndices,bioguideMap);
         assert (sponsorshipMatrix.length == legislatorsList.size());
         assert (sponsorshipMatrix[0].length == legislatorsList.size());
 
@@ -95,6 +95,11 @@ public class IdeologyAnalysisTest {
     public void testGetLegislatorIndexMap() {
         HashMap<String,Integer> indexMap = ideologyAnalysis.getLegislatorIndexMap(legislatorsList);
         assert ( indexMap.size() == legislatorsList.size());
+    }
+
+    @Test
+    public void testGetIdeologyScore() {
+
     }
 
 /**********************************************************************************************************************/

@@ -1,9 +1,6 @@
 package com.poliana.core.entities.entities;
 
-import com.google.code.morphia.annotations.Entity;
-import com.google.code.morphia.annotations.Id;
-import com.google.code.morphia.annotations.Indexed;
-import com.google.code.morphia.annotations.Property;
+import com.google.code.morphia.annotations.*;
 
 /**
  * @author David Gilmore
@@ -53,9 +50,13 @@ public class Legislator {
     private String birthday;
     private String religion;
     @Property("term_start")
-    private int termStart;
+    private String termStart;
     @Property("term_end")
-    private int termEnd;
+    private String termEnd;
+    @Property("begin_timestamp")
+    private int beginTimestamp;
+    @Property("end_timestamp")
+    private int endTimestamp;
     @Property("term_state")
     private String termState;
     @Property("term_type")
@@ -63,6 +64,8 @@ public class Legislator {
     private int district;
     @Property("term_state_rank")
     private String termStateRank;
+    @Transient
+    private int index;
 
     public String getId() {
         return id;
@@ -240,20 +243,36 @@ public class Legislator {
         this.religion = religion;
     }
 
-    public int getTermStart() {
+    public String getTermStart() {
         return termStart;
     }
 
-    public void setTermStart(int termStart) {
+    public void setTermStart(String termStart) {
         this.termStart = termStart;
     }
 
-    public int getTermEnd() {
+    public String getTermEnd() {
         return termEnd;
     }
 
-    public void setTermEnd(int termEnd) {
+    public void setTermEnd(String termEnd) {
         this.termEnd = termEnd;
+    }
+
+    public int getBeginTimestamp() {
+        return beginTimestamp;
+    }
+
+    public void setBeginTimestamp(int beginTimestamp) {
+        this.beginTimestamp = beginTimestamp;
+    }
+
+    public int getEndTimestamp() {
+        return endTimestamp;
+    }
+
+    public void setEndTimestamp(int endTimestamp) {
+        this.endTimestamp = endTimestamp;
     }
 
     public String getTermState() {
@@ -286,5 +305,13 @@ public class Legislator {
 
     public void setTermStateRank(String termStateRank) {
         this.termStateRank = termStateRank;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 }

@@ -8,7 +8,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author David Gilmore
@@ -30,15 +29,13 @@ public class PacPoliticianContrMapper implements RowMapper<PacPoliticianContrTot
         PacPoliticianContrTotals pac = new PacPoliticianContrTotals();
 
         pac.setPacId(rs.getString("cmte_id"));
-        pac.setPacNames(splitPacNames(rs.getString("cmte_id")));
-        pac.setPacId(rs.getString("cmte_id"));
-        pac.setPacId(rs.getString("cmte_id"));
-        pac.setPacId(rs.getString("cmte_id"));
+        pac.setPacName(rs.getString("cmte_nm"));
+        pac.setPacParty(rs.getString("cmte_pty_affiliaction"));
+        pac.setPacType(rs.getString("cmte_tp"));
+        pac.setPacOrg(rs.getString("connected_org_nm"));
+        pac.setOrgType(rs.getString("org_tp"));
+        pac.setAmount(rs.getInt(8));
 
         return pac;
-    }
-
-    private List<String> splitPacNames(String pacNames) {
-        return new ArrayList<>(Arrays.asList(pacNames.split("\t")));
     }
 }

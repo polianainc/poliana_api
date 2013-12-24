@@ -1,5 +1,6 @@
 package com.poliana.core.finance.pacs.repositories;
 
+import com.poliana.core.common.util.TimeUtils;
 import com.poliana.core.finance.industries.mapppers.LegislatorRecievedIndustryTotalsMapper;
 import com.poliana.core.finance.pacs.entities.PacPoliticianContrTotals;
 import com.poliana.core.finance.pacs.mappers.PacPoliticianContrMapper;
@@ -31,11 +32,13 @@ public class PacContributionHadoopRepo {
         if (limit != 0)
             lim = " LIMIT " + limit;
 
-        String query = "SELECT bioguide_id, real_code, sum(amount), i.cat_name, i.industry, i.sector_long FROM " +
-                "campaign_finance.individual_contributions_timestamped c JOIN entities.legislators l " +
-                "ON c.recip_id = l.opensecrets_id JOIN entities.industry_codes i ON c.real_code = i.cat_code " +
-                " WHERE bioguide_id = \'" + bioguideId +"\' AND unix_time > " + beginTimestamp + " AND unix_time < "
-                + endTimestamp + " GROUP BY bioguide_id, real_code, i.cat_name, i.industry, i.sector_long" + lim;
+        String query = "SELECT bioguide_id, cmte_id, cmte_nm, cmte_pty_affiliation, cmte_tp, org_tp, connected_org_nm, " +
+                "SUM(transaction_amt) FROM (SELECT c.bioguide_id, m.cmte_id, m.cmte_nm, m.cmte_pty_affiliation, " +
+                "m.cmte_tp, m.org_tp, m.connected_org_nm, c.transaction_amt FROM fec.pac_committee_master m JOIN " +
+                "fec.pac_to_candidate_contributions c ON m.cand_id = c.cand_id  WHERE c.bioguide_id = \'" + bioguideId
+                + "\' AND c.transation_ts > " + beginTimestamp + " AND c.transation_ts < " + endTimestamp + ") " +
+                "candidate_receipts GROUP BY bioguide_id, cmte_id, cmte_nm, cmte_pty_affiliation, cmte_tp, org_tp, " +
+                "connected_org_nm";
 
         return impalaTemplate.query(query, new PacPoliticianContrMapper(beginTimestamp, endTimestamp));
     }

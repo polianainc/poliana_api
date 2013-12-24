@@ -2,8 +2,6 @@ package com.poliana.core.finance.pacs.entities;
 
 import com.google.code.morphia.annotations.Property;
 
-import java.util.List;
-
 /**
  * @author David Gilmore
  * @date 12/19/13
@@ -13,11 +11,15 @@ public class PacPoliticianContrTotals {
     @Property("pac_id")
     public String pacId;
     @Property("pac_name")
-    public List<String> pacNames;
-    @Property("pac_city")
-    public String pacCity;
-    @Property("pac_state")
-    public String pacState;
+    public String pacName;
+    @Property("pac_party")
+    public String pacParty;
+    @Property("pac_type")
+    public String pacType;
+    @Property("pac_org")
+    public String pacOrg;
+    @Property("org_type")
+    public String orgType;
     public int amount;
 
     public String getPacId() {
@@ -28,28 +30,44 @@ public class PacPoliticianContrTotals {
         this.pacId = pacId;
     }
 
-    public List<String> getPacNames() {
-        return pacNames;
+    public String getPacName() {
+        return pacName;
     }
 
-    public void setPacNames(List<String> pacNames) {
-        this.pacNames = pacNames;
+    public void setPacName(String pacName) {
+        this.pacName = pacName;
     }
 
-    public String getPacCity() {
-        return pacCity;
+    public String getPacParty() {
+        return pacParty;
     }
 
-    public void setPacCity(String pacCity) {
-        this.pacCity = pacCity;
+    public void setPacParty(String pacParty) {
+        this.pacParty = pacParty;
     }
 
-    public String getPacState() {
-        return pacState;
+    public String getPacType() {
+        return pacType;
     }
 
-    public void setPacState(String pacState) {
-        this.pacState = pacState;
+    public void setPacType(String pacType) {
+        this.pacType = pacType;
+    }
+
+    public String getPacOrg() {
+        return pacOrg;
+    }
+
+    public void setPacOrg(String pacOrg) {
+        this.pacOrg = pacOrg;
+    }
+
+    public String getOrgType() {
+        return orgType;
+    }
+
+    public void setOrgType(String orgType) {
+        this.orgType = orgType;
     }
 
     public int getAmount() {

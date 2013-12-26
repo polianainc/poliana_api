@@ -1,10 +1,11 @@
 package com.poliana.core.legislation.services;
 
 import com.poliana.config.StandaloneConfig;
-import com.poliana.core.entities.entities.Legislator;
-import com.poliana.core.entities.repositories.EntitiesMongoRepo;
-import com.poliana.core.legislation.entities.Sponsorship;
-import com.poliana.core.legislation.repositories.BillHadoopRepo;
+import com.poliana.core.ideology.IdeologyAnalysis;
+import com.poliana.core.legislators.Legislator;
+import com.poliana.core.legislators.LegislatorsRepo;
+import com.poliana.core.sponsorship.Sponsorship;
+import com.poliana.core.bills.repositories.BillHadoopRepo;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.SingularValueDecomposition;
 import org.bson.types.ObjectId;
@@ -53,12 +54,12 @@ public class IdeologyAnalysisTest {
     public void testGetSponsorshipMatrix() throws Exception {
         Iterator<Legislator> legislatorIterator = legislatorsList.iterator();
 
-        EntitiesMongoRepo entitiesMongoRepo = mock(EntitiesMongoRepo.class);
+        LegislatorsRepo legislatorsRepo = mock(LegislatorsRepo.class);
         BillHadoopRepo billHadoopRepo = mock(BillHadoopRepo.class);
 
         ideologyAnalysis = mock(IdeologyAnalysis.class);
 
-        when(entitiesMongoRepo.getLegislators(anyString(), anyInt(), anyInt())).thenReturn(legislatorIterator);
+        when(legislatorsRepo.getLegislators(anyString(), anyInt(), anyInt())).thenReturn(legislatorIterator);
         when(billHadoopRepo.getSponsorships(anyString(),anyInt())).thenReturn(sponsorsMock(legislatorsList));
 
         when(ideologyAnalysis.getIdeologyMatrix("chamber",1)).thenCallRealMethod();
@@ -69,7 +70,7 @@ public class IdeologyAnalysisTest {
 //        when(ideologyAnalysis.legislatorMap(any(HashMap.class),anyInt())).thenReturn(bioguideMap);
         when(ideologyAnalysis.legislatorIndices(anyList(),anyInt())).thenReturn(legislatorIndices);
 
-        setField(ideologyAnalysis, "entitiesMongoRepo", entitiesMongoRepo, EntitiesMongoRepo.class);
+        setField(ideologyAnalysis, "legislatorsRepo", legislatorsRepo, LegislatorsRepo.class);
         setField(ideologyAnalysis, "billHadoopRepo", billHadoopRepo,BillHadoopRepo.class);
 
         ideologyAnalysis.getIdeologyMatrix("chamber", 1);

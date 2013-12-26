@@ -1,7 +1,6 @@
 package com.poliana.cli.controllers;
 
-import com.poliana.core.legislation.jobs.IngestGovtrack;
-import com.poliana.core.legislation.services.LegislationService;
+import com.poliana.core.bills.jobs.IngestGovtrack;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.core.CommandMarker;
 import org.springframework.shell.core.annotation.CliCommand;
@@ -18,9 +17,6 @@ public class BillJobs implements CommandMarker {
 
     @Autowired
     private IngestGovtrack gtProcess;
-
-    @Autowired
-    private LegislationService legislationService;
 
 
     @CliCommand(value = "populateBills")

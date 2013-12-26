@@ -1,8 +1,7 @@
 package com.poliana.cli.controllers;
 
-import com.poliana.core.entities.entities.Industry;
-import com.poliana.core.finance.industries.IndustryContributionService;
-import com.poliana.core.finance.industries.entities.IndustryPoliticianContributions;
+import com.poliana.core.industryFinance.IndustryContributionService;
+import com.poliana.core.industryFinance.entities.IndustryPoliticianContributions;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

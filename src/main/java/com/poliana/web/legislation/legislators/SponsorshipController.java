@@ -1,8 +1,8 @@
 package com.poliana.web.legislation.legislators;
 
-import com.poliana.core.entities.entities.Legislator;
-import com.poliana.core.legislation.models.IdeologyMatrix;
-import com.poliana.core.legislation.services.IdeologyAnalysis;
+import com.poliana.core.legislators.Legislator;
+import com.poliana.core.ideology.IdeologyMatrix;
+import com.poliana.core.ideology.IdeologyAnalysis;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

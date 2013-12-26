@@ -1,6 +1,6 @@
 package com.poliana.cli;
 
-import com.poliana.config.CliConfig;
+import com.poliana.config.cli.CliShell;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.shell.core.ExitShellRequest;
 import org.springframework.shell.support.logging.HandlerUtils;
@@ -12,12 +12,12 @@ public class StartCli {
 
     public static void main(String[] args) {
         AnnotationConfigApplicationContext ctx =
-                new AnnotationConfigApplicationContext("com/poliana/config");
+                new AnnotationConfigApplicationContext("com/poliana/config/cli");
 
         try {
-            CliConfig cliConfig = new CliConfig(ctx);
+            CliShell cliShell = new CliShell(ctx);
             String[] options = {};
-            ExitShellRequest exitShellRequest = cliConfig.run(null);
+            ExitShellRequest exitShellRequest = cliShell.run(null);
         } catch (RuntimeException t) {
             throw t;
         } catch (IOException e) {

@@ -1,6 +1,6 @@
 package com.poliana.cli.controllers;
 
-import com.poliana.core.finance.industries.jobs.IndContrSessionBatch;
+import com.poliana.core.industryFinance.jobs.IndContrSessionBatch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.core.CommandMarker;
 import org.springframework.shell.core.annotation.CliCommand;

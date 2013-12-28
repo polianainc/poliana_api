@@ -4,7 +4,6 @@ import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Property;
-import com.poliana.core.generalFinance.entities.Recipient;
 
 import java.util.HashMap;
 import java.util.List;

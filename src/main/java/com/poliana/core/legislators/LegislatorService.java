@@ -11,7 +11,7 @@ import java.util.*;
 public class LegislatorService {
 
     @Autowired
-    protected LegislatorsRepo legislatorsRepo;
+    protected LegislatorRepo legislatorRepo;
 
     private Map<String, List<Legislator>> lisCache;
     private Map<String, List<Legislator>> bioguideCache;
@@ -96,7 +96,7 @@ public class LegislatorService {
         }
         else {
             legislators = new LinkedList<>();
-            Iterator<Legislator> iterator = legislatorsRepo.getLegislator(id);
+            Iterator<Legislator> iterator = legislatorRepo.getLegislator(id);
             while (iterator.hasNext()) {
                 Legislator legislator = iterator.next();
                 legislators.add(legislator);
@@ -183,7 +183,7 @@ public class LegislatorService {
 
     private void setCacheLis() {
         Iterator<Legislator> legislators =
-                legislatorsRepo.allLegislatorTerms();
+                legislatorRepo.allLegislatorTerms();
 
         lisCache = new HashMap<>(43000);
 
@@ -205,7 +205,7 @@ public class LegislatorService {
 
     private void setCacheBioguide() {
         Iterator<Legislator> legislators =
-                legislatorsRepo.allLegislatorTerms();
+                legislatorRepo.allLegislatorTerms();
         bioguideCache = new HashMap<>(43000);
 
         String currBioguide;
@@ -225,7 +225,7 @@ public class LegislatorService {
 
     private void setCacheThomas() {
         Iterator<Legislator> legislators =
-                legislatorsRepo.allLegislatorTerms();
+                legislatorRepo.allLegislatorTerms();
         thomasCache = new HashMap<>(43000);
 
         String currThomas;

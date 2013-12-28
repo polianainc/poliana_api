@@ -4,9 +4,12 @@ import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Indexed;
 import com.google.code.morphia.annotations.Property;
+import com.poliana.core.industryFinance.entities.IndToPolContrTotals;
+import com.poliana.core.pacFinance.PacPoliticianContrTotals;
 
 
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author David Gilmore
@@ -29,9 +32,9 @@ public class TermTotals {
     @Property("leadership_score")
     private double leadershipScore;
     @Property("top_industry_contributions")
-    private HashMap<String,Integer> topIndustryContributions;
+    private List<IndToPolContrTotals> topIndustryContributions;
     @Property("top_pac_contributions")
-    private HashMap<String,Integer> topPACContributions;
+    private List<PacPoliticianContrTotals> topPACContributions;
 
     public String getId() {
         return id;
@@ -89,19 +92,19 @@ public class TermTotals {
         this.leadershipScore = leadershipScore;
     }
 
-    public HashMap<String, Integer> getTopIndustryContributions() {
+    public List<IndToPolContrTotals> getTopIndustryContributions() {
         return topIndustryContributions;
     }
 
-    public void setTopIndustryContributions(HashMap<String, Integer> topIndustryContributions) {
+    public void setTopIndustryContributions(List<IndToPolContrTotals> topIndustryContributions) {
         this.topIndustryContributions = topIndustryContributions;
     }
 
-    public HashMap<String, Integer> getTopPACContributions() {
+    public List<PacPoliticianContrTotals> getTopPACContributions() {
         return topPACContributions;
     }
 
-    public void setTopPACContributions(HashMap<String, Integer> topPACContributions) {
+    public void setTopPACContributions(List<PacPoliticianContrTotals> topPACContributions) {
         this.topPACContributions = topPACContributions;
     }
 }

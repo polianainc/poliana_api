@@ -2,7 +2,7 @@ package com.poliana.core.ideology;
 
 import com.poliana.core.common.util.TimeUtils;
 import com.poliana.core.legislators.Legislator;
-import com.poliana.core.legislators.LegislatorsRepo;
+import com.poliana.core.legislators.LegislatorRepo;
 import com.poliana.core.legislators.LegislatorService;
 import com.poliana.core.sponsorship.Sponsorship;
 import com.poliana.core.bills.repositories.BillHadoopRepo;
@@ -26,7 +26,7 @@ public class IdeologyAnalysis {
     private BillHadoopRepo billHadoopRepo;
 
     @Autowired
-    private LegislatorsRepo legislatorRepo;
+    private LegislatorRepo legislatorRepo;
 
     @Autowired
     private LegislatorService legislatorService;

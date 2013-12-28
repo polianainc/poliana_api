@@ -1,6 +1,7 @@
 package com.poliana.core.politicianProfile;
 
 import com.google.code.morphia.annotations.*;
+import com.poliana.core.pacFinance.PacPoliticianContrTotals;
 
 import java.util.List;
 

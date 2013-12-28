@@ -9,9 +9,13 @@ public class IndToPolContrTotals {
     private String bioguideId;
     private String party;
     private String industryId;
+    private String industryName;
+    private String sector;
+    private String sectorLong;
     private int contributionsCount;
     private int contributionSum;
     private int timestamp;
+    private int cycle;
     private int year;
     private int month;
 
@@ -39,6 +43,30 @@ public class IndToPolContrTotals {
         this.industryId = industryId;
     }
 
+    public String getIndustryName() {
+        return industryName;
+    }
+
+    public void setIndustryName(String industryName) {
+        this.industryName = industryName;
+    }
+
+    public String getSectorLong() {
+        return sectorLong;
+    }
+
+    public void setSectorLong(String sectorLong) {
+        this.sectorLong = sectorLong;
+    }
+
+    public String getSector() {
+        return sector;
+    }
+
+    public void setSector(String sector) {
+        this.sector = sector;
+    }
+
     public int getContributionsCount() {
         return contributionsCount;
     }
@@ -61,6 +89,14 @@ public class IndToPolContrTotals {
 
     public void setTimestamp(int timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public int getCycle() {
+        return cycle;
+    }
+
+    public void setCycle(int cycle) {
+        this.cycle = cycle;
     }
 
     public int getYear() {

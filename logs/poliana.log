@@ -1,9 +1,0 @@
-16:38:12,595 ERROR IndustryContributionHadoopRepo:47 - org.springframework.jdbc.UncategorizedSQLException: StatementCallback; uncategorized SQLException for SQL [SELECT bioguide_id, sums.cmte_id, p.cmte_nm, cycle, _c3 FROM
-    (SELECT bioguide_id, cmte_id, cycle, SUM(transaction_amt) FROM 
-        (SELECT m.bioguide_id, c.cmte_id, c.transaction_amt, c.cycle FROM
-         entities.legislators m JOIN fec.pac_to_candidate_contributions c ON m.fec_id = c.cand_id          WHERE m.bioguide_id = 'O000167') candidate_receipts 
-    GROUP BY bioguide_id, cmte_id, cycle) sums JOIN entities.pacs p ON sums.cmte_id = p.cmte_id]; SQL state [null]; error code [0]; null; nested exception is java.sql.SQLException
-21:31:15,424 ERROR PacContributionRepo:43 - org.springframework.jdbc.UncategorizedSQLException: StatementCallback; uncategorized SQLException for SQL [SELECT bioguide_id, real_code, industry, sector, sector_long, congress, _c3 FROM
-(SELECT bioguide_id, real_code, congress, SUM(amount) FROM 
-(SELECT bioguide_id, real_code, congress, amount FROM entities.legislators m JOIN crp.individual_contributions c ON opensecrets_id = c.recip_id WHERE bioguide_id = 'O000167') candidate_receipts GROUP BY bioguide_id, real_code, congress) sums 
-JOIN entities.industry_codes l ON real_code = cat_code]; SQL state [null]; error code [0]; null; nested exception is java.sql.SQLException

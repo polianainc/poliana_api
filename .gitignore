@@ -17,6 +17,7 @@ target/
 
 #data
 data/
+logs/
 
 .pem
 target/

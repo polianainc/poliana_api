@@ -2,7 +2,7 @@ package com.poliana.core.bills.repositories;
 
 import com.poliana.core.bills.mappers.*;
 import com.poliana.core.sponsorship.Sponsorship;
-import com.poliana.core.sponsorship.IndividualSponsorshipMapper;
+import com.poliana.core.sponsorship.SponsorshipMapper;
 import com.poliana.core.bills.deprecated.BillAction;
 import com.poliana.core.bills.deprecated.BillPojo;
 import com.poliana.core.bills.deprecated.BillVotes;
@@ -314,6 +314,6 @@ public class BillHadoopRepo {
                 "bills.bill_sponsorship_flat b JOIN entities.legislators s ON b.sponsor_thomas_id = s.thomas_id " +
                 "JOIN entities.legislators c ON b.cosponsor_thomas_id = c.thomas_id WHERE congress = \"" +
                 congress + "\" " + "AND SUBSTR(bill_type,1,1) = \"" + chamber +"\" GROUP BY s.bioguide_id, c.bioguide_id";
-        return impalaTemplate.query(query, new IndividualSponsorshipMapper(chamber,congress));
+        return impalaTemplate.query(query, new SponsorshipMapper(chamber,congress));
     }
 }

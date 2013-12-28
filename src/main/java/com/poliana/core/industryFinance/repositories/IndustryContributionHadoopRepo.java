@@ -3,15 +3,22 @@ package com.poliana.core.industryFinance.repositories;
 import com.poliana.core.industryFinance.entities.IndPartyTotals;
 import com.poliana.core.industryFinance.entities.IndToPolContrTotals;
 import com.poliana.core.industryFinance.entities.IndustryPoliticianContributions;
+import com.poliana.core.industryFinance.mapppers.AllContrPerCogressMapper;
 import com.poliana.core.industryFinance.mapppers.IndPartyTotalsMapper;
 import com.poliana.core.industryFinance.mapppers.IndToPolContrTotalsMapper;
 import com.poliana.core.industryFinance.mapppers.LegislatorRecievedIndustryTotalsMapper;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 
+/**
+ * @author David Gilmore
+ * @date 11/27/13
+ */
 @Repository
 public class IndustryContributionHadoopRepo {
 
@@ -20,6 +27,29 @@ public class IndustryContributionHadoopRepo {
 
     @Autowired
     protected JdbcTemplate impalaTemplate;
+
+    private static final Logger logger = Logger.getLogger(IndustryContributionHadoopRepo.class);
+
+
+    public HashMap<Integer, List<IndToPolContrTotals>> allIndustryContributionsPerCongress(String bioguideId) {
+
+        try {
+            String query = "SELECT bioguide_id, real_code, industry, sector, sector_long, congress, _c3 FROM\n" +
+                    "(SELECT bioguide_id, real_code, congress, SUM(amount) FROM \n" +
+                    "(SELECT bioguide_id, real_code, congress, amount FROM entities.legislators m JOIN " +
+                    "crp.individual_contributions c ON opensecrets_id = c.recip_id WHERE bioguide_id = \'" + bioguideId +
+                    "\') candidate_receipts GROUP BY bioguide_id, real_code, congress) sums \n" +
+                    "JOIN entities.industry_codes l ON real_code = cat_code";
+
+            return impalaTemplate.query(query, new AllContrPerCogressMapper());
+        }
+        catch (Exception e) {
+            logger.error(e);
+        }
+
+        return null;
+    }
+
 
     /**
      * Returns a list of industry to politician contributions

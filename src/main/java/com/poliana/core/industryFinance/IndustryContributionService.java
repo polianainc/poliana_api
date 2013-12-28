@@ -3,7 +3,7 @@ package com.poliana.core.industryFinance;
 import com.poliana.core.industries.IndustryRepo;
 import com.poliana.core.industryFinance.entities.IndTimeRangeTotals;
 import com.poliana.core.industryFinance.entities.IndToPolContrTotals;
-import com.poliana.core.generalFinance.entities.Recipient;
+import com.poliana.core.industryFinance.entities.Recipient;
 import com.poliana.core.industryFinance.entities.IndustryPoliticianContributions;
 import com.poliana.core.industryFinance.repositories.IndustryContributionHadoopRepo;
 import com.poliana.core.common.util.TimeUtils;

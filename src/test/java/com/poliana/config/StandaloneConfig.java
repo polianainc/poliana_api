@@ -7,6 +7,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
+import redis.clients.jedis.JedisPool;
+
+import static org.mockito.Mockito.mock;
 
 import javax.naming.NamingException;
 import javax.sql.DataSource;
@@ -41,5 +44,10 @@ public class StandaloneConfig {
     @Bean
     public Datastore mongoStore() {
         return new Morphia().createDatastore("");
+    }
+
+    @Bean
+    public JedisPool jedisPool() {
+        return mock(JedisPool.class);
     }
 }

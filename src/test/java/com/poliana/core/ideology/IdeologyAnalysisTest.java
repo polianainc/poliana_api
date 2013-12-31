@@ -43,6 +43,7 @@ public class IdeologyAnalysisTest {
 
     @Before
     public void setUp() {
+
         legislatorsList = legislatorsMockList(100);
         sponsorships = sponsorsMock(legislatorsList);
         bioguideMap = bioguideMapMock(legislatorsList);
@@ -51,7 +52,37 @@ public class IdeologyAnalysisTest {
     }
 
     @Test
+    public void testNormalizeEigenvector() {
+
+        Random r = new Random();
+
+        //Construct a mock array
+        double[] e = new double[50];
+        for (int i = 0; i < e.length; i++) {
+            double ei = r.nextDouble();
+            if (i % 2 == 0)
+                ei *= -1;
+            e[i] = ei;
+        }
+
+        //normalize the doubles in our mock array
+        double[] normalized = ideologyAnalysis.normalizeEigenvalues(e);
+
+        // Find the max and min of our normalized array
+        double emax = 0;
+        double emin = 0;
+        for (int ei = 0; ei< normalized.length; ei++) {
+            emax = e[ei] > emax ? e[ei] : emax;
+            emin = e[ei] < emin ? e[ei] : emin;
+        }
+
+        assert emax > emin && emax <= 100;
+        assert emin < emax && emin >= 0;
+    }
+
+    @Test
     public void testGetSponsorshipMatrix() throws Exception {
+
         Iterator<Legislator> legislatorIterator = legislatorsList.iterator();
 
         LegislatorRepo legislatorRepo = mock(LegislatorRepo.class);
@@ -80,6 +111,7 @@ public class IdeologyAnalysisTest {
 
     @Test
     public void testContructMatrix() {
+
 //        double[][] sponsorshipMatrix = ideologyAnalysis.constructMatrix(sponsorships,legislatorIndices,bioguideMap);
         assert (sponsorshipMatrix.length == legislatorsList.size());
         assert (sponsorshipMatrix[0].length == legislatorsList.size());
@@ -95,6 +127,7 @@ public class IdeologyAnalysisTest {
 
     @Test
     public void testGetLegislatorIndexMap() {
+
         HashMap<String,Integer> indexMap = ideologyAnalysis.getLegislatorIndexMap(legislatorsList);
         assert ( indexMap.size() == legislatorsList.size());
     }
@@ -109,6 +142,7 @@ public class IdeologyAnalysisTest {
 /**********************************************************************************************************************/
 
     private List<Legislator> legislatorsMockList(int numLegislators) {
+
         List<Legislator> legislators = new ArrayList<>(numLegislators);
 
         int order = 0;
@@ -126,6 +160,7 @@ public class IdeologyAnalysisTest {
     }
 
     private List<Sponsorship> sponsorsMock(List<Legislator> legislators) {
+
         int dims = legislators.size();
         int size = dims*(dims/2);
         Random rand = new Random();
@@ -154,6 +189,7 @@ public class IdeologyAnalysisTest {
     }
 
     private HashMap<String,String> bioguideMapMock(List<Legislator> legislators) {
+
         HashMap<String,String> legislatorMap = new HashMap<>(500);
 
         for (Legislator legislator: legislators) {
@@ -164,6 +200,7 @@ public class IdeologyAnalysisTest {
     }
 
     public HashMap<String,Integer> legislatorIndexMapMock(List<Legislator> legislators, String chamber) {
+
         int mapSize;
         if (chamber.contains("h"))
             mapSize = 450;

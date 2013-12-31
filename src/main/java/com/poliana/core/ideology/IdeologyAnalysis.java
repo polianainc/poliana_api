@@ -5,11 +5,12 @@ import com.poliana.core.legislators.Legislator;
 import com.poliana.core.legislators.LegislatorRepo;
 import com.poliana.core.legislators.LegislatorService;
 import com.poliana.core.sponsorship.Sponsorship;
-import com.poliana.core.bills.repositories.BillHadoopRepo;
+import com.poliana.core.sponsorship.SponsorshipRepo;
 import org.apache.commons.math3.linear.SingularValueDecomposition;
 import org.apache.commons.math3.linear.BlockRealMatrix;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.MatrixUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +24,7 @@ import java.util.*;
 public class IdeologyAnalysis {
 
     @Autowired
-    private BillHadoopRepo billHadoopRepo;
+    private SponsorshipRepo sponsorshipRepo;
 
     @Autowired
     private LegislatorRepo legislatorRepo;
@@ -31,8 +32,44 @@ public class IdeologyAnalysis {
     @Autowired
     private LegislatorService legislatorService;
 
+    @Autowired
+    private IdeologyRepo ideologyRepo;
+
+    private static final Logger logger = Logger.getLogger(IdeologyAnalysis.class);
+
+
+    public double getIdeologyScore(String bioguideId, int congress) {
+
+//        if (ideologyRepo.getIdeologyMatrix())
+
+        return 0;
+    }
+
     /**
+     * Take an eigen vector and return the same values normalized to be between 0 and 100
      *
+     * @param e
+     * @return
+     */
+    public double[] normalizeEigenvalues(double[] e) {
+
+        //iterate through eigenvalues to get Emax and Emin needed to calculate the normalized values.
+        double emax = 0;
+        double emin = 0;
+        for (int ei = 0; ei<e.length; ei++) {
+            emax = e[ei] > emax ? e[ei] : emax;
+            emin = e[ei] < emin ? e[ei] : emin;
+        }
+
+        for (int ei = 0; ei<e.length; ei++) {
+            e[ei] = ((e[ei] - emin) / (emax - emin)) * 100;
+        }
+        return e;
+    }
+
+    /**
+     * For a given congressional cycle and a certain chamber, return a collective analysis of sponsorship trends using
+     * Singular Value Decomposition.
      *
      * @param chamber
      * @param congress
@@ -46,6 +83,8 @@ public class IdeologyAnalysis {
     }
 
     /**
+     * For a given time range, and a certain chamber, return a collective analysis of sponsorship trends using
+     * Singular Value Decomposition.
      *
      * @param chamber
      * @param beginTimestamp
@@ -76,7 +115,7 @@ public class IdeologyAnalysis {
         IdeologyMatrix ideologyMatrix = new IdeologyMatrix();
 
         List<Sponsorship> sponsorships =
-                billHadoopRepo.getSponsorships(chamber,TimeUtils.timestampToCongress(beginTimestamp));
+                sponsorshipRepo.getSponsorshipCounts(chamber, TimeUtils.timestampToCongress(beginTimestamp));
         Iterator<Legislator> legislatorIterator = legislatorRepo.getLegislators(chamber,beginTimestamp,endTimestamp);
 
         SponsorshipData sponsorshipData = getUniqueLegislators(sponsorships,legislatorIterator,
@@ -86,8 +125,8 @@ public class IdeologyAnalysis {
         sponsorshipData = constructMatrix(sponsorships,sponsorshipData);
 
         ideologyMatrix.setChamber(chamber);
-        ideologyMatrix.setBeginDate(beginTimestamp);
-        ideologyMatrix.setEndDate(endTimestamp);
+        ideologyMatrix.setBeginTimestamp(beginTimestamp);
+        ideologyMatrix.setEndTimestamp(endTimestamp);
         ideologyMatrix.setSponsorshipMatrix(sponsorshipData.matrix);
         ideologyMatrix.setIdToIndex(sponsorshipData.indices);
         ideologyMatrix.setLegislators(sponsorshipData.legislatorList);

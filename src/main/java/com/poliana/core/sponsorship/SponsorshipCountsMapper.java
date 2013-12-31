@@ -9,12 +9,12 @@ import java.sql.SQLException;
  * @author David Gilmore
  * @date 11/27/13
  */
-public class SponsorshipMapper implements RowMapper<Sponsorship> {
+public class SponsorshipCountsMapper implements RowMapper<Sponsorship> {
 
     private String chamber;
     private int congress;
 
-    public SponsorshipMapper(String chamber, int congress) {
+    public SponsorshipCountsMapper(String chamber, int congress) {
         this.chamber = chamber;
         this.congress = congress;
     }

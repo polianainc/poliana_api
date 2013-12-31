@@ -12,6 +12,7 @@ public class Sponsorship {
     private int count;
     private int congress;
 
+
     public String getChamber() {
         return chamber;
     }

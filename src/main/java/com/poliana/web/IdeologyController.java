@@ -39,8 +39,8 @@ public class IdeologyController {
 
         try {
             ideology.put("chamber",ideologyMatrix.getChamber());
-            ideology.put("begin_timestamp",ideologyMatrix.getBeginDate());
-            ideology.put("end_timestamp",ideologyMatrix.getEndDate());
+            ideology.put("begin_timestamp",ideologyMatrix.getBeginTimestamp());
+            ideology.put("end_timestamp",ideologyMatrix.getEndTimestamp());
             ideology.put("sponsorship_matrix",ideologyMatrix.getSponsorshipMatrix());
             ideology.put("id_to_index",ideologyMatrix.getIdToIndex());
             ideology.put("legislators",legislatorsFormat(ideologyMatrix.getLegislators()));

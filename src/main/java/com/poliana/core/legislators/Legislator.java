@@ -1,13 +1,17 @@
 package com.poliana.core.legislators;
 
 import com.google.code.morphia.annotations.*;
+import org.msgpack.annotation.Message;
+
+import java.io.Serializable;
 
 /**
  * @author David Gilmore
  * @date 11/16/13
  */
+@Message
 @Entity("legislators")
-public class Legislator {
+public class Legislator implements Serializable {
 
     @Id
     private String id;

@@ -1,11 +1,11 @@
 package com.poliana.core.ideology;
 
 import com.poliana.config.StandaloneConfig;
-import com.poliana.core.ideology.IdeologyAnalysis;
 import com.poliana.core.legislators.Legislator;
 import com.poliana.core.legislators.LegislatorRepo;
 import com.poliana.core.sponsorship.Sponsorship;
 import com.poliana.core.bills.repositories.BillHadoopRepo;
+import com.poliana.core.sponsorship.SponsorshipRepo;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.SingularValueDecomposition;
 import org.bson.types.ObjectId;
@@ -56,11 +56,12 @@ public class IdeologyAnalysisTest {
 
         LegislatorRepo legislatorRepo = mock(LegislatorRepo.class);
         BillHadoopRepo billHadoopRepo = mock(BillHadoopRepo.class);
+        SponsorshipRepo sponsorshipRepo = mock(SponsorshipRepo.class);
 
         ideologyAnalysis = mock(IdeologyAnalysis.class);
 
         when(legislatorRepo.getLegislators(anyString(), anyInt(), anyInt())).thenReturn(legislatorIterator);
-        when(billHadoopRepo.getSponsorships(anyString(),anyInt())).thenReturn(sponsorsMock(legislatorsList));
+        when(sponsorshipRepo.getSponsorshipCounts(anyString(), anyInt())).thenReturn(sponsorsMock(legislatorsList));
 
         when(ideologyAnalysis.getIdeologyMatrix("chamber",1)).thenCallRealMethod();
         when(ideologyAnalysis.getIdeologyMatrix(anyString(),anyInt(),anyInt())).thenCallRealMethod();

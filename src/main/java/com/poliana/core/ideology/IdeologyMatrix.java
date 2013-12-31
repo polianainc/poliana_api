@@ -2,6 +2,7 @@ package com.poliana.core.ideology;
 
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Property;
 import com.google.code.morphia.annotations.Transient;
 import com.poliana.core.legislators.Legislator;
 import org.apache.commons.math3.linear.SingularValueDecomposition;
@@ -17,8 +18,10 @@ import java.util.List;
 public class IdeologyMatrix {
 
     private String chamber;
-    private int beginDate;
-    private int endDate;
+    @Property("begin_timestamp")
+    private int beginTimestamp;
+    @Property("end_timestamp")
+    private int endTimestamp;
     private double[][] sponsorshipMatrix;
     private double[][] u;
     private double[][] vt;
@@ -36,20 +39,20 @@ public class IdeologyMatrix {
         this.chamber = chamber;
     }
 
-    public int getBeginDate() {
-        return beginDate;
+    public int getBeginTimestamp() {
+        return beginTimestamp;
     }
 
-    public void setBeginDate(int beginDate) {
-        this.beginDate = beginDate;
+    public void setBeginTimestamp(int beginTimestamp) {
+        this.beginTimestamp = beginTimestamp;
     }
 
-    public int getEndDate() {
-        return endDate;
+    public int getEndTimestamp() {
+        return endTimestamp;
     }
 
-    public void setEndDate(int endDate) {
-        this.endDate = endDate;
+    public void setEndTimestamp(int endTimestamp) {
+        this.endTimestamp = endTimestamp;
     }
 
     public double[][] getSponsorshipMatrix() {

@@ -44,8 +44,8 @@ public class IdeologyController implements CommandMarker {
 
         JSONObject ideology = new JSONObject();
         ideology.put("chamber",ideologyMatrix.getChamber());
-        ideology.put("beginTimestamp",ideologyMatrix.getBeginDate());
-        ideology.put("endTimestamp",ideologyMatrix.getEndDate());
+        ideology.put("beginTimestamp",ideologyMatrix.getBeginTimestamp());
+        ideology.put("endTimestamp",ideologyMatrix.getEndTimestamp());
         ideology.put("sponsorshipMatrix",ideologyMatrix.getSponsorshipMatrix());
         ideology.put("u",ideologyMatrix.getU());
         ideology.put("vt",ideologyMatrix.getVt());

@@ -29,7 +29,7 @@ public class SponsorshipRepo {
      * @param termChamberMap
      * @return
      */
-    public HashMap<Integer, List<Sponsorship>> getSponsorshipCounts(HashMap<Integer,String> termChamberMap) {
+    public HashMap<Integer, List<SponsorshipCount>> getSponsorshipCounts(HashMap<Integer,String> termChamberMap) {
 
         Iterator it = termChamberMap.entrySet().iterator();
         Map.Entry pairs;
@@ -69,7 +69,7 @@ public class SponsorshipRepo {
      * @param congress
      * @return
      */
-    public List<Sponsorship> getSponsorshipCounts(String chamber, int congress) {
+    public List<SponsorshipCount> getSponsorshipCounts(String chamber, int congress) {
 
         try {
             String query = "SELECT s.bioguide_id, c.bioguide_id, count(c.bioguide_id) FROM " +

@@ -2,12 +2,9 @@ package com.poliana.core.ideology;
 
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Indexed;
 import com.google.code.morphia.annotations.Property;
-import com.google.code.morphia.annotations.Transient;
-import com.poliana.core.legislators.Legislator;
-import org.apache.commons.math3.linear.SingularValueDecomposition;
 
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -18,18 +15,21 @@ import java.util.List;
 public class IdeologyMatrix {
 
     private String chamber;
+
+    @Indexed
+    private int congress;
+
+    @Indexed
     @Property("begin_timestamp")
     private int beginTimestamp;
+
+    @Indexed
     @Property("end_timestamp")
     private int endTimestamp;
-    private double[][] sponsorshipMatrix;
-    private double[][] u;
-    private double[][] vt;
-    @Transient
-    private SingularValueDecomposition svd;
-    private HashMap<String,Integer> idToIndex;
+    @Property("ideology_values")
+    private double[] ideologyValues;
     @Embedded
-    private List<Legislator> legislators;
+    private List<LegislatorIdeology> ideologies;
 
     public String getChamber() {
         return chamber;
@@ -37,6 +37,14 @@ public class IdeologyMatrix {
 
     public void setChamber(String chamber) {
         this.chamber = chamber;
+    }
+
+    public int getCongress() {
+        return congress;
+    }
+
+    public void setCongress(int congress) {
+        this.congress = congress;
     }
 
     public int getBeginTimestamp() {
@@ -55,51 +63,19 @@ public class IdeologyMatrix {
         this.endTimestamp = endTimestamp;
     }
 
-    public double[][] getSponsorshipMatrix() {
-        return sponsorshipMatrix;
+    public double[] getIdeologyValues() {
+        return ideologyValues;
     }
 
-    public void setSponsorshipMatrix(double[][] sponsorshipMatrix) {
-        this.sponsorshipMatrix = sponsorshipMatrix;
+    public void setIdeologyValues(double[] ideologyValues) {
+        this.ideologyValues = ideologyValues;
     }
 
-    public double[][] getU() {
-        return u;
+    public List<LegislatorIdeology> getIdeologies() {
+        return ideologies;
     }
 
-    public void setU(double[][] u) {
-        this.u = u;
-    }
-
-    public double[][] getVt() {
-        return vt;
-    }
-
-    public void setVt(double[][] vt) {
-        this.vt = vt;
-    }
-
-    public SingularValueDecomposition getSvd() {
-        return svd;
-    }
-
-    public void setSvd(SingularValueDecomposition svd) {
-        this.svd = svd;
-    }
-
-    public HashMap<String, Integer> getIdToIndex() {
-        return idToIndex;
-    }
-
-    public void setIdToIndex(HashMap<String, Integer> idToIndex) {
-        this.idToIndex = idToIndex;
-    }
-
-    public List<Legislator> getLegislators() {
-        return legislators;
-    }
-
-    public void setLegislators(List<Legislator> legislators) {
-        this.legislators = legislators;
+    public void setIdeologies(List<LegislatorIdeology> ideologies) {
+        this.ideologies = ideologies;
     }
 }

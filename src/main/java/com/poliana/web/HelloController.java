@@ -13,17 +13,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 @RequestMapping("/")
-public class HelloController {
+public class HelloController extends BaseController {
 
     @ResponseBody
     @RequestMapping(value="", method = RequestMethod.GET)
     public String index() {
-        return "Welcome to the Poliana API!";
-    }
-
-    @ResponseBody
-    @RequestMapping(value="hello", method = RequestMethod.GET)
-    public String printWelcome() {
-        return "Hello World!";
+        return "Hello. Welcome to the Poliana API!";
     }
 }

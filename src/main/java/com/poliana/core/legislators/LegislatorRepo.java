@@ -35,6 +35,7 @@ public class LegislatorRepo {
     private final String TERMS_BY_LIS = "termsByLis:";
     private final String TERMS_BY_THOMAS = "termsByThomas:";
     private final String TERMS_BY_MONGO = "termsByMongo:";
+    private final String TERMS_BY_TIMESTAMP = "termsByTimestamp:";
 
     private static final Logger logger = Logger.getLogger(LegislatorRepo.class);
 

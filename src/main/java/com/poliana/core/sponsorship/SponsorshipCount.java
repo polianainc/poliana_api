@@ -4,7 +4,7 @@ package com.poliana.core.sponsorship;
  * @author David Gilmore
  * @date 11/27/13
  */
-public class Sponsorship {
+public class SponsorshipCount {
 
     private String chamber;
     private String sponsor;

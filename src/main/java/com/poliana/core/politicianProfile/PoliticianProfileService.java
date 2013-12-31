@@ -1,6 +1,6 @@
 package com.poliana.core.politicianProfile;
 
-import com.poliana.core.ideology.IdeologyAnalysis;
+import com.poliana.core.ideology.IdeologyService;
 import com.poliana.core.industryFinance.entities.IndToPolContrTotals;
 import com.poliana.core.industryFinance.repositories.IndustryContributionHadoopRepo;
 import com.poliana.core.pacFinance.PacContributionRepo;
@@ -26,7 +26,7 @@ public class PoliticianProfileService {
     private IndustryContributionHadoopRepo industryContributionHadoopRepo;
 
     @Autowired
-    private IdeologyAnalysis ideologyAnalysis;
+    private IdeologyService ideologyService;
 
 
     /**

@@ -14,21 +14,21 @@ import java.util.List;
  * @author David Gilmore
  * @date 12/28/13
  */
-public class SponsorshipRSMapper implements ResultSetExtractor<HashMap<Integer, List<Sponsorship>>> {
+public class SponsorshipRSMapper implements ResultSetExtractor<HashMap<Integer, List<SponsorshipCount>>> {
     @Override
-    public HashMap<Integer, List<Sponsorship>> extractData(ResultSet rs)
+    public HashMap<Integer, List<SponsorshipCount>> extractData(ResultSet rs)
             throws SQLException, DataAccessException {
 
-        HashMap<Integer, List<Sponsorship>> allTotals = new HashMap<>();
+        HashMap<Integer, List<SponsorshipCount>> allTotals = new HashMap<>();
         SponsorshipMapper sponsorshipMapper = new SponsorshipMapper();
 
         int index = 1;
         while (rs.next()) {
-            Sponsorship totals = sponsorshipMapper.mapRow(rs, index);
+            SponsorshipCount totals = sponsorshipMapper.mapRow(rs, index);
             if (allTotals.containsKey(totals.getCongress()))
                 allTotals.get(totals.getCongress()).add(totals);
             else {
-                List<Sponsorship> cycleTotals = new LinkedList<>();
+                List<SponsorshipCount> cycleTotals = new LinkedList<>();
                 cycleTotals.add(totals);
                 allTotals.put(totals.getCongress(), cycleTotals);
             }
@@ -38,13 +38,13 @@ public class SponsorshipRSMapper implements ResultSetExtractor<HashMap<Integer, 
         return allTotals;
     }
 
-    class SponsorshipMapper implements RowMapper<Sponsorship> {
+    class SponsorshipMapper implements RowMapper<SponsorshipCount> {
 
         @Override
-        public Sponsorship mapRow(ResultSet rs, int rowNum)
+        public SponsorshipCount mapRow(ResultSet rs, int rowNum)
                 throws SQLException, DataAccessException {
 
-            Sponsorship s = new Sponsorship();
+            SponsorshipCount s = new SponsorshipCount();
 
             s.setSponsor(rs.getString("sponsor"));
             s.setCosponsor(rs.getString("cosponsor"));

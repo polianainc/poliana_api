@@ -17,7 +17,6 @@ import java.util.Map;
 @Repository
 public class SponsorshipRepo {
 
-    @Autowired
     private JdbcTemplate impalaTemplate;
 
     private static final Logger logger = Logger.getLogger(SponsorshipRepo.class);
@@ -72,15 +71,29 @@ public class SponsorshipRepo {
     public List<SponsorshipCount> getSponsorshipCounts(String chamber, int congress) {
 
         try {
-            String query = "SELECT s.bioguide_id, c.bioguide_id, count(c.bioguide_id) FROM " +
-                    "bills.bill_sponsorship_flat b JOIN entities.legislators s ON b.sponsor_thomas_id = s.thomas_id " +
-                    "JOIN entities.legislators c ON b.cosponsor_thomas_id = c.thomas_id WHERE congress = \"" +
-                    congress + "\" " + "AND SUBSTR(bill_type,1,1) = \"" + chamber +"\" GROUP BY s.bioguide_id, c.bioguide_id";
+            String query =  "SELECT " +
+                            "   s.bioguide_id, " +
+                            "   c.bioguide_id, " +
+                            "   count(c.bioguide_id) " +
+                            "FROM " +
+                            "   bills.bill_sponsorship_flat b JOIN entities.legislators s ON b.sponsor_thomas_id = s.thomas_id " +
+                            "   JOIN entities.legislators c ON b.cosponsor_thomas_id = c.thomas_id " +
+                            "WHERE " +
+                            "   congress = \"" + congress + "\" " +
+                                "AND SUBSTR(bill_type,1,1) = \"" + chamber +"\" " +
+                            "GROUP BY " +
+                            "   s.bioguide_id, " +
+                            "   c.bioguide_id";
             return impalaTemplate.query(query, new SponsorshipCountsMapper(chamber,congress));
         }
         catch (Exception e) {
             logger.error(e);
         }
         return null;
+    }
+
+    @Autowired
+    public void setImpalaTemplate(JdbcTemplate impalaTemplate) {
+        this.impalaTemplate = impalaTemplate;
     }
 }

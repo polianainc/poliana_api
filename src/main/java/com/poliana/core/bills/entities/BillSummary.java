@@ -9,7 +9,7 @@ import com.google.code.morphia.annotations.Property;
 public class BillSummary {
     private String as;
     @Property("date_ts")
-    private int dateTs;
+    private long dateTs;
     @Property("date_string")
     private String dateString;
     private String text;
@@ -22,11 +22,11 @@ public class BillSummary {
         this.as = as;
     }
 
-    public int getDateTs() {
+    public long getDateTs() {
         return dateTs;
     }
 
-    public void setDateTs(int dateTs) {
+    public void setDateTs(long dateTs) {
         this.dateTs = dateTs;
     }
 

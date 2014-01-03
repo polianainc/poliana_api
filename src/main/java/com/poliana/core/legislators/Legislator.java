@@ -58,9 +58,9 @@ public class Legislator implements Serializable {
     @Property("term_end")
     private String termEnd;
     @Property("begin_timestamp")
-    private int beginTimestamp;
+    private long beginTimestamp;
     @Property("end_timestamp")
-    private int endTimestamp;
+    private long endTimestamp;
     @Property("term_state")
     private String termState;
     @Property("term_type")
@@ -263,19 +263,19 @@ public class Legislator implements Serializable {
         this.termEnd = termEnd;
     }
 
-    public int getBeginTimestamp() {
+    public long getBeginTimestamp() {
         return beginTimestamp;
     }
 
-    public void setBeginTimestamp(int beginTimestamp) {
+    public void setBeginTimestamp(long beginTimestamp) {
         this.beginTimestamp = beginTimestamp;
     }
 
-    public int getEndTimestamp() {
+    public long getEndTimestamp() {
         return endTimestamp;
     }
 
-    public void setEndTimestamp(int endTimestamp) {
+    public void setEndTimestamp(long endTimestamp) {
         this.endTimestamp = endTimestamp;
     }
 

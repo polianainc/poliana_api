@@ -1,12 +1,14 @@
 package com.poliana.core.industryFinance;
 
+import com.poliana.core.time.CongressTimestamps;
+import com.poliana.core.time.CongressYears;
+import com.poliana.core.time.TimeService;
 import com.poliana.core.industries.IndustryRepo;
 import com.poliana.core.industryFinance.entities.IndTimeRangeTotals;
 import com.poliana.core.industryFinance.entities.IndToPolContrTotals;
 import com.poliana.core.industryFinance.entities.Recipient;
 import com.poliana.core.industryFinance.entities.IndustryPoliticianContributions;
 import com.poliana.core.industryFinance.repositories.IndustryContributionHadoopRepo;
-import com.poliana.core.common.util.TimeUtils;
 import com.poliana.core.industries.Industry;
 import com.poliana.core.legislators.Legislator;
 import com.poliana.core.legislators.LegislatorService;
@@ -22,12 +24,10 @@ import java.util.*;
 @Service
 public class IndustryContributionService {
 
-    @Autowired
     private IndustryRepo industryRepo;
-    @Autowired
     private LegislatorService legislatorService;
-    @Autowired
     private IndustryContributionHadoopRepo contributionRepo;
+    private TimeService timeService;
 
     /**
      *
@@ -36,8 +36,9 @@ public class IndustryContributionService {
      * @return
      */
     public List<IndustryPoliticianContributions> legislatorReceivedIndustryTotals(String bioguideId, int congress) {
-        int[] yearTimestamps = TimeUtils.yearTimestamps(congress);
-        return legislatorReceivedIndustryTotals(bioguideId, yearTimestamps[0], yearTimestamps[1], 0);
+
+        CongressTimestamps yearTimestamps = timeService.congressTimestamps(congress);
+        return legislatorReceivedIndustryTotals(bioguideId, yearTimestamps.getBegin(), yearTimestamps.getEnd(), 0);
     }
 
     /**
@@ -49,7 +50,8 @@ public class IndustryContributionService {
      * @return
      */
     public List<IndustryPoliticianContributions> legislatorReceivedIndustryTotals(String bioguideId,
-                                                           int beginTimestamp, int endTimestamp, int limit) {
+                                                           long beginTimestamp, long endTimestamp, int limit) {
+
         return contributionRepo.legislatorReceivedIndustryTotals(bioguideId, beginTimestamp, endTimestamp, limit);
     }
 
@@ -61,7 +63,8 @@ public class IndustryContributionService {
      * @return
      */
     public List<IndustryPoliticianContributions> legislatorReceivedIndustryTotals(String bioguideId,
-                                                           int beginTimestamp, int endTimestamp) {
+                                                           long beginTimestamp, long endTimestamp) {
+
         return contributionRepo.legislatorReceivedIndustryTotals(bioguideId, beginTimestamp, endTimestamp);
     }
 
@@ -74,8 +77,10 @@ public class IndustryContributionService {
     public IndTimeRangeTotals industryTimeRangeTotals(
             String industryId, int congress, int numSeries) {
 
+        CongressYears years = timeService.congressToYears(congress);
+
         List<IndToPolContrTotals> contributionTotals =
-                contributionRepo.industryContrTotals(industryId, TimeUtils.congressToYears(congress));
+                contributionRepo.industryContrTotals(industryId, years.getYearOne(), years.getYearTwo());
 
 
         IndTimeRangeTotals timeRangeTotals = new IndTimeRangeTotals();
@@ -182,7 +187,7 @@ public class IndustryContributionService {
         Calendar calendar = Calendar.getInstance();
         calendar.set(contribution.getYear(),contribution.getMonth(),2);
         long timestamp = calendar.getTimeInMillis()/1000;
-        return legislatorService.legislatorByIdTimestamp(contribution.getBioguideId(),(int)timestamp);
+        return legislatorService.getLegislatorByIdTimestamp(contribution.getBioguideId(), (int) timestamp);
     }
 
     protected List<Recipient> topRecipients(HashMap<String,Recipient> recipients, int limit) {
@@ -202,6 +207,7 @@ public class IndustryContributionService {
     }
 
     protected List<Recipient> bottomRecipients(HashMap<String,Recipient> recipients, int limit) {
+
         List<Recipient> recipientList = new ArrayList<>(recipients.values());
 
         Collections.sort(recipientList, new Comparator<Recipient>() {
@@ -214,7 +220,9 @@ public class IndustryContributionService {
         int recipientsCount = recipientList.size();
         int index = 0;
         int firstPositive = 0;
+
         Iterator<Recipient> recipientIterator = recipientList.iterator();
+
         while (recipientIterator.hasNext() && firstPositive < recipientsCount - limit) {
             Recipient recipient = recipientIterator.next();
             if (recipient.getSum() > 0) {
@@ -232,5 +240,25 @@ public class IndustryContributionService {
             int offset = (firstPositive - recipientsCount) + limit;
             return recipientList.subList(firstPositive-offset,firstPositive-offset);
         }
+    }
+
+    @Autowired
+    public void setIndustryRepo(IndustryRepo industryRepo) {
+        this.industryRepo = industryRepo;
+    }
+
+    @Autowired
+    public void setLegislatorService(LegislatorService legislatorService) {
+        this.legislatorService = legislatorService;
+    }
+
+    @Autowired
+    public void setContributionRepo(IndustryContributionHadoopRepo contributionRepo) {
+        this.contributionRepo = contributionRepo;
+    }
+
+    @Autowired
+    public void setTimeService(TimeService timeService) {
+        this.timeService = timeService;
     }
 }

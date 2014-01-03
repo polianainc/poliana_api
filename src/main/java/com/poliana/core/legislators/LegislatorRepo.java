@@ -22,20 +22,14 @@ import java.util.*;
 @Repository
 public class LegislatorRepo {
 
-    @Autowired
     private JdbcTemplate impalaTemplate;
-
-    @Autowired
     private Datastore mongoStore;
-
-    @Autowired
     private JedisPool jedisPool;
 
     private final String TERMS_BY_BIOGUIDE = "termsByBioguide:";
     private final String TERMS_BY_LIS = "termsByLis:";
     private final String TERMS_BY_THOMAS = "termsByThomas:";
     private final String TERMS_BY_MONGO = "termsByMongo:";
-    private final String TERMS_BY_TIMESTAMP = "termsByTimestamp:";
 
     private static final Logger logger = Logger.getLogger(LegislatorRepo.class);
 
@@ -200,18 +194,32 @@ public class LegislatorRepo {
     /**
      *
      * @param chamber
-     * @param timestampBegin
-     * @param timestampEnd
+     * @param beginTimestamp
+     * @param endTimestamp
      * @return
      */
-    public Iterator<Legislator> getLegislators(String chamber, int timestampBegin, int timestampEnd) {
+    public Iterator<Legislator> getLegislators(String chamber, long beginTimestamp, long endTimestamp) {
         Query<Legislator> query = mongoStore.find(Legislator.class);
         query.and(
                 query.criteria("termType").contains(chamber),
-                query.criteria("beginTimestamp").lessThan(timestampEnd),
-                query.criteria("endTimestamp").greaterThan(timestampBegin)
+                query.criteria("beginTimestamp").lessThan(endTimestamp),
+                query.criteria("endTimestamp").greaterThan(beginTimestamp)
         );
         return query.iterator();
     }
 
+    @Autowired
+    public void setImpalaTemplate(JdbcTemplate impalaTemplate) {
+        this.impalaTemplate = impalaTemplate;
+    }
+
+    @Autowired
+    public void setMongoStore(Datastore mongoStore) {
+        this.mongoStore = mongoStore;
+    }
+
+    @Autowired
+    public void setJedisPool(JedisPool jedisPool) {
+        this.jedisPool = jedisPool;
+    }
 }

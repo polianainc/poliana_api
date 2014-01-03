@@ -25,24 +25,20 @@ import java.util.List;
 @RequestMapping("/ideology")
 public class IdeologyController extends BaseController  {
 
-    @Autowired
     private IdeologyService ideologyService;
 
-    private Gson gson;
-
-    public IdeologyController() {
-        this.gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                .create();
-    }
 
     @RequestMapping(value="/{chamber}/{congress}", headers="Accept=*/*", method = RequestMethod.GET)
-    public @ResponseBody String ideology(
+    public @ResponseBody String getIdeologyMatrix(
             @PathVariable("chamber") String chamber,
             @PathVariable("congress") Integer congress) {
 
         IdeologyMatrix ideologyMatrix = ideologyService.getIdeologyMatrix(chamber,congress);
-        return gson.toJson(ideologyMatrix);
+        return this.gson.toJson(ideologyMatrix);
+    }
+
+    @Autowired
+    public void setIdeologyService(IdeologyService ideologyService) {
+        this.ideologyService = ideologyService;
     }
 }

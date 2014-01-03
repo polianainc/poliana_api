@@ -12,8 +12,8 @@ import java.util.List;
 public class SponsorshipMatrix {
 
     private String chamber;
-    private int beginTimestamp;
-    private int endTimestamp;
+    private long beginTimestamp;
+    private long endTimestamp;
     private HashMap<String, Integer> indices;
     private HashMap<String, Legislator> legislatorHashMap;
     private double[][] matrix;
@@ -27,19 +27,19 @@ public class SponsorshipMatrix {
         this.chamber = chamber;
     }
 
-    public int getBeginTimestamp() {
+    public long getBeginTimestamp() {
         return beginTimestamp;
     }
 
-    public void setBeginTimestamp(int beginTimestamp) {
+    public void setBeginTimestamp(long beginTimestamp) {
         this.beginTimestamp = beginTimestamp;
     }
 
-    public int getEndTimestamp() {
+    public long getEndTimestamp() {
         return endTimestamp;
     }
 
-    public void setEndTimestamp(int endTimestamp) {
+    public void setEndTimestamp(long endTimestamp) {
         this.endTimestamp = endTimestamp;
     }
 

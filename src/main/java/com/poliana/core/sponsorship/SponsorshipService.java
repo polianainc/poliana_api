@@ -1,6 +1,7 @@
 package com.poliana.core.sponsorship;
 
-import com.poliana.core.common.util.TimeUtils;
+import com.poliana.core.time.CongressTimestamps;
+import com.poliana.core.time.TimeService;
 import com.poliana.core.legislators.Legislator;
 import com.poliana.core.legislators.LegislatorRepo;
 import com.poliana.core.legislators.LegislatorService;
@@ -21,17 +22,12 @@ import java.util.List;
 @Service
 public class SponsorshipService {
 
-    @Autowired
     private SponsorshipRepo sponsorshipRepo;
-
-    @Autowired
     private LegislatorRepo legislatorRepo;
-
-    @Autowired
     private LegislatorService legislatorService;
+    private TimeService timeService;
 
     private static final Logger logger = Logger.getLogger(SponsorshipService.class);
-
 
     /**
      * Return a matrix of sponsorships for a given congressional cycle. The Ith dimension corresponds to bills
@@ -45,12 +41,15 @@ public class SponsorshipService {
         //Get all sponsorship counts for the given congress
         List<SponsorshipCount> sponsorships =
                 sponsorshipRepo.getSponsorshipCounts(chamber, congress);
-        //Get beginning and ending timestamps for the given congress to use for a legislator query
-        int[] timestamps = TimeUtils.yearTimestamps(congress);
-        //Get all legislators in the given chamber during the congress given
-        Iterator<Legislator> legislatorIterator = legislatorRepo.getLegislators(chamber, timestamps[0], timestamps[1]);
 
-        return getSponsorshipMatrix(chamber, sponsorships, legislatorIterator, timestamps[0], timestamps[1]);
+        //Get beginning and ending timestamps for the given congress to use for a legislator query
+        CongressTimestamps timestamps = timeService.congressTimestamps(congress);
+
+        //Get all legislators in the given chamber during the congress given
+        Iterator<Legislator> legislatorIterator =
+                legislatorRepo.getLegislators(chamber, timestamps.getBegin(), timestamps.getEnd());
+
+        return getSponsorshipMatrix(chamber, sponsorships, legislatorIterator, timestamps.getBegin(), timestamps.getEnd());
     }
 
     /**
@@ -65,7 +64,7 @@ public class SponsorshipService {
 
         //TODO: Need to run a hive job to properly select by timestamps in the sponsorship repo
         List<SponsorshipCount> sponsorships =
-                sponsorshipRepo.getSponsorshipCounts(chamber, TimeUtils.timestampToCongress(beginTimestamp));
+                sponsorshipRepo.getSponsorshipCounts(chamber, TimeService.timestampToCongress(beginTimestamp));
         Iterator<Legislator> legislatorIterator = legislatorRepo.getLegislators(chamber, beginTimestamp, endTimestamp);
 
         return getSponsorshipMatrix(chamber, sponsorships, legislatorIterator, beginTimestamp, endTimestamp);
@@ -81,7 +80,7 @@ public class SponsorshipService {
      * @return
      */
     public SponsorshipMatrix getSponsorshipMatrix(String chamber, List<SponsorshipCount> sponsorships,
-                                      Iterator<Legislator> legislatorIterator, int beginTimestamp, int endTimestamp) {
+                                      Iterator<Legislator> legislatorIterator, long beginTimestamp, long endTimestamp) {
 
         SponsorshipMatrix sponsorshipMatrix = getUniqueLegislators(sponsorships,legislatorIterator,
                 beginTimestamp,endTimestamp);
@@ -138,7 +137,7 @@ public class SponsorshipService {
      * @return
      */
     protected SponsorshipMatrix getUniqueLegislators(List<SponsorshipCount> sponsorships,
-                               Iterator<Legislator> legislatorIterator, int beginTimestamp, int endTimestamp) {
+                               Iterator<Legislator> legislatorIterator, long beginTimestamp, long endTimestamp) {
 
         SponsorshipMatrix sponsorshipMatrix = legislatorMap(legislatorIterator);
         HashMap<String, Legislator> legislatorHashMap = sponsorshipMatrix.getLegislatorHashMap();
@@ -183,16 +182,36 @@ public class SponsorshipService {
      * @param endTimestamp
      */
     protected void updateLegislatorMap(String bioguideId,
-                               HashMap<String, Legislator> legislatorHashMap, int beginTimestamp, int endTimestamp) {
+                               HashMap<String, Legislator> legislatorHashMap, long beginTimestamp, long endTimestamp) {
 
         if (!legislatorHashMap.containsKey(bioguideId)) {
-            Legislator legislator = legislatorService.legislatorByIdTimestamp(bioguideId, beginTimestamp);
+            Legislator legislator = legislatorService.getLegislatorByIdTimestamp(bioguideId, beginTimestamp);
             if (legislator == null)
-                legislator = legislatorService.legislatorByIdTimestamp(bioguideId, endTimestamp);
+                legislator = legislatorService.getLegislatorByIdTimestamp(bioguideId, endTimestamp);
             if (legislator != null) {
                 legislator.setIndex(legislatorHashMap.size()+1);
                 legislatorHashMap.put(legislator.getBioguideId(),legislator);
             }
         }
+    }
+
+    @Autowired
+    public void setSponsorshipRepo(SponsorshipRepo sponsorshipRepo) {
+        this.sponsorshipRepo = sponsorshipRepo;
+    }
+
+    @Autowired
+    public void setLegislatorRepo(LegislatorRepo legislatorRepo) {
+        this.legislatorRepo = legislatorRepo;
+    }
+
+    @Autowired
+    public void setLegislatorService(LegislatorService legislatorService) {
+        this.legislatorService = legislatorService;
+    }
+
+    @Autowired
+    public void setTimeService(TimeService timeService) {
+        this.timeService = timeService;
     }
 }

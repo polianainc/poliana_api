@@ -10,7 +10,7 @@ import com.google.gson.GsonBuilder;
  */
 public abstract class BaseController {
 
-    private Gson gson;
+    protected Gson gson;
 
     public BaseController() {
 

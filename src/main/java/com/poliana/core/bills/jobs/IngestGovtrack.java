@@ -2,7 +2,7 @@ package com.poliana.core.bills.jobs;
 
 import com.google.code.morphia.Key;
 import com.google.code.morphia.mapping.MappingException;
-import com.poliana.core.common.util.TimeUtils;
+import com.poliana.core.time.TimeService;
 import com.poliana.core.bills.govtrack.votes.Voter;
 import com.poliana.core.legislators.Legislator;
 import com.poliana.core.legislators.LegislatorService;
@@ -61,16 +61,16 @@ public class IngestGovtrack {
             bill.setSummary(gtSummaryConvert(billGt.getSummary()));
 
 
-            int introducedAt = TimeUtils.getTimestamp(billGt.getIntroducedAt());
+            long introducedAt = TimeService.getTimestamp(billGt.getIntroducedAt());
             Legislator sponsor =
-                    legislatorService.legislatorByIdTimestamp(billGt.getSponsor().getThomasId(), introducedAt);
+                    legislatorService.getLegislatorByIdTimestamp(billGt.getSponsor().getThomasId(), introducedAt);
             bill.setSponsor(sponsor.getId());
 
             List<String> legislators = new LinkedList<>();
             if (billGt.getCosponsors() != null) {
                 for (Sponsor cosponsor: billGt.getCosponsors()) {
                     Legislator legislator =
-                            legislatorService.legislatorByIdTimestamp(cosponsor.getThomasId(), introducedAt);
+                            legislatorService.getLegislatorByIdTimestamp(cosponsor.getThomasId(), introducedAt);
                     if (legislator != null) {
                         legislators.add(legislator.getId());
                     }
@@ -82,7 +82,7 @@ public class IngestGovtrack {
             bill.setIntroducedTs(introducedAt);
             bill.setStatus(billGt.getStatus());
             if (billGt.getStatusAt() != null) {
-                bill.setStatusTs(TimeUtils.getTimestamp(billGt.getStatusAt()));
+                bill.setStatusTs(TimeService.getTimestamp(billGt.getStatusAt()));
                 bill.setStatusAt(billGt.getStatusAt());
             }
 
@@ -99,7 +99,7 @@ public class IngestGovtrack {
             bill.setAmendments(billGt.getAmendments());
             bill.setHistory(gtHistoryConvert(billGt.getHistory()));
             bill.setUpdatedAt(billGt.getUpdatedAt());
-            bill.setUpdatedTs(TimeUtils.getTimestamp(billGt.getUpdatedAt()));
+            bill.setUpdatedTs(TimeService.getTimestamp(billGt.getUpdatedAt()));
 
             billMongoRepo.saveBill(bill);
 
@@ -160,7 +160,7 @@ public class IngestGovtrack {
         vote.setCategory(voteGt.getCategory());
         vote.setCongress(voteGt.getCongress());
 
-        int timestamp = TimeUtils.getTimestamp(voteGt.getDate());
+        long timestamp = TimeService.getTimestamp(voteGt.getDate());
         vote.setDate(timestamp);
         vote.setBillInfo(voteGt.getBill());
         vote.setAmendment(voteGt.getAmendment());
@@ -206,23 +206,23 @@ public class IngestGovtrack {
         BillHistory billHistory = new BillHistory();
 
         billHistory.setActive(billHistoryGt.isActive());
-        billHistory.setActiveTs(TimeUtils.getTimestamp(billHistoryGt.getActiveAt()));
+        billHistory.setActiveTs(TimeService.getTimestamp(billHistoryGt.getActiveAt()));
         billHistory.setActiveAt(billHistoryGt.getActiveAt());
         billHistory.setAwaitingSignature(billHistoryGt.isAwaitingSignature());
-        billHistory.setAwaitingSignatureSince(TimeUtils.getTimestamp(billHistoryGt.getAwaitingSignatureSince()));
+        billHistory.setAwaitingSignatureSince(TimeService.getTimestamp(billHistoryGt.getAwaitingSignatureSince()));
         billHistory.setEnacted(billHistoryGt.isEnacted());
-        billHistory.setEnactedTs(TimeUtils.getTimestamp(billHistoryGt.getEnactedAt()));
+        billHistory.setEnactedTs(TimeService.getTimestamp(billHistoryGt.getEnactedAt()));
         billHistory.setEnactedAt(billHistoryGt.getEnactedAt());
         billHistory.setHousePassageResult(billHistoryGt.getHousePassageResult());
-        billHistory.setHousePassageResultTs(TimeUtils.getTimestamp(billHistoryGt.getHousePassageResultAt()));
+        billHistory.setHousePassageResultTs(TimeService.getTimestamp(billHistoryGt.getHousePassageResultAt()));
         billHistory.setHousePassageResultAt(billHistoryGt.getHousePassageResultAt());
         billHistory.setSenatePassageResult(billHistoryGt.getSenatePassageResult());
-        billHistory.setSenatePassageResultTs(TimeUtils.getTimestamp(billHistoryGt.getSenatePassageResultAt()));
+        billHistory.setSenatePassageResultTs(TimeService.getTimestamp(billHistoryGt.getSenatePassageResultAt()));
         billHistory.setSenatePassageResultAt(billHistoryGt.getSenatePassageResultAt());
         billHistory.setHouseOverrideResult(billHistoryGt.getHouseOverrideResult());
         billHistory.setSenateOverrideResult(billHistoryGt.getSenateOverrideResult());
         billHistory.setVetoed(billHistory.isVetoed());
-        billHistory.setVetoedTs(TimeUtils.getTimestamp(billHistoryGt.getVetoedAt()));
+        billHistory.setVetoedTs(TimeService.getTimestamp(billHistoryGt.getVetoedAt()));
         billHistory.setVetoedAt(billHistoryGt.getVetoedAt());
 
         return billHistory;
@@ -236,7 +236,7 @@ public class IngestGovtrack {
                 billSummary.setAs(billSummaryGt.getAs());
             if (billSummaryGt.getDate() != null)
                 billSummary.setDateString(billSummaryGt.getDate());
-                billSummary.setDateTs(TimeUtils.getTimestamp(billSummaryGt.getDate()));
+                billSummary.setDateTs(TimeService.getTimestamp(billSummaryGt.getDate()));
             billSummary.setText(billSummaryGt.getText());
         }
 
@@ -253,7 +253,7 @@ public class IngestGovtrack {
                 Action action = new Action();
 
                 if (actionGt.getActedAt() != null)
-                    action.setActedTs(TimeUtils.getTimestamp(actionGt.getActedAt()));
+                    action.setActedTs(TimeService.getTimestamp(actionGt.getActedAt()));
                 action.setBillIds(actionGt.getBillIds());
                 action.setReferences(actionGt.getReferences());
                 action.setCalendar(actionGt.getCalendar());
@@ -275,13 +275,13 @@ public class IngestGovtrack {
         return actions;
     }
 
-    protected List<String> gtVotersToLegislators(List<Voter> votersGt, int timestamp) {
+    protected List<String> gtVotersToLegislators(List<Voter> votersGt, long timestamp) {
         List<String> legislators = new LinkedList<>();
 
         try {
             for (Voter voter : votersGt) {
                 Legislator legislator =
-                        legislatorService.legislatorByIdTimestamp(voter.getPoliticianId(), timestamp);
+                        legislatorService.getLegislatorByIdTimestamp(voter.getPoliticianId(), timestamp);
                 legislators.add(legislator.getId());
             }
         }

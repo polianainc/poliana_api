@@ -12,9 +12,9 @@ import java.util.List;
 @Embedded
 public class Action {
     @Property("acted_ts")
-    private int actedTs;
+    private long actedTs;
     @Property("acted_at")
-    private int actedAt;
+    private String actedAt;
     @Embedded("bill_ids")
     private List<String> billIds;
     @Embedded
@@ -33,19 +33,19 @@ public class Action {
     @Property("vote_type")
     private String voteType;
 
-    public int getActedTs() {
+    public long getActedTs() {
         return actedTs;
     }
 
-    public void setActedTs(int actedTs) {
+    public void setActedTs(long actedTs) {
         this.actedTs = actedTs;
     }
 
-    public int getActedAt() {
+    public String getActedAt() {
         return actedAt;
     }
 
-    public void setActedAt(int actedAt) {
+    public void setActedAt(String actedAt) {
         this.actedAt = actedAt;
     }
 

@@ -13,10 +13,14 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class IndustryContributionMongoRepo {
 
-    @Autowired
     private Datastore mongoStore;
 
     public Key<IndTimeRangeTotals> saveIndTimeRangeTotal(IndTimeRangeTotals indTimeRangeTotals) {
         return mongoStore.save(indTimeRangeTotals);
+    }
+
+    @Autowired
+    public void setMongoStore(Datastore mongoStore) {
+        this.mongoStore = mongoStore;
     }
 }

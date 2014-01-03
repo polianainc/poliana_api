@@ -18,6 +18,7 @@ public class LegislatorIdeology {
     @Indexed
     @Property("bioguide_id")
     private String bioguideId;
+    private String name;
 
     @Indexed
     private int congress;
@@ -31,6 +32,7 @@ public class LegislatorIdeology {
     private int endTimestamp;
 
     private double ideology;
+    private int index;
     private String chamber;
     private String party;
     private String religion;
@@ -50,6 +52,14 @@ public class LegislatorIdeology {
 
     public void setBioguideId(String bioguideId) {
         this.bioguideId = bioguideId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getCongress() {
@@ -82,6 +92,14 @@ public class LegislatorIdeology {
 
     public void setIdeology(double ideology) {
         this.ideology = ideology;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 
     public String getChamber() {

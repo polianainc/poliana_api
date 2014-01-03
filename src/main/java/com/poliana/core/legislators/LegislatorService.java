@@ -9,8 +9,7 @@ import java.util.*;
 @Service
 public class LegislatorService {
 
-    @Autowired
-    protected LegislatorRepo legislatorRepo;
+    private LegislatorRepo legislatorRepo;
 
     private static final Logger logger = Logger.getLogger(LegislatorService.class);
 
@@ -21,7 +20,7 @@ public class LegislatorService {
      *
      * @see com.poliana.core.legislators.Legislator
      */
-    public Legislator legislatorByIdTimestamp(String id, int timestamp) {
+    public Legislator getLegislatorByIdTimestamp(String id, long timestamp) {
 
         List<Legislator> legislators = getLegislatorTermsById(id);
         return getCorrectTerm(legislators, timestamp);
@@ -33,12 +32,12 @@ public class LegislatorService {
      * @param timestamp
      * @return
      */
-    public Legislator getCorrectTerm(List<Legislator> legislators, int timestamp) {
+    public Legislator getCorrectTerm(List<Legislator> legislators, long timestamp) {
 
         int correctTerm = 0;
-        int closestTimeStamp = 0;
-        int diff;
-        int termStart;
+        long closestTimeStamp = 0;
+        long diff;
+        long termStart;
         int index = 0;
 
         if (legislators != null) {
@@ -93,5 +92,10 @@ public class LegislatorService {
             }
         }
         return legislators;
+    }
+
+    @Autowired
+    public void setLegislatorRepo(LegislatorRepo legislatorRepo) {
+        this.legislatorRepo = legislatorRepo;
     }
 }

@@ -21,11 +21,11 @@ public class IdeologyMatrix {
 
     @Indexed
     @Property("begin_timestamp")
-    private int beginTimestamp;
+    private long beginTimestamp;
 
     @Indexed
     @Property("end_timestamp")
-    private int endTimestamp;
+    private long endTimestamp;
     @Property("ideology_values")
     private double[] ideologyValues;
     @Embedded
@@ -47,19 +47,19 @@ public class IdeologyMatrix {
         this.congress = congress;
     }
 
-    public int getBeginTimestamp() {
+    public long getBeginTimestamp() {
         return beginTimestamp;
     }
 
-    public void setBeginTimestamp(int beginTimestamp) {
+    public void setBeginTimestamp(long beginTimestamp) {
         this.beginTimestamp = beginTimestamp;
     }
 
-    public int getEndTimestamp() {
+    public long getEndTimestamp() {
         return endTimestamp;
     }
 
-    public void setEndTimestamp(int endTimestamp) {
+    public void setEndTimestamp(long endTimestamp) {
         this.endTimestamp = endTimestamp;
     }
 

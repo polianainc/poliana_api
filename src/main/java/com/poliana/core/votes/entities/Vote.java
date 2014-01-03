@@ -24,7 +24,7 @@ public class Vote {
     private String billId;
     private String category;
     private int congress;
-    private int date;
+    private long date;
     @Embedded("bill_info")
     private BillRef billInfo;
     @Embedded
@@ -113,11 +113,11 @@ public class Vote {
         this.congress = congress;
     }
 
-    public int getDate() {
+    public long getDate() {
         return date;
     }
 
-    public void setDate(int date) {
+    public void setDate(long date) {
         this.date = date;
     }
 

@@ -1,6 +1,7 @@
 package com.poliana.core.ideology;
 
-import com.poliana.core.common.util.TimeUtils;
+import com.poliana.core.time.CongressTimestamps;
+import com.poliana.core.time.TimeService;
 import com.poliana.core.legislators.Legislator;
 import com.poliana.core.legislators.LegislatorService;
 import com.poliana.core.sponsorship.SponsorshipMatrix;
@@ -23,60 +24,71 @@ import java.util.*;
 @Service
 public class IdeologyService {
 
-    @Autowired
     private IdeologyRepo ideologyRepo;
-
-    @Autowired
     private LegislatorService legislatorService;
-
-    @Autowired
     private SponsorshipService sponsorshipService;
+    private TimeService timeService;
 
     private static final Logger logger = Logger.getLogger(IdeologyService.class);
 
 
     /**
-     * Return an ideology score for a legislator during a specified congress. If no score is found, return -1.
+     * Get an getIdeologyMatrix score for a legislator during a specified congress. If no score is found, return -1.
      * @param bioguideId
      * @param congress
      * @return
      */
     public double getIdeologyScore(String bioguideId, int congress) {
 
-        int[] timestamps = TimeUtils.yearTimestamps(congress);
-        Legislator legislator = legislatorService.legislatorByIdTimestamp(bioguideId, timestamps[1]);
+        LegislatorIdeology ideology = getLegislatorIdeology(bioguideId, congress);
 
-        if (legislator != null) {
-            String termType = legislator.getTermType().substring(0,2);
-            IdeologyMatrix ideologyMatrix = getIdeologyMatrix(termType, congress);
-            double score = -1;
-            for (LegislatorIdeology ideology : ideologyMatrix.getIdeologies())
-                score = bioguideId.equalsIgnoreCase(ideology.getBioguideId()) ? ideology.getIdeology() : score;
-            return score;
-        }
+        if (ideology != null)
+            return ideology.getIdeology();
+
         return -1;
     }
 
     /**
-     * Return an ideology score for a legislator during a specified time range. If no score is found, return -1.
+     * Get a LegislatorIdeology object
      * @param bioguideId
-     * @param beginTimestamp
-     * @param endTimestamp
+     * @param congress
      * @return
      */
-    public double ideologyScore(String bioguideId, int beginTimestamp, int endTimestamp) {
+    public LegislatorIdeology getLegislatorIdeology(String bioguideId, int congress) {
 
-        Legislator legislator = legislatorService.legislatorByIdTimestamp(bioguideId, beginTimestamp);
+        //Look in MongoDB cache for the LegislatorIdeology object we need
+        LegislatorIdeology ret = ideologyRepo.getLegislatorIdeology(bioguideId, congress);
 
+        //If the object was cached, return it
+        if (ret!= null)
+            return ret;
+
+        //If no return, get an IdeologyMatrix and find the correct LegislatorIdeology in it.
+        //We don't know what term it is, query for the correct term using the average of the congress timestamps.
+        CongressTimestamps timestamps = timeService.congressTimestamps(congress);
+        int avg = (int) ((timestamps.getBegin() + timestamps.getEnd()) / 2);
+
+        Legislator legislator = legislatorService.getLegislatorByIdTimestamp(bioguideId, avg);
+
+        //Avoid null pointer exception
         if (legislator != null) {
-            String termType = legislator.getTermType().substring(0,2);
-            IdeologyMatrix ideologyMatrix = getIdeologyMatrix(termType, beginTimestamp, endTimestamp);
-            double score = -1;
-            for (LegislatorIdeology ideology : ideologyMatrix.getIdeologies())
-                score = bioguideId.equalsIgnoreCase(ideology.getBioguideId()) ? ideology.getIdeology() : score;
-            return score;
+
+            //Get the correct chamber from the legislator term
+            String termType = legislator.getTermType().substring(0, 1);
+
+            //Query for the getIdeologyMatrix matrix
+            IdeologyMatrix ideologyMatrix = getIdeologyMatrix(termType, congress);
+
+            if (ideologyMatrix != null) {
+                //Iterate through the returned objects getIdeologyMatrix list. If the bioguide IDs match, keep it as the return.
+                for (LegislatorIdeology ideology : ideologyMatrix.getIdeologies()) {
+                    ret = bioguideId.equalsIgnoreCase(ideology.getBioguideId()) ? ideology : null;
+                }
+            }
+
         }
-        return -1;
+
+        return ret;
     }
 
     /**
@@ -88,11 +100,17 @@ public class IdeologyService {
      */
     public IdeologyMatrix getIdeologyMatrix(String chamber, int congress) {
 
+        //Consult MongoDB for the getIdeologyMatrix matrix first
+        IdeologyMatrix ideologyMatrix = ideologyRepo.getIdeologyMatrix(chamber, congress);
+
+        if (ideologyMatrix != null)
+            return ideologyMatrix;
+
         SponsorshipMatrix sponsorshipMatrix = sponsorshipService.getSponsorshipMatrix(chamber, congress);
         SingularValueDecomposition svd = svdAnalysisCommons(sponsorshipMatrix.getMatrix());
-        IdeologyMatrix ideologyMatrix = new IdeologyMatrix();
+        ideologyMatrix = new IdeologyMatrix();
 
-        //Use the normalized second dimension of the SVD output as ideology score
+        //Use the normalized second dimension of the SVD output as getIdeologyMatrix score
         double[] ideologyValues = normalizeEigenvector(svd.getVT().getRow(1));
         ideologyMatrix.setIdeologyValues(ideologyValues);
 
@@ -103,6 +121,10 @@ public class IdeologyService {
                 getLegislatorIdeologies(sponsorshipMatrix, ideologyValues, chamber, congress);
 
         ideologyMatrix.setIdeologies(ideologies);
+
+        //Cache results to MongoDB
+        ideologyRepo.saveIdeologyMatrix(ideologyMatrix);
+        ideologyRepo.saveLegislatorIdeologies(ideologyMatrix.getIdeologies());
 
         return ideologyMatrix;
     }
@@ -121,7 +143,7 @@ public class IdeologyService {
         SingularValueDecomposition svd = svdAnalysisCommons(sponsorshipMatrix.getMatrix());
         IdeologyMatrix ideologyMatrix = new IdeologyMatrix();
 
-        //Use the normalized second dimension of the SVD output as ideology score
+        //Use the normalized second dimension of the SVD output as getIdeologyMatrix score
         double[] ideologyValues = normalizeEigenvector(svd.getVT().getRow(1));
         ideologyMatrix.setIdeologyValues(ideologyValues);
 
@@ -133,6 +155,10 @@ public class IdeologyService {
                 getLegislatorIdeologies(sponsorshipMatrix, ideologyValues, chamber, beginTimestamp, endTimestamp);
 
         ideologyMatrix.setIdeologies(ideologies);
+
+        //Cache results to MongoDB
+        ideologyRepo.saveIdeologyMatrix(ideologyMatrix);
+        ideologyRepo.saveLegislatorIdeologies(ideologyMatrix.getIdeologies());
 
         return ideologyMatrix;
     }
@@ -165,7 +191,7 @@ public class IdeologyService {
         }
 
         for (int ei = 0; ei<e.length; ei++) {
-            e[ei] = ((e[ei] - emin) / (emax - emin)) * 100;
+            e[ei] = (( (e[ei] * -1 ) - emin) / (emax - emin)) * 100;
         }
         return e;
     }
@@ -181,8 +207,11 @@ public class IdeologyService {
                                                             String chamber, int... timerange) {
 
         List<LegislatorIdeology> legislatorIdeologies = new LinkedList<>();
+
         for (Legislator legislator : sponsorshipMatrix.getLegislatorList()) {
+
             LegislatorIdeology ideology = new LegislatorIdeology();
+
             ideology.setBioguideId(legislator.getBioguideId());
 
             if (timerange.length == 1)
@@ -193,10 +222,35 @@ public class IdeologyService {
             }
 
             ideology.setChamber(chamber);
+            ideology.setName(legislator.getFirstName() + " " + legislator.getLastName());
+            ideology.setParty(legislator.getParty());
+            ideology.setReligion(legislator.getReligion());
+            ideology.setIndex(legislator.getIndex());
             ideology.setMetric("sponsorship");
             ideology.setIdeology(ideologyValues[legislator.getIndex()]);
             legislatorIdeologies.add(ideology);
         }
+
         return legislatorIdeologies;
+    }
+
+    @Autowired
+    public void setIdeologyRepo(IdeologyRepo ideologyRepo) {
+        this.ideologyRepo = ideologyRepo;
+    }
+
+    @Autowired
+    public void setLegislatorService(LegislatorService legislatorService) {
+        this.legislatorService = legislatorService;
+    }
+
+    @Autowired
+    public void setSponsorshipService(SponsorshipService sponsorshipService) {
+        this.sponsorshipService = sponsorshipService;
+    }
+
+    @Autowired
+    public void setTimeService(TimeService timeService) {
+        this.timeService = timeService;
     }
 }

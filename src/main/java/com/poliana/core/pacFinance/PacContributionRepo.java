@@ -19,15 +19,11 @@ import java.util.List;
 @Repository
 public class PacContributionRepo {
 
-    @Autowired
-    protected JdbcTemplate hiveTemplate;
-
-    @Autowired
     protected JdbcTemplate impalaTemplate;
 
     private static final Logger logger = Logger.getLogger(PacContributionRepo.class);
 
-    public HashMap<Integer, List<PacPoliticianContrTotals>> allLegislatorReceivedPacTotals(final String bioguideId) {
+    public HashMap<Integer, List<PacPoliticianContrTotals>> getAllLegislatorReceivedPacTotals(final String bioguideId) {
 
         try {
             String query = "SELECT bioguide_id, sums.cmte_id, p.cmte_nm, cycle, _c3 FROM\n" +
@@ -114,5 +110,10 @@ public class PacContributionRepo {
         catch (Exception e) {}
 
         return new ArrayList<>();
+    }
+
+    @Autowired
+    public void setImpalaTemplate(JdbcTemplate impalaTemplate) {
+        this.impalaTemplate = impalaTemplate;
     }
 }

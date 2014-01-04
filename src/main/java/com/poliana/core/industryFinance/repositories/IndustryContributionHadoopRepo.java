@@ -22,10 +22,7 @@ import java.util.List;
 @Repository
 public class IndustryContributionHadoopRepo {
 
-    @Autowired
     protected JdbcTemplate hiveTemplate;
-
-    @Autowired
     protected JdbcTemplate impalaTemplate;
 
     private static final Logger logger = Logger.getLogger(IndustryContributionHadoopRepo.class);
@@ -134,11 +131,15 @@ public class IndustryContributionHadoopRepo {
      * @param years
      * @return
      */
-    public List<IndToPolContrTotals> industryContrTotals(String industryId, int[] years) {
-        String yrs = "";
+    public List<IndToPolContrTotals> industryContrTotals(String industryId, int... years) {
+
+        String yrs;
+
         if (years.length > 1) {
             yrs = "( year = ";
+
             for (int i = 0; i < years.length; i++) {
+
                 if (i != years.length - 1)
                     yrs += years[i] + " OR year = ";
                 else
@@ -151,6 +152,7 @@ public class IndustryContributionHadoopRepo {
 
         String query = "SELECT * FROM campaign_finance.industry_to_pol_contribution_monthly_totals" +
                 " WHERE industry_id = \'" + industryId + "\' AND " + yrs;
+
         return impalaTemplate.query(query, new IndToPolContrTotalsMapper());
     }
 
@@ -220,7 +222,7 @@ public class IndustryContributionHadoopRepo {
      *
      * @param industryId{String} Query parameter to the industry_id field
      * @param years     {int[]} Years (use contribution service to convert congress to years
-     * @param range     {int} Time range given in seconds
+     * @param range     {int} TimeService range given in seconds
      */
     public List<IndPartyTotals> indPartyContrTotals(
             String industryId, int[] years, int range) {
@@ -267,8 +269,8 @@ public class IndustryContributionHadoopRepo {
      *
      * @see             com.poliana.core.industryFinance.mapppers.LegislatorRecievedIndustryTotalsMapper
      */
-    public List<IndustryPoliticianContributions> legislatorReceivedIndustryTotals(String bioguideId, int beginTimestamp,
-                                                                    int endTimestamp) {
+    public List<IndustryPoliticianContributions> legislatorReceivedIndustryTotals(String bioguideId, long beginTimestamp,
+                                                                    long endTimestamp) {
         return legislatorReceivedIndustryTotals(bioguideId, beginTimestamp, endTimestamp,0);
     }
 
@@ -281,7 +283,7 @@ public class IndustryContributionHadoopRepo {
      * @return
      */
     public List<IndustryPoliticianContributions> legislatorReceivedIndustryTotals(String bioguideId,
-                                                                    int beginTimestamp, int endTimestamp, int limit) {
+                                                                    long beginTimestamp, long endTimestamp, int limit) {
         String lim = "";
         if (limit != 0)
             lim = " LIMIT " + limit;
@@ -293,5 +295,15 @@ public class IndustryContributionHadoopRepo {
                 + endTimestamp + " GROUP BY bioguide_id, real_code, i.cat_name, i.industry, i.sector_long" + lim;
 
         return impalaTemplate.query(query, new LegislatorRecievedIndustryTotalsMapper(beginTimestamp, endTimestamp));
+    }
+
+    @Autowired
+    public void setHiveTemplate(JdbcTemplate hiveTemplate) {
+        this.hiveTemplate = hiveTemplate;
+    }
+
+    @Autowired
+    public void setImpalaTemplate(JdbcTemplate impalaTemplate) {
+        this.impalaTemplate = impalaTemplate;
     }
 }

@@ -1,9 +1,6 @@
 package com.poliana.core.politicianProfile;
 
-import com.google.code.morphia.annotations.Entity;
-import com.google.code.morphia.annotations.Id;
-import com.google.code.morphia.annotations.Indexed;
-import com.google.code.morphia.annotations.Property;
+import com.google.code.morphia.annotations.*;
 import com.poliana.core.industryFinance.entities.IndToPolContrTotals;
 import com.poliana.core.pacFinance.PacPoliticianContrTotals;
 
@@ -21,19 +18,27 @@ public class TermTotals {
     @Id
     private String id;
 
+    @Property("bioguide_id")
+    private String bioguideId;
+
     @Indexed
     private int congress;
     private String chamber;
+
     @Property("term_start")
     private int termStart;
     private String religion;
+
     @Property("ideology_score")
     private double ideologyScore;
+
     @Property("leadership_score")
     private double leadershipScore;
-    @Property("top_industry_contributions")
+
+    @Embedded("top_industry_contributions")
     private List<IndToPolContrTotals> topIndustryContributions;
-    @Property("top_pac_contributions")
+
+    @Embedded("top_pac_contributions")
     private List<PacPoliticianContrTotals> topPACContributions;
 
     public String getId() {
@@ -42,6 +47,10 @@ public class TermTotals {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public void setBioguideId(String bioguideId) {
+        this.bioguideId = bioguideId;
     }
 
     public int getCongress() {

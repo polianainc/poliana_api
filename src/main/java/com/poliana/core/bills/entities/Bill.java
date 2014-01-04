@@ -37,12 +37,12 @@ public class Bill {
     @Reference
     private List<String> cosponsors;
     @Property("introduced_ts")
-    private int introducedTs;
+    private long introducedTs;
     @Property("introduced_at")
     private String introducedAt;
     private String status;
     @Property("status_ts")
-    private int statusTs;
+    private long statusTs;
     @Property("status_at")
     private String statusAt;
     private int congress;
@@ -61,7 +61,7 @@ public class Bill {
     @Property("updated_at")
     private String updatedAt;
     @Property("updated_ts")
-    private int updatedTs;
+    private long updatedTs;
 
     public String getId() {
         return id;
@@ -159,11 +159,11 @@ public class Bill {
         this.cosponsors = cosponsors;
     }
 
-    public int getIntroducedTs() {
+    public long getIntroducedTs() {
         return introducedTs;
     }
 
-    public void setIntroducedTs(int introducedTs) {
+    public void setIntroducedTs(long introducedTs) {
         this.introducedTs = introducedTs;
     }
 
@@ -183,11 +183,11 @@ public class Bill {
         this.status = status;
     }
 
-    public int getStatusTs() {
+    public long getStatusTs() {
         return statusTs;
     }
 
-    public void setStatusTs(int statusTs) {
+    public void setStatusTs(long statusTs) {
         this.statusTs = statusTs;
     }
 
@@ -271,11 +271,11 @@ public class Bill {
         this.updatedAt = updatedAt;
     }
 
-    public int getUpdatedTs() {
+    public long getUpdatedTs() {
         return updatedTs;
     }
 
-    public void setUpdatedTs(int updatedTs) {
+    public void setUpdatedTs(long updatedTs) {
         this.updatedTs = updatedTs;
     }
 }

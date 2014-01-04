@@ -9,18 +9,18 @@ import java.sql.SQLException;
  * @author David Gilmore
  * @date 11/27/13
  */
-public class SponsorshipMapper implements RowMapper<Sponsorship> {
+public class SponsorshipCountsMapper implements RowMapper<SponsorshipCount> {
 
     private String chamber;
     private int congress;
 
-    public SponsorshipMapper(String chamber, int congress) {
+    public SponsorshipCountsMapper(String chamber, int congress) {
         this.chamber = chamber;
         this.congress = congress;
     }
 
-    public Sponsorship mapRow(ResultSet rs, int rowNum) throws SQLException {
-        Sponsorship sponsorship = new Sponsorship();
+    public SponsorshipCount mapRow(ResultSet rs, int rowNum) throws SQLException {
+        SponsorshipCount sponsorship = new SponsorshipCount();
         sponsorship.setChamber(chamber);
         sponsorship.setSponsor(rs.getString(1));
         sponsorship.setCosponsor(rs.getString(2));

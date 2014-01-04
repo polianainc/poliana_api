@@ -4,13 +4,14 @@ package com.poliana.core.sponsorship;
  * @author David Gilmore
  * @date 11/27/13
  */
-public class Sponsorship {
+public class SponsorshipCount {
 
     private String chamber;
     private String sponsor;
     private String cosponsor;
     private int count;
     private int congress;
+
 
     public String getChamber() {
         return chamber;

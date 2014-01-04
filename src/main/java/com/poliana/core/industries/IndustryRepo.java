@@ -17,10 +17,8 @@ import java.util.List;
 @Repository
 public class IndustryRepo {
 
-    @Autowired
     private Datastore mongoStore;
 
-    @Autowired
     private JdbcTemplate impalaTemplate;
 
     /**
@@ -65,5 +63,15 @@ public class IndustryRepo {
      */
     public List<Industry> getIndustries() {
         return impalaTemplate.query("SELECT * FROM entities.industry_codes", new IndustryMapper());
+    }
+
+    @Autowired
+    public void setMongoStore(Datastore mongoStore) {
+        this.mongoStore = mongoStore;
+    }
+
+    @Autowired
+    public void setImpalaTemplate(JdbcTemplate impalaTemplate) {
+        this.impalaTemplate = impalaTemplate;
     }
 }

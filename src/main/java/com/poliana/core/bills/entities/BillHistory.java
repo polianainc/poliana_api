@@ -12,28 +12,28 @@ public class BillHistory {
 
     private boolean active;
     @Property("active_ts")
-    private int activeTs;
+    private long activeTs;
     @Property("active_at")
     private String activeAt;
     @Property("awaiting_signature")
     private boolean awaitingSignature;
     @Property("awaiting_signature_since")
-    private int awaitingSignatureSince;
+    private long awaitingSignatureSince;
     private boolean enacted;
     @Property("enacted_ts")
-    private int enactedTs;
+    private long enactedTs;
     @Property("enacted_at")
     private String enactedAt;
     @Property("house_passage_result")
     private String housePassageResult;
     @Property("house_passage_result_ts")
-    private int housePassageResultTs;
+    private long housePassageResultTs;
     @Property("house_passage_result_at")
     private String housePassageResultAt;
     @Property("senate_passage_result")
     private String senatePassageResult;
     @Property("senate_passage_result_ts")
-    private int senatePassageResultTs;
+    private long senatePassageResultTs;
     @Property("senate_passage_result_at")
     private String senatePassageResultAt;
     @Property("house_override_result")
@@ -42,7 +42,7 @@ public class BillHistory {
     private String senateOverrideResult;
     private boolean vetoed;
     @Property("vetoed_ts")
-    private int vetoedTs;
+    private long vetoedTs;
     @Property("vetoed_at")
     private String vetoedAt;
 
@@ -54,11 +54,11 @@ public class BillHistory {
         this.active = active;
     }
 
-    public int getActiveTs() {
+    public long getActiveTs() {
         return activeTs;
     }
 
-    public void setActiveTs(int activeTs) {
+    public void setActiveTs(long activeTs) {
         this.activeTs = activeTs;
     }
 
@@ -78,11 +78,11 @@ public class BillHistory {
         this.awaitingSignature = awaitingSignature;
     }
 
-    public int getAwaitingSignatureSince() {
+    public long getAwaitingSignatureSince() {
         return awaitingSignatureSince;
     }
 
-    public void setAwaitingSignatureSince(int awaitingSignatureSince) {
+    public void setAwaitingSignatureSince(long awaitingSignatureSince) {
         this.awaitingSignatureSince = awaitingSignatureSince;
     }
 
@@ -94,11 +94,11 @@ public class BillHistory {
         this.enacted = enacted;
     }
 
-    public int getEnactedTs() {
+    public long getEnactedTs() {
         return enactedTs;
     }
 
-    public void setEnactedTs(int enactedTs) {
+    public void setEnactedTs(long enactedTs) {
         this.enactedTs = enactedTs;
     }
 
@@ -118,11 +118,11 @@ public class BillHistory {
         this.housePassageResult = housePassageResult;
     }
 
-    public int getHousePassageResultTs() {
+    public long getHousePassageResultTs() {
         return housePassageResultTs;
     }
 
-    public void setHousePassageResultTs(int housePassageResultTs) {
+    public void setHousePassageResultTs(long housePassageResultTs) {
         this.housePassageResultTs = housePassageResultTs;
     }
 
@@ -142,11 +142,11 @@ public class BillHistory {
         this.senatePassageResult = senatePassageResult;
     }
 
-    public int getSenatePassageResultTs() {
+    public long getSenatePassageResultTs() {
         return senatePassageResultTs;
     }
 
-    public void setSenatePassageResultTs(int senatePassageResultTs) {
+    public void setSenatePassageResultTs(long senatePassageResultTs) {
         this.senatePassageResultTs = senatePassageResultTs;
     }
 
@@ -182,11 +182,11 @@ public class BillHistory {
         this.vetoed = vetoed;
     }
 
-    public int getVetoedTs() {
+    public long getVetoedTs() {
         return vetoedTs;
     }
 
-    public void setVetoedTs(int vetoedTs) {
+    public void setVetoedTs(long vetoedTs) {
         this.vetoedTs = vetoedTs;
     }
 

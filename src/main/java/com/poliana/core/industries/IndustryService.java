@@ -11,8 +11,7 @@ import java.util.Map;
 @Service
 public class IndustryService {
 
-    @Autowired
-    protected IndustryRepo industryRepo;
+    private IndustryRepo industryRepo;
 
     private HashMap<String, Industry> industryMap;
 
@@ -38,5 +37,10 @@ public class IndustryService {
         if (industryMap == null)
             setIndustryMap();
         return industryMap;
+    }
+
+    @Autowired
+    public void setIndustryRepo(IndustryRepo industryRepo) {
+        this.industryRepo = industryRepo;
     }
 }

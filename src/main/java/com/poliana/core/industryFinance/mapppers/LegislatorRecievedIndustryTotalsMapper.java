@@ -13,10 +13,10 @@ import java.sql.SQLException;
  */
 public class LegislatorRecievedIndustryTotalsMapper implements RowMapper<IndustryPoliticianContributions> {
 
-    private int beginTimestamp;
-    private int endTimestamp;
+    private long beginTimestamp;
+    private long endTimestamp;
 
-    public LegislatorRecievedIndustryTotalsMapper(int beginTimestamp, int endTimestamp) {
+    public LegislatorRecievedIndustryTotalsMapper(long beginTimestamp, long endTimestamp) {
         this.beginTimestamp = beginTimestamp;
         this.endTimestamp = endTimestamp;
     }

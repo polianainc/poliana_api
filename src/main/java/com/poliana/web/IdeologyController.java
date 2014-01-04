@@ -1,11 +1,12 @@
 package com.poliana.web;
 
-import com.poliana.core.legislators.Legislator;
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.poliana.core.ideology.IdeologyMatrix;
-import com.poliana.core.ideology.IdeologyAnalysis;
+import com.poliana.core.ideology.LegislatorIdeology;
+import com.poliana.core.ideology.IdeologyService;
 import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,54 +17,28 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.List;
 
 /**
+ *
  * @author David Gilmore
  * @date 12/15/13
  */
 @Controller
-@RequestMapping("/legislators/")
-public class IdeologyController {
+@RequestMapping("/ideology")
+public class IdeologyController extends BaseController  {
 
-    @Autowired
-    private IdeologyAnalysis ideologyAnalysis;
+    private IdeologyService ideologyService;
 
-    @RequestMapping(value="sponsorship-matrix/{chamber}/{begin}/{end}", headers="Accept=*/*",
-            method = RequestMethod.GET)
-    public @ResponseBody String ideology(
+
+    @RequestMapping(value="/{chamber}/{congress}", headers="Accept=*/*", method = RequestMethod.GET)
+    public @ResponseBody String getIdeologyMatrix(
             @PathVariable("chamber") String chamber,
-            @PathVariable("begin") Integer begin,
-            @PathVariable("end") Integer end) {
+            @PathVariable("congress") Integer congress) {
 
-        IdeologyMatrix ideologyMatrix = ideologyAnalysis.getSponsorshipMatrix(chamber,begin,end);
-
-        JSONObject ideology = new JSONObject();
-
-        try {
-            ideology.put("chamber",ideologyMatrix.getChamber());
-            ideology.put("begin_timestamp",ideologyMatrix.getBeginDate());
-            ideology.put("end_timestamp",ideologyMatrix.getEndDate());
-            ideology.put("sponsorship_matrix",ideologyMatrix.getSponsorshipMatrix());
-            ideology.put("id_to_index",ideologyMatrix.getIdToIndex());
-            ideology.put("legislators",legislatorsFormat(ideologyMatrix.getLegislators()));
-        } catch (JSONException e) {}
-
-        return ideology.toString();
+        IdeologyMatrix ideologyMatrix = ideologyService.getIdeologyMatrix(chamber,congress);
+        return this.gson.toJson(ideologyMatrix);
     }
 
-
-    private JSONArray legislatorsFormat(List<Legislator> legislatorsList) {
-
-        JSONArray legislatorsJson = new JSONArray();
-        for (Legislator legislator: legislatorsList) {
-            JSONObject jsonLegislator = new JSONObject();
-            try {
-                jsonLegislator.put("bioguide_id", legislator.getBioguideId());
-                jsonLegislator.put("name", legislator.getFirstName() + " " + legislator.getLastName());
-                jsonLegislator.put("party", legislator.getParty());
-                jsonLegislator.put("religion", legislator.getReligion());
-                jsonLegislator.put("index", legislator.getIndex());
-            } catch (JSONException e) {}
-            legislatorsJson.put(jsonLegislator);
-        }
-        return legislatorsJson;
+    @Autowired
+    public void setIdeologyService(IdeologyService ideologyService) {
+        this.ideologyService = ideologyService;
     }
 }

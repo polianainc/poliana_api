@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 public class ExpendituresMongoRepo {
-    @Autowired
+
     private JdbcTemplate hiveTemplate;
 
     private final String databasePrefix = "local.";
@@ -16,5 +16,10 @@ public class ExpendituresMongoRepo {
 
     public List<Expenditure> expenditures() {
         return hiveTemplate.query("SELECT * FROM " + expendituresTable, new ExpenditureMapper());
+    }
+
+    @Autowired
+    public void setHiveTemplate(JdbcTemplate hiveTemplate) {
+        this.hiveTemplate = hiveTemplate;
     }
 }

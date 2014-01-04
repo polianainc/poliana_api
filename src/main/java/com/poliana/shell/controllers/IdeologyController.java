@@ -1,75 +1,39 @@
 package com.poliana.shell.controllers;
 
-import com.poliana.core.legislators.Legislator;
+import com.poliana.core.ideology.IdeologyService;
 import com.poliana.core.ideology.IdeologyMatrix;
-import com.poliana.core.ideology.IdeologyAnalysis;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.core.CommandMarker;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.core.annotation.CliOption;
 import org.springframework.stereotype.Controller;
+import com.google.gson.Gson;
 
-import java.io.FileWriter;
-import java.io.IOException;
 
 @Controller
 public class IdeologyController implements CommandMarker {
 
     @Autowired
-    private IdeologyAnalysis ideologyAnalysis;
+    private IdeologyService ideologyService;
 
 
     /**
-     * Saves a file to ../data/{chamber}_{beginTimestamp}_{endTimestamp}_ideology.json with an IdeologyMatrix json
+     * Saves a file to ../data/{chamber}_{congress}_ideology.json with an IdeologyMatrix json
      * object.
      *
-     * Example query: ideologyMatrix --chamber s --beginTimestamp 1086484277 --endTimestamp 1286484277
+     * Example query: ideologyMatrix --chamber s --congress 110
      *
      * @param chamber
-     * @param beginTimestamp
-     * @param endTimestamp
+     * @param congress
      * @return
-     * @throws JSONException
      */
     @CliCommand(value = "ideologyMatrix")
     public String ideologyMatrix(
             @CliOption(key = { "chamber" }) final String chamber,
-            @CliOption(key = { "beginTimestamp" }) final int beginTimestamp,
-            @CliOption(key = { "endTimestamp" }) final int endTimestamp) throws JSONException {
+            @CliOption(key = { "congress" }) final int congress) {
 
-        IdeologyMatrix ideologyMatrix = ideologyAnalysis.getIdeologyMatrix(chamber,beginTimestamp,endTimestamp);
-
-        JSONObject ideology = new JSONObject();
-        ideology.put("chamber",ideologyMatrix.getChamber());
-        ideology.put("beginTimestamp",ideologyMatrix.getBeginDate());
-        ideology.put("endTimestamp",ideologyMatrix.getEndDate());
-        ideology.put("sponsorshipMatrix",ideologyMatrix.getSponsorshipMatrix());
-        ideology.put("u",ideologyMatrix.getU());
-        ideology.put("vt",ideologyMatrix.getVt());
-        ideology.put("idToIndex",ideologyMatrix.getIdToIndex());
-
-        JSONArray legislators = new JSONArray();
-        for (Legislator legislator: ideologyMatrix.getLegislators()) {
-            legislators.put(new JSONObject(legislator));
-        }
-        ideology.put("legislators",legislators);
-
-        String path = "../data/" + chamber + "_" + beginTimestamp + "_" + endTimestamp + "_ideology.json";
-        String message;
-        try {
-
-            FileWriter file = new FileWriter(path);
-            ideology.write(file);
-            file.flush();
-            file.close();
-            message = "Successfully saved ideology analysis to " + path;
-        } catch (IOException e) {
-            message = "There was an error processing the ideology analysis";
-        }
-
-        return message;
+        IdeologyMatrix ideologyMatrix = ideologyService.getIdeologyMatrix(chamber, congress);
+        Gson gson = new Gson();
+        return gson.toJson(ideologyMatrix);
     }
 }

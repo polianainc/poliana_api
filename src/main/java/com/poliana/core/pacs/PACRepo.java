@@ -19,10 +19,7 @@ import java.util.List;
 @Repository
 public class PACRepo {
 
-    @Autowired
     private JdbcTemplate hiveTemplate;
-
-    @Autowired
     private Datastore mongoStore;
 
     /**
@@ -58,5 +55,15 @@ public class PACRepo {
     public List<CongCommittee> getCongCommitties() {
         return hiveTemplate.query("SELECT * FROM entities.congressional_committee_ids",
                 new CongCommitteeMapper());
+    }
+
+    @Autowired
+    public void setHiveTemplate(JdbcTemplate hiveTemplate) {
+        this.hiveTemplate = hiveTemplate;
+    }
+
+    @Autowired
+    public void setMongoStore(Datastore mongoStore) {
+        this.mongoStore = mongoStore;
     }
 }

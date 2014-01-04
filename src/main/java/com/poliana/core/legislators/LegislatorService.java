@@ -1,7 +1,6 @@
 package com.poliana.core.legislators;
 
-import com.poliana.core.politicianProfile.PoliticianProfile;
-import com.poliana.core.politicianProfile.TermTotals;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,57 +9,10 @@ import java.util.*;
 @Service
 public class LegislatorService {
 
-    @Autowired
-    protected LegislatorRepo legislatorRepo;
+    private LegislatorRepo legislatorRepo;
 
-    private Map<String, List<Legislator>> lisCache;
-    private Map<String, List<Legislator>> bioguideCache;
-    private Map<String, List<Legislator>> thomasCache;
+    private static final Logger logger = Logger.getLogger(LegislatorService.class);
 
-
-    /**
-     * Given a bioguide id, check mongo for the correct PoliticianProfile.
-     * If it's not been processed, fall back to impala.
-     *
-     *  TODO: big-O analysis of all methods used
-     * @param bioguideId  {String}
-     * @return
-     *
-     * @see               com.poliana.core.politicianProfile.PoliticianProfile
-     */
-    public PoliticianProfile getPoliticianProfile(String bioguideId) {
-        PoliticianProfile profile = new PoliticianProfile();
-        profile.setBioguideId(bioguideId);
-
-        return profile;
-    }
-
-    /**
-     * Given a list of legislators, return a list of corresponding term totals
-     *
-     * TODO: big-O analysis of all methods used
-     * @see com.poliana.core.politicianProfile.TermTotals
-     */
-    public List<TermTotals> getTermTotals(List<Legislator> legislators) {
-        List<TermTotals> termTotalsList = new LinkedList<>();
-
-        for (Legislator legislator: legislators) {
-
-        }
-
-        return termTotalsList;
-    }
-
-    /**
-     *
-     * @param legislator
-     * @return
-     */
-    public TermTotals getTermTotals(Legislator legislator) {
-        TermTotals termTotals = new TermTotals();
-
-        return termTotals;
-    }
 
     /**
      * Given a lis, bioguide, or thomas id and a timestamp, return the corresponding legislator object.
@@ -68,45 +20,24 @@ public class LegislatorService {
      *
      * @see com.poliana.core.legislators.Legislator
      */
-    public Legislator legislatorByIdTimestamp(String id, int timestamp) {
+    public Legislator getLegislatorByIdTimestamp(String id, long timestamp) {
 
-        List<Legislator> legislators;
+        List<Legislator> legislators = getLegislatorTermsById(id);
+        return getCorrectTerm(legislators, timestamp);
+    }
 
-        //TODO: evaluate big-O, determine best solution
-        int idLength = id.length();
-        if (idLength < 4) {
-            try {
-                int num = Integer.parseInt(id);
-                id = String.format("%05d", num);
-                idLength = id.length();
-            }
-            catch (NumberFormatException e) {}
-        }
-        if(idLength == 4) {
-            if (lisCache == null) { setCacheLis(); }
-            legislators = lisCache.get(id);
-        }
-        else if (idLength == 7) {
-            if (bioguideCache == null) { setCacheBioguide(); }
-            legislators = bioguideCache.get(id);
-        }
-        else if (idLength == 5) {
-            if (thomasCache == null) { setCacheThomas(); }
-            legislators = thomasCache.get(id);
-        }
-        else {
-            legislators = new LinkedList<>();
-            Iterator<Legislator> iterator = legislatorRepo.getLegislator(id);
-            while (iterator.hasNext()) {
-                Legislator legislator = iterator.next();
-                legislators.add(legislator);
-            }
-        }
+    /**
+     * Determine the correct term for a legislator given a list of all terms he or she has served and a timestamp
+     * @param legislators
+     * @param timestamp
+     * @return
+     */
+    public Legislator getCorrectTerm(List<Legislator> legislators, long timestamp) {
 
         int correctTerm = 0;
-        int closestTimeStamp = 0;
-        int diff;
-        int termStart;
+        long closestTimeStamp = 0;
+        long diff;
+        long termStart;
         int index = 0;
 
         if (legislators != null) {
@@ -127,119 +58,44 @@ public class LegislatorService {
     }
 
     /**
-     * Useful method for mapping bioguide ids to object ids
-     *
-     * @param legislators  {List<Legislator>}
-     *
-     * @see com.poliana.core.legislators.Legislator
-     */
-    public HashMap<String,String> getLegislatorBioguideMap(List<Legislator> legislators) {
-        HashMap<String,String> legislatorMap = new HashMap<>(500);
-
-        for (Legislator legislator: legislators)
-            legislatorMap.put(legislator.getBioguideId(), legislator.getId());
-
-        return legislatorMap;
-    }
-
-    /**
-     *
-     * @param bioguideIds
-     * @param timestamp
+     * Any of Thomas, LIS, Bioguide and Mongo IDs will be resolved and return a list of legislator terms.
+     * @param id
      * @return
      */
-    public List<Legislator> bioguideToLegislator(List<String> bioguideIds, int timestamp) {
+    public List<Legislator> getLegislatorTermsById(String id) {
 
-        List<Legislator> legislators = new LinkedList<>();
+        List<Legislator> legislators;
 
-        try{
-            for (String bioguideId: bioguideIds) {
-                Legislator legislator = legislatorByIdTimestamp(bioguideId, timestamp);
+        int idLength = id.length();
+        if (idLength < 4) { // No IDs we use have a length under 4. The general explanation is a malformed Thomas Id
+            try {
+                int num = Integer.parseInt(id); //If it is a number, it is now most probable it's indeed a Thomas Id
+                id = String.format("%05d", num); //Pad with 0s
+                idLength = id.length(); //Update the length
+            }
+            catch (NumberFormatException e) {
+                logger.error(e.getMessage());
+            }
+        }
+        if(idLength == 4)
+            legislators = legislatorRepo.getLegislatorTermsByLis(id);
+        else if (idLength == 7)
+            legislators = legislatorRepo.getLegislatorTermsByBioguide(id);
+        else if (idLength == 5)
+            legislators = legislatorRepo.getLegislatorTermsByThomas(id);
+        else {
+            legislators = new LinkedList<>();
+            Iterator<Legislator> iterator = legislatorRepo.getLegislator(id);
+            while (iterator.hasNext()) {
+                Legislator legislator = iterator.next();
                 legislators.add(legislator);
             }
         }
-        catch (NullPointerException e) {}
-
         return legislators;
     }
 
-    /**
-     *
-     * @param legislatorIterator
-     * @return
-     */
-    public List<Legislator> legislatorList(Iterator<Legislator> legislatorIterator) {
-        List<Legislator> legislatorList = new LinkedList<>();
-        while(legislatorIterator.hasNext()) {
-            Legislator legislator = legislatorIterator.next();
-            legislatorList.add(legislator);
-        }
-        return legislatorList;
-    }
-
-/**********************************************************************************************************************/
-
-/**********************************************************************************************************************/
-
-    private void setCacheLis() {
-        Iterator<Legislator> legislators =
-                legislatorRepo.allLegislatorTerms();
-
-        lisCache = new HashMap<>(43000);
-
-        String currLis;
-        while (legislators.hasNext()) {
-            Legislator legislator = legislators.next();
-            List<Legislator> currLegislators;
-            currLis = legislator.getLisId();
-            if(lisCache.containsKey(currLis))
-                currLegislators = lisCache.get(currLis);
-            else
-                currLegislators = new LinkedList<>();
-            currLegislators.add(legislator);
-
-            if (null != currLis)
-                lisCache.put(currLis, currLegislators);
-        }
-    }
-
-    private void setCacheBioguide() {
-        Iterator<Legislator> legislators =
-                legislatorRepo.allLegislatorTerms();
-        bioguideCache = new HashMap<>(43000);
-
-        String currBioguide;
-        while (legislators.hasNext()) {
-            Legislator legislator = legislators.next();
-            List<Legislator> currLegislators;
-            currBioguide = legislator.getBioguideId();
-            if(bioguideCache.containsKey(currBioguide))
-                currLegislators = bioguideCache.get(currBioguide);
-            else
-                currLegislators = new LinkedList<>();
-            currLegislators.add(legislator);
-
-            bioguideCache.put(currBioguide, currLegislators);
-        }
-    }
-
-    private void setCacheThomas() {
-        Iterator<Legislator> legislators =
-                legislatorRepo.allLegislatorTerms();
-        thomasCache = new HashMap<>(43000);
-
-        String currThomas;
-        while (legislators.hasNext()) {
-            Legislator legislator = legislators.next();
-            List<Legislator> currLegislators;
-            currThomas = legislator.getThomasId();
-            if(thomasCache.containsKey(currThomas))
-                currLegislators = thomasCache.get(currThomas);
-            else
-                currLegislators = new LinkedList<>();
-            currLegislators.add(legislator);
-
-            thomasCache.put(currThomas, currLegislators);
-        }
+    @Autowired
+    public void setLegislatorRepo(LegislatorRepo legislatorRepo) {
+        this.legislatorRepo = legislatorRepo;
     }
 }

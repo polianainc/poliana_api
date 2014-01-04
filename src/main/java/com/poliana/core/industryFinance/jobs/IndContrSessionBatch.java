@@ -16,13 +16,8 @@ import java.util.Iterator;
 @Component
 public class IndContrSessionBatch {
 
-    @Autowired
     private IndustryContributionService industryContributionService;
-
-    @Autowired
     private IndustryRepo industryRepo;
-
-    @Autowired
     private IndustryContributionMongoRepo industryContributionMongoRepo;
 
     public void processIndustryTotals(int congress) {
@@ -32,5 +27,20 @@ public class IndContrSessionBatch {
             industryContributionMongoRepo.saveIndTimeRangeTotal(
                     industryContributionService.industryTimeRangeTotals(industry,congress,24));
         }
+    }
+
+    @Autowired
+    public void setIndustryContributionService(IndustryContributionService industryContributionService) {
+        this.industryContributionService = industryContributionService;
+    }
+
+    @Autowired
+    public void setIndustryRepo(IndustryRepo industryRepo) {
+        this.industryRepo = industryRepo;
+    }
+
+    @Autowired
+    public void setIndustryContributionMongoRepo(IndustryContributionMongoRepo industryContributionMongoRepo) {
+        this.industryContributionMongoRepo = industryContributionMongoRepo;
     }
 }

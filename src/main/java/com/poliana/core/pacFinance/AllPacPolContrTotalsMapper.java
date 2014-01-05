@@ -46,6 +46,7 @@ public class AllPacPolContrTotalsMapper implements ResultSetExtractor<HashMap<In
 
             PacPoliticianContrTotals pac = new PacPoliticianContrTotals();
 
+            pac.setBioguideId(rs.getString("bioguide_id"));
             pac.setPacId(rs.getString("cmte_id"));
             pac.setPacName(rs.getString("cmte_nm"));
             pac.setCycle(rs.getInt(4));

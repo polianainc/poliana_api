@@ -18,8 +18,22 @@ public class IndToPolContrTotalsMapper implements RowMapper<IndToPolContrTotals>
         totals.setIndustryId(rs.getString("industry_id"));
         totals.setContributionsCount(rs.getInt("contributions_count"));
         totals.setContributionSum(rs.getInt("contributions_total"));
-        totals.setYear(rs.getInt("year"));
-        totals.setMonth(rs.getInt("month"));
+
+        try {
+            totals.setCycle(rs.getInt("congress"));
+        }
+        catch (SQLException e) {}
+
+        try {
+            totals.setYear(rs.getInt("year"));
+        }
+        catch (SQLException e) {}
+
+        try {
+            totals.setMonth(rs.getInt("month"));
+        }
+        catch (SQLException e) {}
+
         return totals;
     }
 }

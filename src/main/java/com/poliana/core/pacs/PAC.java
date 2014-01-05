@@ -1,8 +1,9 @@
 package com.poliana.core.pacs;
 
-import com.google.code.morphia.annotations.Entity;
-import com.google.code.morphia.annotations.Id;
-import com.google.code.morphia.annotations.Property;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Property;
+import com.google.gson.annotations.Expose;
 
 /**
  * @author David Gilmore
@@ -12,6 +13,7 @@ import com.google.code.morphia.annotations.Property;
 public class PAC {
 
     @Id
+    @Expose
     private String id;
 
     private String name;

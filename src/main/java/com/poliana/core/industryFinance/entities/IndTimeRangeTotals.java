@@ -1,9 +1,10 @@
 package com.poliana.core.industryFinance.entities;
 
-import com.google.code.morphia.annotations.Embedded;
-import com.google.code.morphia.annotations.Entity;
-import com.google.code.morphia.annotations.Id;
-import com.google.code.morphia.annotations.Property;
+import org.mongodb.morphia.annotations.Embedded;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Property;
+import com.google.gson.annotations.Expose;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,8 +18,8 @@ import java.util.List;
 public class IndTimeRangeTotals {
 
     @Id
+    @Expose
     private String id;
-
 
     private String industry;
     private int congress;

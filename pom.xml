@@ -78,10 +78,11 @@
         </dependency>
 
         <dependency>
-            <groupId>com.google.code.morphia</groupId>
+            <groupId>org.mongodb.morphia</groupId>
             <artifactId>morphia</artifactId>
-            <version>0.99.1-SNAPSHOT</version>
+            <version>0.105</version>
         </dependency>
+
 
         <!-- Spring Shell-->
         <dependency>

@@ -1,6 +1,6 @@
 package com.poliana.core.bills.govtrack;
 
-import com.google.code.morphia.annotations.Property;
+import org.mongodb.morphia.annotations.Property;
 
 import java.util.List;
 

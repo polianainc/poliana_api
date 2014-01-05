@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 @RequestMapping("/")
-public class HelloController extends BaseController {
+public class HelloController extends AbstractBaseController {
 
     @ResponseBody
     @RequestMapping(value="", method = RequestMethod.GET)

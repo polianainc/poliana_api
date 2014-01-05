@@ -1,9 +1,10 @@
 package com.poliana.core.bills.govtrack;
 
-import com.google.code.morphia.annotations.Embedded;
-import com.google.code.morphia.annotations.Entity;
-import com.google.code.morphia.annotations.Id;
-import com.google.code.morphia.annotations.Property;
+import org.mongodb.morphia.annotations.Embedded;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Property;
+import com.google.gson.annotations.Expose;
 import com.poliana.core.amendments.entities.AmendmentRef;
 import com.poliana.core.amendments.entities.BillRef;
 import com.poliana.core.amendments.entities.TreatyRef;
@@ -21,6 +22,7 @@ import java.util.List;
 public class AmendmentGt {
 
     @Id
+    @Expose
     private ObjectId id;
 
     @Embedded

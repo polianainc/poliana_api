@@ -8,10 +8,10 @@ import com.poliana.core.industryFinance.entities.IndTimeRangeTotals;
 import com.poliana.core.industryFinance.entities.IndToPolContrTotals;
 import com.poliana.core.industryFinance.entities.Recipient;
 import com.poliana.core.industryFinance.entities.IndustryPoliticianContributions;
-import com.poliana.core.industryFinance.repositories.IndustryContributionHadoopRepo;
 import com.poliana.core.industries.Industry;
 import com.poliana.core.legislators.Legislator;
 import com.poliana.core.legislators.LegislatorService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,8 +26,85 @@ public class IndustryContributionService {
 
     private IndustryRepo industryRepo;
     private LegislatorService legislatorService;
-    private IndustryContributionHadoopRepo contributionRepo;
+    private IndustryContributionRepo industryContributionRepo;
     private TimeService timeService;
+
+    private static final Logger logger = Logger.getLogger(IndustryContributionService.class);
+
+
+    /**
+     * Get a list of industry to politician contributions for a given congressional cycle
+     * @param bioguideId
+     * @param congress
+     * @return
+     */
+    public List<IndToPolContrTotals> getIndustryTotals(String bioguideId, int congress) {
+
+        List<IndToPolContrTotals> totalsList = industryContributionRepo.getIndustryToPoliticianContributions(bioguideId, congress);
+
+        if (totalsList.size() > 0)
+            return totalsList;
+
+        //If MongoDB didn't return, fall back to Impala.
+        totalsList = industryContributionRepo.getIndustryToPoliticianContributions(bioguideId, congress);
+
+        //If Impala had something to return, save it to MongoDB
+        if (totalsList.size() > 0)
+            industryContributionRepo.saveIndustryToPoliticianContributions(totalsList);
+
+        return totalsList;
+    }
+
+    /**
+     * Get a HashMap of Cycle->Industry contribution lists for all congressional cycles a politician has been apart of
+     * @param bioguideId
+     * @return
+     */
+    public HashMap<Integer, List<IndToPolContrTotals>> getIndustryTotalsAllTime(String bioguideId) {
+
+        //Query MongoDB for industry to politician objects
+        Iterator<IndToPolContrTotals> totalsIterator = industryContributionRepo.getIndustryToPoliticianContributions(bioguideId);
+
+        HashMap<Integer, List<IndToPolContrTotals>> totalsHashMap = new HashMap<>(30);
+
+        //Add industry totals to the HashMap. Check the size, if it's zero, fall back to Impala.
+        while (totalsIterator.hasNext()) {
+            IndToPolContrTotals industryTotals = totalsIterator.next();
+
+            //If the hashmap already has a list of industry totals for the object's cycle
+            if (totalsHashMap.containsKey(industryTotals.getCycle()))
+                totalsHashMap.get(industryTotals.getCycle()).add(industryTotals);
+                //If the hashmap doesn't contain a list of industry totals, make it
+            else {
+                List<IndToPolContrTotals> totalsList = new LinkedList<>();
+                totalsList.add(industryTotals);
+                totalsHashMap.put(industryTotals.getCycle(), totalsList);
+            }
+        }
+
+        //A size greater than 0 means that MongoDB had the sums cached
+        if (totalsHashMap.size() > 0)
+            return totalsHashMap;
+
+        //Fall back to Impala if MongoDB did not have the sums cached
+        totalsHashMap = industryContributionRepo.getAllIndustryContributionsPerCongress(bioguideId);
+
+        //Cache sums to MongoDB
+
+        //Get an iterator for the values in the hash map
+        Iterator it = totalsHashMap.entrySet().iterator();
+        Map.Entry pairs;
+
+        //Iterate through all entry pairs in the map and update the TermTotalsMap with the values.
+        while (it.hasNext()) {
+            pairs = (Map.Entry) it.next();
+
+            if (industryContributionRepo.countIndustryToPoliticianContributions(bioguideId, (Integer) pairs.getKey()) <= 0)
+                industryContributionRepo.saveIndustryToPoliticianContributions((List<IndToPolContrTotals>)pairs.getValue());
+        }
+
+        return totalsHashMap;
+    }
 
     /**
      *
@@ -50,37 +127,24 @@ public class IndustryContributionService {
      * @return
      */
     public List<IndustryPoliticianContributions> legislatorReceivedIndustryTotals(String bioguideId,
-                                                           long beginTimestamp, long endTimestamp, int limit) {
+                                                                                  long beginTimestamp, long endTimestamp, int limit) {
 
-        return contributionRepo.legislatorReceivedIndustryTotals(bioguideId, beginTimestamp, endTimestamp, limit);
+        return industryContributionRepo.legislatorReceivedIndustryTotals(bioguideId, beginTimestamp, endTimestamp, limit);
     }
 
     /**
-     *
-     * @param bioguideId
-     * @param beginTimestamp
-     * @param endTimestamp
-     * @return
-     */
-    public List<IndustryPoliticianContributions> legislatorReceivedIndustryTotals(String bioguideId,
-                                                           long beginTimestamp, long endTimestamp) {
-
-        return contributionRepo.legislatorReceivedIndustryTotals(bioguideId, beginTimestamp, endTimestamp);
-    }
-
-    /**
+     * Get an IndTimeRangeTotals object
      * @param industryId
      * @param congress
      * @param numSeries
      * @return
      */
-    public IndTimeRangeTotals industryTimeRangeTotals(
-            String industryId, int congress, int numSeries) {
+    public IndTimeRangeTotals getIndustryTimeRangeTotals(String industryId, int congress, int numSeries) {
 
         CongressYears years = timeService.congressToYears(congress);
 
         List<IndToPolContrTotals> contributionTotals =
-                contributionRepo.industryContrTotals(industryId, years.getYearOne(), years.getYearTwo());
+                industryContributionRepo.industryContrTotals(industryId, years.getYearOne(), years.getYearTwo());
 
 
         IndTimeRangeTotals timeRangeTotals = new IndTimeRangeTotals();
@@ -93,32 +157,30 @@ public class IndustryContributionService {
         HashMap<String,Recipient> stateAverages = new HashMap<>(60);
 
         for (IndToPolContrTotals contributions : contributionTotals) {
-            partyCount(contributions, timeRangeTotals);
-            stateCount(contributions, stateAverages, numSeries);
-            recipientMap(contributions, recipients, numSeries);
+            updatePartyCounts(contributions, timeRangeTotals);
+            updateStateCounts(contributions, stateAverages, numSeries);
+            updateRecipientMap(contributions, recipients, numSeries);
         }
 
 
         timeRangeTotals.setStates(stateAverages);
-        timeRangeTotals.setTopRecipients(topRecipients(recipients, 5));
-        timeRangeTotals.setBottomRecipients(bottomRecipients(recipients, 5));
+        timeRangeTotals.setTopRecipients(getTopRecipients(recipients, 5));
+        timeRangeTotals.setBottomRecipients(getBottomRecipients(recipients, 5));
 
         return timeRangeTotals;
     }
 
-/**********************************************************************************************************************/
-
-/**********************************************************************************************************************/
-
-    protected boolean assertBioguide(String bioguideId) {
-        return (bioguideId.length() == 7);
-    }
-
-    protected void recipientMap(IndToPolContrTotals contribution,
-                              HashMap<String,Recipient> recipients, int numSeries) {
+    /**
+     * Functional helper method that updates a map of Bioguide->Recipients from a list of industry contributions
+     * @param contribution
+     * @param recipients
+     * @param numSeries
+     */
+    private void updateRecipientMap(IndToPolContrTotals contribution, HashMap<String, Recipient> recipients, int numSeries) {
 
         String bioguideId = contribution.getBioguideId();
         Legislator legislator = getLegislator(contribution);
+
         if (recipients.containsKey(bioguideId)) {
             Recipient recipient = recipients.get(bioguideId);
             recipient.setCount(recipient.getCount() + contribution.getContributionsCount());
@@ -127,6 +189,7 @@ public class IndustryContributionService {
         }
         else {
             Recipient recipient = new Recipient();
+
             int contributionCount = contribution.getContributionsCount();
             int contributionSum = contribution.getContributionSum();
 
@@ -142,7 +205,13 @@ public class IndustryContributionService {
         }
     }
 
-    protected void partyCount(IndToPolContrTotals contribution, IndTimeRangeTotals totals) {
+    /**
+     * Functional helper method that increments sums and counts according to party
+     * @param contribution
+     * @param totals
+     */
+    private void updatePartyCounts(IndToPolContrTotals contribution, IndTimeRangeTotals totals) {
+
         switch(contribution.getParty()) {
             case "Republican":
                 totals.setRepublicanCount(totals.getRepublicanCount() + contribution.getContributionsCount());
@@ -159,8 +228,14 @@ public class IndustryContributionService {
         }
     }
 
-    protected void stateCount(IndToPolContrTotals contribution,
-                            HashMap<String,Recipient> stateAverages, int numSeries) {
+    /**
+     * Functional helper method that increments sums and counts according to legislator state
+     * @param contribution
+     * @param stateAverages
+     * @param numSeries
+     */
+    private void updateStateCounts(IndToPolContrTotals contribution, HashMap<String, Recipient> stateAverages, int numSeries) {
+
         Legislator legislator = getLegislator(contribution);
         String state = legislator.getTermState();
 
@@ -176,6 +251,7 @@ public class IndustryContributionService {
 
             int contributionsCount = contribution.getContributionsCount();
             int contributionsSum = contribution.getContributionSum();
+
             recipient.setCount(contributionsCount);
             recipient.setSum(contributionsSum);
             recipient.setSeriesAverage(contributionsSum/numSeries);
@@ -183,14 +259,28 @@ public class IndustryContributionService {
         }
     }
 
-    protected Legislator getLegislator(IndToPolContrTotals contribution) {
+    /**
+     * Get a legislator object from a contribution object.
+     * @param contribution
+     * @return
+     */
+    private Legislator getLegislator(IndToPolContrTotals contribution) {
+
         Calendar calendar = Calendar.getInstance();
         calendar.set(contribution.getYear(),contribution.getMonth(),2);
+
         long timestamp = calendar.getTimeInMillis()/1000;
+
         return legislatorService.getLegislatorByIdTimestamp(contribution.getBioguideId(), (int) timestamp);
     }
 
-    protected List<Recipient> topRecipients(HashMap<String,Recipient> recipients, int limit) {
+    /**
+     * Get a list of the top recipients given a map of recipient objects.
+     * @param recipients
+     * @param limit
+     * @return
+     */
+    private List<Recipient> getTopRecipients(HashMap<String, Recipient> recipients, int limit) {
         List<Recipient> recipientList = new ArrayList<>(recipients.values());
 
         Collections.sort(recipientList, new Comparator<Recipient>() {
@@ -206,7 +296,13 @@ public class IndustryContributionService {
             return recipientList;
     }
 
-    protected List<Recipient> bottomRecipients(HashMap<String,Recipient> recipients, int limit) {
+    /**
+     * Get a list of the least recipients given a map of recipient objects.
+     * @param recipients
+     * @param limit
+     * @return
+     */
+    private List<Recipient> getBottomRecipients(HashMap<String, Recipient> recipients, int limit) {
 
         List<Recipient> recipientList = new ArrayList<>(recipients.values());
 
@@ -253,8 +349,8 @@ public class IndustryContributionService {
     }
 
     @Autowired
-    public void setContributionRepo(IndustryContributionHadoopRepo contributionRepo) {
-        this.contributionRepo = contributionRepo;
+    public void setIndustryContributionRepo(IndustryContributionRepo industryContributionRepo) {
+        this.industryContributionRepo = industryContributionRepo;
     }
 
     @Autowired

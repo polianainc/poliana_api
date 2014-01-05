@@ -1,8 +1,9 @@
 package com.poliana.core.pacFinance;
 
-import com.google.code.morphia.annotations.Entity;
-import com.google.code.morphia.annotations.Id;
-import com.google.code.morphia.annotations.Property;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Property;
+import com.google.gson.annotations.Expose;
 
 /**
  * @author David Gilmore
@@ -12,15 +13,35 @@ import com.google.code.morphia.annotations.Property;
 public class PacPoliticianContrTotals {
 
     @Id
-    private String id;
+    private transient String id;
+
+    @Property("bioguide_id")
+    private String bioguideId;
 
     @Property("pac_id")
     private String pacId;
 
     @Property("pac_name")
     private String pacName;
+
     private int cycle;
     private int amount;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getBioguideId() {
+        return bioguideId;
+    }
+
+    public void setBioguideId(String bioguideId) {
+        this.bioguideId = bioguideId;
+    }
 
     public String getPacId() {
         return pacId;

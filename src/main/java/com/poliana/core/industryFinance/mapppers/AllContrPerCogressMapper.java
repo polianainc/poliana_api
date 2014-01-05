@@ -45,6 +45,7 @@ public class AllContrPerCogressMapper implements ResultSetExtractor<HashMap<Inte
 
             IndToPolContrTotals ind = new IndToPolContrTotals();
 
+            ind.setBioguideId(rs.getString("bioguide_id"));
             ind.setIndustryId(rs.getString("real_code"));
             ind.setIndustryName(rs.getString("industry"));
             ind.setSector(rs.getString("sector"));

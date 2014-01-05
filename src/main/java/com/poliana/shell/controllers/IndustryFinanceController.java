@@ -32,7 +32,7 @@ public class IndustryFinanceController implements CommandMarker {
             @CliOption(key = { "range" }, mandatory = true) final int numSeries) throws IOException {
 
         JSONObject jsonIndustryTotals =  new JSONObject(
-                industryContributionService.industryTimeRangeTotals(industryId, congress, numSeries));
+                industryContributionService.getIndustryTimeRangeTotals(industryId, congress, numSeries));
         return jsonIndustryTotals.toString();
     }
 

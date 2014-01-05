@@ -1,7 +1,8 @@
 package com.poliana.core.bills.entities;
 
-import com.google.code.morphia.annotations.*;
-import com.google.code.morphia.annotations.Reference;
+import org.mongodb.morphia.annotations.*;
+import org.mongodb.morphia.annotations.Reference;
+import com.google.gson.annotations.Expose;
 
 import java.util.List;
 
@@ -13,6 +14,7 @@ import java.util.List;
 public class Bill {
 
     @Id
+    @Expose
     private String id;
 
     @Indexed @Property("bill_id")

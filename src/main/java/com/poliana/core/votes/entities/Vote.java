@@ -1,6 +1,7 @@
 package com.poliana.core.votes.entities;
 
-import com.google.code.morphia.annotations.*;
+import org.mongodb.morphia.annotations.*;
+import com.google.gson.annotations.Expose;
 import com.poliana.core.bills.entities.Bill;
 
 
@@ -14,6 +15,7 @@ import java.util.List;
 public class Vote {
 
     @Id
+    @Expose
     private String id;
 
     @Reference

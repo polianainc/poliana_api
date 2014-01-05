@@ -1,6 +1,7 @@
 package com.poliana.core.amendments.entities;
 
-import com.google.code.morphia.annotations.*;
+import org.mongodb.morphia.annotations.*;
+import com.google.gson.annotations.Expose;
 import com.poliana.core.bills.entities.Action;
 import com.poliana.core.bills.entities.Bill;
 import com.poliana.core.bills.govtrack.bills.Sponsor;
@@ -15,6 +16,7 @@ import java.util.List;
 public class Amendment {
 
     @Id
+    @Expose
     private String id;
 
     @Embedded

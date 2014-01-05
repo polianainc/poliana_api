@@ -1,6 +1,7 @@
 package com.poliana.core.bills.govtrack;
 
 
+import com.google.gson.annotations.Expose;
 import com.poliana.core.votes.entities.VoteDeprecated;
 import com.poliana.core.bills.govtrack.votes.LegislatorDeprecated;
 import org.json.JSONArray;
@@ -24,7 +25,8 @@ import java.util.List;
 public class BillDeprecated implements Serializable
 {
     @Id
-    private String id;
+    @Expose
+    private transient String id;
 
     @DBRef
     private VoteDeprecated votes;

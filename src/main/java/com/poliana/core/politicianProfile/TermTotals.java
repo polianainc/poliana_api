@@ -1,6 +1,7 @@
 package com.poliana.core.politicianProfile;
 
-import com.google.code.morphia.annotations.*;
+import org.mongodb.morphia.annotations.*;
+import com.google.gson.annotations.Expose;
 import com.poliana.core.industryFinance.entities.IndToPolContrTotals;
 import com.poliana.core.pacFinance.PacPoliticianContrTotals;
 
@@ -16,6 +17,7 @@ import java.util.List;
 public class TermTotals {
 
     @Id
+    @Expose
     private String id;
 
     @Property("bioguide_id")

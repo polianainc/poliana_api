@@ -1,23 +1,49 @@
 package com.poliana.core.industryFinance.entities;
 
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Property;
+
 /**
  * @author David Gilmore
  * @date 11/1/13
  */
+@Entity("industry_to_politician_contribution_totals")
 public class IndToPolContrTotals {
 
-    private String bioguideId;
+    @Id
+    private String id;
+
+    @Property("bioguide_id")
+    private transient String bioguideId;
+
     private String party;
+
+    @Property("industry_id")
     private String industryId;
+
+    @Property("industry_name")
     private String industryName;
+
     private String sector;
+
+    @Property("sector_long")
     private String sectorLong;
+
+    @Property("contributions_count")
     private int contributionsCount;
+
+    @Property("contribution_sum")
     private int contributionSum;
+
     private int timestamp;
     private int cycle;
     private int year;
     private int month;
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getBioguideId() {
         return bioguideId;

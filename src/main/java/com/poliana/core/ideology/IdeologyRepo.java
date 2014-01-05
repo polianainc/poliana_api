@@ -1,8 +1,8 @@
 package com.poliana.core.ideology;
 
-import com.google.code.morphia.Datastore;
-import com.google.code.morphia.Key;
-import com.google.code.morphia.query.Query;
+import org.mongodb.morphia.Datastore;
+import org.mongodb.morphia.Key;
+import org.mongodb.morphia.query.Query;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

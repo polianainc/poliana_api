@@ -38,6 +38,13 @@ public class SponsorshipService {
      */
     public SponsorshipMatrix getSponsorshipMatrix(String chamber, int congress) {
 
+        //Check MongoDB for the existence of this sponsorship matrix
+        SponsorshipMatrix sponsorshipMatrix = sponsorshipRepo.getSponsorshipMatrix(chamber, congress);
+
+        //If there was a matrix cached, return it
+        if (sponsorshipMatrix != null)
+            return sponsorshipMatrix;
+
         //Get all sponsorship counts for the given congress
         List<SponsorshipCount> sponsorships =
                 sponsorshipRepo.getSponsorshipCounts(chamber, congress);
@@ -49,7 +56,12 @@ public class SponsorshipService {
         Iterator<Legislator> legislatorIterator =
                 legislatorRepo.getLegislators(chamber, timestamps.getBegin(), timestamps.getEnd());
 
-        return getSponsorshipMatrix(chamber, sponsorships, legislatorIterator, timestamps.getBegin(), timestamps.getEnd());
+        sponsorshipMatrix = getSponsorshipMatrix(chamber, sponsorships, legislatorIterator, timestamps.getBegin(), timestamps.getEnd());
+
+        //Save it so we don't have to go through all of this again
+        sponsorshipRepo.saveSponsorshipMatrix(sponsorshipMatrix);
+
+        return sponsorshipMatrix;
     }
 
     /**

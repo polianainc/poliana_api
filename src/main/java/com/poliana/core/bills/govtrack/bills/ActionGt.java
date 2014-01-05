@@ -1,7 +1,7 @@
 package com.poliana.core.bills.govtrack.bills;
 
-import com.google.code.morphia.annotations.Embedded;
-import com.google.code.morphia.annotations.Property;
+import org.mongodb.morphia.annotations.Embedded;
+import org.mongodb.morphia.annotations.Property;
 import com.poliana.core.bills.entities.Reference;
 
 import java.util.List;

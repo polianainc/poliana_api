@@ -1,5 +1,6 @@
 package com.poliana.core.bills.deprecated;
 
+import com.google.gson.annotations.Expose;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -9,7 +10,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class BillVote {
 
     @Id
+    @Expose
     private String id;
+
     private String bioguideId;
     private String displayName;
     private String firstName;

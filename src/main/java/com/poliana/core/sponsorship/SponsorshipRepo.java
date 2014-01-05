@@ -1,5 +1,10 @@
 package com.poliana.core.sponsorship;
 
+import org.mongodb.morphia.Datastore;
+import org.mongodb.morphia.Key;
+import org.mongodb.morphia.query.Query;
+import com.poliana.core.time.CongressTimestamps;
+import com.poliana.core.time.TimeService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -18,8 +23,40 @@ import java.util.Map;
 public class SponsorshipRepo {
 
     private JdbcTemplate impalaTemplate;
+    private Datastore mongoStore;
+    private TimeService timeService;
 
     private static final Logger logger = Logger.getLogger(SponsorshipRepo.class);
+
+
+    public SponsorshipRepo() {
+        this.timeService = new TimeService();
+    }
+
+    /**
+     * Save a sponsorship matrix to MongoDB
+     * @param sponsorshipMatrix
+     * @return
+     */
+    public Key<SponsorshipMatrix> saveSponsorshipMatrix(SponsorshipMatrix sponsorshipMatrix) {
+
+        return mongoStore.save(sponsorshipMatrix);
+    }
+
+
+    public SponsorshipMatrix getSponsorshipMatrix(String chamber, int congress) {
+
+        Query<SponsorshipMatrix> query = mongoStore.find(SponsorshipMatrix.class);
+
+        CongressTimestamps ts = timeService.congressTimestamps(congress);
+
+        query.and(
+                query.criteria("chamber").equal(chamber),
+                query.criteria("beginTimestamp").equal(ts.getBegin()),
+                query.criteria("endTimestamp").equal(ts.getEnd()));
+
+        return query.get();
+    }
 
     /**
      * For a HashMap of Cycle->Chamber entries, return a list of sponsorships for each entry indexed by congressional
@@ -95,5 +132,10 @@ public class SponsorshipRepo {
     @Autowired
     public void setImpalaTemplate(JdbcTemplate impalaTemplate) {
         this.impalaTemplate = impalaTemplate;
+    }
+
+    @Autowired
+    public void setMongoStore(Datastore mongoStore) {
+        this.mongoStore = mongoStore;
     }
 }

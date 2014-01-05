@@ -1,10 +1,10 @@
 package com.poliana.core.bills.repositories;
 
-import com.google.code.morphia.Datastore;
-import com.google.code.morphia.Key;
-import com.google.code.morphia.query.Query;
-import com.google.code.morphia.query.UpdateOperations;
-import com.google.code.morphia.query.UpdateResults;
+import org.mongodb.morphia.Datastore;
+import org.mongodb.morphia.Key;
+import org.mongodb.morphia.query.Query;
+import org.mongodb.morphia.query.UpdateOperations;
+import org.mongodb.morphia.query.UpdateResults;
 import com.poliana.core.bills.govtrack.AmendmentGt;
 import com.poliana.core.bills.govtrack.bills.BillGt;
 import com.poliana.core.bills.govtrack.votes.VoteGt;

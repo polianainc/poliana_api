@@ -1,8 +1,8 @@
 package com.poliana.core.legislators;
 
-import com.google.code.morphia.Datastore;
-import com.google.code.morphia.Key;
-import com.google.code.morphia.query.Query;
+import org.mongodb.morphia.Datastore;
+import org.mongodb.morphia.Key;
+import org.mongodb.morphia.query.Query;
 import org.apache.log4j.Logger;
 import org.msgpack.MessagePack;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -171,7 +171,9 @@ public class LegislatorRepo {
      * @return
      */
     public Iterator<Legislator> getLegislator(String legislatorId) {
+
         Query<Legislator> query = mongoStore.find(Legislator.class);
+
         query.or(
                 query.criteria("thomasId").equal(legislatorId),
                 query.criteria("bioguideId").equal(legislatorId),
@@ -179,6 +181,7 @@ public class LegislatorRepo {
                 query.criteria("fecId").equal(legislatorId),
                 query.criteria("lisId").equal(legislatorId),
                 query.criteria("govtrackId").equal(legislatorId));
+
         return query.iterator();
     }
 
@@ -199,12 +202,15 @@ public class LegislatorRepo {
      * @return
      */
     public Iterator<Legislator> getLegislators(String chamber, long beginTimestamp, long endTimestamp) {
+
         Query<Legislator> query = mongoStore.find(Legislator.class);
+
         query.and(
                 query.criteria("termType").contains(chamber),
                 query.criteria("beginTimestamp").lessThan(endTimestamp),
                 query.criteria("endTimestamp").greaterThan(beginTimestamp)
         );
+
         return query.iterator();
     }
 

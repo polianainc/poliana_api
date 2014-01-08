@@ -1,13 +1,10 @@
 package com.poliana.core.industryFinance;
 
+import com.poliana.core.industryFinance.entities.*;
 import com.poliana.core.time.CongressTimestamps;
 import com.poliana.core.time.CongressYears;
 import com.poliana.core.time.TimeService;
 import com.poliana.core.industries.IndustryRepo;
-import com.poliana.core.industryFinance.entities.IndTimeRangeTotals;
-import com.poliana.core.industryFinance.entities.IndToPolContrTotals;
-import com.poliana.core.industryFinance.entities.Recipient;
-import com.poliana.core.industryFinance.entities.IndustryPoliticianContributions;
 import com.poliana.core.industries.Industry;
 import com.poliana.core.legislators.Legislator;
 import com.poliana.core.legislators.LegislatorService;
@@ -31,6 +28,63 @@ public class IndustryContributionService {
 
     private static final Logger logger = Logger.getLogger(IndustryContributionService.class);
 
+
+    /**
+     * Get a map of BioguideId->Total sum of industry contributions to all legislators in a given chamber during the given
+     * congressional cycles
+     * @param chamber
+     * @param congress
+     * @return
+     */
+    public IndustryChamberTotals getIndustryTotalsByChamber(String id, String chamber, int congress) {
+
+        //Check MongoDB for a cached industry chamber total document
+        IndustryChamberTotals chamberTotals =
+                industryContributionRepo.getIndustryChamberTotalsMongo(id, chamber, congress);
+
+        //If it exists, return it
+        if (chamberTotals != null)
+            return chamberTotals;
+
+        //If not we'll use Impala to get it
+        if (id.length() == 3)
+            chamberTotals = industryContributionRepo.getIndustryChamberTotals(id, chamber, congress);
+        if (id.length() == 5)
+            chamberTotals = industryContributionRepo.getIndustryChamberTotalsByCategory(id, chamber, congress);
+
+        if (chamberTotals != null)
+            industryContributionRepo.saveIndustryChamberTotals(chamberTotals);
+
+        return chamberTotals;
+    }
+
+    /**
+     * Get a map of BioguideId->Total sum of industry contributions to all legislators in a given chamber during the given
+     * congressional cycles
+     * @param chamber
+     * @param congress
+     * @return
+     */
+    public IndustryChamberTotals getCategoryTotalsByChamber(String categoryId, String chamber, int congress) {
+
+        //Check MongoDB for a cached industry chamber total document
+        IndustryChamberTotals chamberTotals =
+                industryContributionRepo.getCategoryChamberTotalsMongo(categoryId, chamber, congress);
+
+        //If it exists, return it
+        if (chamberTotals != null)
+            return chamberTotals;
+
+        chamberTotals = industryContributionRepo.getIndustryCategoryChamberTotals(categoryId, chamber, congress);
+
+        if (chamberTotals != null) {
+            chamberTotals.setIndustryId(null);
+            chamberTotals.setCategoryId(categoryId);
+            industryContributionRepo.saveIndustryChamberTotals(chamberTotals);
+        }
+
+        return chamberTotals;
+    }
 
     /**
      * Get a list of industry to politician contributions for a given congressional cycle

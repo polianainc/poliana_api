@@ -11,10 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author David Gilmore
@@ -133,7 +130,7 @@ public class PacContributionRepo {
             logger.error(e);
         }
 
-        return null;
+        return new LinkedList<>();
     }
 
     /**

@@ -266,6 +266,12 @@
             <version>1.0.13</version>
         </dependency>
 
+        <dependency>
+            <groupId>batik</groupId>
+            <artifactId>batik-svggen</artifactId>
+            <version>1.6-1</version>
+        </dependency>
+
         <!-- Java byte code assist -->
 
         <dependency>

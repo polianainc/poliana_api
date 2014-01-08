@@ -20,4 +20,5 @@ public class HelloController extends AbstractBaseController {
     public String index() {
         return "Hello. Welcome to the Poliana API!";
     }
+
 }

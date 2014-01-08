@@ -28,3 +28,75 @@
 
 >>b. Edit Configurations -> Add Tomcat Server(local)
 >>>* Add the PolianaAPI artifact to the server
+
+
+GLOBAL PARAMETERS:
+       ?format=json/csv
+
+       ?api_key=XXX
+       
+       ?fields
+
+       ?start=1010101&end=12309314 
+       ?year=2003
+       ?congress=110  DEFAULT current
+       
+       ?compare_to=analysis_type
+
+/politician 
+
+       /contributions
+              /organizations
+                     ?politician_id=XXXXXX *
+                     ?organization_id=XXXXX 
+                     
+              /industries
+                     ?politician_id=XXXXXX *
+                     ?industry_id=XXX
+                     ?category_id=XXXXX
+                     
+              /pacs
+                     ?politician_id=XXXXXX *
+                     ?pac_id=XXXX 
+       
+       /expenditures
+
+       /committees
+
+       /votes
+
+       /sponsorships
+
+/industry
+
+       /contributions
+              ?industry_id=XXX **
+              ?category_id=XXXXX **
+              ?chamber=s
+
+
+       /memberships
+
+
+/pac
+
+       /contributions 
+
+              /pacs
+                     ?pac_id=XXX *
+                     ?other_pac_id=XXX
+                     ?chamber=s
+
+              /politician
+                     ?pac_id *
+                     ?politician_id
+                     ?chamber=s
+
+
+/bill
+
+       /amendments
+       /votes
+       /related
+
+/congress

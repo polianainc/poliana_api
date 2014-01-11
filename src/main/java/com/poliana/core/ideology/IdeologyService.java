@@ -157,7 +157,7 @@ public class IdeologyService {
         ideologyMatrix.setIdeologies(ideologies);
 
         //Cache results to MongoDB
-        ideologyRepo.saveIdeologyMatrix(ideologyMatrix);
+        ideologyRepo.saveIdeologyMatrix(sortIdeologyScores(ideologyMatrix));
         ideologyRepo.saveLegislatorIdeologies(ideologyMatrix.getIdeologies());
 
         return ideologyMatrix;

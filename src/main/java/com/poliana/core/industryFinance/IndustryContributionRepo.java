@@ -176,7 +176,7 @@ public class IndustryContributionRepo {
      * @param bioguideId
      * @return
      */
-    public List<IndustryPoliticianContributions> getIndustryToPoliticianContributions(String bioguideId, int congress) {
+    public List<IndustryPoliticianContributions> getIndustryToPoliticianContributionsMongo(String bioguideId, int congress) {
 
         Query<IndustryPoliticianContributions> query = mongoStore.find(IndustryPoliticianContributions.class);
 
@@ -601,7 +601,7 @@ public class IndustryContributionRepo {
      * @param bioguideId
      * @return
      */
-    public List<IndustryPoliticianContributions> getAllIndustryContributions(String bioguideId, int congress) {
+    public List<IndustryPoliticianContributions> getIndustryToPoliticianContributions(String bioguideId, int congress) {
 
         try {
             String query =

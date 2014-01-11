@@ -194,7 +194,7 @@ public class IndustryContributionService {
      */
     public List<IndustryPoliticianContributions> getIndustryToPoliticianTotals(String bioguideId, int congress) {
 
-        List<IndustryPoliticianContributions> totalsList = industryContributionRepo.getIndustryToPoliticianContributions(bioguideId, congress);
+        List<IndustryPoliticianContributions> totalsList = industryContributionRepo.getIndustryToPoliticianContributionsMongo(bioguideId, congress);
 
         if (totalsList.size() > 0)
             return totalsList;

@@ -1,6 +1,6 @@
 package com.poliana.core.industryFinance.mapppers;
 
-import com.poliana.core.industryFinance.entities.IndToPolContrTotals;
+import com.poliana.core.industryFinance.entities.IndustryPoliticianContributions;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
@@ -15,20 +15,20 @@ import java.util.List;
  * @author David Gilmore
  * @date 12/27/13
  */
-public class AllContrPerCogressMapper implements ResultSetExtractor<HashMap<Integer, List<IndToPolContrTotals>>> {
+public class AllContrPerCogressMapper implements ResultSetExtractor<HashMap<Integer, List<IndustryPoliticianContributions>>> {
     @Override
-    public HashMap<Integer, List<IndToPolContrTotals>> extractData(ResultSet rs) throws SQLException, DataAccessException {
+    public HashMap<Integer, List<IndustryPoliticianContributions>> extractData(ResultSet rs) throws SQLException, DataAccessException {
 
-        HashMap<Integer, List<IndToPolContrTotals>> allTotals = new HashMap<>();
+        HashMap<Integer, List<IndustryPoliticianContributions>> allTotals = new HashMap<>();
         ContributionMapper contrMapper = new ContributionMapper();
 
         int index = 1;
         while (rs.next()) {
-            IndToPolContrTotals totals = contrMapper.mapRow(rs, index);
+            IndustryPoliticianContributions totals = contrMapper.mapRow(rs, index);
             if (allTotals.containsKey(totals.getCycle()))
                 allTotals.get(totals.getCycle()).add(totals);
             else {
-                List<IndToPolContrTotals> cycleTotals = new LinkedList<>();
+                List<IndustryPoliticianContributions> cycleTotals = new LinkedList<>();
                 cycleTotals.add(totals);
                 allTotals.put(totals.getCycle(), cycleTotals);
             }
@@ -38,12 +38,12 @@ public class AllContrPerCogressMapper implements ResultSetExtractor<HashMap<Inte
         return allTotals;
     }
 
-    class ContributionMapper implements RowMapper<IndToPolContrTotals> {
+    class ContributionMapper implements RowMapper<IndustryPoliticianContributions> {
 
         @Override
-        public IndToPolContrTotals mapRow(ResultSet rs, int rowNum) throws SQLException, DataAccessException {
+        public IndustryPoliticianContributions mapRow(ResultSet rs, int rowNum) throws SQLException, DataAccessException {
 
-            IndToPolContrTotals ind = new IndToPolContrTotals();
+            IndustryPoliticianContributions ind = new IndustryPoliticianContributions();
 
             ind.setBioguideId(rs.getString("bioguide_id"));
             ind.setIndustryId(rs.getString("real_code"));

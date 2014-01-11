@@ -40,7 +40,7 @@ public class LegislatorService {
         long termStart;
         int index = 0;
 
-        if (legislators != null) {
+        if (legislators != null && legislators.size() > 0) {
             for (Legislator legislator: legislators) {
                 termStart = legislator.getBeginTimestamp();
                 diff = Math.abs(timestamp) - Math.abs(termStart);

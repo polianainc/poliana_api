@@ -11,8 +11,8 @@ import java.util.HashMap;
  * @author David Gilmore
  * @date 1/6/14
  */
-@Entity("industry_chamber_totals")
-public class IndustryChamberTotals {
+@Entity("industry_contribution_totals")
+public class IndustryContributionTotals {
 
     @Id
     private String id;
@@ -23,11 +23,22 @@ public class IndustryChamberTotals {
     @Property("category_id")
     private String categoryId;
 
-    @Property("name")
-    private String name;
+    @Property("industry_name")
+    private String industryName;
+
+    private String sector;
+
+    @Property("sector_long")
+    private String sectorLong;
+
+    @Property("category_name")
+    private String categoryName;
 
     private String chamber;
     private int congress;
+
+    private long begin_timestamp;
+    private long end_timestamp;
 
     @Embedded
     private HashMap<String, Integer> sums;
@@ -56,12 +67,36 @@ public class IndustryChamberTotals {
         this.categoryId = categoryId;
     }
 
-    public String getName() {
-        return name;
+    public String getIndustryName() {
+        return industryName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setIndustryName(String industryName) {
+        this.industryName = industryName;
+    }
+
+    public String getSector() {
+        return sector;
+    }
+
+    public void setSector(String sector) {
+        this.sector = sector;
+    }
+
+    public String getSectorLong() {
+        return sectorLong;
+    }
+
+    public void setSectorLong(String sectorLong) {
+        this.sectorLong = sectorLong;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
     public String getChamber() {
@@ -78,6 +113,22 @@ public class IndustryChamberTotals {
 
     public void setCongress(int congress) {
         this.congress = congress;
+    }
+
+    public long getBegin_timestamp() {
+        return begin_timestamp;
+    }
+
+    public void setBegin_timestamp(long begin_timestamp) {
+        this.begin_timestamp = begin_timestamp;
+    }
+
+    public long getEnd_timestamp() {
+        return end_timestamp;
+    }
+
+    public void setEnd_timestamp(long end_timestamp) {
+        this.end_timestamp = end_timestamp;
     }
 
     public HashMap<String, Integer> getSums() {

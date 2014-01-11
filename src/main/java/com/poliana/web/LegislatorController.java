@@ -1,7 +1,7 @@
 package com.poliana.web;
 
 import com.poliana.core.industryFinance.IndustryContributionService;
-import com.poliana.core.industryFinance.entities.IndToPolContrTotals;
+import com.poliana.core.industryFinance.entities.IndustryPoliticianContributions;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,7 +31,7 @@ public class LegislatorController extends AbstractBaseController {
     String getAllIndustryContributions (
             @PathVariable("bioguideId") String bioguideId) {
 
-        HashMap<Integer, List<IndToPolContrTotals>> allTotals = industryContributionService.getIndustryTotalsAllTime(bioguideId);
+        HashMap<Integer, List<IndustryPoliticianContributions>> allTotals = industryContributionService.getIndustryTotalsAllTime(bioguideId);
         return this.gson.toJson(allTotals);
     }
 
@@ -40,7 +40,7 @@ public class LegislatorController extends AbstractBaseController {
             @PathVariable("bioguideId") String bioguideId,
             @PathVariable("congress") int congress) {
 
-        List<IndToPolContrTotals> allTotals = industryContributionService.getIndustryTotals(bioguideId, congress);
+        List<IndustryPoliticianContributions> allTotals = industryContributionService.getIndustryToPoliticianTotals(bioguideId, congress);
         return this.gson.toJson(allTotals);
     }
 

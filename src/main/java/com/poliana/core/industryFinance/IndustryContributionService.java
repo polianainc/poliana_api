@@ -1,5 +1,7 @@
 package com.poliana.core.industryFinance;
 
+import com.poliana.core.ideology.IdeologyMatrix;
+import com.poliana.core.ideology.LegislatorIdeology;
 import com.poliana.core.industryFinance.entities.*;
 import com.poliana.core.time.CongressTimestamps;
 import com.poliana.core.time.CongressYears;
@@ -30,30 +32,102 @@ public class IndustryContributionService {
 
 
     /**
-     * Get a map of BioguideId->Total sum of industry contributions to all legislators in a given chamber during the given
+     * Get a list of industry contributions compared to legislator ideology
+     * @param ideologyMatrix
+     * @param industryContributionTotals
+     * @return
+     */
+    public List<IndustryContributionCompare> getIdeologyVsContributions(
+            IdeologyMatrix ideologyMatrix, IndustryContributionTotals industryContributionTotals) {
+
+        List<IndustryContributionCompare> compareList = new LinkedList<>();
+
+        if (ideologyMatrix == null || industryContributionTotals == null)
+            return new LinkedList<>();
+
+        for (LegislatorIdeology legislatorIdeology: ideologyMatrix.getIdeologies()) {
+
+            //Inititialize a new comparison
+            IndustryContributionCompare compare = new IndustryContributionCompare();
+
+            //If the sums were made for a category, only the categoryId will be set, and vice verse
+            String industry;
+            if (industryContributionTotals.getIndustryId() != null)
+                industry = industryContributionTotals.getIndustryName();
+            else
+                industry = industryContributionTotals.getCategoryName();
+
+            //Set values
+            compare.setIndustry(industry);
+            compare.setLegislator(legislatorIdeology.getName());
+            compare.setParty(legislatorIdeology.getParty());
+            compare.setReligion(legislatorIdeology.getReligion());
+
+            try { //Try to get an amount from the contribution totals' sum map
+                compare.setAmount(industryContributionTotals.getSums().get(legislatorIdeology.getBioguideId()));
+            }
+            catch (Exception e) { //If there is no entry for this legislator, set the value to 0
+                compare.setAmount(0);
+            }
+
+            compare.setCompare1(legislatorIdeology.getIdeology());
+            compare.setCompare1Metric("ideology");
+
+            //Append the new compare object
+            compareList.add(compare);
+        }
+
+        return compareList;
+    }
+
+    /**
+     * Get a map of BioguideId->Total sum of industry contributions to all legislators during the given
      * congressional cycles
-     * @param chamber
      * @param congress
      * @return
      */
-    public IndustryChamberTotals getIndustryTotalsByChamber(String id, String chamber, int congress) {
+    public IndustryContributionTotals getIndustryTotals(String industryId, int congress) {
 
         //Check MongoDB for a cached industry chamber total document
-        IndustryChamberTotals chamberTotals =
-                industryContributionRepo.getIndustryChamberTotalsMongo(id, chamber, congress);
+        IndustryContributionTotals chamberTotals =
+                industryContributionRepo.getIndustryTotalsMongo(industryId, congress);
 
         //If it exists, return it
         if (chamberTotals != null)
             return chamberTotals;
 
         //If not we'll use Impala to get it
-        if (id.length() == 3)
-            chamberTotals = industryContributionRepo.getIndustryChamberTotals(id, chamber, congress);
-        if (id.length() == 5)
-            chamberTotals = industryContributionRepo.getIndustryChamberTotalsByCategory(id, chamber, congress);
+        chamberTotals = industryContributionRepo.getIndustryContributionTotals(industryId, congress);
 
         if (chamberTotals != null)
-            industryContributionRepo.saveIndustryChamberTotals(chamberTotals);
+            industryContributionRepo.saveIndustryContributionTotals(chamberTotals);
+
+        return chamberTotals;
+    }
+
+    /**
+     * Get a map of BioguideId->Total sum of industry contributions to all legislators during the given
+     * congressional cycles
+     * @param congress
+     * @return
+     */
+    public IndustryContributionTotals getIndustryCategoryTotals(String categoryId, int congress) {
+
+        //Check MongoDB for a cached industry chamber total document
+        IndustryContributionTotals chamberTotals =
+                industryContributionRepo.getIndustryCategoryTotalsMongo(categoryId, congress);
+
+        //If it exists, return it
+        if (chamberTotals != null)
+            return chamberTotals;
+
+        chamberTotals = industryContributionRepo.getIndustryCategoryContributionTotals(categoryId, congress);
+
+        if (chamberTotals != null) {
+            chamberTotals.setIndustryId(null);
+            chamberTotals.setCategoryId(categoryId);
+            industryContributionRepo.saveIndustryContributionTotals(chamberTotals);
+        }
 
         return chamberTotals;
     }
@@ -65,22 +139,48 @@ public class IndustryContributionService {
      * @param congress
      * @return
      */
-    public IndustryChamberTotals getCategoryTotalsByChamber(String categoryId, String chamber, int congress) {
+    public IndustryContributionTotals getIndustryTotalsByChamber(String industryId, String chamber, int congress) {
 
         //Check MongoDB for a cached industry chamber total document
-        IndustryChamberTotals chamberTotals =
-                industryContributionRepo.getCategoryChamberTotalsMongo(categoryId, chamber, congress);
+        IndustryContributionTotals chamberTotals =
+                industryContributionRepo.getIndustryChamberTotalsMongo(industryId, chamber, congress);
 
         //If it exists, return it
         if (chamberTotals != null)
             return chamberTotals;
 
-        chamberTotals = industryContributionRepo.getIndustryCategoryChamberTotals(categoryId, chamber, congress);
+        //If not we'll use Impala to get it
+        chamberTotals = industryContributionRepo.getIndustryChamberContributionTotals(industryId, chamber, congress);
+
+        if (chamberTotals != null)
+            industryContributionRepo.saveIndustryContributionTotals(chamberTotals);
+
+        return chamberTotals;
+    }
+
+    /**
+     * Get a map of BioguideId->Total sum of industry contributions to all legislators in a given chamber during the given
+     * congressional cycles
+     * @param chamber
+     * @param congress
+     * @return
+     */
+    public IndustryContributionTotals getIndustryCategoryTotalsByChamber(String categoryId, String chamber, int congress) {
+
+        //Check MongoDB for a cached industry chamber total document
+        IndustryContributionTotals chamberTotals =
+                industryContributionRepo.getIndustryCategoryChamberTotalsMongo(categoryId, chamber, congress);
+
+        //If it exists, return it
+        if (chamberTotals != null)
+            return chamberTotals;
+
+        chamberTotals = industryContributionRepo.getIndustryCategoryChamberContributionTotals(categoryId, chamber, congress);
 
         if (chamberTotals != null) {
             chamberTotals.setIndustryId(null);
             chamberTotals.setCategoryId(categoryId);
-            industryContributionRepo.saveIndustryChamberTotals(chamberTotals);
+            industryContributionRepo.saveIndustryContributionTotals(chamberTotals);
         }
 
         return chamberTotals;
@@ -92,9 +192,9 @@ public class IndustryContributionService {
      * @param congress
      * @return
      */
-    public List<IndToPolContrTotals> getIndustryTotals(String bioguideId, int congress) {
+    public List<IndustryPoliticianContributions> getIndustryToPoliticianTotals(String bioguideId, int congress) {
 
-        List<IndToPolContrTotals> totalsList = industryContributionRepo.getIndustryToPoliticianContributions(bioguideId, congress);
+        List<IndustryPoliticianContributions> totalsList = industryContributionRepo.getIndustryToPoliticianContributions(bioguideId, congress);
 
         if (totalsList.size() > 0)
             return totalsList;
@@ -114,23 +214,23 @@ public class IndustryContributionService {
      * @param bioguideId
      * @return
      */
-    public HashMap<Integer, List<IndToPolContrTotals>> getIndustryTotalsAllTime(String bioguideId) {
+    public HashMap<Integer, List<IndustryPoliticianContributions>> getIndustryTotalsAllTime(String bioguideId) {
 
         //Query MongoDB for industry to politician objects
-        Iterator<IndToPolContrTotals> totalsIterator = industryContributionRepo.getIndustryToPoliticianContributions(bioguideId);
+        Iterator<IndustryPoliticianContributions> totalsIterator = industryContributionRepo.getIndustryToPoliticianContributions(bioguideId);
 
-        HashMap<Integer, List<IndToPolContrTotals>> totalsHashMap = new HashMap<>(30);
+        HashMap<Integer, List<IndustryPoliticianContributions>> totalsHashMap = new HashMap<>(30);
 
         //Add industry totals to the HashMap. Check the size, if it's zero, fall back to Impala.
         while (totalsIterator.hasNext()) {
-            IndToPolContrTotals industryTotals = totalsIterator.next();
+            IndustryPoliticianContributions industryTotals = totalsIterator.next();
 
             //If the hashmap already has a list of industry totals for the object's cycle
             if (totalsHashMap.containsKey(industryTotals.getCycle()))
                 totalsHashMap.get(industryTotals.getCycle()).add(industryTotals);
                 //If the hashmap doesn't contain a list of industry totals, make it
             else {
-                List<IndToPolContrTotals> totalsList = new LinkedList<>();
+                List<IndustryPoliticianContributions> totalsList = new LinkedList<>();
                 totalsList.add(industryTotals);
                 totalsHashMap.put(industryTotals.getCycle(), totalsList);
             }
@@ -154,7 +254,7 @@ public class IndustryContributionService {
             pairs = (Map.Entry) it.next();
 
             if (industryContributionRepo.countIndustryToPoliticianContributions(bioguideId, (Integer) pairs.getKey()) <= 0)
-                industryContributionRepo.saveIndustryToPoliticianContributions((List<IndToPolContrTotals>)pairs.getValue());
+                industryContributionRepo.saveIndustryToPoliticianContributions((List<IndustryPoliticianContributions>)pairs.getValue());
         }
 
         return totalsHashMap;
@@ -166,7 +266,7 @@ public class IndustryContributionService {
      * @param congress
      * @return
      */
-    public List<IndustryPoliticianContributions> legislatorReceivedIndustryTotals(String bioguideId, int congress) {
+    public List<IndustryPoliticianContribution> legislatorReceivedIndustryTotals(String bioguideId, int congress) {
 
         CongressTimestamps yearTimestamps = timeService.congressTimestamps(congress);
         return legislatorReceivedIndustryTotals(bioguideId, yearTimestamps.getBegin(), yearTimestamps.getEnd(), 0);
@@ -180,28 +280,28 @@ public class IndustryContributionService {
      * @param limit
      * @return
      */
-    public List<IndustryPoliticianContributions> legislatorReceivedIndustryTotals(String bioguideId,
+    public List<IndustryPoliticianContribution> legislatorReceivedIndustryTotals(String bioguideId,
                                                                                   long beginTimestamp, long endTimestamp, int limit) {
 
         return industryContributionRepo.legislatorReceivedIndustryTotals(bioguideId, beginTimestamp, endTimestamp, limit);
     }
 
     /**
-     * Get an IndTimeRangeTotals object
+     * Get an IndustryTimeRangeTotals object
      * @param industryId
      * @param congress
      * @param numSeries
      * @return
      */
-    public IndTimeRangeTotals getIndustryTimeRangeTotals(String industryId, int congress, int numSeries) {
+    public IndustryTimeRangeTotals getIndustryTimeRangeTotals(String industryId, int congress, int numSeries) {
 
         CongressYears years = timeService.congressToYears(congress);
 
-        List<IndToPolContrTotals> contributionTotals =
+        List<IndustryPoliticianContributions> contributionTotals =
                 industryContributionRepo.industryContrTotals(industryId, years.getYearOne(), years.getYearTwo());
 
 
-        IndTimeRangeTotals timeRangeTotals = new IndTimeRangeTotals();
+        IndustryTimeRangeTotals timeRangeTotals = new IndustryTimeRangeTotals();
 
         timeRangeTotals.setCongress(congress);
         Industry industry = industryRepo.industry(industryId);
@@ -210,7 +310,7 @@ public class IndustryContributionService {
         HashMap<String,Recipient> recipients = new HashMap<>(500);
         HashMap<String,Recipient> stateAverages = new HashMap<>(60);
 
-        for (IndToPolContrTotals contributions : contributionTotals) {
+        for (IndustryPoliticianContributions contributions : contributionTotals) {
             updatePartyCounts(contributions, timeRangeTotals);
             updateStateCounts(contributions, stateAverages, numSeries);
             updateRecipientMap(contributions, recipients, numSeries);
@@ -230,7 +330,7 @@ public class IndustryContributionService {
      * @param recipients
      * @param numSeries
      */
-    private void updateRecipientMap(IndToPolContrTotals contribution, HashMap<String, Recipient> recipients, int numSeries) {
+    private void updateRecipientMap(IndustryPoliticianContributions contribution, HashMap<String, Recipient> recipients, int numSeries) {
 
         String bioguideId = contribution.getBioguideId();
         Legislator legislator = getLegislator(contribution);
@@ -264,7 +364,7 @@ public class IndustryContributionService {
      * @param contribution
      * @param totals
      */
-    private void updatePartyCounts(IndToPolContrTotals contribution, IndTimeRangeTotals totals) {
+    private void updatePartyCounts(IndustryPoliticianContributions contribution, IndustryTimeRangeTotals totals) {
 
         switch(contribution.getParty()) {
             case "Republican":
@@ -288,7 +388,7 @@ public class IndustryContributionService {
      * @param stateAverages
      * @param numSeries
      */
-    private void updateStateCounts(IndToPolContrTotals contribution, HashMap<String, Recipient> stateAverages, int numSeries) {
+    private void updateStateCounts(IndustryPoliticianContributions contribution, HashMap<String, Recipient> stateAverages, int numSeries) {
 
         Legislator legislator = getLegislator(contribution);
         String state = legislator.getTermState();
@@ -318,7 +418,7 @@ public class IndustryContributionService {
      * @param contribution
      * @return
      */
-    private Legislator getLegislator(IndToPolContrTotals contribution) {
+    private Legislator getLegislator(IndustryPoliticianContributions contribution) {
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(contribution.getYear(),contribution.getMonth(),2);

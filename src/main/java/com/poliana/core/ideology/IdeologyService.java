@@ -123,7 +123,7 @@ public class IdeologyService {
         ideologyMatrix.setIdeologies(ideologies);
 
         //Cache results to MongoDB
-        ideologyRepo.saveIdeologyMatrix(ideologyMatrix);
+        ideologyRepo.saveIdeologyMatrix(sortIdeologyScores(ideologyMatrix)); //Sort scores first
         ideologyRepo.saveLegislatorIdeologies(ideologyMatrix.getIdeologies());
 
         return ideologyMatrix;
@@ -159,6 +159,19 @@ public class IdeologyService {
         //Cache results to MongoDB
         ideologyRepo.saveIdeologyMatrix(ideologyMatrix);
         ideologyRepo.saveLegislatorIdeologies(ideologyMatrix.getIdeologies());
+
+        return ideologyMatrix;
+    }
+
+    private IdeologyMatrix sortIdeologyScores(IdeologyMatrix ideologyMatrix) {
+
+        class LegislatorIdeologyComparator implements Comparator<LegislatorIdeology> {
+            public int compare(LegislatorIdeology leg1, LegislatorIdeology leg2) {
+                return (int) (leg1.getIdeology() - leg2.getIdeology());
+            }
+        }
+
+        Collections.sort(ideologyMatrix.getIdeologies(), new LegislatorIdeologyComparator());
 
         return ideologyMatrix;
     }

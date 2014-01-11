@@ -1,6 +1,6 @@
 package com.poliana.core.industryFinance.mapppers;
 
-import com.poliana.core.industryFinance.entities.IndustryPoliticianContributions;
+import com.poliana.core.industryFinance.entities.IndustryPoliticianContribution;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -11,7 +11,7 @@ import java.sql.SQLException;
  * @author David Gilmore
  * @date 12/12/13
  */
-public class LegislatorRecievedIndustryTotalsMapper implements RowMapper<IndustryPoliticianContributions> {
+public class LegislatorRecievedIndustryTotalsMapper implements RowMapper<IndustryPoliticianContribution> {
 
     private long beginTimestamp;
     private long endTimestamp;
@@ -22,9 +22,9 @@ public class LegislatorRecievedIndustryTotalsMapper implements RowMapper<Industr
     }
 
     @Override
-    public IndustryPoliticianContributions mapRow(ResultSet rs, int rowNum) throws SQLException, DataAccessException {
+    public IndustryPoliticianContribution mapRow(ResultSet rs, int rowNum) throws SQLException, DataAccessException {
 
-        IndustryPoliticianContributions industry = new IndustryPoliticianContributions();
+        IndustryPoliticianContribution industry = new IndustryPoliticianContribution();
 
         industry.setIndustryId(rs.getString(2));
         industry.setAmount(rs.getInt(3));

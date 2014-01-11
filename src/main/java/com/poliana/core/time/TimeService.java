@@ -15,6 +15,8 @@ import java.util.Date;
 @Service
 public class TimeService {
 
+    public static final String CURRENT_CONGRESS = "113";
+
     /**
      *
      * @param dateString

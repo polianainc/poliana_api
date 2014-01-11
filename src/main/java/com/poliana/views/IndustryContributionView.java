@@ -1,14 +1,9 @@
 package com.poliana.views;
 
-import java.awt.*;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Random;
 import javax.swing.JFrame;
 
-import com.poliana.core.ideology.IdeologyMatrix;
-import com.poliana.core.ideology.LegislatorIdeology;
-import com.poliana.core.industryFinance.entities.IndustryChamberTotals;
+import com.poliana.core.industryFinance.entities.IndustryContributionCompare;
+import com.poliana.core.time.TimeService;
 import org.jfree.chart.*;
 import org.jfree.chart.axis.*;
 import org.jfree.chart.plot.CategoryPlot;
@@ -16,9 +11,9 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
-import org.jfree.data.xy.XYDataset;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
+
+import java.awt.*;
+import java.util.List;
 
 /**
  * @author David Gilmore
@@ -26,20 +21,65 @@ import org.jfree.data.xy.XYSeriesCollection;
  */
 public class IndustryContributionView extends JFrame {
 
-    private IdeologyMatrix ideologyMatrix;
-    private IndustryChamberTotals industryChamberTotals;
+    private String title;
+    private CategoryDataset dataset;
+    private TimeService timeService;
 
-    public IndustryContributionView(IdeologyMatrix ideologyMatrix, IndustryChamberTotals industryChamberTotals) {
+    /**
+     * Plot ideology vs. industry contribution totals for a given chamber in a given congressional cycle.
+     * @param compareList
+     * @param chamber
+     * @param congress
+     */
+    public IndustryContributionView(List<IndustryContributionCompare> compareList, String chamber, int congress) {
 
-        this.ideologyMatrix = ideologyMatrix;
-        this.industryChamberTotals = industryChamberTotals;
+        this.timeService = new TimeService();
+
+        String chamberName = (chamber.toLowerCase().startsWith("s")) ? "Senate" : "House of Representatives";
+
+        if (compareList.size() > 0) {
+            this.title =
+                    compareList.get(0).getIndustry() +
+                            " contributions to the " +
+                            chamberName +
+                            " during the " +
+                            congress +
+                            timeService.getNumberSuffix(congress) +
+                            " congressional session";
+        }
+        else
+            this.title = "No data";
+
+        this.dataset = getContributionsVsIdeology(compareList);
     }
 
-    public JFreeChart generateChart(String title, CategoryDataset dataset) {
+    /**
+     * Generate a certain type of chart.
+     * @param type
+     * @return
+     */
+    public JFreeChart generateChart(String type) {
 
-        JFreeChart chart = ChartFactory.createBarChart(title,
-                "Ideology Score", "Contribution Amount", dataset, PlotOrientation.VERTICAL,
-                false, true, false);
+        JFreeChart chart;
+
+        switch(type) {
+            default: chart = generateBarChart();
+        }
+
+        return chart;
+    }
+
+    private JFreeChart generateBarChart() {
+
+        JFreeChart chart = ChartFactory.createBarChart(
+                this.title,
+                "Ideology Score", "Contribution Amount",
+                this.dataset,
+                PlotOrientation.VERTICAL,
+                false,//Legend
+                true, //Tooltips
+                false //URLS
+        );
 
         CategoryPlot plot = (CategoryPlot) chart.getPlot();
 
@@ -53,76 +93,32 @@ public class IndustryContributionView extends JFrame {
         domainAxis.setLabel("* The position of legislators on the graph is determined through an analysis of their sponsorship patterns");
 
         plot.setDomainAxis(domainAxis);
+        plot.setBackgroundPaint(Color.WHITE);
 
         BarRenderer renderer = (BarRenderer) plot.getRenderer();
 
-        renderer.setSeriesPaint(0, Color.blue);
-        renderer.setSeriesPaint(1, Color.red);
+        if (((String)dataset.getRowKey(0)).toLowerCase().startsWith("r")) {
+            renderer.setSeriesPaint(0, Color.red);
+            renderer.setSeriesPaint(1, Color.blue);
+        }
+        else {
+            renderer.setSeriesPaint(0, Color.blue);
+            renderer.setSeriesPaint(1, Color.red);
+        }
+
+        renderer.setShadowVisible(false);
 
         return chart;
     }
 
-    private void adjustAxis(NumberAxis axis, boolean vertical) {
-
-        axis.setRange(-3.0, 3.0);
-        axis.setTickUnit(new NumberTickUnit(0.5));
-        axis.setVerticalTickLabels(vertical);
-    }
-
-
-
-    public CategoryDataset getIndustryContributionData() {
+    private CategoryDataset getContributionsVsIdeology(List<IndustryContributionCompare> compareList) {
 
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
-        for (LegislatorIdeology legislatorIdeology: this.ideologyMatrix.getIdeologies()) {
-
-            Integer total = industryChamberTotals.getSums().get(legislatorIdeology.getBioguideId());
-
-
-            if (legislatorIdeology.getParty().equalsIgnoreCase("democrat")) {
-                if (total != null)
-                    dataset.setValue(total, "democrat", legislatorIdeology.getName());
-                else
-                    dataset.setValue(total, "democrat", "");
-            }
-
-            if (legislatorIdeology.getParty().equalsIgnoreCase("republican")) {
-                if (total != null)
-                    dataset.setValue(total, "republican", legislatorIdeology.getName());
-                else
-                    dataset.setValue(total, "republican", "");
-            }
+        for (IndustryContributionCompare compare: compareList) {
+            dataset.addValue(compare.getAmount(), compare.getParty(), compare.getLegislator());
         }
 
         return dataset;
-    }
-
-    public void sortIdeologyScores() {
-
-        class LegislatorIdeologyComparator implements Comparator<LegislatorIdeology> {
-            public int compare(LegislatorIdeology leg1, LegislatorIdeology leg2) {
-                return (int) (leg1.getIdeology() - leg2.getIdeology());
-            }
-        }
-
-        Collections.sort(this.ideologyMatrix.getIdeologies(), new LegislatorIdeologyComparator());
-
-    }
-
-    private XYDataset createSampleData() {
-
-        Random rand = new Random();
-
-        XYSeries series = new XYSeries("Original");
-        XYSeries added = new XYSeries("Moved");
-
-        XYSeriesCollection xySeriesCollection = new XYSeriesCollection();
-        for (int i = 0; i < 8 * 8; i++) {
-            series.add(rand.nextGaussian(), rand.nextGaussian());
-        }
-        xySeriesCollection.addSeries(series);
-        xySeriesCollection.addSeries(added);
-        return xySeriesCollection;
     }
 }

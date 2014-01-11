@@ -3,112 +3,213 @@ package com.poliana.web;
 import com.poliana.core.ideology.IdeologyMatrix;
 import com.poliana.core.ideology.IdeologyService;
 import com.poliana.core.industryFinance.IndustryContributionService;
-import com.poliana.core.industryFinance.entities.IndToPolContrTotals;
-import com.poliana.core.industryFinance.entities.IndustryChamberTotals;
-import com.poliana.core.time.TimeService;
+import com.poliana.core.industryFinance.entities.IndustryContributionCompare;
+import com.poliana.core.industryFinance.entities.IndustryContributionTotals;
 import com.poliana.views.IndustryContributionView;
 import org.apache.log4j.Logger;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
-import org.jfree.data.category.CategoryDataset;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.io.OutputStream;
-import java.util.HashMap;
 import java.util.List;
+
+import static com.poliana.core.time.TimeService.CURRENT_CONGRESS;
 
 /**
  * @author David Gilmore
  * @date 1/4/14
  */
 @Controller
-@RequestMapping("/industry-finance")
+@RequestMapping("/industry")
 public class IndustryContributionController extends AbstractBaseController {
 
     private IdeologyService ideologyService;
     private IndustryContributionService industryContributionService;
 
-    private TimeService timeService;
+    private static final Logger logger = Logger.getLogger(IndustryContributionController.class);
 
 
-    public IndustryContributionController() {
-        this.timeService = new TimeService();
+    /**
+     * Get Industry contributions by congressional session. If no congress is provided, it will default to the current
+     * congress.
+     * @param industryId
+     * @param chamber
+     * @param congress
+     * @return
+     */
+    @RequestMapping(value = "/{industry_id}/contributions", method = RequestMethod.GET)
+    public @ResponseBody String getIndustryContributionsByCongress(
+            @PathVariable(value = "industry_id") String industryId,
+            @RequestParam(value = "chamber", required = false) String chamber,
+            @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress) {
+
+        if (chamber != null) //Get contributions for a specifc chamber
+            return this.gson.toJson(industryContributionService.getIndustryTotalsByChamber(industryId, chamber, congress));
+
+        else  //If no chamber is specified, return both the house and senate contributions.
+            return this.gson.toJson(industryContributionService.getIndustryTotals(industryId, congress));
+
     }
 
-    @RequestMapping("/{industryId}/{chamber}/{congress}/plot.png")
-    public void plotIndustryContributionsAndIdeology(
+    /**
+     * Get Industry category contributions by congressional session.
+     * If no congress is provided, it will default to the current congress.
+     * @param categoryId
+     * @param chamber
+     * @param congress
+     * @return
+     */
+    @RequestMapping(value = "/category/{category_id}/contributions", method = RequestMethod.GET)
+    public @ResponseBody String getIndustryCategoryContributionsByCongress(
+            @PathVariable(value = "category_id") String categoryId,
+            @RequestParam(value = "chamber", required = false) String chamber,
+            @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress) {
+
+        if (chamber != null) //Get contributions for a specifc chamber
+            return this.gson.toJson(industryContributionService.getIndustryCategoryTotalsByChamber(categoryId, chamber, congress));
+
+        else  //If no chamber is specified, return both the house and senate contributions.
+            return this.gson.toJson(industryContributionService.getIndustryCategoryTotals(categoryId, congress));
+
+    }
+
+    /**
+     * Get Industry contributions by congressional cycle and compared to a given metric.
+     * @param industryId
+     * @param chamber
+     * @param congress
+     * @return
+     */
+    @RequestMapping(value = "/{industry_id}/contributions", params = {"compare_to"},method = RequestMethod.GET)
+    public @ResponseBody String getIndustryContributionsVsIdeologyByCongress(
+            @PathVariable(value = "industry_id") String industryId,
+            @RequestParam(value = "chamber", required = false, defaultValue = "s") String chamber,
+            @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
+            @RequestParam(value = "compare_to", required = false) String compareTo) {
+
+        IndustryContributionTotals totals;
+        IdeologyMatrix ideologyMatrix;
+
+        switch (compareTo) {
+
+            default: {
+                totals = industryContributionService.getIndustryTotalsByChamber(industryId, chamber, congress);
+                ideologyMatrix = ideologyService.getIdeologyMatrix(chamber, congress);
+                return this.gson.toJson(industryContributionService.getIdeologyVsContributions(ideologyMatrix, totals));
+            }
+        }
+    }
+
+    /**
+     * Get Industry category contributions by congressional cycle and compared to a given metric.
+     * @param categoryId
+     * @param chamber
+     * @param congress
+     * @return
+     */
+    @RequestMapping(value = "/category/{category_id}/contributions", params = {"compare_to"},method = RequestMethod.GET)
+    public @ResponseBody String getIndustryCategoryContributionsVsIdeologyByCongress(
+            @PathVariable(value = "category_id") String categoryId,
+            @RequestParam(value = "chamber", required = false, defaultValue = "s") String chamber,
+            @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
+            @RequestParam(value = "compare_to", required = false) String compareTo) {
+
+        IndustryContributionTotals totals;
+        IdeologyMatrix ideologyMatrix;
+
+        switch (compareTo) {
+
+            default: {
+                totals = industryContributionService.getIndustryCategoryTotalsByChamber(categoryId, chamber, congress);
+                ideologyMatrix = ideologyService.getIdeologyMatrix(chamber, congress);
+                return this.gson.toJson(industryContributionService.getIdeologyVsContributions(ideologyMatrix, totals));
+            }
+        }
+    }
+
+    /**
+     * Plot Industry contributions by congressional cycle as compared to a given metric.
+     * @param stream
+     * @param industryId
+     * @param chamber
+     * @param congress
+     * @return
+     */
+    @RequestMapping(value = "/{industry_id}/contributions", params = {"compare_to", "plot"},method = RequestMethod.GET)
+    public void plotIndustryContributionsVsIdeologyByCongress(
             OutputStream stream,
-            @PathVariable("industryId") String industryId,
-            @PathVariable("chamber") String chamber,
-            @PathVariable("congress") Integer congress) throws Exception {
+            @PathVariable(value = "industry_id") String industryId,
+            @RequestParam(value = "chamber", required = false, defaultValue = "s") String chamber,
+            @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
+            @RequestParam(value = "compare_to") String compareTo,
+            @RequestParam(value = "plot") String plotType) {
 
-        IdeologyMatrix ideologyMatrix = ideologyService.getIdeologyMatrix(chamber,congress);
+        List<IndustryContributionCompare> compareTotals;
 
-        IndustryChamberTotals chamberTotals =
-                industryContributionService.getIndustryTotalsByChamber(industryId, chamber, congress);
+        switch (compareTo) {
 
-        IndustryContributionView industryContributionView = new IndustryContributionView(ideologyMatrix, chamberTotals);
+            default: {
+                IndustryContributionTotals industryTotals = industryContributionService.getIndustryTotalsByChamber(industryId, chamber, congress);
+                IdeologyMatrix ideologyMatrix = ideologyService.getIdeologyMatrix(chamber, congress);
 
-        industryContributionView.sortIdeologyScores();
+                compareTotals = industryContributionService.getIdeologyVsContributions(ideologyMatrix, industryTotals);
+            }
+        }
 
-        CategoryDataset dataset = industryContributionView.getIndustryContributionData();
+        IndustryContributionView view = new IndustryContributionView(compareTotals, chamber, congress);
+        JFreeChart chart = view.generateChart(plotType);
 
-        String chamberName = (chamber.equals("h")) ? "House of Representatives" : "Senate";
-
-        String title =
-                chamberTotals.getName() +
-                        " contributions to the " +
-                        chamberName +
-                        " during the " +
-                        congress +
-                        timeService.getNumberSuffix(congress) +
-                        " congressional session";
-
-
-        JFreeChart chart = industryContributionView.generateChart(title, dataset);
-
-        ChartUtilities.writeChartAsPNG(stream, chart, 1200, 800);
+        try {
+            ChartUtilities.writeChartAsPNG(stream, chart, 1200, 800);
+        } catch (IOException e) {
+            logger.error(e);
+        }
     }
 
-    @RequestMapping("/category/{categoryId}/{chamber}/{congress}/plot.png")
-    public void plotIndustryCategoryContributionsAndIdeology(
+    /**
+     * Plot Industry contributions by congressional cycle as compared to a given metric.
+     * @param stream
+     * @param categoryId
+     * @param chamber
+     * @param congress
+     * @return
+     */
+    @RequestMapping(value = "/category/{category_id}/contributions", params = {"compare_to", "plot"},method = RequestMethod.GET)
+    public void plotIndustryCategoryContributionsVsIdeologyByCongress(
             OutputStream stream,
-            @PathVariable("categoryId") String categoryId,
-            @PathVariable("chamber") String chamber,
-            @PathVariable("congress") Integer congress) throws Exception {
+            @PathVariable(value = "category_id") String categoryId,
+            @RequestParam(value = "chamber", required = false, defaultValue = "s") String chamber,
+            @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
+            @RequestParam(value = "compare_to") String compareTo,
+            @RequestParam(value = "plot") String plotType) {
 
-        IdeologyMatrix ideologyMatrix = ideologyService.getIdeologyMatrix(chamber,congress);
+        List<IndustryContributionCompare> compareTotals;
 
-        IndustryChamberTotals chamberTotals =
-                industryContributionService.getCategoryTotalsByChamber(categoryId, chamber, congress);
+        switch (compareTo) {
 
-        IndustryContributionView industryContributionView = new IndustryContributionView(ideologyMatrix, chamberTotals);
+            default: {
+                IndustryContributionTotals industryTotals =
+                        industryContributionService.getIndustryCategoryTotalsByChamber(categoryId, chamber, congress);
+                IdeologyMatrix ideologyMatrix = ideologyService.getIdeologyMatrix(chamber, congress);
 
-        industryContributionView.sortIdeologyScores();
+                compareTotals = industryContributionService.getIdeologyVsContributions(ideologyMatrix, industryTotals);
+            }
+        }
 
-        CategoryDataset dataset = industryContributionView.getIndustryContributionData();
+        IndustryContributionView view = new IndustryContributionView(compareTotals, chamber, congress);
+        JFreeChart chart = view.generateChart(plotType);
 
-        String chamberName = (chamber.equals("h")) ? "House of Representatives" : "Senate";
-
-        String title =
-                chamberTotals.getName() +
-                        " contributions to the " +
-                        chamberName +
-                        " during the " +
-                        congress +
-                        timeService.getNumberSuffix(congress) +
-                        " congressional session";
-
-
-        JFreeChart chart = industryContributionView.generateChart(title, dataset);
-
-        ChartUtilities.writeChartAsPNG(stream, chart, 1200, 800);
+        try {
+            ChartUtilities.writeChartAsPNG(stream, chart, 1200, 800);
+        } catch (IOException e) {
+            logger.error(e);
+        }
     }
+
 
     @Autowired
     public void setIdeologyService(IdeologyService ideologyService) {

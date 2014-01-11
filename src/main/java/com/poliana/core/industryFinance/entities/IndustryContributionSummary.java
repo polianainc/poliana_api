@@ -1,6 +1,6 @@
 package com.poliana.core.industryFinance.entities;
 
-public class IndustryContrTotals {
+public class IndustryContributionSummary {
 
     private String industryId;
     private int totalYea;

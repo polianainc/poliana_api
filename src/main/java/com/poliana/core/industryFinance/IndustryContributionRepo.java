@@ -1,15 +1,15 @@
 package com.poliana.core.industryFinance;
 
-import com.poliana.core.industryFinance.entities.IndustryChamberTotals;
-import com.poliana.core.industryFinance.mapppers.IndustryChamberTotalsMapper;
+import com.poliana.core.industryFinance.entities.IndustryContributionTotals;
+import com.poliana.core.industryFinance.entities.IndustryPoliticianContribution;
+import com.poliana.core.industryFinance.entities.IndustryPoliticianContributions;
+import com.poliana.core.industryFinance.mapppers.IndustryContributionTotalsMapper;
 import com.poliana.core.time.CongressTimestamps;
 import com.poliana.core.time.TimeService;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.query.Query;
-import com.poliana.core.industryFinance.entities.IndTimeRangeTotals;
-import com.poliana.core.industryFinance.entities.IndToPolContrTotals;
-import com.poliana.core.industryFinance.entities.IndustryPoliticianContributions;
+import com.poliana.core.industryFinance.entities.IndustryTimeRangeTotals;
 import com.poliana.core.industryFinance.mapppers.AllContrPerCogressMapper;
 import com.poliana.core.industryFinance.mapppers.IndToPolContrTotalsMapper;
 import com.poliana.core.industryFinance.mapppers.LegislatorRecievedIndustryTotalsMapper;
@@ -41,16 +41,51 @@ public class IndustryContributionRepo {
         this.timeService = new TimeService();
     }
 
+
+    /**
+     * Get totals for an industry's contributions to all legislators during a given cycle.
+     * @param congress
+     * @return
+     * @see com.poliana.core.industryFinance.entities.IndustryContributionTotals
+     */
+    public IndustryContributionTotals getIndustryTotalsMongo(String industryId, int congress) {
+
+        Query<IndustryContributionTotals> query = mongoStore.createQuery(IndustryContributionTotals.class);
+
+        query.and(
+                query.criteria("industryId").equal(industryId),
+                query.criteria("congress").equal(congress));
+
+        return query.get();
+    }
+
+    /**
+     * Get totals for an industry category contributions to all legislators during a given cycle.
+     * @param congress
+     * @return
+     * @see com.poliana.core.industryFinance.entities.IndustryContributionTotals
+     */
+    public IndustryContributionTotals getIndustryCategoryTotalsMongo(String categoryId, int congress) {
+
+        Query<IndustryContributionTotals> query = mongoStore.createQuery(IndustryContributionTotals.class);
+
+        query.and(
+                query.criteria("categoryId").equal(categoryId),
+                query.criteria("congress").equal(congress));
+
+        return query.get();
+    }
+
     /**
      * Get totals for an industry's contributions to all legislators in a certain chamber during a given cycle.
      * @param chamber
      * @param congress
      * @return
-     * @see IndustryChamberTotals
+     * @see com.poliana.core.industryFinance.entities.IndustryContributionTotals
      */
-    public IndustryChamberTotals getIndustryChamberTotalsMongo(String industryId, String chamber, int congress) {
+    public IndustryContributionTotals getIndustryChamberTotalsMongo(String industryId, String chamber, int congress) {
 
-        Query<IndustryChamberTotals> query = mongoStore.createQuery(IndustryChamberTotals.class);
+        Query<IndustryContributionTotals> query = mongoStore.createQuery(IndustryContributionTotals.class);
 
         query.and(
                 query.criteria("industryId").equal(industryId),
@@ -65,11 +100,11 @@ public class IndustryContributionRepo {
      * @param chamber
      * @param congress
      * @return
-     * @see IndustryChamberTotals
+     * @see com.poliana.core.industryFinance.entities.IndustryContributionTotals
      */
-    public IndustryChamberTotals getCategoryChamberTotalsMongo(String categoryId, String chamber, int congress) {
+    public IndustryContributionTotals getIndustryCategoryChamberTotalsMongo(String categoryId, String chamber, int congress) {
 
-        Query<IndustryChamberTotals> query = mongoStore.createQuery(IndustryChamberTotals.class);
+        Query<IndustryContributionTotals> query = mongoStore.createQuery(IndustryContributionTotals.class);
 
         query.and(
                 query.criteria("categoryId").equal(categoryId),
@@ -81,24 +116,24 @@ public class IndustryContributionRepo {
 
     /**
      * Save totals for an industry's contributions to all legislators in a certain chamber during a given cycle
-     * @param industryChamberTotals
+     * @param industryContributionTotals
      * @return
-     * @see IndustryChamberTotals
+     * @see com.poliana.core.industryFinance.entities.IndustryContributionTotals
      */
-    public Key<IndustryChamberTotals> saveIndustryChamberTotals(IndustryChamberTotals industryChamberTotals) {
+    public Key<IndustryContributionTotals> saveIndustryContributionTotals(IndustryContributionTotals industryContributionTotals) {
 
-        return mongoStore.save(industryChamberTotals);
+        return mongoStore.save(industryContributionTotals);
     }
 
     /**
      * Save totals for an industry's contributions over a certain time range
-     * @param indTimeRangeTotals
+     * @param industryTimeRangeTotals
      * @return
-     * @see IndTimeRangeTotals
+     * @see com.poliana.core.industryFinance.entities.IndustryTimeRangeTotals
      */
-    public Key<IndTimeRangeTotals> saveIndTimeRangeTotal(IndTimeRangeTotals indTimeRangeTotals) {
+    public Key<IndustryTimeRangeTotals> saveIndTimeRangeTotal(IndustryTimeRangeTotals industryTimeRangeTotals) {
 
-        return mongoStore.save(indTimeRangeTotals);
+        return mongoStore.save(industryTimeRangeTotals);
     }
 
     /**
@@ -106,14 +141,14 @@ public class IndustryContributionRepo {
      * @param totalsList
      * @return
      */
-    public Iterable<Key<IndToPolContrTotals>> saveIndustryToPoliticianContributions(List<IndToPolContrTotals> totalsList) {
+    public Iterable<Key<IndustryPoliticianContributions>> saveIndustryToPoliticianContributions(List<IndustryPoliticianContributions> totalsList) {
 
         return mongoStore.save(totalsList);
     }
 
     public long countIndustryToPoliticianContributions(String bioguideId, int congress) {
 
-        Query<IndToPolContrTotals> query = mongoStore.find(IndToPolContrTotals.class);
+        Query<IndustryPoliticianContributions> query = mongoStore.find(IndustryPoliticianContributions.class);
 
         query.and(
                 query.criteria("bioguideId").equal(bioguideId),
@@ -127,9 +162,9 @@ public class IndustryContributionRepo {
      * @param bioguideId
      * @return
      */
-    public Iterator<IndToPolContrTotals> getIndustryToPoliticianContributions(String bioguideId) {
+    public Iterator<IndustryPoliticianContributions> getIndustryToPoliticianContributions(String bioguideId) {
 
-        Query<IndToPolContrTotals> query = mongoStore.find(IndToPolContrTotals.class);
+        Query<IndustryPoliticianContributions> query = mongoStore.find(IndustryPoliticianContributions.class);
 
         query.criteria("bioguideId").equal(bioguideId);
 
@@ -141,9 +176,9 @@ public class IndustryContributionRepo {
      * @param bioguideId
      * @return
      */
-    public List<IndToPolContrTotals> getIndustryToPoliticianContributions(String bioguideId, int congress) {
+    public List<IndustryPoliticianContributions> getIndustryToPoliticianContributions(String bioguideId, int congress) {
 
-        Query<IndToPolContrTotals> query = mongoStore.find(IndToPolContrTotals.class);
+        Query<IndustryPoliticianContributions> query = mongoStore.find(IndustryPoliticianContributions.class);
 
         query.and(
                 query.criteria("bioguideId").equal(bioguideId),
@@ -153,13 +188,13 @@ public class IndustryContributionRepo {
     }
 
     /**
-     * Get total sums of all money contributed to each legislator in a given chamber during a given congress by a certain
+     * Get total sums of all money contributed to each legislator during a given congress by a certain
      * industry category.
      *
      * @return
-     * @see IndustryChamberTotals
+     * @see com.poliana.core.industryFinance.entities.IndustryContributionTotals
      */
-    public IndustryChamberTotals getIndustryChamberTotals(String industryId, String chamber, int congress) {
+    public IndustryContributionTotals getIndustryContributionTotals(String industryId, int congress) {
 
         CongressTimestamps ts = timeService.congressTimestamps(congress);
 
@@ -169,8 +204,11 @@ public class IndustryContributionRepo {
                             "      bioguide_id " +
                             "    , first_name " +
                             "    , last_name   " +
-                            "    , industry_id " +
+                            "    , cat_order as industry_id " +
                             "    , industry " +
+                            "    , cat_name " +
+                            "    , sector " +
+                            "    , sector_long " +
                             "    , congress " +
                             "    , SUM(amount) as total     " +
                             "FROM " +
@@ -178,15 +216,202 @@ public class IndustryContributionRepo {
                             "          bioguide_id " +
                             "        , first_name " +
                             "        , last_name " +
-                            "        , industry_id " +
+                            "        , cat_order " +
                             "        , industry " +
+                            "        , cat_name " +
+                            "        , sector " +
+                            "        , sector_long " +
                             "        , congress " +
                             "        , amount " +
                             "    FROM      " +
                             "        (SELECT  " +
                             "              recip_id   " +
-                            "            , cat_order as industry_id " +
+                            "            , cat_order " +
                             "            , industry " +
+                            "            , cat_name " +
+                            "            , sector " +
+                            "            , sector_long " +
+                            "            , congress " +
+                            "            , amount " +
+                            "        FROM  " +
+                            "            crp.individual_contributions contributions " +
+                            "        JOIN  " +
+                            "            entities.industry_codes industries " +
+                            "        ON  " +
+                            "            real_code = cat_code " +
+                            "        WHERE  " +
+                            "            cat_order = \'" + industryId + "\' " +
+                            "        AND  " +
+                            "            congress = " + congress + " ) order_contributions " +
+                            "    JOIN " +
+                            "        entities.legislators_flat_terms " +
+                            "    ON  " +
+                            "       opensecrets_id = recip_id       " +
+                            "    WHERE  " +
+                            "       (begin_timestamp < " + ts.getEnd() +  " AND end_timestamp > " + ts.getBegin() +  ")    " +
+                            "    AND " +
+                            "       (begin_timestamp < " + ts.getBegin() +  " OR end_timestamp > " + ts.getEnd() +  ") )   " +
+                            "    joined_contributions  " +
+                            "GROUP BY " +
+                            "      bioguide_id     " +
+                            "    , first_name   " +
+                            "    , last_name   " +
+                            "    , industry_id " +
+                            "    , industry " +
+                            "    , cat_name " +
+                            "    , sector " +
+                            "    , sector_long " +
+                            "    , congress";
+
+            return impalaTemplate.query(query, new IndustryContributionTotalsMapper(null));
+        }
+        catch (Exception e) {
+            logger.error(e);
+        }
+
+        return null;
+    }
+
+    /**
+     * Get total sums of all money contributed to each legislator during a given congress by a certain
+     * industry category.
+     *
+     * @return
+     * @see com.poliana.core.industryFinance.entities.IndustryContributionTotals
+     */
+    public IndustryContributionTotals getIndustryCategoryContributionTotals(String categoryId, int congress) {
+
+        CongressTimestamps ts = timeService.congressTimestamps(congress);
+
+        try {
+            String query =
+                    "SELECT " +
+                            "  bioguide_id" +
+                            ", first_name" +
+                            ", last_name" +
+                            ", real_code as category_id" +
+                            ", industry" +
+                            ", cat_name" +
+                            ", sector" +
+                            ", sector_long" +
+                            ", congress" +
+                            ", total " +
+                            "FROM " +
+                            "       (SELECT " +
+                            "         bioguide_id" +
+                            "       , first_name" +
+                            "       , last_name" +
+                            "       , real_code" +
+                            "       , industry " +
+                            "       , cat_name " +
+                            "       , sector " +
+                            "       , sector_long " +
+                            "       , congress" +
+                            "       , SUM(amount) as total" +
+                            "       FROM" +
+                            "              (SELECT " +
+                            "                bioguide_id" +
+                            "              , first_name" +
+                            "              , last_name" +
+                            "              , real_code" +
+                            "              , industry " +
+                            "              , cat_name " +
+                            "              , sector " +
+                            "              , sector_long " +
+                            "              , amount" +
+                            "              , congress" +
+                            "              FROM " +
+                            "                     (SELECT " +
+                            "                       bioguide_id" +
+                            "                     , first_name" +
+                            "                     , last_name" +
+                            "                     , opensecrets_id" +
+                            "                     FROM" +
+                            "                         entities.legislators_flat_terms" +
+                            "                     WHERE " +
+                            "                         (begin_timestamp < " + ts.getEnd() + " AND end_timestamp > " + ts.getBegin() + ")   " +
+                            "                     AND" +
+                            "                         (begin_timestamp < " + ts.getBegin() + " OR end_timestamp > " + ts.getEnd() + ")    " +
+                            "                     ) legislators " +
+                            "              JOIN " +
+                            "                  crp.individual_contributions c " +
+                            "              ON " +
+                            "                  opensecrets_id = c.recip_id" +
+                            "              WHERE " +
+                            "                  real_code = \'" + categoryId + "\'" +
+                            "              AND " +
+                            "                  congress = " + congress +
+                            "              )" +
+                            "       candidate_receipts " +
+                            "       GROUP BY " +
+                            "         bioguide_id" +
+                            "       , first_name" +
+                            "       , last_name" +
+                            "       , real_code" +
+                            "       , industry " +
+                            "       , cat_name " +
+                            "       , sector " +
+                            "       , sector_long " +
+                            "       , congress) " +
+                            "sums " +
+                            "JOIN " +
+                            "   entities.industry_codes l " +
+                            "ON " +
+                            "   real_code = cat_code";
+
+            return impalaTemplate.query(query, new IndustryContributionTotalsMapper(null));
+        }
+        catch (Exception e) {
+            logger.error(e);
+        }
+
+        return null;
+    }
+
+    /**
+     * Get total sums of all money contributed to each legislator in a given chamber during a given congress by a certain
+     * industry category.
+     *
+     * @return
+     * @see com.poliana.core.industryFinance.entities.IndustryContributionTotals
+     */
+    public IndustryContributionTotals getIndustryChamberContributionTotals(String industryId, String chamber, int congress) {
+
+        CongressTimestamps ts = timeService.congressTimestamps(congress);
+
+        try {
+            String query =
+                    "SELECT  " +
+                            "      bioguide_id " +
+                            "    , first_name " +
+                            "    , last_name   " +
+                            "    , cat_order as industry_id " +
+                            "    , industry " +
+                            "    , cat_name " +
+                            "    , sector " +
+                            "    , sector_long " +
+                            "    , congress " +
+                            "    , SUM(amount) as total     " +
+                            "FROM " +
+                            "    (SELECT  " +
+                            "          bioguide_id " +
+                            "        , first_name " +
+                            "        , last_name " +
+                            "        , cat_order " +
+                            "        , industry " +
+                            "        , cat_name " +
+                            "        , sector " +
+                            "        , sector_long " +
+                            "        , congress " +
+                            "        , amount " +
+                            "    FROM      " +
+                            "        (SELECT  " +
+                            "              recip_id   " +
+                            "            , cat_order " +
+                            "            , industry " +
+                            "            , cat_name " +
+                            "            , sector " +
+                            "            , sector_long " +
                             "            , congress " +
                             "            , amount " +
                             "        FROM  " +
@@ -215,83 +440,12 @@ public class IndustryContributionRepo {
                             "    , last_name   " +
                             "    , industry_id " +
                             "    , industry " +
+                            "    , cat_name " +
+                            "    , sector " +
+                            "    , sector_long " +
                             "    , congress";
 
-            return impalaTemplate.query(query, new IndustryChamberTotalsMapper(chamber));
-        }
-        catch (Exception e) {
-            logger.error(e);
-        }
-
-        return null;
-    }
-
-    /**
-     * Get total sums of all money contributed to each legislator in a given chamber during a given congress by a certain
-     * industry category using an industry id.
-     *
-     * @return
-     * @see IndustryChamberTotals
-     */
-    public IndustryChamberTotals getIndustryChamberTotalsByCategory(String categoryId, String chamber, int congress) {
-
-        CongressTimestamps ts = timeService.congressTimestamps(congress);
-
-        try {
-            String query =
-                    "SELECT  " +
-                            "      bioguide_id " +
-                            "    , first_name " +
-                            "    , last_name   " +
-                            "    , industry_id " +
-                            "    , industry " +
-                            "    , congress " +
-                            "    , SUM(amount) as total     " +
-                            "FROM " +
-                            "    (SELECT  " +
-                            "          bioguide_id " +
-                            "        , first_name " +
-                            "        , last_name " +
-                            "        , industry_id " +
-                            "        , industry " +
-                            "        , congress " +
-                            "        , amount " +
-                            "    FROM      " +
-                            "        (SELECT  " +
-                            "              recip_id   " +
-                            "            , cat_order as industry_id " +
-                            "            , industry " +
-                            "            , congress " +
-                            "            , amount " +
-                            "        FROM  " +
-                            "            crp.individual_contributions contributions " +
-                            "        JOIN  " +
-                            "            entities.industry_codes industries " +
-                            "        ON  " +
-                            "            real_code = cat_code " +
-//                            "        WHERE  " +
-//                            "            real_code = \'" + categoryId + "\' " +
-                            "        AND  " +
-                            "            congress = " + congress + " ) order_contributions " +
-                            "    JOIN " +
-                            "        entities.legislators_flat_terms " +
-                            "    ON  " +
-                            "       opensecrets_id = recip_id       " +
-                            "    WHERE  " +
-                            "       (begin_timestamp < " + ts.getEnd() +  " AND end_timestamp > " + ts.getBegin() +  ")    " +
-                            "    AND " +
-                            "       (begin_timestamp < " + ts.getBegin() +  " OR end_timestamp > " + ts.getEnd() +  ")     " +
-                            "    AND  " +
-                            "       SUBSTR(term_type, 1, 1) = \'" + chamber + "\' ) industry_contributions " +
-                            "GROUP BY " +
-                            "      bioguide_id     " +
-                            "    , first_name   " +
-                            "    , last_name   " +
-                            "    , industry_id " +
-                            "    , industry " +
-                            "    , congress";
-
-            return impalaTemplate.query(query, new IndustryChamberTotalsMapper(chamber));
+            return impalaTemplate.query(query, new IndustryContributionTotalsMapper(chamber));
         }
         catch (Exception e) {
             logger.error(e);
@@ -305,9 +459,9 @@ public class IndustryContributionRepo {
      * industry category.
      *
      * @return
-     * @see IndustryChamberTotals
+     * @see com.poliana.core.industryFinance.entities.IndustryContributionTotals
      */
-    public IndustryChamberTotals getIndustryCategoryChamberTotals(String categoryId, String chamber, int congress) {
+    public IndustryContributionTotals getIndustryCategoryChamberContributionTotals(String categoryId, String chamber, int congress) {
 
         CongressTimestamps ts = timeService.congressTimestamps(congress);
 
@@ -318,7 +472,8 @@ public class IndustryContributionRepo {
                     ", first_name" +
                     ", last_name" +
                     ", real_code as industry_id" +
-                    ", cat_name as industry" +
+                    ", industry" +
+                    ", cat_name" +
                     ", sector" +
                     ", sector_long" +
                     ", congress" +
@@ -376,7 +531,7 @@ public class IndustryContributionRepo {
                     "ON " +
                     "   real_code = cat_code";
 
-            return impalaTemplate.query(query, new IndustryChamberTotalsMapper(chamber));
+            return impalaTemplate.query(query, new IndustryContributionTotalsMapper(chamber));
         }
         catch (Exception e) {
             logger.error(e);
@@ -390,7 +545,7 @@ public class IndustryContributionRepo {
      * @param bioguideId
      * @return
      */
-    public HashMap<Integer, List<IndToPolContrTotals>> getAllIndustryContributionsPerCongress(String bioguideId) {
+    public HashMap<Integer, List<IndustryPoliticianContributions>> getAllIndustryContributionsPerCongress(String bioguideId) {
 
         try {
             String query =
@@ -446,7 +601,7 @@ public class IndustryContributionRepo {
      * @param bioguideId
      * @return
      */
-    public List<IndToPolContrTotals> getAllIndustryContributions(String bioguideId, int congress) {
+    public List<IndustryPoliticianContributions> getAllIndustryContributions(String bioguideId, int congress) {
 
         try {
             String query =
@@ -504,7 +659,7 @@ public class IndustryContributionRepo {
      * @param years
      * @return
      */
-    public List<IndToPolContrTotals> industryContrTotals(String industryId, int... years) {
+    public List<IndustryPoliticianContributions> industryContrTotals(String industryId, int... years) {
 
         String yrs;
 
@@ -542,7 +697,7 @@ public class IndustryContributionRepo {
      * @param limit
      * @return
      */
-    public List<IndustryPoliticianContributions> legislatorReceivedIndustryTotals(String bioguideId,
+    public List<IndustryPoliticianContribution> legislatorReceivedIndustryTotals(String bioguideId,
                                                                     long beginTimestamp, long endTimestamp, int limit) {
         String lim = "";
         if (limit != 0)

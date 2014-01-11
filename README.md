@@ -43,12 +43,14 @@ GLOBAL PARAMETERS:
        
        ?compare_to=analysis_type
 
+       ?plot=type
+
 /politician 
 
        /contributions
               /organizations
                      ?politician_id=XXXXXX *
-                     ?organization_id=XXXXX 
+                     ?organization_id=XXXXX
                      
               /industries
                      ?politician_id=XXXXXX *
@@ -57,7 +59,7 @@ GLOBAL PARAMETERS:
                      
               /pacs
                      ?politician_id=XXXXXX *
-                     ?pac_id=XXXX 
+                     ?pac_id=XXXX
        
        /expenditures
 
@@ -100,3 +102,6 @@ GLOBAL PARAMETERS:
        /related
 
 /congress
+
+
+

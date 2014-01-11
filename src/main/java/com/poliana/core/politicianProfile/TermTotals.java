@@ -1,12 +1,11 @@
 package com.poliana.core.politicianProfile;
 
+import com.poliana.core.industryFinance.entities.IndustryPoliticianContributions;
 import org.mongodb.morphia.annotations.*;
 import com.google.gson.annotations.Expose;
-import com.poliana.core.industryFinance.entities.IndToPolContrTotals;
 import com.poliana.core.pacFinance.PacPoliticianContrTotals;
 
 
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -38,7 +37,7 @@ public class TermTotals {
     private double leadershipScore;
 
     @Embedded("top_industry_contributions")
-    private List<IndToPolContrTotals> topIndustryContributions;
+    private List<IndustryPoliticianContributions> topIndustryContributions;
 
     @Embedded("top_pac_contributions")
     private List<PacPoliticianContrTotals> topPACContributions;
@@ -103,11 +102,11 @@ public class TermTotals {
         this.leadershipScore = leadershipScore;
     }
 
-    public List<IndToPolContrTotals> getTopIndustryContributions() {
+    public List<IndustryPoliticianContributions> getTopIndustryContributions() {
         return topIndustryContributions;
     }
 
-    public void setTopIndustryContributions(List<IndToPolContrTotals> topIndustryContributions) {
+    public void setTopIndustryContributions(List<IndustryPoliticianContributions> topIndustryContributions) {
         this.topIndustryContributions = topIndustryContributions;
     }
 

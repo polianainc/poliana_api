@@ -1,6 +1,6 @@
 package com.poliana.core.amendments.entities;
 
-import com.google.code.morphia.annotations.Property;
+import org.mongodb.morphia.annotations.Property;
 
 /**
  * @author David Gilmore

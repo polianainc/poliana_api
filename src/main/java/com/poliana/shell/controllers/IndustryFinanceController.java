@@ -1,7 +1,7 @@
 package com.poliana.shell.controllers;
 
 import com.poliana.core.industryFinance.IndustryContributionService;
-import com.poliana.core.industryFinance.entities.IndustryPoliticianContributions;
+import com.poliana.core.industryFinance.entities.IndustryPoliticianContribution;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,7 +32,7 @@ public class IndustryFinanceController implements CommandMarker {
             @CliOption(key = { "range" }, mandatory = true) final int numSeries) throws IOException {
 
         JSONObject jsonIndustryTotals =  new JSONObject(
-                industryContributionService.industryTimeRangeTotals(industryId, congress, numSeries));
+                industryContributionService.getIndustryTimeRangeTotals(industryId, congress, numSeries));
         return jsonIndustryTotals.toString();
     }
 
@@ -51,9 +51,9 @@ public class IndustryFinanceController implements CommandMarker {
             @CliOption(key = {"id"}, mandatory = true) final String bioguideId,
             @CliOption(key = {"congress"}, mandatory = true) final int congress) {
         JSONArray jsonArray = new JSONArray();
-        List<IndustryPoliticianContributions> industies =
+        List<IndustryPoliticianContribution> industies =
                 industryContributionService.legislatorReceivedIndustryTotals(bioguideId,congress);
-        for (IndustryPoliticianContributions industry: industies) {
+        for (IndustryPoliticianContribution industry: industies) {
             JSONObject jsonIndustry = new JSONObject(industry);
             jsonArray.put(jsonIndustry);
         }

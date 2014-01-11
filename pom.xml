@@ -5,7 +5,7 @@
     <artifactId>data_manager</artifactId>
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
-    <name>data_manager</name>
+    <categoryName>data_manager</categoryName>
     <url>http://maven.apache.org</url>
     <properties>
         <jackson-asl.version>1.9.12</jackson-asl.version>
@@ -78,10 +78,11 @@
         </dependency>
 
         <dependency>
-            <groupId>com.google.code.morphia</groupId>
+            <groupId>org.mongodb.morphia</groupId>
             <artifactId>morphia</artifactId>
-            <version>0.99.1-SNAPSHOT</version>
+            <version>0.105</version>
         </dependency>
+
 
         <!-- Spring Shell-->
         <dependency>
@@ -263,6 +264,12 @@
             <groupId>jfree</groupId>
             <artifactId>jfreechart</artifactId>
             <version>1.0.13</version>
+        </dependency>
+
+        <dependency>
+            <groupId>batik</groupId>
+            <artifactId>batik-svggen</artifactId>
+            <version>1.6-1</version>
         </dependency>
 
         <!-- Java byte code assist -->

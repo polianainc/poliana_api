@@ -1,6 +1,7 @@
 package com.poliana.core.legislators;
 
-import com.google.code.morphia.annotations.*;
+import org.mongodb.morphia.annotations.*;
+import com.google.gson.annotations.Expose;
 import org.msgpack.annotation.Message;
 
 import java.io.Serializable;
@@ -14,6 +15,7 @@ import java.io.Serializable;
 public class Legislator implements Serializable {
 
     @Id
+    @Expose
     private String id;
 
     @Property("first_name")

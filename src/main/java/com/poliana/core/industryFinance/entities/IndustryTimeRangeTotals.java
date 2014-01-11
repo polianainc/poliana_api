@@ -1,9 +1,10 @@
 package com.poliana.core.industryFinance.entities;
 
-import com.google.code.morphia.annotations.Embedded;
-import com.google.code.morphia.annotations.Entity;
-import com.google.code.morphia.annotations.Id;
-import com.google.code.morphia.annotations.Property;
+import org.mongodb.morphia.annotations.Embedded;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Property;
+import com.google.gson.annotations.Expose;
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,12 +14,12 @@ import java.util.List;
  * @date 11/15/13
  */
 @SuppressWarnings("serial")
-@Entity("industry_monthly_totals_120113")
-public class IndTimeRangeTotals {
+@Entity("industry_monthly_totals")
+public class IndustryTimeRangeTotals {
 
     @Id
+    @Expose
     private String id;
-
 
     private String industry;
     private int congress;
@@ -41,19 +42,19 @@ public class IndTimeRangeTotals {
     @Embedded("states")
     private HashMap<String,Recipient> states;
 
-    public IndTimeRangeTotals() {}
+    public IndustryTimeRangeTotals() {}
 
-    public IndTimeRangeTotals(IndTimeRangeTotals indTimeRangeTotals) {
-        this.setIndustry(indTimeRangeTotals.getIndustry());
-        this.setCongress(indTimeRangeTotals.getCongress());
-        this.setRepublicanCount(indTimeRangeTotals.getRepublicanCount());
-        this.setRepublicanSum(indTimeRangeTotals.getRepublicanSum());
-        this.setDemocratCount(indTimeRangeTotals.getDemocratCount());
-        this.setDemocratSum(indTimeRangeTotals.getDemocratSum());
-        this.setIndependentCount(indTimeRangeTotals.getIndependentCount());
-        this.setIndependentSum(indTimeRangeTotals.getIndependentSum());
-        this.setTopRecipients(indTimeRangeTotals.getTopRecipients());
-        this.setStates(indTimeRangeTotals.getStates());
+    public IndustryTimeRangeTotals(IndustryTimeRangeTotals industryTimeRangeTotals) {
+        this.setIndustry(industryTimeRangeTotals.getIndustry());
+        this.setCongress(industryTimeRangeTotals.getCongress());
+        this.setRepublicanCount(industryTimeRangeTotals.getRepublicanCount());
+        this.setRepublicanSum(industryTimeRangeTotals.getRepublicanSum());
+        this.setDemocratCount(industryTimeRangeTotals.getDemocratCount());
+        this.setDemocratSum(industryTimeRangeTotals.getDemocratSum());
+        this.setIndependentCount(industryTimeRangeTotals.getIndependentCount());
+        this.setIndependentSum(industryTimeRangeTotals.getIndependentSum());
+        this.setTopRecipients(industryTimeRangeTotals.getTopRecipients());
+        this.setStates(industryTimeRangeTotals.getStates());
     }
 
     public String getId() {

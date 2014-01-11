@@ -1,5 +1,9 @@
 package com.poliana.core.sponsorship;
 
+import org.mongodb.morphia.annotations.Embedded;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Property;
 import com.poliana.core.legislators.Legislator;
 
 import java.util.HashMap;
@@ -9,15 +13,38 @@ import java.util.List;
  * @author David Gilmore
  * @date 12/30/13
  */
+@Entity("sponsorship_matrix")
 public class SponsorshipMatrix {
 
+    @Id
+    private String id;
+
     private String chamber;
+
+    @Property("begin_timestamp")
     private long beginTimestamp;
+
+    @Property("end_timestamp")
     private long endTimestamp;
+
     private HashMap<String, Integer> indices;
+
+    @Embedded("legislator_hash_map")
     private HashMap<String, Legislator> legislatorHashMap;
+
+    @Embedded
     private double[][] matrix;
+
+    @Embedded("legislator_list")
     private List<Legislator> legislatorList;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getChamber() {
         return chamber;

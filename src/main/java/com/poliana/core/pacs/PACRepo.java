@@ -1,8 +1,8 @@
 package com.poliana.core.pacs;
 
-import com.google.code.morphia.Datastore;
-import com.google.code.morphia.Key;
-import com.google.code.morphia.query.Query;
+import org.mongodb.morphia.Datastore;
+import org.mongodb.morphia.Key;
+import org.mongodb.morphia.query.Query;
 import com.poliana.core.bills.mappers.CongCommitteeMapper;
 import com.poliana.core.bills.entities.CongCommittee;
 import org.springframework.beans.factory.annotation.Autowired;

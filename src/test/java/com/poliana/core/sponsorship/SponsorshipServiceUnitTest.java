@@ -6,9 +6,11 @@ import com.poliana.core.legislators.LegislatorRepo;
 import com.poliana.core.legislators.LegislatorService;
 import com.poliana.core.shared.AbstractSponsorshipTest;
 import com.poliana.core.time.TimeService;
+import org.bson.types.ObjectId;
 import org.easymock.IMocksControl;
 import org.junit.Before;
 import org.junit.Test;
+import org.mongodb.morphia.Key;
 
 import java.util.List;
 
@@ -53,9 +55,12 @@ public class SponsorshipServiceUnitTest extends AbstractSponsorshipTest {
         List<SponsorshipCount> sponsorshipCountsMock = getSponsorsMockData(legislatorListMock);
         CongressTimestamps timestamps = this.timeService.congressTimestamps(110);
 
+        expect(this.sponsorshipRepoMock.getSponsorshipMatrix("s", 110)).andReturn(null);
         expect(this.sponsorshipRepoMock.getSponsorshipCounts("s", 110)).andReturn(sponsorshipCountsMock);
         expect(this.legislatorRepoMock.getLegislators("s", timestamps.getBegin(), timestamps.getEnd()))
                 .andReturn(legislatorListMock.iterator());
+        expect(this.sponsorshipRepoMock.saveSponsorshipMatrix(anyObject(SponsorshipMatrix.class)))
+                .andReturn(new Key<>(SponsorshipMatrix.class, new ObjectId()));
 
         this.control.replay();
 

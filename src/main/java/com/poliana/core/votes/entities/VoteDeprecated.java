@@ -1,5 +1,6 @@
 package com.poliana.core.votes.entities;
 
+import com.google.gson.annotations.Expose;
 import com.poliana.core.bills.govtrack.BillDeprecated;
 import com.poliana.core.bills.govtrack.votes.LegislatorDeprecated;
 import org.springframework.data.annotation.Id;
@@ -17,6 +18,7 @@ import java.util.List;
 public class VoteDeprecated {
 
     @Id
+    @Expose
     private String id;
 
     @DBRef

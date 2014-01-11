@@ -1,9 +1,9 @@
 package com.poliana.core.industryFinance.jobs;
 
 import com.poliana.core.industries.IndustryRepo;
-import com.poliana.core.industryFinance.repositories.IndustryContributionMongoRepo;
 import com.poliana.core.industryFinance.IndustryContributionService;
 import com.poliana.core.industries.Industry;
+import com.poliana.core.industryFinance.IndustryContributionRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,14 +18,20 @@ public class IndContrSessionBatch {
 
     private IndustryContributionService industryContributionService;
     private IndustryRepo industryRepo;
-    private IndustryContributionMongoRepo industryContributionMongoRepo;
+    private IndustryContributionRepo industryContributionRepo;
 
+    /**
+     * Save all industry totals for a given congress
+     * @param congress
+     */
     public void processIndustryTotals(int congress) {
+
         Iterator<Industry> industries = industryRepo.getIndustriesFromMongo();
+
         while (industries.hasNext()) {
             String industry = industries.next().getIndustryId();
-            industryContributionMongoRepo.saveIndTimeRangeTotal(
-                    industryContributionService.industryTimeRangeTotals(industry,congress,24));
+            industryContributionRepo.saveIndTimeRangeTotal(
+                    industryContributionService.getIndustryTimeRangeTotals(industry, congress, 24));
         }
     }
 
@@ -40,7 +46,7 @@ public class IndContrSessionBatch {
     }
 
     @Autowired
-    public void setIndustryContributionMongoRepo(IndustryContributionMongoRepo industryContributionMongoRepo) {
-        this.industryContributionMongoRepo = industryContributionMongoRepo;
+    public void setIndustryContributionRepo(IndustryContributionRepo industryContributionRepo) {
+        this.industryContributionRepo = industryContributionRepo;
     }
 }

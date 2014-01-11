@@ -1,8 +1,9 @@
 package com.poliana.core.bills.govtrack.votes;
 
-import com.google.code.morphia.annotations.Embedded;
-import com.google.code.morphia.annotations.Entity;
-import com.google.code.morphia.annotations.Property;
+import org.mongodb.morphia.annotations.Embedded;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Property;
+import com.google.gson.annotations.Expose;
 import com.poliana.core.votes.entities.BillRef;
 import com.poliana.core.votes.entities.Nomination;
 import com.poliana.core.votes.entities.VoteAmendmentRef;
@@ -17,6 +18,7 @@ import org.springframework.data.annotation.Id;
 public class VoteGt {
 
     @Id
+    @Expose
     private ObjectId id;
     @Embedded
     private BillRef bill;

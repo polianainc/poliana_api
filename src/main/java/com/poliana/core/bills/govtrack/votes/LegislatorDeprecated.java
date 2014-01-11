@@ -1,5 +1,6 @@
 package com.poliana.core.bills.govtrack.votes;
 
+import com.google.gson.annotations.Expose;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -9,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class LegislatorDeprecated {
 
     @Id
+    @Expose
     private String id;
 
     private String firstName;

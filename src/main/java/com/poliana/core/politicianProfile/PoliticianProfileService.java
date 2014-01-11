@@ -2,11 +2,11 @@ package com.poliana.core.politicianProfile;
 
 import com.poliana.core.ideology.IdeologyService;
 import com.poliana.core.ideology.LegislatorIdeology;
-import com.poliana.core.industryFinance.entities.IndToPolContrTotals;
-import com.poliana.core.industryFinance.repositories.IndustryContributionHadoopRepo;
+import com.poliana.core.industryFinance.IndustryContributionService;
+import com.poliana.core.industryFinance.entities.IndustryPoliticianContributions;
 import com.poliana.core.legislators.Legislator;
 import com.poliana.core.legislators.LegislatorService;
-import com.poliana.core.pacFinance.PacContributionRepo;
+import com.poliana.core.pacFinance.PacContributionService;
 import com.poliana.core.pacFinance.PacPoliticianContrTotals;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +24,8 @@ import java.util.*;
 @Service
 public class PoliticianProfileService {
 
-    private PacContributionRepo pacContributionRepo;
-    private IndustryContributionHadoopRepo industryContributionHadoopRepo;
+    private PacContributionService pacContributionService;
+    private IndustryContributionService industryContributionService;
     private IdeologyService ideologyService;
     private LegislatorService legislatorService;
     private PoliticianProfileRepo politicianProfileRepo;
@@ -34,7 +34,7 @@ public class PoliticianProfileService {
 
 
     /**
-     * A Politician profile is an overview of contributions and getIdeologyMatrix. This method checks for the
+     * A Politician profile is an overview of contributions and getAllPacContributions. This method checks for the
      * existence of a cached analysis in MongoDB. If the profile does not exist in Mongo, the method
      * will call constructProfile which use Impala as its data source and has high latency.
      * @param bioguideId
@@ -45,7 +45,7 @@ public class PoliticianProfileService {
         PoliticianProfile profile = new PoliticianProfile();
 
         //This method calls MongoDB and looks for cached TermTotals. If they exist, we'll use them and return.
-        HashMap<Integer, TermTotals> termTotalsMap = getTermTotalsByCongress(bioguideId);
+        HashMap<Integer, TermTotals> termTotalsMap = getTermTotalsByCongressMongo(bioguideId);
 
         if (termTotalsMap != null && !termTotalsMap.isEmpty()) {
 
@@ -73,7 +73,6 @@ public class PoliticianProfileService {
 
         termTotalsMap = new HashMap<>(30);
 
-        //TODO: Should probably refactor this functional approach
         setPacTotals(bioguideId, termTotalsMap);
         setIndustryTotals(bioguideId, termTotalsMap);
         setIdeologyScores(bioguideId, termTotalsMap);
@@ -90,7 +89,7 @@ public class PoliticianProfileService {
      * @return
      * @see TermTotals
      */
-    public HashMap<Integer, TermTotals> getTermTotalsByCongress(String bioguide) {
+    public HashMap<Integer, TermTotals> getTermTotalsByCongressMongo(String bioguide) {
 
         List<TermTotals> termTotalsList = politicianProfileRepo.getTermTotals(bioguide);
 
@@ -112,30 +111,43 @@ public class PoliticianProfileService {
         return null;
     }
 
+    /**
+     * Functional helper method that compartmentalizes the logic for updating TermTotals with PAC contributions.
+     * @param bioguideId
+     * @param termTotalsMap
+     */
     private void setPacTotals(String bioguideId, HashMap<Integer, TermTotals> termTotalsMap) {
 
-        HashMap<Integer, List<PacPoliticianContrTotals>> totalsHashMap =
-                pacContributionRepo.getAllLegislatorReceivedPacTotals(bioguideId);
+        HashMap<Integer, List<PacPoliticianContrTotals>> totalsHashMap = pacContributionService.getPacTotalsAllTime(bioguideId);
 
-        for (Integer cycle: totalsHashMap.keySet()) {
-            if (termTotalsMap.containsKey(cycle)) {
-                termTotalsMap.get(cycle).setTopPACContributions(totalsHashMap.get(cycle));
-            }
+        //Get an iterator for the values in the hash map
+        Iterator it = termTotalsMap.entrySet().iterator();
+        Map.Entry pairs;
+
+        //Iterate through all entry pairs in the map and update the TermTotalsMap with the values.
+        while (it.hasNext()) {
+            pairs = (Map.Entry) it.next();
+
+            if (termTotalsMap.containsKey(pairs.getKey()))
+                termTotalsMap.get(pairs.getKey()).setTopPACContributions((List<PacPoliticianContrTotals>)pairs.getValue());
             else {
+                //If the termTotalsMap doesn't have the current cycle, make a new object for it
                 TermTotals termTotals = new TermTotals();
-                termTotals.setCongress(cycle);
-                termTotals.setBioguideId(bioguideId);
-                termTotals.setTopPACContributions(totalsHashMap.get(cycle));
-                termTotalsMap.put(cycle, termTotals);
+                termTotals.setTopPACContributions((List<PacPoliticianContrTotals>) pairs.getValue());
+                termTotalsMap.put((Integer)pairs.getKey(), termTotals);
             }
         }
 
     }
 
-    private void setIndustryTotals (String bioguideId, HashMap<Integer, TermTotals> termTotalsMap) {
+    /**
+     * Functional helper method that compartmentalizes the logic for updating TermTotals with Industry contributions.
+     * @param bioguideId
+     * @param termTotalsMap
+     */
+    private void setIndustryTotals(String bioguideId, HashMap<Integer, TermTotals> termTotalsMap) {
 
-        HashMap<Integer, List<IndToPolContrTotals>> totalsHashMap =
-                industryContributionHadoopRepo.allIndustryContributionsPerCongress(bioguideId);
+        HashMap<Integer, List<IndustryPoliticianContributions>> totalsHashMap = industryContributionService.getIndustryTotalsAllTime(bioguideId);
 
         for (Integer cycle: totalsHashMap.keySet()) {
             if (termTotalsMap.containsKey(cycle)) {
@@ -150,6 +162,11 @@ public class PoliticianProfileService {
         }
     }
 
+    /**
+     * Functional helper method that compartmentalizes the logic for updating TermTotals with ideology scores.
+     * @param bioguideId
+     * @param termTotalsMap
+     */
     private void setIdeologyScores(String bioguideId, HashMap<Integer, TermTotals> termTotalsMap) {
 
         //Get an iterator for the values in the hash map
@@ -173,13 +190,13 @@ public class PoliticianProfileService {
     }
 
     @Autowired
-    public void setPacContributionRepo(PacContributionRepo pacContributionRepo) {
-        this.pacContributionRepo = pacContributionRepo;
+    public void setPacContributionService(PacContributionService pacContributionService) {
+        this.pacContributionService = pacContributionService;
     }
 
     @Autowired
-    public void setIndustryContributionHadoopRepo(IndustryContributionHadoopRepo industryContributionHadoopRepo) {
-        this.industryContributionHadoopRepo = industryContributionHadoopRepo;
+    public void setIndustryContributionService(IndustryContributionService industryContributionService) {
+        this.industryContributionService = industryContributionService;
     }
 
     @Autowired

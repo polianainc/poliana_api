@@ -1,6 +1,6 @@
 package com.poliana.core.votes.entities;
 
-import com.google.code.morphia.annotations.Embedded;
+import org.mongodb.morphia.annotations.Embedded;
 
 /**
  * @author David Gilmore

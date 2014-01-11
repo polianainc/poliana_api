@@ -1,8 +1,9 @@
 package com.poliana.core.legislators;
 
-import com.google.code.morphia.Datastore;
-import com.google.code.morphia.Key;
-import com.google.code.morphia.query.Query;
+import com.poliana.core.time.TimeService;
+import org.mongodb.morphia.Datastore;
+import org.mongodb.morphia.Key;
+import org.mongodb.morphia.query.Query;
 import org.apache.log4j.Logger;
 import org.msgpack.MessagePack;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -171,7 +172,9 @@ public class LegislatorRepo {
      * @return
      */
     public Iterator<Legislator> getLegislator(String legislatorId) {
+
         Query<Legislator> query = mongoStore.find(Legislator.class);
+
         query.or(
                 query.criteria("thomasId").equal(legislatorId),
                 query.criteria("bioguideId").equal(legislatorId),
@@ -179,6 +182,7 @@ public class LegislatorRepo {
                 query.criteria("fecId").equal(legislatorId),
                 query.criteria("lisId").equal(legislatorId),
                 query.criteria("govtrackId").equal(legislatorId));
+
         return query.iterator();
     }
 
@@ -192,6 +196,25 @@ public class LegislatorRepo {
     }
 
     /**
+     * Get all legislator term objects for a given chamber and time range.
+     *
+     * b. some legislator's term beginning timestamp
+     * e. some legislator's term ending timestamp
+     * B. the inputted beginning timestamp
+     * E. the inputted ending timestamp
+     *
+     * KB: (b < e) ^ (B < E)
+     *
+     * P. b < B
+     * Q. b < E
+     * R. e < B
+     * S. e < E
+     *
+     * We need PQ~RS + ~PQ~R~S + PQ~R~S:
+     * PQ~RS + ~PQ~R~S + PQ~R~S
+     * Q~R (P~S + ~P~S + P~S)
+     * Q~R ~(~PS)
+     * Q~R (P + ~S)
      *
      * @param chamber
      * @param beginTimestamp
@@ -199,12 +222,32 @@ public class LegislatorRepo {
      * @return
      */
     public Iterator<Legislator> getLegislators(String chamber, long beginTimestamp, long endTimestamp) {
+
+        //If the timestamps are backward, swap 'em
+        if (endTimestamp < beginTimestamp) {
+            long tmp = endTimestamp;
+            endTimestamp = beginTimestamp;
+            beginTimestamp = tmp;
+        }
+
+        //Contruct a Legislator query
         Query<Legislator> query = mongoStore.find(Legislator.class);
+
+        //Add our logic critieria
         query.and(
-                query.criteria("termType").contains(chamber),
-                query.criteria("beginTimestamp").lessThan(endTimestamp),
-                query.criteria("endTimestamp").greaterThan(beginTimestamp)
+            query.criteria("termType").contains(chamber),
+            query.and(
+                query.and(
+                    query.criteria("beginTimestamp").lessThan(endTimestamp),
+                    query.criteria("endTimestamp").greaterThan(beginTimestamp)
+                ),
+                query.or(
+                    query.criteria("beginTimestamp").lessThan(beginTimestamp),
+                    query.criteria("endTimestamp").greaterThan(endTimestamp)
+                )
+            )
         );
+
         return query.iterator();
     }
 

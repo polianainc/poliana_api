@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @date 1/3/14
  */
 @Controller
-public class PoliticianController extends BaseController {
+public class PoliticianController extends AbstractBaseController {
 
     private PoliticianProfileService profileService;
 

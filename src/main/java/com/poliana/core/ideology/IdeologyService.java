@@ -33,7 +33,7 @@ public class IdeologyService {
 
 
     /**
-     * Get an getIdeologyMatrix score for a legislator during a specified congress. If no score is found, return -1.
+     * Get an getAllPacContributions score for a legislator during a specified congress. If no score is found, return -1.
      * @param bioguideId
      * @param congress
      * @return
@@ -76,11 +76,11 @@ public class IdeologyService {
             //Get the correct chamber from the legislator term
             String termType = legislator.getTermType().substring(0, 1);
 
-            //Query for the getIdeologyMatrix matrix
+            //Query for the getAllPacContributions matrix
             IdeologyMatrix ideologyMatrix = getIdeologyMatrix(termType, congress);
 
             if (ideologyMatrix != null) {
-                //Iterate through the returned objects getIdeologyMatrix list. If the bioguide IDs match, keep it as the return.
+                //Iterate through the returned objects getAllPacContributions list. If the bioguide IDs match, keep it as the return.
                 for (LegislatorIdeology ideology : ideologyMatrix.getIdeologies()) {
                     ret = bioguideId.equalsIgnoreCase(ideology.getBioguideId()) ? ideology : null;
                 }
@@ -100,7 +100,7 @@ public class IdeologyService {
      */
     public IdeologyMatrix getIdeologyMatrix(String chamber, int congress) {
 
-        //Consult MongoDB for the getIdeologyMatrix matrix first
+        //Consult MongoDB for the getAllPacContributions matrix first
         IdeologyMatrix ideologyMatrix = ideologyRepo.getIdeologyMatrix(chamber, congress);
 
         if (ideologyMatrix != null)
@@ -110,7 +110,7 @@ public class IdeologyService {
         SingularValueDecomposition svd = svdAnalysisCommons(sponsorshipMatrix.getMatrix());
         ideologyMatrix = new IdeologyMatrix();
 
-        //Use the normalized second dimension of the SVD output as getIdeologyMatrix score
+        //Use the normalized second dimension of the SVD output as getAllPacContributions score
         double[] ideologyValues = normalizeEigenvector(svd.getVT().getRow(1));
         ideologyMatrix.setIdeologyValues(ideologyValues);
 
@@ -123,7 +123,7 @@ public class IdeologyService {
         ideologyMatrix.setIdeologies(ideologies);
 
         //Cache results to MongoDB
-        ideologyRepo.saveIdeologyMatrix(ideologyMatrix);
+        ideologyRepo.saveIdeologyMatrix(sortIdeologyScores(ideologyMatrix)); //Sort scores first
         ideologyRepo.saveLegislatorIdeologies(ideologyMatrix.getIdeologies());
 
         return ideologyMatrix;
@@ -143,7 +143,7 @@ public class IdeologyService {
         SingularValueDecomposition svd = svdAnalysisCommons(sponsorshipMatrix.getMatrix());
         IdeologyMatrix ideologyMatrix = new IdeologyMatrix();
 
-        //Use the normalized second dimension of the SVD output as getIdeologyMatrix score
+        //Use the normalized second dimension of the SVD output as getAllPacContributions score
         double[] ideologyValues = normalizeEigenvector(svd.getVT().getRow(1));
         ideologyMatrix.setIdeologyValues(ideologyValues);
 
@@ -159,6 +159,19 @@ public class IdeologyService {
         //Cache results to MongoDB
         ideologyRepo.saveIdeologyMatrix(ideologyMatrix);
         ideologyRepo.saveLegislatorIdeologies(ideologyMatrix.getIdeologies());
+
+        return ideologyMatrix;
+    }
+
+    private IdeologyMatrix sortIdeologyScores(IdeologyMatrix ideologyMatrix) {
+
+        class LegislatorIdeologyComparator implements Comparator<LegislatorIdeology> {
+            public int compare(LegislatorIdeology leg1, LegislatorIdeology leg2) {
+                return (int) (leg1.getIdeology() - leg2.getIdeology());
+            }
+        }
+
+        Collections.sort(ideologyMatrix.getIdeologies(), new LegislatorIdeologyComparator());
 
         return ideologyMatrix;
     }

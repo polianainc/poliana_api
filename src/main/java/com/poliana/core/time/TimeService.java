@@ -15,6 +15,8 @@ import java.util.Date;
 @Service
 public class TimeService {
 
+    public static final String CURRENT_CONGRESS = "113";
+
     /**
      *
      * @param dateString
@@ -142,7 +144,7 @@ public class TimeService {
         long begin = cal.getTimeInMillis();
 
         //Set the begin timestamp to December 31 at 11:59am of the second year of this session
-        cal.set(years.getYearTwo()-1, 11, 31, 0, 0, 0);
+        cal.set(years.getYearTwo(), 11, 31, 0, 0, 0);
         long end = cal.getTimeInMillis();
 
         CongressTimestamps timestamps = new CongressTimestamps();
@@ -152,5 +154,14 @@ public class TimeService {
         timestamps.setEnd(end/1000);
 
         return timestamps;
+    }
+
+    public String getNumberSuffix(int n) {
+        switch (n % 10) {
+            case 1:  return "st";
+            case 2:  return "nd";
+            case 3:  return "rd";
+            default: return "th";
+        }
     }
 }

@@ -1,7 +1,7 @@
 package com.poliana.core.bills.jobs;
 
-import com.google.code.morphia.Key;
-import com.google.code.morphia.mapping.MappingException;
+import org.mongodb.morphia.Key;
+import org.mongodb.morphia.mapping.MappingException;
 import com.poliana.core.time.TimeService;
 import com.poliana.core.bills.govtrack.votes.Voter;
 import com.poliana.core.legislators.Legislator;

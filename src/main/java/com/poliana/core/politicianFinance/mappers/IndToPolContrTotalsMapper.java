@@ -1,6 +1,6 @@
-package com.poliana.core.industryFinance.mapppers;
+package com.poliana.core.politicianFinance.mappers;
 
-import com.poliana.core.industryFinance.entities.IndustryPoliticianContributions;
+import com.poliana.core.politicianFinance.entities.IndustryPoliticianContributions;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
@@ -11,8 +11,11 @@ import java.sql.SQLException;
  * @date 11/1/13
  */
 public class IndToPolContrTotalsMapper implements RowMapper<IndustryPoliticianContributions> {
+
     public IndustryPoliticianContributions mapRow(ResultSet rs, int rowNum) throws SQLException {
+
         IndustryPoliticianContributions totals = new IndustryPoliticianContributions();
+
         totals.setBioguideId(rs.getString("bioguide_id"));
         totals.setParty(rs.getString("party"));
         totals.setIndustryId(rs.getString("industry_id"));
@@ -20,7 +23,7 @@ public class IndToPolContrTotalsMapper implements RowMapper<IndustryPoliticianCo
         totals.setContributionSum(rs.getInt("contributions_total"));
 
         try {
-            totals.setCycle(rs.getInt("congress"));
+            totals.setCongress(rs.getInt("congress"));
         }
         catch (SQLException e) {}
 

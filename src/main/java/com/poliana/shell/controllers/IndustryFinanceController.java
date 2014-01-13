@@ -52,7 +52,7 @@ public class IndustryFinanceController implements CommandMarker {
             @CliOption(key = {"congress"}, mandatory = true) final int congress) {
         JSONArray jsonArray = new JSONArray();
         List<IndustryPoliticianContribution> industies =
-                industryContributionService.legislatorReceivedIndustryTotals(bioguideId,congress);
+                industryContributionService.legislatorReceivedIndustryTotals(bioguideId, congress);
         for (IndustryPoliticianContribution industry: industies) {
             JSONObject jsonIndustry = new JSONObject(industry);
             jsonArray.put(jsonIndustry);

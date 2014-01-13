@@ -1,25 +1,18 @@
 package com.poliana.core.industryFinance;
 
-import com.poliana.core.industryFinance.entities.IndustryContributionTotals;
+import com.poliana.core.industryFinance.entities.IndustryContributionTotalsHashMap;
 import com.poliana.core.industryFinance.entities.IndustryPoliticianContribution;
-import com.poliana.core.industryFinance.entities.IndustryPoliticianContributions;
-import com.poliana.core.industryFinance.mapppers.IndustryContributionTotalsMapper;
+import com.poliana.core.industryFinance.mapppers.IndustryContributionTotalsHashMapper;
+import com.poliana.core.politicianFinance.entities.IndustryPoliticianContributions;
 import com.poliana.core.time.CongressTimestamps;
 import com.poliana.core.time.TimeService;
-import org.mongodb.morphia.Datastore;
-import org.mongodb.morphia.Key;
-import org.mongodb.morphia.query.Query;
-import com.poliana.core.industryFinance.entities.IndustryTimeRangeTotals;
-import com.poliana.core.industryFinance.mapppers.AllContrPerCogressMapper;
-import com.poliana.core.industryFinance.mapppers.IndToPolContrTotalsMapper;
+import com.poliana.core.politicianFinance.mappers.IndToPolContrTotalsMapper;
 import com.poliana.core.industryFinance.mapppers.LegislatorRecievedIndustryTotalsMapper;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -27,164 +20,17 @@ import java.util.List;
  * @date 11/27/13
  */
 @Repository
-public class IndustryContributionRepo {
+public class IndustryContributionHadoopRepo {
 
     private JdbcTemplate impalaTemplate;
-    private Datastore mongoStore;
 
     private TimeService timeService;
 
-    private static final Logger logger = Logger.getLogger(IndustryContributionRepo.class);
+    private static final Logger logger = Logger.getLogger(IndustryContributionHadoopRepo.class);
 
 
-    public IndustryContributionRepo() {
+    public IndustryContributionHadoopRepo() {
         this.timeService = new TimeService();
-    }
-
-
-    /**
-     * Get totals for an industry's contributions to all legislators during a given cycle.
-     * @param congress
-     * @return
-     * @see com.poliana.core.industryFinance.entities.IndustryContributionTotals
-     */
-    public IndustryContributionTotals getIndustryTotalsMongo(String industryId, int congress) {
-
-        Query<IndustryContributionTotals> query = mongoStore.createQuery(IndustryContributionTotals.class);
-
-        query.and(
-                query.criteria("industryId").equal(industryId),
-                query.criteria("congress").equal(congress));
-
-        return query.get();
-    }
-
-    /**
-     * Get totals for an industry category contributions to all legislators during a given cycle.
-     * @param congress
-     * @return
-     * @see com.poliana.core.industryFinance.entities.IndustryContributionTotals
-     */
-    public IndustryContributionTotals getIndustryCategoryTotalsMongo(String categoryId, int congress) {
-
-        Query<IndustryContributionTotals> query = mongoStore.createQuery(IndustryContributionTotals.class);
-
-        query.and(
-                query.criteria("categoryId").equal(categoryId),
-                query.criteria("congress").equal(congress));
-
-        return query.get();
-    }
-
-    /**
-     * Get totals for an industry's contributions to all legislators in a certain chamber during a given cycle.
-     * @param chamber
-     * @param congress
-     * @return
-     * @see com.poliana.core.industryFinance.entities.IndustryContributionTotals
-     */
-    public IndustryContributionTotals getIndustryChamberTotalsMongo(String industryId, String chamber, int congress) {
-
-        Query<IndustryContributionTotals> query = mongoStore.createQuery(IndustryContributionTotals.class);
-
-        query.and(
-                query.criteria("industryId").equal(industryId),
-                query.criteria("chamber").equal(chamber),
-                query.criteria("congress").equal(congress));
-
-        return query.get();
-    }
-
-    /**
-     * Get totals for an industry category contributions to all legislators in a certain chamber during a given cycle.
-     * @param chamber
-     * @param congress
-     * @return
-     * @see com.poliana.core.industryFinance.entities.IndustryContributionTotals
-     */
-    public IndustryContributionTotals getIndustryCategoryChamberTotalsMongo(String categoryId, String chamber, int congress) {
-
-        Query<IndustryContributionTotals> query = mongoStore.createQuery(IndustryContributionTotals.class);
-
-        query.and(
-                query.criteria("categoryId").equal(categoryId),
-                query.criteria("chamber").equal(chamber),
-                query.criteria("congress").equal(congress));
-
-        return query.get();
-    }
-
-    /**
-     * Save totals for an industry's contributions to all legislators in a certain chamber during a given cycle
-     * @param industryContributionTotals
-     * @return
-     * @see com.poliana.core.industryFinance.entities.IndustryContributionTotals
-     */
-    public Key<IndustryContributionTotals> saveIndustryContributionTotals(IndustryContributionTotals industryContributionTotals) {
-
-        return mongoStore.save(industryContributionTotals);
-    }
-
-    /**
-     * Save totals for an industry's contributions over a certain time range
-     * @param industryTimeRangeTotals
-     * @return
-     * @see com.poliana.core.industryFinance.entities.IndustryTimeRangeTotals
-     */
-    public Key<IndustryTimeRangeTotals> saveIndTimeRangeTotal(IndustryTimeRangeTotals industryTimeRangeTotals) {
-
-        return mongoStore.save(industryTimeRangeTotals);
-    }
-
-    /**
-     * Save a list of industry to politician contribution objects
-     * @param totalsList
-     * @return
-     */
-    public Iterable<Key<IndustryPoliticianContributions>> saveIndustryToPoliticianContributions(List<IndustryPoliticianContributions> totalsList) {
-
-        return mongoStore.save(totalsList);
-    }
-
-    public long countIndustryToPoliticianContributions(String bioguideId, int congress) {
-
-        Query<IndustryPoliticianContributions> query = mongoStore.find(IndustryPoliticianContributions.class);
-
-        query.and(
-                query.criteria("bioguideId").equal(bioguideId),
-                query.criteria("cycle").equal(congress));
-
-        return mongoStore.getCount(query);
-    }
-
-    /**
-     * Using MongoDB, get a list of all industry to politician contributions for a given bioguide ID.
-     * @param bioguideId
-     * @return
-     */
-    public Iterator<IndustryPoliticianContributions> getIndustryToPoliticianContributions(String bioguideId) {
-
-        Query<IndustryPoliticianContributions> query = mongoStore.find(IndustryPoliticianContributions.class);
-
-        query.criteria("bioguideId").equal(bioguideId);
-
-        return query.iterator();
-    }
-
-    /**
-     * Using MongoDB, get a list of all industry to politician contributions for a given bioguide ID.
-     * @param bioguideId
-     * @return
-     */
-    public List<IndustryPoliticianContributions> getIndustryToPoliticianContributionsMongo(String bioguideId, int congress) {
-
-        Query<IndustryPoliticianContributions> query = mongoStore.find(IndustryPoliticianContributions.class);
-
-        query.and(
-                query.criteria("bioguideId").equal(bioguideId),
-                query.criteria("cycle").equal(congress));
-
-        return query.asList();
     }
 
     /**
@@ -192,9 +38,9 @@ public class IndustryContributionRepo {
      * industry category.
      *
      * @return
-     * @see com.poliana.core.industryFinance.entities.IndustryContributionTotals
+     * @see com.poliana.core.industryFinance.entities.IndustryContributionTotalsHashMap
      */
-    public IndustryContributionTotals getIndustryContributionTotals(String industryId, int congress) {
+    public IndustryContributionTotalsHashMap getIndustryContributionTotals(String industryId, int congress) {
 
         CongressTimestamps ts = timeService.congressTimestamps(congress);
 
@@ -263,7 +109,7 @@ public class IndustryContributionRepo {
                             "    , sector_long " +
                             "    , congress";
 
-            return impalaTemplate.query(query, new IndustryContributionTotalsMapper(null));
+            return impalaTemplate.query(query, new IndustryContributionTotalsHashMapper(null));
         }
         catch (Exception e) {
             logger.error(e);
@@ -277,9 +123,9 @@ public class IndustryContributionRepo {
      * industry category.
      *
      * @return
-     * @see com.poliana.core.industryFinance.entities.IndustryContributionTotals
+     * @see com.poliana.core.industryFinance.entities.IndustryContributionTotalsHashMap
      */
-    public IndustryContributionTotals getIndustryCategoryContributionTotals(String categoryId, int congress) {
+    public IndustryContributionTotalsHashMap getIndustryCategoryContributionTotals(String categoryId, int congress) {
 
         CongressTimestamps ts = timeService.congressTimestamps(congress);
 
@@ -359,7 +205,7 @@ public class IndustryContributionRepo {
                             "ON " +
                             "   real_code = cat_code";
 
-            return impalaTemplate.query(query, new IndustryContributionTotalsMapper(null));
+            return impalaTemplate.query(query, new IndustryContributionTotalsHashMapper(null));
         }
         catch (Exception e) {
             logger.error(e);
@@ -373,9 +219,9 @@ public class IndustryContributionRepo {
      * industry category.
      *
      * @return
-     * @see com.poliana.core.industryFinance.entities.IndustryContributionTotals
+     * @see com.poliana.core.industryFinance.entities.IndustryContributionTotalsHashMap
      */
-    public IndustryContributionTotals getIndustryChamberContributionTotals(String industryId, String chamber, int congress) {
+    public IndustryContributionTotalsHashMap getIndustryChamberContributionTotals(String industryId, String chamber, int congress) {
 
         CongressTimestamps ts = timeService.congressTimestamps(congress);
 
@@ -445,7 +291,7 @@ public class IndustryContributionRepo {
                             "    , sector_long " +
                             "    , congress";
 
-            return impalaTemplate.query(query, new IndustryContributionTotalsMapper(chamber));
+            return impalaTemplate.query(query, new IndustryContributionTotalsHashMapper(chamber));
         }
         catch (Exception e) {
             logger.error(e);
@@ -459,9 +305,9 @@ public class IndustryContributionRepo {
      * industry category.
      *
      * @return
-     * @see com.poliana.core.industryFinance.entities.IndustryContributionTotals
+     * @see com.poliana.core.industryFinance.entities.IndustryContributionTotalsHashMap
      */
-    public IndustryContributionTotals getIndustryCategoryChamberContributionTotals(String categoryId, String chamber, int congress) {
+    public IndustryContributionTotalsHashMap getIndustryCategoryChamberContributionTotals(String categoryId, String chamber, int congress) {
 
         CongressTimestamps ts = timeService.congressTimestamps(congress);
 
@@ -531,120 +377,7 @@ public class IndustryContributionRepo {
                     "ON " +
                     "   real_code = cat_code";
 
-            return impalaTemplate.query(query, new IndustryContributionTotalsMapper(chamber));
-        }
-        catch (Exception e) {
-            logger.error(e);
-        }
-
-        return null;
-    }
-
-    /**
-     * Get a map of Cycle->Industry to politician contributions from Impala.
-     * @param bioguideId
-     * @return
-     */
-    public HashMap<Integer, List<IndustryPoliticianContributions>> getAllIndustryContributionsPerCongress(String bioguideId) {
-
-        try {
-            String query =
-                    "SELECT " +
-                        "  bioguide_id" +
-                        ", real_code" +
-                        ", industry" +
-                        ", sector" +
-                        ", sector_long" +
-                        ", congress" +
-                        ", _c3 " +
-                    "FROM " +
-                        "(SELECT " +
-                            "  bioguide_id" +
-                            ", real_code" +
-                            ", congress" +
-                            ", SUM(amount) " +
-                        "FROM " +
-                            "(SELECT " +
-                            "  bioguide_id" +
-                            ", real_code" +
-                            ", congress" +
-                            ", amount " +
-                            "FROM " +
-                            "   entities.legislators m " +
-                            "JOIN " +
-                            "   crp.individual_contributions c " +
-                            "ON " +
-                            "   opensecrets_id = c.recip_id " +
-                            "WHERE bioguide_id = \'" + bioguideId + "\') " +
-                        "candidate_receipts " +
-                        "GROUP BY " +
-                            "  bioguide_id" +
-                            ", real_code" +
-                            ", congress) " +
-                    "sums " +
-                    "JOIN " +
-                    "   entities.industry_codes l " +
-                    "ON " +
-                    "   real_code = cat_code";
-
-            return impalaTemplate.query(query, new AllContrPerCogressMapper());
-        }
-        catch (Exception e) {
-            logger.error(e);
-        }
-
-        return null;
-    }
-
-    /**
-     * Get a list of industry to politician contribution sums for a given cycle
-     * @param bioguideId
-     * @return
-     */
-    public List<IndustryPoliticianContributions> getIndustryToPoliticianContributions(String bioguideId, int congress) {
-
-        try {
-            String query =
-                    "SELECT " +
-                            "  bioguide_id" +
-                            ", real_code" +
-                            ", industry" +
-                            ", sector" +
-                            ", sector_long" +
-                            ", congress" +
-                            ", _c3 " +
-                            "FROM " +
-                            "(SELECT " +
-                            "  bioguide_id" +
-                            ", real_code" +
-                            ", congress" +
-                            ", SUM(amount) " +
-                            "FROM " +
-                            "(SELECT " +
-                            "  bioguide_id" +
-                            ", real_code" +
-                            ", congress" +
-                            ", amount " +
-                            "FROM " +
-                            "   entities.legislators m " +
-                            "JOIN " +
-                            "   crp.individual_contributions c " +
-                            "ON " +
-                            "   opensecrets_id = c.recip_id " +
-                            "WHERE bioguide_id = \'" + bioguideId + "\' " +
-                            "candidate_receipts " +
-                            "GROUP BY " +
-                            "  bioguide_id" +
-                            ", real_code" +
-                            ", congress) " +
-                            "sums " +
-                            "JOIN " +
-                            "   entities.industry_codes l " +
-                            "ON " +
-                            "   real_code = cat_code " +
-                            "WHERE congress = " + congress;
-
-            return impalaTemplate.query(query, new IndToPolContrTotalsMapper());
+            return impalaTemplate.query(query, new IndustryContributionTotalsHashMapper(chamber));
         }
         catch (Exception e) {
             logger.error(e);
@@ -740,10 +473,5 @@ public class IndustryContributionRepo {
     @Autowired
     public void setImpalaTemplate(JdbcTemplate impalaTemplate) {
         this.impalaTemplate = impalaTemplate;
-    }
-
-    @Autowired
-    public void setMongoStore(Datastore mongoStore) {
-        this.mongoStore = mongoStore;
     }
 }

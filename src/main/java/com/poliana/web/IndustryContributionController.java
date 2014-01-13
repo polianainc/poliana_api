@@ -4,7 +4,7 @@ import com.poliana.core.ideology.IdeologyMatrix;
 import com.poliana.core.ideology.IdeologyService;
 import com.poliana.core.industryFinance.IndustryContributionService;
 import com.poliana.core.industryFinance.entities.IndustryContributionCompare;
-import com.poliana.core.industryFinance.entities.IndustryContributionTotals;
+import com.poliana.core.industryFinance.entities.IndustryContributionTotalsHashMap;
 import com.poliana.views.IndustryContributionView;
 import org.apache.log4j.Logger;
 import org.jfree.chart.ChartUtilities;
@@ -91,7 +91,7 @@ public class IndustryContributionController extends AbstractBaseController {
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
             @RequestParam(value = "compare_to", required = false) String compareTo) {
 
-        IndustryContributionTotals totals;
+        IndustryContributionTotalsHashMap totals;
         IdeologyMatrix ideologyMatrix;
 
         switch (compareTo) {
@@ -118,7 +118,7 @@ public class IndustryContributionController extends AbstractBaseController {
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
             @RequestParam(value = "compare_to", required = false) String compareTo) {
 
-        IndustryContributionTotals totals;
+        IndustryContributionTotalsHashMap totals;
         IdeologyMatrix ideologyMatrix;
 
         switch (compareTo) {
@@ -153,7 +153,7 @@ public class IndustryContributionController extends AbstractBaseController {
         switch (compareTo) {
 
             default: {
-                IndustryContributionTotals industryTotals = industryContributionService.getIndustryTotalsByChamber(industryId, chamber, congress);
+                IndustryContributionTotalsHashMap industryTotals = industryContributionService.getIndustryTotalsByChamber(industryId, chamber, congress);
                 IdeologyMatrix ideologyMatrix = ideologyService.getIdeologyMatrix(chamber, congress);
 
                 compareTotals = industryContributionService.getIdeologyVsContributions(ideologyMatrix, industryTotals);
@@ -192,7 +192,7 @@ public class IndustryContributionController extends AbstractBaseController {
         switch (compareTo) {
 
             default: {
-                IndustryContributionTotals industryTotals =
+                IndustryContributionTotalsHashMap industryTotals =
                         industryContributionService.getIndustryCategoryTotalsByChamber(categoryId, chamber, congress);
                 IdeologyMatrix ideologyMatrix = ideologyService.getIdeologyMatrix(chamber, congress);
 

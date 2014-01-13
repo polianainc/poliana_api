@@ -3,6 +3,7 @@ package com.poliana.core.industryFinance;
 import com.poliana.core.ideology.IdeologyMatrix;
 import com.poliana.core.ideology.LegislatorIdeology;
 import com.poliana.core.industryFinance.entities.*;
+import com.poliana.core.politicianFinance.entities.IndustryPoliticianContributions;
 import com.poliana.core.time.CongressTimestamps;
 import com.poliana.core.time.CongressYears;
 import com.poliana.core.time.TimeService;
@@ -25,7 +26,8 @@ public class IndustryContributionService {
 
     private IndustryRepo industryRepo;
     private LegislatorService legislatorService;
-    private IndustryContributionRepo industryContributionRepo;
+    private IndustryContributionMongoRepo industryContributionMongoRepo;
+    private IndustryContributionHadoopRepo industryContributionHadoopRepo;
     private TimeService timeService;
 
     private static final Logger logger = Logger.getLogger(IndustryContributionService.class);
@@ -34,15 +36,15 @@ public class IndustryContributionService {
     /**
      * Get a list of industry contributions compared to legislator ideology
      * @param ideologyMatrix
-     * @param industryContributionTotals
+     * @param industryContributionTotalsHashMap
      * @return
      */
     public List<IndustryContributionCompare> getIdeologyVsContributions(
-            IdeologyMatrix ideologyMatrix, IndustryContributionTotals industryContributionTotals) {
+            IdeologyMatrix ideologyMatrix, IndustryContributionTotalsHashMap industryContributionTotalsHashMap) {
 
         List<IndustryContributionCompare> compareList = new LinkedList<>();
 
-        if (ideologyMatrix == null || industryContributionTotals == null)
+        if (ideologyMatrix == null || industryContributionTotalsHashMap == null)
             return new LinkedList<>();
 
         for (LegislatorIdeology legislatorIdeology: ideologyMatrix.getIdeologies()) {
@@ -52,10 +54,10 @@ public class IndustryContributionService {
 
             //If the sums were made for a category, only the categoryId will be set, and vice verse
             String industry;
-            if (industryContributionTotals.getIndustryId() != null)
-                industry = industryContributionTotals.getIndustryName();
+            if (industryContributionTotalsHashMap.getIndustryId() != null)
+                industry = industryContributionTotalsHashMap.getIndustryName();
             else
-                industry = industryContributionTotals.getCategoryName();
+                industry = industryContributionTotalsHashMap.getCategoryName();
 
             //Set values
             compare.setIndustry(industry);
@@ -64,7 +66,7 @@ public class IndustryContributionService {
             compare.setReligion(legislatorIdeology.getReligion());
 
             try { //Try to get an amount from the contribution totals' sum map
-                compare.setAmount(industryContributionTotals.getSums().get(legislatorIdeology.getBioguideId()));
+                compare.setAmount(industryContributionTotalsHashMap.getSums().get(legislatorIdeology.getBioguideId()));
             }
             catch (Exception e) { //If there is no entry for this legislator, set the value to 0
                 compare.setAmount(0);
@@ -82,25 +84,25 @@ public class IndustryContributionService {
 
     /**
      * Get a map of BioguideId->Total sum of industry contributions to all legislators during the given
-     * congressional cycles
+     * congressional cycle
      * @param congress
      * @return
      */
-    public IndustryContributionTotals getIndustryTotals(String industryId, int congress) {
+    public IndustryContributionTotalsHashMap getIndustryTotals(String industryId, int congress) {
 
         //Check MongoDB for a cached industry chamber total document
-        IndustryContributionTotals chamberTotals =
-                industryContributionRepo.getIndustryTotalsMongo(industryId, congress);
+        IndustryContributionTotalsHashMap chamberTotals =
+                industryContributionMongoRepo.getIndustryTotals(industryId, congress);
 
         //If it exists, return it
         if (chamberTotals != null)
             return chamberTotals;
 
         //If not we'll use Impala to get it
-        chamberTotals = industryContributionRepo.getIndustryContributionTotals(industryId, congress);
+        chamberTotals = industryContributionHadoopRepo.getIndustryContributionTotals(industryId, congress);
 
         if (chamberTotals != null)
-            industryContributionRepo.saveIndustryContributionTotals(chamberTotals);
+            industryContributionMongoRepo.saveIndustryContributionTotals(chamberTotals);
 
         return chamberTotals;
     }
@@ -111,22 +113,22 @@ public class IndustryContributionService {
      * @param congress
      * @return
      */
-    public IndustryContributionTotals getIndustryCategoryTotals(String categoryId, int congress) {
+    public IndustryContributionTotalsHashMap getIndustryCategoryTotals(String categoryId, int congress) {
 
         //Check MongoDB for a cached industry chamber total document
-        IndustryContributionTotals chamberTotals =
-                industryContributionRepo.getIndustryCategoryTotalsMongo(categoryId, congress);
+        IndustryContributionTotalsHashMap chamberTotals =
+                industryContributionMongoRepo.getIndustryCategoryTotals(categoryId, congress);
 
         //If it exists, return it
         if (chamberTotals != null)
             return chamberTotals;
 
-        chamberTotals = industryContributionRepo.getIndustryCategoryContributionTotals(categoryId, congress);
+        chamberTotals = industryContributionHadoopRepo.getIndustryCategoryContributionTotals(categoryId, congress);
 
         if (chamberTotals != null) {
             chamberTotals.setIndustryId(null);
             chamberTotals.setCategoryId(categoryId);
-            industryContributionRepo.saveIndustryContributionTotals(chamberTotals);
+            industryContributionMongoRepo.saveIndustryContributionTotals(chamberTotals);
         }
 
         return chamberTotals;
@@ -139,21 +141,21 @@ public class IndustryContributionService {
      * @param congress
      * @return
      */
-    public IndustryContributionTotals getIndustryTotalsByChamber(String industryId, String chamber, int congress) {
+    public IndustryContributionTotalsHashMap getIndustryTotalsByChamber(String industryId, String chamber, int congress) {
 
         //Check MongoDB for a cached industry chamber total document
-        IndustryContributionTotals chamberTotals =
-                industryContributionRepo.getIndustryChamberTotalsMongo(industryId, chamber, congress);
+        IndustryContributionTotalsHashMap chamberTotals =
+                industryContributionMongoRepo.getIndustryChamberTotals(industryId, chamber, congress);
 
         //If it exists, return it
         if (chamberTotals != null)
             return chamberTotals;
 
         //If not we'll use Impala to get it
-        chamberTotals = industryContributionRepo.getIndustryChamberContributionTotals(industryId, chamber, congress);
+        chamberTotals = industryContributionHadoopRepo.getIndustryChamberContributionTotals(industryId, chamber, congress);
 
         if (chamberTotals != null)
-            industryContributionRepo.saveIndustryContributionTotals(chamberTotals);
+            industryContributionMongoRepo.saveIndustryContributionTotals(chamberTotals);
 
         return chamberTotals;
     }
@@ -165,99 +167,25 @@ public class IndustryContributionService {
      * @param congress
      * @return
      */
-    public IndustryContributionTotals getIndustryCategoryTotalsByChamber(String categoryId, String chamber, int congress) {
+    public IndustryContributionTotalsHashMap getIndustryCategoryTotalsByChamber(String categoryId, String chamber, int congress) {
 
         //Check MongoDB for a cached industry chamber total document
-        IndustryContributionTotals chamberTotals =
-                industryContributionRepo.getIndustryCategoryChamberTotalsMongo(categoryId, chamber, congress);
+        IndustryContributionTotalsHashMap chamberTotals =
+                industryContributionMongoRepo.getIndustryCategoryChamberTotals(categoryId, chamber, congress);
 
         //If it exists, return it
         if (chamberTotals != null)
             return chamberTotals;
 
-        chamberTotals = industryContributionRepo.getIndustryCategoryChamberContributionTotals(categoryId, chamber, congress);
+        chamberTotals = industryContributionHadoopRepo.getIndustryCategoryChamberContributionTotals(categoryId, chamber, congress);
 
         if (chamberTotals != null) {
             chamberTotals.setIndustryId(null);
             chamberTotals.setCategoryId(categoryId);
-            industryContributionRepo.saveIndustryContributionTotals(chamberTotals);
+            industryContributionMongoRepo.saveIndustryContributionTotals(chamberTotals);
         }
 
         return chamberTotals;
-    }
-
-    /**
-     * Get a list of industry to politician contributions for a given congressional cycle
-     * @param bioguideId
-     * @param congress
-     * @return
-     */
-    public List<IndustryPoliticianContributions> getIndustryToPoliticianTotals(String bioguideId, int congress) {
-
-        List<IndustryPoliticianContributions> totalsList = industryContributionRepo.getIndustryToPoliticianContributionsMongo(bioguideId, congress);
-
-        if (totalsList.size() > 0)
-            return totalsList;
-
-        //If MongoDB didn't return, fall back to Impala.
-        totalsList = industryContributionRepo.getIndustryToPoliticianContributions(bioguideId, congress);
-
-        //If Impala had something to return, save it to MongoDB
-        if (totalsList.size() > 0)
-            industryContributionRepo.saveIndustryToPoliticianContributions(totalsList);
-
-        return totalsList;
-    }
-
-    /**
-     * Get a HashMap of Cycle->Industry contribution lists for all congressional cycles a politician has been apart of
-     * @param bioguideId
-     * @return
-     */
-    public HashMap<Integer, List<IndustryPoliticianContributions>> getIndustryTotalsAllTime(String bioguideId) {
-
-        //Query MongoDB for industry to politician objects
-        Iterator<IndustryPoliticianContributions> totalsIterator = industryContributionRepo.getIndustryToPoliticianContributions(bioguideId);
-
-        HashMap<Integer, List<IndustryPoliticianContributions>> totalsHashMap = new HashMap<>(30);
-
-        //Add industry totals to the HashMap. Check the size, if it's zero, fall back to Impala.
-        while (totalsIterator.hasNext()) {
-            IndustryPoliticianContributions industryTotals = totalsIterator.next();
-
-            //If the hashmap already has a list of industry totals for the object's cycle
-            if (totalsHashMap.containsKey(industryTotals.getCycle()))
-                totalsHashMap.get(industryTotals.getCycle()).add(industryTotals);
-                //If the hashmap doesn't contain a list of industry totals, make it
-            else {
-                List<IndustryPoliticianContributions> totalsList = new LinkedList<>();
-                totalsList.add(industryTotals);
-                totalsHashMap.put(industryTotals.getCycle(), totalsList);
-            }
-        }
-
-        //A size greater than 0 means that MongoDB had the sums cached
-        if (totalsHashMap.size() > 0)
-            return totalsHashMap;
-
-        //Fall back to Impala if MongoDB did not have the sums cached
-        totalsHashMap = industryContributionRepo.getAllIndustryContributionsPerCongress(bioguideId);
-
-        //Cache sums to MongoDB
-
-        //Get an iterator for the values in the hash map
-        Iterator it = totalsHashMap.entrySet().iterator();
-        Map.Entry pairs;
-
-        //Iterate through all entry pairs in the map and update the TermTotalsMap with the values.
-        while (it.hasNext()) {
-            pairs = (Map.Entry) it.next();
-
-            if (industryContributionRepo.countIndustryToPoliticianContributions(bioguideId, (Integer) pairs.getKey()) <= 0)
-                industryContributionRepo.saveIndustryToPoliticianContributions((List<IndustryPoliticianContributions>)pairs.getValue());
-        }
-
-        return totalsHashMap;
     }
 
     /**
@@ -283,7 +211,7 @@ public class IndustryContributionService {
     public List<IndustryPoliticianContribution> legislatorReceivedIndustryTotals(String bioguideId,
                                                                                   long beginTimestamp, long endTimestamp, int limit) {
 
-        return industryContributionRepo.legislatorReceivedIndustryTotals(bioguideId, beginTimestamp, endTimestamp, limit);
+        return industryContributionHadoopRepo.legislatorReceivedIndustryTotals(bioguideId, beginTimestamp, endTimestamp, limit);
     }
 
     /**
@@ -298,7 +226,7 @@ public class IndustryContributionService {
         CongressYears years = timeService.congressToYears(congress);
 
         List<IndustryPoliticianContributions> contributionTotals =
-                industryContributionRepo.industryContrTotals(industryId, years.getYearOne(), years.getYearTwo());
+                industryContributionHadoopRepo.industryContrTotals(industryId, years.getYearOne(), years.getYearTwo());
 
 
         IndustryTimeRangeTotals timeRangeTotals = new IndustryTimeRangeTotals();
@@ -503,8 +431,13 @@ public class IndustryContributionService {
     }
 
     @Autowired
-    public void setIndustryContributionRepo(IndustryContributionRepo industryContributionRepo) {
-        this.industryContributionRepo = industryContributionRepo;
+    public void setIndustryContributionMongoRepo(IndustryContributionMongoRepo industryContributionMongoRepo) {
+        this.industryContributionMongoRepo = industryContributionMongoRepo;
+    }
+
+    @Autowired
+    public void setIndustryContributionHadoopRepo(IndustryContributionHadoopRepo industryContributionHadoopRepo) {
+        this.industryContributionHadoopRepo = industryContributionHadoopRepo;
     }
 
     @Autowired

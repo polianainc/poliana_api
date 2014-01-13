@@ -1,6 +1,6 @@
-package com.poliana.core.industryFinance.mapppers;
+package com.poliana.core.politicianFinance.mappers;
 
-import com.poliana.core.industryFinance.entities.IndustryPoliticianContributions;
+import com.poliana.core.politicianFinance.entities.IndustryPoliticianContributions;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
@@ -25,12 +25,12 @@ public class AllContrPerCogressMapper implements ResultSetExtractor<HashMap<Inte
         int index = 1;
         while (rs.next()) {
             IndustryPoliticianContributions totals = contrMapper.mapRow(rs, index);
-            if (allTotals.containsKey(totals.getCycle()))
-                allTotals.get(totals.getCycle()).add(totals);
+            if (allTotals.containsKey(totals.getCongress()))
+                allTotals.get(totals.getCongress()).add(totals);
             else {
                 List<IndustryPoliticianContributions> cycleTotals = new LinkedList<>();
                 cycleTotals.add(totals);
-                allTotals.put(totals.getCycle(), cycleTotals);
+                allTotals.put(totals.getCongress(), cycleTotals);
             }
             index++;
         }
@@ -50,7 +50,7 @@ public class AllContrPerCogressMapper implements ResultSetExtractor<HashMap<Inte
             ind.setIndustryName(rs.getString("industry"));
             ind.setSector(rs.getString("sector"));
             ind.setSectorLong(rs.getString("sector_long"));
-            ind.setCycle(rs.getInt("congress"));
+            ind.setCongress(rs.getInt("congress"));
             ind.setContributionSum(rs.getInt(7));
 
             return ind;

@@ -1,4 +1,4 @@
-package com.poliana.core.industryFinance.entities;
+package com.poliana.core.politicianFinance.entities;
 
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
@@ -36,13 +36,22 @@ public class IndustryPoliticianContributions {
     @Property("contribution_sum")
     private int contributionSum;
 
-    private int timestamp;
-    private int cycle;
+    @Property("begin_timestamp")
+    private long beginTimestamp;
+
+    @Property("end_timestamp")
+    private long endTimestamp;
+
+    private int congress;
     private int year;
     private int month;
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getBioguideId() {
@@ -109,20 +118,28 @@ public class IndustryPoliticianContributions {
         this.contributionSum = contributionSum;
     }
 
-    public int getTimestamp() {
-        return timestamp;
+    public long getBeginTimestamp() {
+        return beginTimestamp;
     }
 
-    public void setTimestamp(int timestamp) {
-        this.timestamp = timestamp;
+    public void setBeginTimestamp(long beginTimestamp) {
+        this.beginTimestamp = beginTimestamp;
     }
 
-    public int getCycle() {
-        return cycle;
+    public long getEndTimestamp() {
+        return endTimestamp;
     }
 
-    public void setCycle(int cycle) {
-        this.cycle = cycle;
+    public void setEndTimestamp(long endTimestamp) {
+        this.endTimestamp = endTimestamp;
+    }
+
+    public int getCongress() {
+        return congress;
+    }
+
+    public void setCongress(int congress) {
+        this.congress = congress;
     }
 
     public int getYear() {

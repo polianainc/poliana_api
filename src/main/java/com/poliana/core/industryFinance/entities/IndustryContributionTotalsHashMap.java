@@ -12,7 +12,7 @@ import java.util.HashMap;
  * @date 1/6/14
  */
 @Entity("industry_contribution_totals")
-public class IndustryContributionTotals {
+public class IndustryContributionTotalsHashMap {
 
     @Id
     private String id;
@@ -37,8 +37,11 @@ public class IndustryContributionTotals {
     private String chamber;
     private int congress;
 
-    private long begin_timestamp;
-    private long end_timestamp;
+    @Property("begin_timestamp")
+    private long beginTimestamp;
+
+    @Property("end_timestamp")
+    private long endTimestamp;
 
     @Embedded
     private HashMap<String, Integer> sums;
@@ -115,20 +118,20 @@ public class IndustryContributionTotals {
         this.congress = congress;
     }
 
-    public long getBegin_timestamp() {
-        return begin_timestamp;
+    public long getBeginTimestamp() {
+        return beginTimestamp;
     }
 
-    public void setBegin_timestamp(long begin_timestamp) {
-        this.begin_timestamp = begin_timestamp;
+    public void setBeginTimestamp(long beginTimestamp) {
+        this.beginTimestamp = beginTimestamp;
     }
 
-    public long getEnd_timestamp() {
-        return end_timestamp;
+    public long getEndTimestamp() {
+        return endTimestamp;
     }
 
-    public void setEnd_timestamp(long end_timestamp) {
-        this.end_timestamp = end_timestamp;
+    public void setEndTimestamp(long endTimestamp) {
+        this.endTimestamp = endTimestamp;
     }
 
     public HashMap<String, Integer> getSums() {

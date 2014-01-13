@@ -1,6 +1,6 @@
 package com.poliana.views;
 
-import com.poliana.core.industryFinance.entities.IndustryPoliticianContributions;
+import com.poliana.core.politicianFinance.entities.IndustryPoliticianContributions;
 import com.poliana.core.legislators.Legislator;
 import com.poliana.core.time.TimeService;
 import org.jfree.chart.ChartFactory;
@@ -39,8 +39,7 @@ public class PoliticianContributionView extends JFrame {
 
         if (contributions != null && contributions.size() > 0) {
             this.title =
-                    "Industry contributions from " +
-                    contributions.get(0) + " to " +
+                    "Industry contributions  to " +
                     legislator.getFirstName() + " " +
                     legislator.getLastName() +
                     " during the " +
@@ -49,7 +48,7 @@ public class PoliticianContributionView extends JFrame {
                     " congress";
         }
         else
-            this.title = " No data";
+            this.title = "No data";
 
         this.dataset = getContributionDataset(contributions);
     }

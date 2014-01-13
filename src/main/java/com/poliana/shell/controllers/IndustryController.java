@@ -1,14 +1,11 @@
 package com.poliana.shell.controllers;
 
 import com.poliana.core.industries.IndustryRepo;
-import com.poliana.core.industryFinance.jobs.IndContrSessionBatch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.core.CommandMarker;
 import org.springframework.shell.core.annotation.CliCommand;
-import org.springframework.shell.core.annotation.CliOption;
 import org.springframework.stereotype.Controller;
 
-import java.io.IOException;
 
 /**
  * @author David Gilmore
@@ -18,16 +15,7 @@ import java.io.IOException;
 public class IndustryController implements CommandMarker {
 
     @Autowired
-    private IndContrSessionBatch indContrSessionBatch;
-
-    @Autowired
     private IndustryRepo industryRepo;
-
-    @CliCommand(value = "indContributions", help = "Run a job")
-    public void actions(
-            @CliOption(key = { "congress" }, mandatory = true) final int congress) throws IOException {
-        indContrSessionBatch.processIndustryTotals(congress);
-    }
 
     @CliCommand(value = "populateIndustries")
     public void populateIndustries() {

@@ -1,8 +1,7 @@
-package com.poliana.core.politicianProfile;
+package com.poliana.core.politicianFinance.entities;
 
 import org.mongodb.morphia.annotations.*;
 import com.google.gson.annotations.Expose;
-import com.poliana.core.pacFinance.PacPoliticianContrTotals;
 
 import java.util.List;
 
@@ -11,7 +10,7 @@ import java.util.List;
  * @date 12/11/13
  */
 @Entity("politician_profile")
-public class PoliticianProfile {
+public class PoliticianFinance {
 
     @Id
     @Expose

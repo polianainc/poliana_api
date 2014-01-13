@@ -1,8 +1,7 @@
-package com.poliana.core.politicianProfile;
+package com.poliana.core.politicianFinance.entities;
 
-import com.poliana.core.industryFinance.entities.IndustryPoliticianContributions;
+import com.poliana.core.politicianFinance.entities.IndustryPoliticianContributions;
 import org.mongodb.morphia.annotations.*;
-import com.google.gson.annotations.Expose;
 import com.poliana.core.pacFinance.PacPoliticianContrTotals;
 
 
@@ -12,11 +11,10 @@ import java.util.List;
  * @author David Gilmore
  * @date 12/11/13
  */
-@Entity("term_totals")
-public class TermTotals {
+@Entity("session_totals")
+public class SessionTotals {
 
     @Id
-    @Expose
     private String id;
 
     @Property("bioguide_id")

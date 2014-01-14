@@ -1,6 +1,6 @@
 package com.poliana.core.politicianFinance;
 
-import com.poliana.core.politicianFinance.entities.IndustryPoliticianContributions;
+import com.poliana.core.politicianFinance.entities.IndustryPoliticianContributionTotals;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,9 +29,9 @@ public class PoliticianFinanceService {
      * @param congress
      * @return
      */
-    public List<IndustryPoliticianContributions> getIndustryToPoliticianTotals(String bioguideId, int congress) {
+    public List<IndustryPoliticianContributionTotals> getIndustryToPoliticianTotals(String bioguideId, int congress) {
 
-        List<IndustryPoliticianContributions> totalsList = politicianIndustryMongoRepo.getIndustryToPoliticianContributions(bioguideId, congress);
+        List<IndustryPoliticianContributionTotals> totalsList = politicianIndustryMongoRepo.getIndustryToPoliticianContributions(bioguideId, congress);
 
         if (totalsList.size() > 0)
             return totalsList;
@@ -53,9 +53,9 @@ public class PoliticianFinanceService {
      * @param endTimestamp
      * @return
      */
-    public List<IndustryPoliticianContributions> getIndustryToPoliticianTotals(String bioguideId, long beginTimestamp, long endTimestamp) {
+    public List<IndustryPoliticianContributionTotals> getIndustryToPoliticianTotals(String bioguideId, long beginTimestamp, long endTimestamp) {
 
-        List<IndustryPoliticianContributions> totalsList =
+        List<IndustryPoliticianContributionTotals> totalsList =
                 politicianIndustryMongoRepo.getIndustryToPoliticianContributions(bioguideId, beginTimestamp, endTimestamp);
 
         if (totalsList.size() > 0)
@@ -76,10 +76,10 @@ public class PoliticianFinanceService {
      * @param bioguideId
      * @return
      */
-    public List<IndustryPoliticianContributions> getIndustryToPoliticianTotals(String bioguideId) {
+    public List<IndustryPoliticianContributionTotals> getIndustryToPoliticianTotals(String bioguideId) {
 
         //Query MongoDB for industry to politician objects
-        List<IndustryPoliticianContributions> totalsList =
+        List<IndustryPoliticianContributionTotals> totalsList =
                 politicianIndustryMongoRepo.getIndustryToPoliticianContributions(bioguideId);
 
         if (totalsList != null && totalsList.size() > 0)
@@ -87,7 +87,8 @@ public class PoliticianFinanceService {
 
         totalsList = politicianIndustryHadoopRepo.getIndustryToPoliticianContributions(bioguideId);
 
-        politicianIndustryMongoRepo.saveIndustryToPoliticianContributions(totalsList);
+        if (totalsList != null && totalsList.size() > 0)
+            politicianIndustryMongoRepo.saveIndustryToPoliticianContributions(totalsList);
 
         return totalsList;
     }
@@ -97,23 +98,23 @@ public class PoliticianFinanceService {
      * @param bioguideId
      * @return
      */
-    public HashMap<Integer, List<IndustryPoliticianContributions>> getIndustryTotalsAllTime(String bioguideId) {
+    public HashMap<Integer, List<IndustryPoliticianContributionTotals>> getIndustryTotalsAllTime(String bioguideId) {
 
         //Query MongoDB for industry to politician objects
-        Iterator<IndustryPoliticianContributions> totalsIterator = politicianIndustryMongoRepo.getIndustryToPoliticianContributionsIterator(bioguideId);
+        Iterator<IndustryPoliticianContributionTotals> totalsIterator = politicianIndustryMongoRepo.getIndustryToPoliticianContributionsIterator(bioguideId);
 
-        HashMap<Integer, List<IndustryPoliticianContributions>> totalsHashMap = new HashMap<>(30);
+        HashMap<Integer, List<IndustryPoliticianContributionTotals>> totalsHashMap = new HashMap<>(30);
 
         //Add industry totals to the HashMap. Check the size, if it's zero, fall back to Impala.
         while (totalsIterator.hasNext()) {
-            IndustryPoliticianContributions industryTotals = totalsIterator.next();
+            IndustryPoliticianContributionTotals industryTotals = totalsIterator.next();
 
             //If the hashmap already has a list of industry totals for the object's cycle
             if (totalsHashMap.containsKey(industryTotals.getCongress()))
                 totalsHashMap.get(industryTotals.getCongress()).add(industryTotals);
                 //If the hashmap doesn't contain a list of industry totals, make it
             else {
-                List<IndustryPoliticianContributions> totalsList = new LinkedList<>();
+                List<IndustryPoliticianContributionTotals> totalsList = new LinkedList<>();
                 totalsList.add(industryTotals);
                 totalsHashMap.put(industryTotals.getCongress(), totalsList);
             }
@@ -137,7 +138,7 @@ public class PoliticianFinanceService {
             pairs = (Map.Entry) it.next();
 
             if (politicianIndustryMongoRepo.countIndustryToPoliticianContributions(bioguideId, (Integer) pairs.getKey()) <= 0)
-                politicianIndustryMongoRepo.saveIndustryToPoliticianContributions((List<IndustryPoliticianContributions>)pairs.getValue());
+                politicianIndustryMongoRepo.saveIndustryToPoliticianContributions((List<IndustryPoliticianContributionTotals>)pairs.getValue());
         }
 
         return totalsHashMap;

@@ -1,7 +1,6 @@
 package com.poliana.core.industryFinance;
 
-import com.poliana.core.industryFinance.entities.IndustryContributionTotalsHashMap;
-import com.poliana.core.industryFinance.entities.IndustryTimeRangeTotals;
+import com.poliana.core.industryFinance.entities.IndustryContributionTotalsMap;
 import org.apache.log4j.Logger;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Key;
@@ -23,24 +22,24 @@ public class IndustryContributionMongoRepo {
 
     /**
      * Save totals for an industry's contributions to all legislators in a certain chamber during a given cycle
-     * @param industryContributionTotalsHashMap
+     * @param industryContributionTotalsMap
      * @return
-     * @see com.poliana.core.industryFinance.entities.IndustryContributionTotalsHashMap
+     * @see com.poliana.core.industryFinance.entities.IndustryContributionTotalsMap
      */
-    public Key<IndustryContributionTotalsHashMap> saveIndustryContributionTotals(IndustryContributionTotalsHashMap industryContributionTotalsHashMap) {
+    public Key<IndustryContributionTotalsMap> saveIndustryContributionTotalsMap(IndustryContributionTotalsMap industryContributionTotalsMap) {
 
-        return mongoStore.save(industryContributionTotalsHashMap);
+        return mongoStore.save(industryContributionTotalsMap);
     }
 
     /**
      * Get totals for an industry's contributions to all legislators during a given congressional cycle.
      * @param congress
      * @return
-     * @see com.poliana.core.industryFinance.entities.IndustryContributionTotalsHashMap
+     * @see com.poliana.core.industryFinance.entities.IndustryContributionTotalsMap
      */
-    public IndustryContributionTotalsHashMap getIndustryTotals(String industryId, int congress) {
+    public IndustryContributionTotalsMap getIndustryContributionTotalsMap(String industryId, int congress) {
 
-        Query<IndustryContributionTotalsHashMap> query = mongoStore.createQuery(IndustryContributionTotalsHashMap.class);
+        Query<IndustryContributionTotalsMap> query = mongoStore.createQuery(IndustryContributionTotalsMap.class);
 
         query.and(
                 query.criteria("industryId").equal(industryId),
@@ -53,11 +52,11 @@ public class IndustryContributionMongoRepo {
      * Get totals for an industry category contributions to all legislators during a given congressional cycle.
      * @param congress
      * @return
-     * @see com.poliana.core.industryFinance.entities.IndustryContributionTotalsHashMap
+     * @see com.poliana.core.industryFinance.entities.IndustryContributionTotalsMap
      */
-    public IndustryContributionTotalsHashMap getIndustryCategoryTotals(String categoryId, int congress) {
+    public IndustryContributionTotalsMap getIndustryCategoryContributionTotalsMap(String categoryId, int congress) {
 
-        Query<IndustryContributionTotalsHashMap> query = mongoStore.createQuery(IndustryContributionTotalsHashMap.class);
+        Query<IndustryContributionTotalsMap> query = mongoStore.createQuery(IndustryContributionTotalsMap.class);
 
         query.and(
                 query.criteria("categoryId").equal(categoryId),
@@ -71,11 +70,11 @@ public class IndustryContributionMongoRepo {
      * @param chamber
      * @param congress
      * @return
-     * @see com.poliana.core.industryFinance.entities.IndustryContributionTotalsHashMap
+     * @see com.poliana.core.industryFinance.entities.IndustryContributionTotalsMap
      */
-    public IndustryContributionTotalsHashMap getIndustryChamberTotals(String industryId, String chamber, int congress) {
+    public IndustryContributionTotalsMap getIndustryContributionTotalsMapByChamber(String industryId, String chamber, int congress) {
 
-        Query<IndustryContributionTotalsHashMap> query = mongoStore.createQuery(IndustryContributionTotalsHashMap.class);
+        Query<IndustryContributionTotalsMap> query = mongoStore.createQuery(IndustryContributionTotalsMap.class);
 
         query.and(
                 query.criteria("industryId").equal(industryId),
@@ -90,11 +89,11 @@ public class IndustryContributionMongoRepo {
      * @param chamber
      * @param congress
      * @return
-     * @see com.poliana.core.industryFinance.entities.IndustryContributionTotalsHashMap
+     * @see com.poliana.core.industryFinance.entities.IndustryContributionTotalsMap
      */
-    public IndustryContributionTotalsHashMap getIndustryCategoryChamberTotals(String categoryId, String chamber, int congress) {
+    public IndustryContributionTotalsMap getIndustryCategoryContributionTotalsMap(String categoryId, String chamber, int congress) {
 
-        Query<IndustryContributionTotalsHashMap> query = mongoStore.createQuery(IndustryContributionTotalsHashMap.class);
+        Query<IndustryContributionTotalsMap> query = mongoStore.createQuery(IndustryContributionTotalsMap.class);
 
         query.and(
                 query.criteria("categoryId").equal(categoryId),

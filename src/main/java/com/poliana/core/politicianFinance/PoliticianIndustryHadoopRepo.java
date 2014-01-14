@@ -1,6 +1,6 @@
 package com.poliana.core.politicianFinance;
 
-import com.poliana.core.politicianFinance.entities.IndustryPoliticianContributions;
+import com.poliana.core.politicianFinance.entities.IndustryPoliticianContributionTotals;
 import com.poliana.core.politicianFinance.mappers.AllContrPerCogressMapper;
 import com.poliana.core.politicianFinance.mappers.IndToPolContrTotalsMapper;
 import org.apache.log4j.Logger;
@@ -28,7 +28,7 @@ public class PoliticianIndustryHadoopRepo {
      * @param bioguideId
      * @return
      */
-    public List<IndustryPoliticianContributions> getIndustryToPoliticianContributions(String bioguideId, int congress) {
+    public List<IndustryPoliticianContributionTotals> getIndustryToPoliticianContributions(String bioguideId, int congress) {
 
         try {
             String query =
@@ -70,7 +70,11 @@ public class PoliticianIndustryHadoopRepo {
                     "   real_code = cat_code " +
                     "WHERE congress = " + congress;
 
-            return impalaTemplate.query(query, new IndToPolContrTotalsMapper());
+            List<IndustryPoliticianContributionTotals> contributionsList = impalaTemplate.query(query, new IndToPolContrTotalsMapper());
+
+            logger.info("Industry contribution sums to " + bioguideId + " for congress " + congress + "returned from Impala");
+
+            return contributionsList;
         }
         catch (Exception e) {
             logger.error(e);
@@ -84,13 +88,17 @@ public class PoliticianIndustryHadoopRepo {
      * @param bioguideId
      * @return
      */
-    public List<IndustryPoliticianContributions> getIndustryCategoryToPoliticianContributions(String bioguideId, int congress) {
+    public List<IndustryPoliticianContributionTotals> getIndustryCategoryToPoliticianContributions(String bioguideId, int congress) {
 
         try {
             String query =
                     "";
 
-            return impalaTemplate.query(query, new IndToPolContrTotalsMapper());
+            List<IndustryPoliticianContributionTotals> contributionsList = impalaTemplate.query(query, new IndToPolContrTotalsMapper());
+
+            logger.info("Industry category contribution sums to " + bioguideId + " for all time returned from Impala");
+
+            return contributionsList;
         }
         catch (Exception e) {
             logger.error(e);
@@ -104,7 +112,7 @@ public class PoliticianIndustryHadoopRepo {
      * @param bioguideId
      * @return
      */
-    public List<IndustryPoliticianContributions> getIndustryToPoliticianContributions(
+    public List<IndustryPoliticianContributionTotals> getIndustryToPoliticianContributions(
             String bioguideId, long beginTimestamp, long endTimestamp) {
 
         try {
@@ -125,7 +133,7 @@ public class PoliticianIndustryHadoopRepo {
      * @param bioguideId
      * @return
      */
-    public List<IndustryPoliticianContributions> getIndustryCategoryToPoliticianContributions(
+    public List<IndustryPoliticianContributionTotals> getIndustryCategoryToPoliticianContributions(
             String bioguideId, long beginTimestamp, long endTimestamp) {
 
         try {
@@ -146,7 +154,7 @@ public class PoliticianIndustryHadoopRepo {
      * @param bioguideId
      * @return
      */
-    public List<IndustryPoliticianContributions> getIndustryToPoliticianContributions(String bioguideId) {
+    public List<IndustryPoliticianContributionTotals> getIndustryToPoliticianContributions(String bioguideId) {
 
         try {
             String query =
@@ -166,7 +174,7 @@ public class PoliticianIndustryHadoopRepo {
      * @param bioguideId
      * @return
      */
-    public List<IndustryPoliticianContributions> getIndustryCategoryToPoliticianContributions(String bioguideId) {
+    public List<IndustryPoliticianContributionTotals> getIndustryCategoryToPoliticianContributions(String bioguideId) {
 
         try {
             String query =
@@ -186,7 +194,7 @@ public class PoliticianIndustryHadoopRepo {
      * @param bioguideId
      * @return
      */
-    public HashMap<Integer, List<IndustryPoliticianContributions>> getAllIndustryContributionsPerCongress(String bioguideId) {
+    public HashMap<Integer, List<IndustryPoliticianContributionTotals>> getAllIndustryContributionsPerCongress(String bioguideId) {
 
         try {
             String query =

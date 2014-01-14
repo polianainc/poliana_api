@@ -2,9 +2,9 @@ package com.poliana.web;
 
 import com.poliana.core.ideology.IdeologyMatrix;
 import com.poliana.core.ideology.IdeologyService;
-import com.poliana.core.industryFinance.IndustryContributionService;
+import com.poliana.core.industryFinance.services.IndustryContributionService;
 import com.poliana.core.industryFinance.entities.IndustryContributionCompare;
-import com.poliana.core.industryFinance.entities.IndustryContributionTotalsHashMap;
+import com.poliana.core.industryFinance.entities.IndustryContributionTotalsMap;
 import com.poliana.views.IndustryContributionView;
 import org.apache.log4j.Logger;
 import org.jfree.chart.ChartUtilities;
@@ -34,7 +34,7 @@ public class IndustryContributionController extends AbstractBaseController {
 
 
     /**
-     * Get Industry contributions by congressional session. If no congress is provided, it will default to the current
+     * Get industry contributions by congressional session. If no congress is provided, it will default to the current
      * congress.
      * @param industryId
      * @param chamber
@@ -48,15 +48,15 @@ public class IndustryContributionController extends AbstractBaseController {
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress) {
 
         if (chamber != null) //Get contributions for a specifc chamber
-            return this.gson.toJson(industryContributionService.getIndustryTotalsByChamber(industryId, chamber, congress));
+            return this.gson.toJson(industryContributionService.getIndustryContributionTotalsMap(industryId, chamber, congress));
 
         else  //If no chamber is specified, return both the house and senate contributions.
-            return this.gson.toJson(industryContributionService.getIndustryTotals(industryId, congress));
+            return this.gson.toJson(industryContributionService.getIndustryContributionTotalsMap(industryId, congress));
 
     }
 
     /**
-     * Get Industry category contributions by congressional session.
+     * Get industry category contributions by congressional session.
      * If no congress is provided, it will default to the current congress.
      * @param categoryId
      * @param chamber
@@ -70,10 +70,56 @@ public class IndustryContributionController extends AbstractBaseController {
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress) {
 
         if (chamber != null) //Get contributions for a specifc chamber
-            return this.gson.toJson(industryContributionService.getIndustryCategoryTotalsByChamber(categoryId, chamber, congress));
+            return this.gson.toJson(industryContributionService.getIndustryCategoryContributionTotalsMap(categoryId, chamber, congress));
 
         else  //If no chamber is specified, return both the house and senate contributions.
-            return this.gson.toJson(industryContributionService.getIndustryCategoryTotals(categoryId, congress));
+            return this.gson.toJson(industryContributionService.getIndustryCategoryContributionTotalsMap(categoryId, congress));
+
+    }
+
+    /**
+     * Plot industry contributions by congressional session. If no congress is provided, it will default to the current
+     * congress.
+     * @param industryId
+     * @param chamber
+     * @param congress
+     * @return
+     */
+    @RequestMapping(value = "/{industry_id}/contributions", method = RequestMethod.GET)
+    public @ResponseBody String plotIndustryContributionsByCongress(
+            @PathVariable(value = "industry_id") String industryId,
+            @RequestParam(value = "chamber", required = false) String chamber,
+            @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
+            @RequestParam(value = "plot") String plotType) {
+
+        if (chamber != null) //Get contributions for a specifc chamber
+            return this.gson.toJson(industryContributionService.getIndustryContributionTotalsMap(industryId, chamber, congress));
+
+        else  //If no chamber is specified, return both the house and senate contributions.
+            return this.gson.toJson(industryContributionService.getIndustryContributionTotalsMap(industryId, congress));
+
+    }
+
+    /**
+     * Plot industry category contributions by congressional session.
+     * If no congress is provided, it will default to the current congress.
+     * @param categoryId
+     * @param chamber
+     * @param congress
+     * @return
+     */
+    @RequestMapping(value = "/category/{category_id}/contributions", method = RequestMethod.GET)
+    public @ResponseBody String plotIndustryCategoryContributionsByCongress(
+            @PathVariable(value = "category_id") String categoryId,
+            @RequestParam(value = "chamber", required = false) String chamber,
+            @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
+            @RequestParam(value = "plot") String plotType) {
+
+        if (chamber != null) //Get contributions for a specifc chamber
+            return this.gson.toJson(industryContributionService.getIndustryCategoryContributionTotalsMap(categoryId, chamber, congress));
+
+        else  //If no chamber is specified, return both the house and senate contributions.
+            return this.gson.toJson(industryContributionService.getIndustryCategoryContributionTotalsMap(categoryId, congress));
 
     }
 
@@ -91,15 +137,15 @@ public class IndustryContributionController extends AbstractBaseController {
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
             @RequestParam(value = "compare_to", required = false) String compareTo) {
 
-        IndustryContributionTotalsHashMap totals;
+        IndustryContributionTotalsMap totals;
         IdeologyMatrix ideologyMatrix;
 
         switch (compareTo) {
 
             default: {
-                totals = industryContributionService.getIndustryTotalsByChamber(industryId, chamber, congress);
+                totals = industryContributionService.getIndustryContributionTotalsMap(industryId, chamber, congress);
                 ideologyMatrix = ideologyService.getIdeologyMatrix(chamber, congress);
-                return this.gson.toJson(industryContributionService.getIdeologyVsContributions(ideologyMatrix, totals));
+                return this.gson.toJson(industryContributionService.getIndustryContributionsVsIdeology(ideologyMatrix, totals));
             }
         }
     }
@@ -118,15 +164,15 @@ public class IndustryContributionController extends AbstractBaseController {
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
             @RequestParam(value = "compare_to", required = false) String compareTo) {
 
-        IndustryContributionTotalsHashMap totals;
+        IndustryContributionTotalsMap totals;
         IdeologyMatrix ideologyMatrix;
 
         switch (compareTo) {
 
             default: {
-                totals = industryContributionService.getIndustryCategoryTotalsByChamber(categoryId, chamber, congress);
+                totals = industryContributionService.getIndustryCategoryContributionTotalsMap(categoryId, chamber, congress);
                 ideologyMatrix = ideologyService.getIdeologyMatrix(chamber, congress);
-                return this.gson.toJson(industryContributionService.getIdeologyVsContributions(ideologyMatrix, totals));
+                return this.gson.toJson(industryContributionService.getIndustryContributionsVsIdeology(ideologyMatrix, totals));
             }
         }
     }
@@ -153,10 +199,10 @@ public class IndustryContributionController extends AbstractBaseController {
         switch (compareTo) {
 
             default: {
-                IndustryContributionTotalsHashMap industryTotals = industryContributionService.getIndustryTotalsByChamber(industryId, chamber, congress);
+                IndustryContributionTotalsMap industryTotals = industryContributionService.getIndustryContributionTotalsMap(industryId, chamber, congress);
                 IdeologyMatrix ideologyMatrix = ideologyService.getIdeologyMatrix(chamber, congress);
 
-                compareTotals = industryContributionService.getIdeologyVsContributions(ideologyMatrix, industryTotals);
+                compareTotals = industryContributionService.getIndustryContributionsVsIdeology(ideologyMatrix, industryTotals);
             }
         }
 
@@ -192,11 +238,11 @@ public class IndustryContributionController extends AbstractBaseController {
         switch (compareTo) {
 
             default: {
-                IndustryContributionTotalsHashMap industryTotals =
-                        industryContributionService.getIndustryCategoryTotalsByChamber(categoryId, chamber, congress);
+                IndustryContributionTotalsMap industryTotals =
+                        industryContributionService.getIndustryCategoryContributionTotalsMap(categoryId, chamber, congress);
                 IdeologyMatrix ideologyMatrix = ideologyService.getIdeologyMatrix(chamber, congress);
 
-                compareTotals = industryContributionService.getIdeologyVsContributions(ideologyMatrix, industryTotals);
+                compareTotals = industryContributionService.getIndustryContributionsVsIdeology(ideologyMatrix, industryTotals);
             }
         }
 

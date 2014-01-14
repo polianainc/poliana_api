@@ -15,7 +15,7 @@ import java.util.List;
  */
 @SuppressWarnings("serial")
 @Entity("industry_monthly_totals")
-public class IndustryTimeRangeTotals {
+public class IndustryPartyAndGeoTotals {
 
     @Id
     @Expose
@@ -42,19 +42,19 @@ public class IndustryTimeRangeTotals {
     @Embedded("states")
     private HashMap<String,Recipient> states;
 
-    public IndustryTimeRangeTotals() {}
+    public IndustryPartyAndGeoTotals() {}
 
-    public IndustryTimeRangeTotals(IndustryTimeRangeTotals industryTimeRangeTotals) {
-        this.setIndustry(industryTimeRangeTotals.getIndustry());
-        this.setCongress(industryTimeRangeTotals.getCongress());
-        this.setRepublicanCount(industryTimeRangeTotals.getRepublicanCount());
-        this.setRepublicanSum(industryTimeRangeTotals.getRepublicanSum());
-        this.setDemocratCount(industryTimeRangeTotals.getDemocratCount());
-        this.setDemocratSum(industryTimeRangeTotals.getDemocratSum());
-        this.setIndependentCount(industryTimeRangeTotals.getIndependentCount());
-        this.setIndependentSum(industryTimeRangeTotals.getIndependentSum());
-        this.setTopRecipients(industryTimeRangeTotals.getTopRecipients());
-        this.setStates(industryTimeRangeTotals.getStates());
+    public IndustryPartyAndGeoTotals(IndustryPartyAndGeoTotals industryPartyAndGeoTotals) {
+        this.setIndustry(industryPartyAndGeoTotals.getIndustry());
+        this.setCongress(industryPartyAndGeoTotals.getCongress());
+        this.setRepublicanCount(industryPartyAndGeoTotals.getRepublicanCount());
+        this.setRepublicanSum(industryPartyAndGeoTotals.getRepublicanSum());
+        this.setDemocratCount(industryPartyAndGeoTotals.getDemocratCount());
+        this.setDemocratSum(industryPartyAndGeoTotals.getDemocratSum());
+        this.setIndependentCount(industryPartyAndGeoTotals.getIndependentCount());
+        this.setIndependentSum(industryPartyAndGeoTotals.getIndependentSum());
+        this.setTopRecipients(industryPartyAndGeoTotals.getTopRecipients());
+        this.setStates(industryPartyAndGeoTotals.getStates());
     }
 
     public String getId() {

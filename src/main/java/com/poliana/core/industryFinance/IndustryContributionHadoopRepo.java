@@ -1,13 +1,11 @@
 package com.poliana.core.industryFinance;
 
-import com.poliana.core.industryFinance.entities.IndustryContributionTotalsHashMap;
-import com.poliana.core.industryFinance.entities.IndustryPoliticianContribution;
+import com.poliana.core.industryFinance.entities.IndustryContributionTotalsMap;
 import com.poliana.core.industryFinance.mapppers.IndustryContributionTotalsHashMapper;
-import com.poliana.core.politicianFinance.entities.IndustryPoliticianContributions;
+import com.poliana.core.politicianFinance.entities.IndustryPoliticianContributionTotals;
 import com.poliana.core.time.CongressTimestamps;
 import com.poliana.core.time.TimeService;
 import com.poliana.core.politicianFinance.mappers.IndToPolContrTotalsMapper;
-import com.poliana.core.industryFinance.mapppers.LegislatorRecievedIndustryTotalsMapper;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -38,9 +36,9 @@ public class IndustryContributionHadoopRepo {
      * industry category.
      *
      * @return
-     * @see com.poliana.core.industryFinance.entities.IndustryContributionTotalsHashMap
+     * @see com.poliana.core.industryFinance.entities.IndustryContributionTotalsMap
      */
-    public IndustryContributionTotalsHashMap getIndustryContributionTotals(String industryId, int congress) {
+    public IndustryContributionTotalsMap getIndustryContributionTotalsMap(String industryId, int congress) {
 
         CongressTimestamps ts = timeService.congressTimestamps(congress);
 
@@ -123,9 +121,9 @@ public class IndustryContributionHadoopRepo {
      * industry category.
      *
      * @return
-     * @see com.poliana.core.industryFinance.entities.IndustryContributionTotalsHashMap
+     * @see com.poliana.core.industryFinance.entities.IndustryContributionTotalsMap
      */
-    public IndustryContributionTotalsHashMap getIndustryCategoryContributionTotals(String categoryId, int congress) {
+    public IndustryContributionTotalsMap getIndustryCategoryContributionTotalsMap(String categoryId, int congress) {
 
         CongressTimestamps ts = timeService.congressTimestamps(congress);
 
@@ -219,9 +217,9 @@ public class IndustryContributionHadoopRepo {
      * industry category.
      *
      * @return
-     * @see com.poliana.core.industryFinance.entities.IndustryContributionTotalsHashMap
+     * @see com.poliana.core.industryFinance.entities.IndustryContributionTotalsMap
      */
-    public IndustryContributionTotalsHashMap getIndustryChamberContributionTotals(String industryId, String chamber, int congress) {
+    public IndustryContributionTotalsMap getIndustryContributionTotalsMapByChamber(String industryId, String chamber, int congress) {
 
         CongressTimestamps ts = timeService.congressTimestamps(congress);
 
@@ -305,9 +303,9 @@ public class IndustryContributionHadoopRepo {
      * industry category.
      *
      * @return
-     * @see com.poliana.core.industryFinance.entities.IndustryContributionTotalsHashMap
+     * @see com.poliana.core.industryFinance.entities.IndustryContributionTotalsMap
      */
-    public IndustryContributionTotalsHashMap getIndustryCategoryChamberContributionTotals(String categoryId, String chamber, int congress) {
+    public IndustryContributionTotalsMap getIndustryCategoryContributionTotalsMap(String categoryId, String chamber, int congress) {
 
         CongressTimestamps ts = timeService.congressTimestamps(congress);
 
@@ -392,7 +390,7 @@ public class IndustryContributionHadoopRepo {
      * @param years
      * @return
      */
-    public List<IndustryPoliticianContributions> industryContrTotals(String industryId, int... years) {
+    public List<IndustryPoliticianContributionTotals> getIndustryContributionTotals(String industryId, int... years) {
 
         String yrs;
 
@@ -422,53 +420,6 @@ public class IndustryContributionHadoopRepo {
         return impalaTemplate.query(query, new IndToPolContrTotalsMapper());
     }
 
-    /**
-     *
-     * @param bioguideId
-     * @param beginTimestamp
-     * @param endTimestamp
-     * @param limit
-     * @return
-     */
-    public List<IndustryPoliticianContribution> legislatorReceivedIndustryTotals(String bioguideId,
-                                                                    long beginTimestamp, long endTimestamp, int limit) {
-        String lim = "";
-        if (limit != 0)
-            lim = " LIMIT " + limit;
-
-        String query =
-                "SELECT " +
-                    "  bioguide_id" +
-                    ", real_code" +
-                    ", sum(amount)" +
-                    ", i.cat_name" +
-                    ", i.industry" +
-                    ", i.sector_long " +
-                "FROM " +
-                    "campaign_finance.individual_contributions_timestamped c " +
-                "JOIN " +
-                    "entities.legislators l " +
-                "ON " +
-                    "c.recip_id = l.opensecrets_id " +
-                "JOIN " +
-                    "entities.industry_codes i " +
-                "ON " +
-                    "c.real_code = i.cat_code " +
-                " WHERE " +
-                        "bioguide_id = \'" + bioguideId +"\' " +
-                    "AND " +
-                        "unix_time > " + beginTimestamp + " " +
-                    "AND " +
-                        "unix_time < " + endTimestamp + " " +
-                "GROUP BY " +
-                    "  bioguide_id" +
-                    ", real_code" +
-                    ", i.cat_name" +
-                    ", i.industry" +
-                    ", i.sector_long" + lim;
-
-        return impalaTemplate.query(query, new LegislatorRecievedIndustryTotalsMapper(beginTimestamp, endTimestamp));
-    }
 
     @Autowired
     public void setImpalaTemplate(JdbcTemplate impalaTemplate) {

@@ -12,7 +12,7 @@ import java.util.HashMap;
  * @date 1/6/14
  */
 @Entity("industry_contribution_totals")
-public class IndustryContributionTotalsHashMap {
+public class IndustryContributionTotalsMap {
 
     @Id
     private String id;

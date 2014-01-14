@@ -1,6 +1,5 @@
 package com.poliana.core.politicianFinance.entities;
 
-import com.poliana.core.politicianFinance.entities.IndustryPoliticianContributions;
 import org.mongodb.morphia.annotations.*;
 import com.poliana.core.pacFinance.PacPoliticianContrTotals;
 
@@ -35,7 +34,7 @@ public class SessionTotals {
     private double leadershipScore;
 
     @Embedded("top_industry_contributions")
-    private List<IndustryPoliticianContributions> topIndustryContributions;
+    private List<IndustryPoliticianContributionTotals> topIndustryContributions;
 
     @Embedded("top_pac_contributions")
     private List<PacPoliticianContrTotals> topPACContributions;
@@ -100,11 +99,11 @@ public class SessionTotals {
         this.leadershipScore = leadershipScore;
     }
 
-    public List<IndustryPoliticianContributions> getTopIndustryContributions() {
+    public List<IndustryPoliticianContributionTotals> getTopIndustryContributions() {
         return topIndustryContributions;
     }
 
-    public void setTopIndustryContributions(List<IndustryPoliticianContributions> topIndustryContributions) {
+    public void setTopIndustryContributions(List<IndustryPoliticianContributionTotals> topIndustryContributions) {
         this.topIndustryContributions = topIndustryContributions;
     }
 

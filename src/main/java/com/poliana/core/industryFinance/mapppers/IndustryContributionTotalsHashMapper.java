@@ -1,6 +1,6 @@
 package com.poliana.core.industryFinance.mapppers;
 
-import com.poliana.core.industryFinance.entities.IndustryContributionTotalsHashMap;
+import com.poliana.core.industryFinance.entities.IndustryContributionTotalsMap;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 
@@ -12,7 +12,7 @@ import java.util.HashMap;
  * @author David Gilmore
  * @date 1/6/14
  */
-public class IndustryContributionTotalsHashMapper implements ResultSetExtractor<IndustryContributionTotalsHashMap> {
+public class IndustryContributionTotalsHashMapper implements ResultSetExtractor<IndustryContributionTotalsMap> {
 
     private String chamber;
     private Long beginTimestamp;
@@ -28,9 +28,9 @@ public class IndustryContributionTotalsHashMapper implements ResultSetExtractor<
     }
 
     @Override
-    public IndustryContributionTotalsHashMap extractData(ResultSet rs) throws SQLException, DataAccessException {
+    public IndustryContributionTotalsMap extractData(ResultSet rs) throws SQLException, DataAccessException {
 
-        IndustryContributionTotalsHashMap totals = new IndustryContributionTotalsHashMap();
+        IndustryContributionTotalsMap totals = new IndustryContributionTotalsMap();
 
         HashMap<String, Integer> sums = new HashMap<>();
 

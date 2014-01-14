@@ -1,7 +1,7 @@
 package com.poliana.web;
 
 import com.poliana.core.politicianFinance.PoliticianFinanceService;
-import com.poliana.core.politicianFinance.entities.IndustryPoliticianContributions;
+import com.poliana.core.politicianFinance.entities.IndustryPoliticianContributionTotals;
 import com.poliana.core.legislators.Legislator;
 import com.poliana.core.legislators.LegislatorService;
 import com.poliana.core.time.TimeService;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import static com.poliana.core.time.TimeService.CURRENT_CONGRESS;
@@ -54,7 +53,7 @@ public class PoliticianFinanceController extends AbstractBaseController {
             @PathVariable("bioguide_id") String bioguideId,
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress) {
 
-        List<IndustryPoliticianContributions> allTotals = politicianFinanceService.getIndustryToPoliticianTotals(bioguideId, congress);
+        List<IndustryPoliticianContributionTotals> allTotals = politicianFinanceService.getIndustryToPoliticianTotals(bioguideId, congress);
         return this.gson.toJson(allTotals);
     }
 
@@ -71,7 +70,7 @@ public class PoliticianFinanceController extends AbstractBaseController {
             @RequestParam(value = "start", required = true) @DateTimeFormat(pattern = "mm-dd-yyyy") Date start,
             @RequestParam(value = "end", required = true) @DateTimeFormat(pattern = "mm-dd-yyyy") Date end) {
 
-        List<IndustryPoliticianContributions> totals =
+        List<IndustryPoliticianContributionTotals> totals =
                 politicianFinanceService.getIndustryToPoliticianTotals(bioguideId, start.getTime(), end.getTime());
 
         return this.gson.toJson(totals);
@@ -91,7 +90,7 @@ public class PoliticianFinanceController extends AbstractBaseController {
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
             @RequestParam(value = "plot", required = true) String plotType) {
 
-        List<IndustryPoliticianContributions> allTotals = politicianFinanceService.getIndustryToPoliticianTotals(bioguideId, congress);
+        List<IndustryPoliticianContributionTotals> allTotals = politicianFinanceService.getIndustryToPoliticianTotals(bioguideId, congress);
 
         Legislator legislator;
         try {
@@ -116,8 +115,8 @@ public class PoliticianFinanceController extends AbstractBaseController {
     public @ResponseBody String getAllIndustryContributions(
             @PathVariable("bioguide_id") String bioguideId) {
 
-        HashMap<Integer, List<IndustryPoliticianContributions>> contributionsMap =
-                politicianFinanceService.getIndustryTotalsAllTime(bioguideId);
+        List<IndustryPoliticianContributionTotals> contributionsMap =
+                politicianFinanceService.getIndustryToPoliticianTotals(bioguideId);
 
         return this.gson.toJson(contributionsMap);
     }

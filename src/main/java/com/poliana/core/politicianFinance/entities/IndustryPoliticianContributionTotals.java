@@ -9,7 +9,7 @@ import org.mongodb.morphia.annotations.Property;
  * @date 11/1/13
  */
 @Entity("industry_to_politician_contribution_totals")
-public class IndustryPoliticianContributions {
+public class IndustryPoliticianContributionTotals {
 
     @Id
     private String id;

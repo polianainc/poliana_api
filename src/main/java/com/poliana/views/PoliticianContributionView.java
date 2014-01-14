@@ -1,6 +1,6 @@
 package com.poliana.views;
 
-import com.poliana.core.politicianFinance.entities.IndustryPoliticianContributions;
+import com.poliana.core.politicianFinance.entities.IndustryPoliticianContributionTotals;
 import com.poliana.core.legislators.Legislator;
 import com.poliana.core.time.TimeService;
 import org.jfree.chart.ChartFactory;
@@ -33,7 +33,7 @@ public class PoliticianContributionView extends JFrame {
      * @param contributions
      * @param congress
      */
-    public PoliticianContributionView(List<IndustryPoliticianContributions> contributions, Legislator legislator, int congress) {
+    public PoliticianContributionView(List<IndustryPoliticianContributionTotals> contributions, Legislator legislator, int congress) {
 
         this.timeService = new TimeService();
 
@@ -96,11 +96,11 @@ public class PoliticianContributionView extends JFrame {
         return chart;
     }
 
-    private CategoryDataset getContributionDataset(List<IndustryPoliticianContributions> contributions) {
+    private CategoryDataset getContributionDataset(List<IndustryPoliticianContributionTotals> contributions) {
 
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
-        for (IndustryPoliticianContributions contribution: contributions) {
+        for (IndustryPoliticianContributionTotals contribution: contributions) {
             dataset.addValue(contribution.getContributionSum(), "", contribution.getIndustryName());
         }
 

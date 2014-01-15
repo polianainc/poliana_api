@@ -1,6 +1,5 @@
-package com.poliana.core.politicianFinance;
+package com.poliana.core.politicianFinance.industries;
 
-import com.poliana.core.politicianFinance.entities.IndustryPoliticianContributionTotals;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,18 +8,16 @@ import java.util.*;
 
 
 /**
- * The PoliticianFinance Service aggregates PAC contribution sums, individual contribution sums, and getIdeologyMatrix
- * analysis for every congressional cycle a given politician has been in Federal office as a representative or senator.
  * @author David Gilmore
  * @date 12/26/13
  */
 @Service
-public class PoliticianFinanceService {
+public class PoliticianIndustryFinanceService {
 
     private PoliticianIndustryMongoRepo politicianIndustryMongoRepo;
     private PoliticianIndustryHadoopRepo politicianIndustryHadoopRepo;
 
-    private static final Logger logger = Logger.getLogger(PoliticianFinanceService.class);
+    private static final Logger logger = Logger.getLogger(PoliticianIndustryFinanceService.class);
 
 
     /**
@@ -86,6 +83,28 @@ public class PoliticianFinanceService {
             return totalsList;
 
         totalsList = politicianIndustryHadoopRepo.getIndustryToPoliticianContributions(bioguideId);
+
+        if (totalsList != null && totalsList.size() > 0)
+            politicianIndustryMongoRepo.saveIndustryToPoliticianContributions(totalsList);
+
+        return totalsList;
+    }
+
+    /**
+     * Get a list of industry to politician contribution sums for all time
+     * @param bioguideId
+     * @return
+     */
+    public List<IndustryPoliticianContributionTotals> getIndustryCategoryToPoliticianTotals(String bioguideId) {
+
+        //Query MongoDB for industry to politician objects
+        List<IndustryPoliticianContributionTotals> totalsList =
+                politicianIndustryMongoRepo.getIndustryCategoryToPoliticianContributions(bioguideId);
+
+        if (totalsList != null && totalsList.size() > 0)
+            return totalsList;
+
+        totalsList = politicianIndustryHadoopRepo.getIndustryCategoryToPoliticianContributions(bioguideId);
 
         if (totalsList != null && totalsList.size() > 0)
             politicianIndustryMongoRepo.saveIndustryToPoliticianContributions(totalsList);

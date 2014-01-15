@@ -1,6 +1,5 @@
-package com.poliana.core.politicianFinance.mappers;
+package com.poliana.core.politicianFinance.industries;
 
-import com.poliana.core.politicianFinance.entities.IndustryPoliticianContributionTotals;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;

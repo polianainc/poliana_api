@@ -1,6 +1,6 @@
 package com.poliana.views;
 
-import com.poliana.core.politicianFinance.entities.IndustryPoliticianContributionTotals;
+import com.poliana.core.politicianFinance.industries.IndustryPoliticianContributionTotals;
 import com.poliana.core.legislators.Legislator;
 import com.poliana.core.time.TimeService;
 import org.jfree.chart.ChartFactory;
@@ -54,6 +54,25 @@ public class PoliticianContributionView extends JFrame {
     }
 
     /**
+     * Plot industry to politician contribution totals for a given chamber in a given congressional cycle.
+     */
+    public PoliticianContributionView(List<IndustryPoliticianContributionTotals> contributions, Legislator legislator) {
+
+        this.timeService = new TimeService();
+
+        if (contributions != null && contributions.size() > 0) {
+            this.title =
+                    "Industry contributions  to " +
+                            legislator.getFirstName() + " " +
+                            legislator.getLastName();
+        }
+        else
+            this.title = "No data";
+
+        this.dataset = getContributionDataset(contributions);
+    }
+
+    /**
      * Generate a plot of the given type.
      * @param type
      * @return
@@ -99,6 +118,9 @@ public class PoliticianContributionView extends JFrame {
     private CategoryDataset getContributionDataset(List<IndustryPoliticianContributionTotals> contributions) {
 
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+
+        if (contributions == null)
+            return dataset;
 
         for (IndustryPoliticianContributionTotals contribution: contributions) {
             dataset.addValue(contribution.getContributionSum(), "", contribution.getIndustryName());

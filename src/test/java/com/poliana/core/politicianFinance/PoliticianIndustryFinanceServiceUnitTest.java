@@ -1,6 +1,9 @@
 package com.poliana.core.politicianFinance;
 
-import com.poliana.core.politicianFinance.entities.IndustryPoliticianContributionTotals;
+import com.poliana.core.politicianFinance.industries.IndustryPoliticianContributionTotals;
+import com.poliana.core.politicianFinance.industries.PoliticianIndustryFinanceService;
+import com.poliana.core.politicianFinance.industries.PoliticianIndustryHadoopRepo;
+import com.poliana.core.politicianFinance.industries.PoliticianIndustryMongoRepo;
 import org.easymock.IMocksControl;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,9 +21,9 @@ import static org.easymock.EasyMock.expect;
  * @author David Gilmore
  * @date 1/13/14
  */
-public class PoliticianFinanceServiceTest {
+public class PoliticianIndustryFinanceServiceUnitTest {
 
-    private PoliticianFinanceService politicianFinanceService;
+    private PoliticianIndustryFinanceService politicianIndustryFinanceService;
 
     private PoliticianIndustryMongoRepo politicianIndustryMongoRepoMock;
     private PoliticianIndustryHadoopRepo politicianIndustryHadoopRepoMock;
@@ -36,10 +39,10 @@ public class PoliticianFinanceServiceTest {
         this.politicianIndustryMongoRepoMock = this.control.createMock(PoliticianIndustryMongoRepo.class);
         this.politicianIndustryHadoopRepoMock = this.control.createMock(PoliticianIndustryHadoopRepo.class);
 
-        this.politicianFinanceService = new PoliticianFinanceService();
+        this.politicianIndustryFinanceService = new PoliticianIndustryFinanceService();
 
-        this.politicianFinanceService.setPoliticianIndustryMongoRepo(this.politicianIndustryMongoRepoMock);
-        this.politicianFinanceService.setPoliticianIndustryHadoopRepo(this.politicianIndustryHadoopRepoMock);
+        this.politicianIndustryFinanceService.setPoliticianIndustryMongoRepo(this.politicianIndustryMongoRepoMock);
+        this.politicianIndustryFinanceService.setPoliticianIndustryHadoopRepo(this.politicianIndustryHadoopRepoMock);
     }
 
     @Test
@@ -83,11 +86,6 @@ public class PoliticianFinanceServiceTest {
 
         this.control.replay();
 
-        this.politicianFinanceService.getIndustryToPoliticianTotals("O000167");
-    }
-
-    @Test
-    public void testGetIndustryTotalsAllTime() throws Exception {
-
+        this.politicianIndustryFinanceService.getIndustryToPoliticianTotals("O000167");
     }
 }

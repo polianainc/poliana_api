@@ -1,6 +1,6 @@
-package com.poliana.core.politicianFinance;
+package com.poliana.core.politicianFinance.industries;
 
-import com.poliana.core.politicianFinance.entities.IndustryPoliticianContributionTotals;
+import com.poliana.core.politicianFinance.financeProfile.SessionTotals;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.query.Query;
@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -31,6 +32,23 @@ public class PoliticianIndustryMongoRepo {
     public Iterable<Key<IndustryPoliticianContributionTotals>> saveIndustryToPoliticianContributions(List<IndustryPoliticianContributionTotals> totalsList) {
 
         return mongoStore.save(totalsList);
+    }
+
+    /**
+     * Save a collection of term totals to MongoDB
+     * @param sessionTotalsCollection
+     * @return
+     */
+    public Iterable<Key<SessionTotals>> saveSessionTotals(Collection<SessionTotals> sessionTotalsCollection) {
+
+        return mongoStore.save(sessionTotalsCollection);
+    }
+
+    public List<SessionTotals> getSessionTotals(String bioguide) {
+
+        Query<SessionTotals> query = mongoStore.find(SessionTotals.class);
+        query.criteria("bioguideId").equal(bioguide);
+        return query.asList();
     }
 
     /**
@@ -80,11 +98,12 @@ public class PoliticianIndustryMongoRepo {
 
         query.and(
                 query.criteria("bioguideId").equal(bioguideId),
-                query.criteria("congress").equal(0),
-                query.criteria("year").equal(0),
-                query.criteria("month").equal(0),
-                query.criteria("beginTimestamp").equal(0),
-                query.criteria("endTimestamp").equal(0));
+                query.criteria("industryId").exists(),
+                query.criteria("congress").doesNotExist(),
+                query.criteria("year").doesNotExist(),
+                query.criteria("month").doesNotExist(),
+                query.criteria("beginTimestamp").doesNotExist(),
+                query.criteria("endTimestamp").doesNotExist());
 
         return query.iterator();
     }
@@ -100,11 +119,33 @@ public class PoliticianIndustryMongoRepo {
 
         query.and(
                 query.criteria("bioguideId").equal(bioguideId),
-                query.criteria("congress").equal(0),
-                query.criteria("year").equal(0),
-                query.criteria("month").equal(0),
-                query.criteria("beginTimestamp").equal(0),
-                query.criteria("endTimestamp").equal(0));
+                query.criteria("industryId").exists(),
+                query.criteria("congress").doesNotExist(),
+                query.criteria("year").doesNotExist(),
+                query.criteria("month").doesNotExist(),
+                query.criteria("beginTimestamp").doesNotExist(),
+                query.criteria("endTimestamp").doesNotExist());
+
+        return query.asList();
+    }
+
+    /**
+     * Using MongoDB, get a list of all industry to politician contributions for a given bioguide ID.
+     * @param bioguideId
+     * @return
+     */
+    public List<IndustryPoliticianContributionTotals> getIndustryCategoryToPoliticianContributions(String bioguideId) {
+
+        Query<IndustryPoliticianContributionTotals> query = mongoStore.find(IndustryPoliticianContributionTotals.class);
+
+        query.and(
+                query.criteria("bioguideId").equal(bioguideId),
+                query.criteria("categoryId").exists(),
+                query.criteria("congress").doesNotExist(),
+                query.criteria("year").doesNotExist(),
+                query.criteria("month").doesNotExist(),
+                query.criteria("beginTimestamp").doesNotExist(),
+                query.criteria("endTimestamp").doesNotExist());
 
         return query.asList();
     }

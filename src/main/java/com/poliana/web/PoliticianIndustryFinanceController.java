@@ -1,7 +1,7 @@
 package com.poliana.web;
 
-import com.poliana.core.politicianFinance.PoliticianFinanceService;
-import com.poliana.core.politicianFinance.entities.IndustryPoliticianContributionTotals;
+import com.poliana.core.politicianFinance.industries.PoliticianIndustryFinanceService;
+import com.poliana.core.politicianFinance.industries.IndustryPoliticianContributionTotals;
 import com.poliana.core.legislators.Legislator;
 import com.poliana.core.legislators.LegislatorService;
 import com.poliana.core.time.TimeService;
@@ -27,17 +27,17 @@ import static com.poliana.core.time.TimeService.CURRENT_CONGRESS;
  */
 @Controller
 @RequestMapping("/politician/")
-public class PoliticianFinanceController extends AbstractBaseController {
+public class PoliticianIndustryFinanceController extends AbstractBaseController {
 
-    private PoliticianFinanceService politicianFinanceService;
+    private PoliticianIndustryFinanceService politicianIndustryFinanceService;
     private LegislatorService legislatorService;
 
     private TimeService timeService;
 
-    private static final Logger logger = Logger.getLogger(PoliticianFinanceController.class);
+    private static final Logger logger = Logger.getLogger(PoliticianIndustryFinanceController.class);
 
 
-    public PoliticianFinanceController() {
+    public PoliticianIndustryFinanceController() {
         this.timeService = new TimeService();
     }
 
@@ -53,7 +53,7 @@ public class PoliticianFinanceController extends AbstractBaseController {
             @PathVariable("bioguide_id") String bioguideId,
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress) {
 
-        List<IndustryPoliticianContributionTotals> allTotals = politicianFinanceService.getIndustryToPoliticianTotals(bioguideId, congress);
+        List<IndustryPoliticianContributionTotals> allTotals = politicianIndustryFinanceService.getIndustryToPoliticianTotals(bioguideId, congress);
         return this.gson.toJson(allTotals);
     }
 
@@ -71,7 +71,7 @@ public class PoliticianFinanceController extends AbstractBaseController {
             @RequestParam(value = "end", required = true) @DateTimeFormat(pattern = "mm-dd-yyyy") Date end) {
 
         List<IndustryPoliticianContributionTotals> totals =
-                politicianFinanceService.getIndustryToPoliticianTotals(bioguideId, start.getTime(), end.getTime());
+                politicianIndustryFinanceService.getIndustryToPoliticianTotals(bioguideId, start.getTime(), end.getTime());
 
         return this.gson.toJson(totals);
     }
@@ -90,7 +90,7 @@ public class PoliticianFinanceController extends AbstractBaseController {
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
             @RequestParam(value = "plot", required = true) String plotType) {
 
-        List<IndustryPoliticianContributionTotals> allTotals = politicianFinanceService.getIndustryToPoliticianTotals(bioguideId, congress);
+        List<IndustryPoliticianContributionTotals> allTotals = politicianIndustryFinanceService.getIndustryToPoliticianTotals(bioguideId, congress);
 
         Legislator legislator;
         try {
@@ -111,19 +111,74 @@ public class PoliticianFinanceController extends AbstractBaseController {
         }
     }
 
-    @RequestMapping(value = "/{bioguide_id}/contributions/industries", method = RequestMethod.GET)
-    public @ResponseBody String getAllIndustryContributions(
-            @PathVariable("bioguide_id") String bioguideId) {
+    /**
+     * Plot all industry contribution totals for all time
+     * @param bioguideId
+     * @return
+     */
+    @RequestMapping(value="/{bioguide_id}/contributions/industries", params = {"plot"}, method = RequestMethod.GET)
+    public void plotIndustryToPoliticianTotals (
+            OutputStream stream,
+            @PathVariable("bioguide_id") String bioguideId,
+            @RequestParam(value = "plot", required = true) String plotType) {
 
-        List<IndustryPoliticianContributionTotals> contributionsMap =
-                politicianFinanceService.getIndustryToPoliticianTotals(bioguideId);
+        List<IndustryPoliticianContributionTotals> allTotals = politicianIndustryFinanceService.getIndustryToPoliticianTotals(bioguideId);
 
-        return this.gson.toJson(contributionsMap);
+        Legislator legislator;
+        try {
+            legislator = legislatorService.getLegislatorTermsById(bioguideId).get(0);
+        }
+        catch (Exception e) {
+            legislator = new Legislator();
+        }
+
+        PoliticianContributionView view = new PoliticianContributionView(allTotals, legislator);
+
+        JFreeChart chart = view.generateChart(plotType);
+
+        try {
+            ChartUtilities.writeChartAsPNG(stream, chart, 1600, 1000);
+        } catch (IOException e) {
+            logger.error(e);
+        }
+    }
+
+    /**
+     * Plot all industry contribution totals for all time
+     * @param bioguideId
+     * @return
+     */
+    @RequestMapping(value="/{bioguide_id}/contributions/industries/category", params = {"plot"}, method = RequestMethod.GET)
+    public void plotIndustryCategoryToPoliticianTotals (
+            OutputStream stream,
+            @PathVariable("bioguide_id") String bioguideId,
+            @RequestParam(value = "plot", required = true) String plotType) {
+
+        List<IndustryPoliticianContributionTotals> allTotals =
+                politicianIndustryFinanceService.getIndustryCategoryToPoliticianTotals(bioguideId);
+
+        Legislator legislator;
+        try {
+            legislator = legislatorService.getLegislatorTermsById(bioguideId).get(0);
+        }
+        catch (Exception e) {
+            legislator = new Legislator();
+        }
+
+        PoliticianContributionView view = new PoliticianContributionView(allTotals, legislator);
+
+        JFreeChart chart = view.generateChart(plotType);
+
+        try {
+            ChartUtilities.writeChartAsPNG(stream, chart, 1600, 1000);
+        } catch (IOException e) {
+            logger.error(e);
+        }
     }
 
     @Autowired
-    public void setPoliticianFinanceService(PoliticianFinanceService politicianFinanceService) {
-        this.politicianFinanceService = politicianFinanceService;
+    public void setPoliticianIndustryFinanceService(PoliticianIndustryFinanceService politicianIndustryFinanceService) {
+        this.politicianIndustryFinanceService = politicianIndustryFinanceService;
     }
 
     @Autowired

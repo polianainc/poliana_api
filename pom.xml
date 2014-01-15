@@ -5,7 +5,6 @@
     <artifactId>data_manager</artifactId>
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
-    <categoryName>data_manager</categoryName>
     <url>http://maven.apache.org</url>
     <properties>
         <jackson-asl.version>1.9.12</jackson-asl.version>

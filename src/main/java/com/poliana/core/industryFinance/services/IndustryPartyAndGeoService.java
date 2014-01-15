@@ -7,7 +7,7 @@ import com.poliana.core.industryFinance.entities.IndustryPartyAndGeoTotals;
 import com.poliana.core.industryFinance.entities.Recipient;
 import com.poliana.core.legislators.Legislator;
 import com.poliana.core.legislators.LegislatorService;
-import com.poliana.core.politicianFinance.entities.IndustryPoliticianContributionTotals;
+import com.poliana.core.politicianFinance.industries.IndustryPoliticianContributionTotals;
 import com.poliana.core.time.CongressYears;
 import com.poliana.core.time.TimeService;
 import org.apache.log4j.Logger;
@@ -166,14 +166,14 @@ public class IndustryPartyAndGeoService {
 
         if (recipients.containsKey(bioguideId)) {
             Recipient recipient = recipients.get(bioguideId);
-            recipient.setCount(recipient.getCount() + contribution.getContributionsCount());
+            recipient.setCount(recipient.getCount() + contribution.getContributionCount());
             recipient.setSum(recipient.getSum() + contribution.getContributionSum());
             recipient.setSeriesAverage(recipient.getSum()/numSeries);
         }
         else {
             Recipient recipient = new Recipient();
 
-            int contributionCount = contribution.getContributionsCount();
+            int contributionCount = contribution.getContributionCount();
             int contributionSum = contribution.getContributionSum();
 
             recipient.setState(legislator.getTermState());
@@ -197,15 +197,15 @@ public class IndustryPartyAndGeoService {
 
         switch(contribution.getParty()) {
             case "Republican":
-                totals.setRepublicanCount(totals.getRepublicanCount() + contribution.getContributionsCount());
+                totals.setRepublicanCount(totals.getRepublicanCount() + contribution.getContributionCount());
                 totals.setRepublicanSum(totals.getRepublicanSum() + contribution.getContributionSum());
                 break;
             case "Democrat":
-                totals.setDemocratCount(totals.getDemocratCount() + contribution.getContributionsCount());
+                totals.setDemocratCount(totals.getDemocratCount() + contribution.getContributionCount());
                 totals.setDemocratSum(totals.getDemocratSum() + contribution.getContributionSum());
                 break;
             case "Independent":
-                totals.setIndependentCount(totals.getIndependentCount() + contribution.getContributionsCount());
+                totals.setIndependentCount(totals.getIndependentCount() + contribution.getContributionCount());
                 totals.setIndependentSum(totals.getIndependentSum() + contribution.getContributionSum());
                 break;
         }
@@ -224,7 +224,7 @@ public class IndustryPartyAndGeoService {
 
         if (stateAverages.containsKey(state)) {
             Recipient recipient = stateAverages.get(state);
-            recipient.setCount(recipient.getCount() + contribution.getContributionsCount());
+            recipient.setCount(recipient.getCount() + contribution.getContributionCount());
             recipient.setSum(recipient.getSum() + contribution.getContributionSum());
             recipient.setSeriesAverage(recipient.getSum()/numSeries);
         }
@@ -232,7 +232,7 @@ public class IndustryPartyAndGeoService {
             Recipient recipient = new Recipient();
             recipient.setState(legislator.getTermState());
 
-            int contributionsCount = contribution.getContributionsCount();
+            int contributionsCount = contribution.getContributionCount();
             int contributionsSum = contribution.getContributionSum();
 
             recipient.setCount(contributionsCount);

@@ -1,6 +1,6 @@
 package com.poliana.shell.controllers;
 
-import com.poliana.core.politicianFinance.PoliticianFinanceService;
+import com.poliana.core.politicianFinance.industries.PoliticianIndustryFinanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.core.CommandMarker;
 import org.springframework.stereotype.Controller;
@@ -13,6 +13,6 @@ import org.springframework.stereotype.Controller;
 public class PoliticianFinanceController implements CommandMarker {
 
     @Autowired
-    private PoliticianFinanceService profileService;
+    private PoliticianIndustryFinanceService profileService;
 
 }

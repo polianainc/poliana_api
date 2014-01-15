@@ -2,10 +2,10 @@ package com.poliana.core.industryFinance;
 
 import com.poliana.core.industryFinance.entities.IndustryContributionTotalsMap;
 import com.poliana.core.industryFinance.mapppers.IndustryContributionTotalsHashMapper;
-import com.poliana.core.politicianFinance.entities.IndustryPoliticianContributionTotals;
+import com.poliana.core.politicianFinance.industries.IndustryPoliticianContributionTotals;
+import com.poliana.core.politicianFinance.industries.IndustryPoliticianContributionTotalsMapper;
 import com.poliana.core.time.CongressTimestamps;
 import com.poliana.core.time.TimeService;
-import com.poliana.core.politicianFinance.mappers.IndToPolContrTotalsMapper;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -45,67 +45,67 @@ public class IndustryContributionHadoopRepo {
         try {
             String query =
                     "SELECT  " +
-                            "      bioguide_id " +
-                            "    , first_name " +
-                            "    , last_name   " +
-                            "    , cat_order as industry_id " +
-                            "    , industry " +
-                            "    , cat_name " +
-                            "    , sector " +
-                            "    , sector_long " +
-                            "    , congress " +
-                            "    , SUM(amount) as total     " +
-                            "FROM " +
-                            "    (SELECT  " +
-                            "          bioguide_id " +
-                            "        , first_name " +
-                            "        , last_name " +
-                            "        , cat_order " +
-                            "        , industry " +
-                            "        , cat_name " +
-                            "        , sector " +
-                            "        , sector_long " +
-                            "        , congress " +
-                            "        , amount " +
-                            "    FROM      " +
-                            "        (SELECT  " +
-                            "              recip_id   " +
-                            "            , cat_order " +
-                            "            , industry " +
-                            "            , cat_name " +
-                            "            , sector " +
-                            "            , sector_long " +
-                            "            , congress " +
-                            "            , amount " +
-                            "        FROM  " +
-                            "            crp.individual_contributions contributions " +
-                            "        JOIN  " +
-                            "            entities.industry_codes industries " +
-                            "        ON  " +
-                            "            real_code = cat_code " +
-                            "        WHERE  " +
-                            "            cat_order = \'" + industryId + "\' " +
-                            "        AND  " +
-                            "            congress = " + congress + " ) order_contributions " +
-                            "    JOIN " +
-                            "        entities.legislators_flat_terms " +
-                            "    ON  " +
-                            "       opensecrets_id = recip_id       " +
-                            "    WHERE  " +
-                            "       (begin_timestamp < " + ts.getEnd() +  " AND end_timestamp > " + ts.getBegin() +  ")    " +
-                            "    AND " +
-                            "       (begin_timestamp < " + ts.getBegin() +  " OR end_timestamp > " + ts.getEnd() +  ") )   " +
-                            "    joined_contributions  " +
-                            "GROUP BY " +
-                            "      bioguide_id     " +
-                            "    , first_name   " +
-                            "    , last_name   " +
-                            "    , industry_id " +
-                            "    , industry " +
-                            "    , cat_name " +
-                            "    , sector " +
-                            "    , sector_long " +
-                            "    , congress";
+                    "      bioguide_id " +
+                    "    , first_name " +
+                    "    , last_name   " +
+                    "    , cat_order as industry_id " +
+                    "    , industry " +
+                    "    , cat_name " +
+                    "    , sector " +
+                    "    , sector_long " +
+                    "    , congress " +
+                    "    , SUM(amount) as total     " +
+                    "FROM " +
+                    "    (SELECT  " +
+                    "          bioguide_id " +
+                    "        , first_name " +
+                    "        , last_name " +
+                    "        , cat_order " +
+                    "        , industry " +
+                    "        , cat_name " +
+                    "        , sector " +
+                    "        , sector_long " +
+                    "        , congress " +
+                    "        , amount " +
+                    "    FROM      " +
+                    "        (SELECT  " +
+                    "              recip_id   " +
+                    "            , cat_order " +
+                    "            , industry " +
+                    "            , cat_name " +
+                    "            , sector " +
+                    "            , sector_long " +
+                    "            , congress " +
+                    "            , amount " +
+                    "        FROM  " +
+                    "            crp.individual_contributions contributions " +
+                    "        JOIN  " +
+                    "            entities.industry_codes industries " +
+                    "        ON  " +
+                    "            real_code = cat_code " +
+                    "        WHERE  " +
+                    "            cat_order = \'" + industryId + "\' " +
+                    "        AND  " +
+                    "            congress = " + congress + " ) order_contributions " +
+                    "    JOIN " +
+                    "        entities.legislators_flat_terms " +
+                    "    ON  " +
+                    "       opensecrets_id = recip_id       " +
+                    "    WHERE  " +
+                    "       (begin_timestamp < " + ts.getEnd() +  " AND end_timestamp > " + ts.getBegin() +  ")    " +
+                    "    AND " +
+                    "       (begin_timestamp < " + ts.getBegin() +  " OR end_timestamp > " + ts.getEnd() +  ") )   " +
+                    "    joined_contributions  " +
+                    "GROUP BY " +
+                    "      bioguide_id     " +
+                    "    , first_name   " +
+                    "    , last_name   " +
+                    "    , industry_id " +
+                    "    , industry " +
+                    "    , cat_name " +
+                    "    , sector " +
+                    "    , sector_long " +
+                    "    , congress";
 
             return impalaTemplate.query(query, new IndustryContributionTotalsHashMapper(null));
         }
@@ -226,68 +226,68 @@ public class IndustryContributionHadoopRepo {
         try {
             String query =
                     "SELECT  " +
-                            "      bioguide_id " +
-                            "    , first_name " +
-                            "    , last_name   " +
-                            "    , cat_order as industry_id " +
-                            "    , industry " +
-                            "    , cat_name " +
-                            "    , sector " +
-                            "    , sector_long " +
-                            "    , congress " +
-                            "    , SUM(amount) as total     " +
-                            "FROM " +
-                            "    (SELECT  " +
-                            "          bioguide_id " +
-                            "        , first_name " +
-                            "        , last_name " +
-                            "        , cat_order " +
-                            "        , industry " +
-                            "        , cat_name " +
-                            "        , sector " +
-                            "        , sector_long " +
-                            "        , congress " +
-                            "        , amount " +
-                            "    FROM      " +
-                            "        (SELECT  " +
-                            "              recip_id   " +
-                            "            , cat_order " +
-                            "            , industry " +
-                            "            , cat_name " +
-                            "            , sector " +
-                            "            , sector_long " +
-                            "            , congress " +
-                            "            , amount " +
-                            "        FROM  " +
-                            "            crp.individual_contributions contributions " +
-                            "        JOIN  " +
-                            "            entities.industry_codes industries " +
-                            "        ON  " +
-                            "            real_code = cat_code " +
-                            "        WHERE  " +
-                            "            cat_order = \'" + industryId + "\' " +
-                            "        AND  " +
-                            "            congress = " + congress + " ) order_contributions " +
-                            "    JOIN " +
-                            "        entities.legislators_flat_terms " +
-                            "    ON  " +
-                            "       opensecrets_id = recip_id       " +
-                            "    WHERE  " +
-                            "       (begin_timestamp < " + ts.getEnd() +  " AND end_timestamp > " + ts.getBegin() +  ")    " +
-                            "    AND " +
-                            "       (begin_timestamp < " + ts.getBegin() +  " OR end_timestamp > " + ts.getEnd() +  ")     " +
-                            "    AND  " +
-                            "       SUBSTR(term_type, 1, 1) = \'" + chamber + "\' ) industry_contributions " +
-                            "GROUP BY " +
-                            "      bioguide_id     " +
-                            "    , first_name   " +
-                            "    , last_name   " +
-                            "    , industry_id " +
-                            "    , industry " +
-                            "    , cat_name " +
-                            "    , sector " +
-                            "    , sector_long " +
-                            "    , congress";
+                    "      bioguide_id " +
+                    "    , first_name " +
+                    "    , last_name   " +
+                    "    , cat_order as industry_id " +
+                    "    , industry " +
+                    "    , cat_name " +
+                    "    , sector " +
+                    "    , sector_long " +
+                    "    , congress " +
+                    "    , SUM(amount) as total     " +
+                    "FROM " +
+                    "    (SELECT  " +
+                    "          bioguide_id " +
+                    "        , first_name " +
+                    "        , last_name " +
+                    "        , cat_order " +
+                    "        , industry " +
+                    "        , cat_name " +
+                    "        , sector " +
+                    "        , sector_long " +
+                    "        , congress " +
+                    "        , amount " +
+                    "    FROM      " +
+                    "        (SELECT  " +
+                    "              recip_id   " +
+                    "            , cat_order " +
+                    "            , industry " +
+                    "            , cat_name " +
+                    "            , sector " +
+                    "            , sector_long " +
+                    "            , congress " +
+                    "            , amount " +
+                    "        FROM  " +
+                    "            crp.individual_contributions contributions " +
+                    "        JOIN  " +
+                    "            entities.industry_codes industries " +
+                    "        ON  " +
+                    "            real_code = cat_code " +
+                    "        WHERE  " +
+                    "            cat_order = \'" + industryId + "\' " +
+                    "        AND  " +
+                    "            congress = " + congress + " ) order_contributions " +
+                    "    JOIN " +
+                    "        entities.legislators_flat_terms " +
+                    "    ON  " +
+                    "       opensecrets_id = recip_id       " +
+                    "    WHERE  " +
+                    "       (begin_timestamp < " + ts.getEnd() +  " AND end_timestamp > " + ts.getBegin() +  ")    " +
+                    "    AND " +
+                    "       (begin_timestamp < " + ts.getBegin() +  " OR end_timestamp > " + ts.getEnd() +  ")     " +
+                    "    AND  " +
+                    "       SUBSTR(term_type, 1, 1) = \'" + chamber + "\' ) industry_contributions " +
+                    "GROUP BY " +
+                    "      bioguide_id     " +
+                    "    , first_name   " +
+                    "    , last_name   " +
+                    "    , industry_id " +
+                    "    , industry " +
+                    "    , cat_name " +
+                    "    , sector " +
+                    "    , sector_long " +
+                    "    , congress";
 
             return impalaTemplate.query(query, new IndustryContributionTotalsHashMapper(chamber));
         }
@@ -417,8 +417,142 @@ public class IndustryContributionHadoopRepo {
                 "WHERE " +
                 "   industry_id = \'" + industryId + "\' AND " + yrs;
 
-        return impalaTemplate.query(query, new IndToPolContrTotalsMapper());
+        return impalaTemplate.query(query, new IndustryPoliticianContributionTotalsMapper());
     }
+
+    /**
+     * Get a list of Industry to politician contribution sums for all politicians for all time
+     * @param industryId
+     * @return
+     */
+    public List<IndustryPoliticianContributionTotals> getIndustryToPoliticianContributions(String industryId) {
+
+        try {
+            String query =
+                    "SELECT DISTINCT" +
+                            "       bioguide_id" +
+                            "     , industry_id" +
+                            "     , party" +
+                            "     , religion" +
+                            "     , industry" +
+                            "     , sector" +
+                            "     , sector_long" +
+                            "     , contribution_count" +
+                            "     , contribution_sum" +
+                            "FROM" +
+                            "     (SELECT " +
+                            "            bioguide_id" +
+                            "          , cat_order as industry_id" +
+                            "          , party" +
+                            "          , religion" +
+                            "          , SUM(contribution_count) as contribution_count" +
+                            "          , SUM(contribution_sum) as contribution_sum      " +
+                            "     FROM" +
+                            "          (SELECT" +
+                            "                 bioguide_id" +
+                            "               , real_code" +
+                            "               , party" +
+                            "               , religion" +
+                            "               , COUNT(amount) as contribution_count" +
+                            "               , SUM(amount) as contribution_sum" +
+                            "          FROM" +
+                            "               entities.legislators m" +
+                            "          JOIN" +
+                            "               crp.individual_contributions c" +
+                            "          ON" +
+                            "               opensecrets_id = c.recip_id " +
+                            "          GROUP BY" +
+                            "                 bioguide_id" +
+                            "               , real_code" +
+                            "               , party" +
+                            "               , religion " +
+                            "          ) q1" +
+                            "     JOIN" +
+                            "          entities.industry_codes l" +
+                            "     ON" +
+                            "          real_code = cat_code " +
+                            "     GROUP BY" +
+                            "            bioguide_id" +
+                            "          , cat_order" +
+                            "          , party" +
+                            "          , religion " +
+                            "     " +
+                            "     ) distinct_sums" +
+                            "" +
+                            "JOIN" +
+                            "     entities.industry_codes l" +
+                            "ON" +
+                            "     industry_id = cat_order" +
+                            "WHERE industry_id = \'" + industryId + "\'";
+
+            return impalaTemplate.query(query, new IndustryPoliticianContributionTotalsMapper());
+        }
+        catch (Exception e) {
+            logger.error(e);
+        }
+
+        return null;
+    }
+
+    /**
+     * Get a list of Industry category to politician contribution sums for all politicians for all time
+     * @param categoryId
+     * @return
+     */
+    public List<IndustryPoliticianContributionTotals> getIndustryCategoryToPoliticianContributions(String categoryId) {
+
+        try {
+            String query =
+                    "SELECT  " +
+                    "     bioguide_id " +
+                    "   , real_code " +
+                    "   , party" +
+                    "   , religion        " +
+                    "   , industry " +
+                    "   , sector " +
+                    "   , sector_long " +
+                    "   , total" +
+                    "FROM  " +
+                    "   (SELECT  " +
+                    "         bioguide_id " +
+                    "       , real_code  " +
+                    "       , party" +
+                    "       , religion" +
+                    "       , SUM(amount) as total" +
+                    "   FROM  " +
+                    "       (SELECT  " +
+                    "             bioguide_id " +
+                    "           , real_code " +
+                    "           , party" +
+                    "           , religion" +
+                    "           , amount  " +
+                    "       FROM  " +
+                    "           entities.legislators m  " +
+                    "       JOIN  " +
+                    "           crp.individual_contributions c  " +
+                    "       ON  " +
+                    "           opensecrets_id = c.recip_id ) candidate_receipts  " +
+                    "   GROUP BY  " +
+                    "         bioguide_id " +
+                    "       , real_code " +
+                    "       , party" +
+                    "       , religion    " +
+                    "       ) sums  " +
+                    "JOIN  " +
+                    "   entities.industry_codes l  " +
+                    "ON  " +
+                    "   real_code = cat_code" +
+                    "WHERE real_code = \'" + categoryId + "\'";
+
+            return impalaTemplate.query(query, new IndustryPoliticianContributionTotalsMapper());
+        }
+        catch (Exception e) {
+            logger.error(e);
+        }
+
+        return null;
+    }
+
 
 
     @Autowired

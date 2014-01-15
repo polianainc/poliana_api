@@ -1,4 +1,4 @@
-package com.poliana.core.politicianFinance.entities;
+package com.poliana.core.politicianFinance.financeProfile;
 
 import org.mongodb.morphia.annotations.*;
 import com.google.gson.annotations.Expose;
@@ -9,8 +9,8 @@ import java.util.List;
  * @author David Gilmore
  * @date 12/11/13
  */
-@Entity("politician_profile")
-public class PoliticianFinance {
+@Entity("politician_finance_profile")
+public class PoliticianFinanceProfile {
 
     @Id
     @Expose
@@ -24,8 +24,8 @@ public class PoliticianFinance {
     @Property("last_name")
     private String lastName;
 
-    @Reference
-    private List<String> sessions;
+    @Embedded
+    private List<SessionTotals> sessions;
 
     public String getId() {
         return id;
@@ -59,11 +59,11 @@ public class PoliticianFinance {
         this.lastName = lastName;
     }
 
-    public List<String> getSessions() {
+    public List<SessionTotals> getSessions() {
         return sessions;
     }
 
-    public void setSessions(List<String> sessions) {
+    public void setSessions(List<SessionTotals> sessions) {
         this.sessions = sessions;
     }
 }

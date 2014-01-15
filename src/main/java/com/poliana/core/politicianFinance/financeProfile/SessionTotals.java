@@ -1,5 +1,6 @@
-package com.poliana.core.politicianFinance.entities;
+package com.poliana.core.politicianFinance.financeProfile;
 
+import com.poliana.core.politicianFinance.industries.IndustryPoliticianContributionTotals;
 import org.mongodb.morphia.annotations.*;
 import com.poliana.core.pacFinance.PacPoliticianContrTotals;
 

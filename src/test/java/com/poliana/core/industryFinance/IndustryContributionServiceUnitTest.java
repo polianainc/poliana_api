@@ -1,4 +1,4 @@
-package com.poliana.core.industryFinance.services;
+package com.poliana.core.industryFinance;
 
 import com.poliana.core.industryFinance.IndustryContributionHadoopRepo;
 import com.poliana.core.industryFinance.IndustryContributionMongoRepo;
@@ -18,7 +18,7 @@ import static org.easymock.EasyMock.expect;
  * @author David Gilmore
  * @date 1/12/14
  */
-public class IndustryContributionServiceTest {
+public class IndustryContributionServiceUnitTest {
 
     private IndustryContributionService industryContributionService;
 

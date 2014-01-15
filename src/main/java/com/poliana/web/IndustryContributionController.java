@@ -85,7 +85,7 @@ public class IndustryContributionController extends AbstractBaseController {
      * @param congress
      * @return
      */
-    @RequestMapping(value = "/{industry_id}/contributions", method = RequestMethod.GET)
+    @RequestMapping(value = "/{industry_id}/contributions", params = {"plot"}, method = RequestMethod.GET)
     public @ResponseBody String plotIndustryContributionsByCongress(
             @PathVariable(value = "industry_id") String industryId,
             @RequestParam(value = "chamber", required = false) String chamber,
@@ -108,7 +108,7 @@ public class IndustryContributionController extends AbstractBaseController {
      * @param congress
      * @return
      */
-    @RequestMapping(value = "/category/{category_id}/contributions", method = RequestMethod.GET)
+    @RequestMapping(value = "/category/{category_id}/contributions", params = {"plot"}, method = RequestMethod.GET)
     public @ResponseBody String plotIndustryCategoryContributionsByCongress(
             @PathVariable(value = "category_id") String categoryId,
             @RequestParam(value = "chamber", required = false) String chamber,

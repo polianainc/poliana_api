@@ -30,11 +30,35 @@ public class PoliticianIndustryFinanceService {
 
         List<IndustryPoliticianContributionTotals> totalsList = politicianIndustryMongoRepo.getIndustryToPoliticianContributions(bioguideId, congress);
 
-        if (totalsList.size() > 0)
+        if (totalsList != null && totalsList.size() > 0)
             return totalsList;
 
         //If MongoDB didn't return, fall back to Impala.
         totalsList = politicianIndustryHadoopRepo.getIndustryToPoliticianContributions(bioguideId, congress);
+
+        //If Impala had something to return, save it to MongoDB
+        if (totalsList != null && totalsList.size() > 0)
+            politicianIndustryMongoRepo.saveIndustryToPoliticianContributions(totalsList);
+
+        return totalsList;
+    }
+
+    /**
+     * Get a list of industry category to politician contributions summed over a given congressional cycle
+     * @param bioguideId
+     * @param congress
+     * @return
+     */
+    public List<IndustryPoliticianContributionTotals> getIndustryCategoryToPoliticianTotals(String bioguideId, int congress) {
+
+        List<IndustryPoliticianContributionTotals> totalsList =
+                politicianIndustryMongoRepo.getIndustryCategoryToPoliticianContributions(bioguideId, congress);
+
+        if (totalsList != null && totalsList.size() > 0)
+            return totalsList;
+
+        //If MongoDB didn't return, fall back to Impala.
+        totalsList = politicianIndustryHadoopRepo.getIndustryCategoryToPoliticianContributions(bioguideId, congress);
 
         //If Impala had something to return, save it to MongoDB
         if (totalsList != null && totalsList.size() > 0)
@@ -55,11 +79,36 @@ public class PoliticianIndustryFinanceService {
         List<IndustryPoliticianContributionTotals> totalsList =
                 politicianIndustryMongoRepo.getIndustryToPoliticianContributions(bioguideId, beginTimestamp, endTimestamp);
 
-        if (totalsList.size() > 0)
+        if (totalsList != null && totalsList.size() > 0)
             return totalsList;
 
         //If MongoDB didn't return, fall back to Impala.
         totalsList = politicianIndustryHadoopRepo.getIndustryToPoliticianContributions(bioguideId, beginTimestamp, endTimestamp);
+
+        //If Impala had something to return, save it to MongoDB
+        if (totalsList.size() > 0)
+            politicianIndustryMongoRepo.saveIndustryToPoliticianContributions(totalsList);
+
+        return totalsList;
+    }
+
+    /**
+     * Get a list of industry to politician contributions summed over a given congressional cycle
+     * @param bioguideId
+     * @param beginTimestamp
+     * @param endTimestamp
+     * @return
+     */
+    public List<IndustryPoliticianContributionTotals> getIndustryCategoryToPoliticianTotals(String bioguideId, long beginTimestamp, long endTimestamp) {
+
+        List<IndustryPoliticianContributionTotals> totalsList =
+                politicianIndustryMongoRepo.getIndustryCateogryToPoliticianContributions(bioguideId, beginTimestamp, endTimestamp);
+
+        if (totalsList != null && totalsList.size() > 0)
+            return totalsList;
+
+        //If MongoDB didn't return, fall back to Impala.
+        totalsList = politicianIndustryHadoopRepo.getIndustryCategoryToPoliticianContributions(bioguideId, beginTimestamp, endTimestamp);
 
         //If Impala had something to return, save it to MongoDB
         if (totalsList.size() > 0)
@@ -91,7 +140,7 @@ public class PoliticianIndustryFinanceService {
     }
 
     /**
-     * Get a list of industry to politician contribution sums for all time
+     * Get a list of industry category to politician contribution sums for all time
      * @param bioguideId
      * @return
      */

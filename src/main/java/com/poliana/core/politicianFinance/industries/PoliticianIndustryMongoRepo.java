@@ -68,6 +68,27 @@ public class PoliticianIndustryMongoRepo {
     }
 
     /**
+     * Using MongoDB, get a list of all industry category to politician contributions for a given bioguide ID and congress
+     * @param bioguideId
+     * @return
+     */
+    public List<IndustryPoliticianContributionTotals> getIndustryCategoryToPoliticianContributions(String bioguideId, int congress) {
+
+        Query<IndustryPoliticianContributionTotals> query = mongoStore.find(IndustryPoliticianContributionTotals.class);
+
+        query.and(
+                query.criteria("bioguideId").equal(bioguideId),
+                query.criteria("categoryId").exists(),
+                query.criteria("congress").equal(congress),
+                query.criteria("year").doesNotExist(),
+                query.criteria("month").doesNotExist(),
+                query.criteria("beginTimestamp").doesNotExist(),
+                query.criteria("endTimestamp").doesNotExist());
+
+        return query.asList();
+    }
+
+    /**
      *
      * @param bioguideId
      * @param beginTimestamp
@@ -81,6 +102,29 @@ public class PoliticianIndustryMongoRepo {
 
         query.and(
                 query.criteria("bioguideId").equal(bioguideId),
+                query.criteria("industryId").exists(),
+                query.criteria("beginTimestamp").equal(beginTimestamp),
+                query.criteria("endTimestamp").equal(endTimestamp));
+
+        return query.asList();
+    }
+
+    /**
+     *
+     * @param bioguideId
+     * @param beginTimestamp
+     * @param endTimestamp
+     * @return
+     */
+    public List<IndustryPoliticianContributionTotals> getIndustryCateogryToPoliticianContributions(
+            String bioguideId, long beginTimestamp, long endTimestamp) {
+
+        Query<IndustryPoliticianContributionTotals> query = mongoStore.find(IndustryPoliticianContributionTotals.class);
+
+        query.and(
+                query.criteria("bioguideId").equal(bioguideId),
+                query.criteria("categoryId").exists(),
+                query.criteria("industryId").doesNotExist(),
                 query.criteria("beginTimestamp").equal(beginTimestamp),
                 query.criteria("endTimestamp").equal(endTimestamp));
 

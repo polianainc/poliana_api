@@ -24,7 +24,7 @@ import static com.poliana.core.time.TimeService.CURRENT_CONGRESS;
  * @date 1/4/14
  */
 @Controller
-@RequestMapping("/industry")
+@RequestMapping("/industries")
 public class IndustryContributionController extends AbstractBaseController {
 
     private IdeologyService ideologyService;
@@ -108,7 +108,7 @@ public class IndustryContributionController extends AbstractBaseController {
      * @param congress
      * @return
      */
-    @RequestMapping(value = "/category/{category_id}/contributions", params = {"plot"}, method = RequestMethod.GET)
+    @RequestMapping(value = "/categories/{category_id}/contributions", params = {"plot"}, method = RequestMethod.GET)
     public @ResponseBody String plotIndustryCategoryContributionsByCongress(
             @PathVariable(value = "category_id") String categoryId,
             @RequestParam(value = "chamber", required = false) String chamber,
@@ -157,7 +157,7 @@ public class IndustryContributionController extends AbstractBaseController {
      * @param congress
      * @return
      */
-    @RequestMapping(value = "/category/{category_id}/contributions", params = {"compare_to"},method = RequestMethod.GET)
+    @RequestMapping(value = "/categories/{category_id}/contributions", params = {"compare_to"},method = RequestMethod.GET)
     public @ResponseBody String getIndustryCategoryContributionsVsIdeologyByCongress(
             @PathVariable(value = "category_id") String categoryId,
             @RequestParam(value = "chamber", required = false, defaultValue = "s") String chamber,
@@ -224,7 +224,7 @@ public class IndustryContributionController extends AbstractBaseController {
      * @param congress
      * @return
      */
-    @RequestMapping(value = "/category/{category_id}/contributions", params = {"compare_to", "plot"},method = RequestMethod.GET)
+    @RequestMapping(value = "/categories/{category_id}/contributions", params = {"compare_to", "plot"},method = RequestMethod.GET)
     public void plotIndustryCategoryContributionsVsIdeologyByCongress(
             OutputStream stream,
             @PathVariable(value = "category_id") String categoryId,

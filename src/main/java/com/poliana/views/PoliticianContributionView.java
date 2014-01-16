@@ -15,6 +15,7 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,20 +29,46 @@ public class PoliticianContributionView extends JFrame {
     private TimeService timeService;
 
 
+
+    /**
+     * Plot industry to politician contribution totals for a given chamber in a given congressional cycle.
+     */
+    public PoliticianContributionView(List<IndustryPoliticianContributionTotals> contributions) {
+
+        this.timeService = new TimeService();
+
+        if (contributions != null && contributions.size() > 0) {
+
+            IndustryPoliticianContributionTotals totals = contributions.get(0);
+
+            this.title =
+                    "Industry contributions  to " +
+                            totals.getFirstName() + " " +
+                            totals.getLastName();
+        }
+        else
+            this.title = "No data";
+
+        this.dataset = getContributionDataset(contributions);
+    }
+
     /**
      * Plot industry to politician contribution totals for a given chamber in a given congressional cycle.
      * @param contributions
      * @param congress
      */
-    public PoliticianContributionView(List<IndustryPoliticianContributionTotals> contributions, Legislator legislator, int congress) {
+    public PoliticianContributionView(List<IndustryPoliticianContributionTotals> contributions, int congress) {
 
         this.timeService = new TimeService();
 
         if (contributions != null && contributions.size() > 0) {
+
+            IndustryPoliticianContributionTotals totals = contributions.get(0);
+
             this.title =
                     "Industry contributions  to " +
-                    legislator.getFirstName() + " " +
-                    legislator.getLastName() +
+                    totals.getFirstName() + " " +
+                    totals.getLastName() +
                     " during the " +
                     congress +
                     timeService.getNumberSuffix(congress) +
@@ -53,18 +80,23 @@ public class PoliticianContributionView extends JFrame {
         this.dataset = getContributionDataset(contributions);
     }
 
+
     /**
      * Plot industry to politician contribution totals for a given chamber in a given congressional cycle.
      */
-    public PoliticianContributionView(List<IndustryPoliticianContributionTotals> contributions, Legislator legislator) {
+    public PoliticianContributionView(List<IndustryPoliticianContributionTotals> contributions, Date start, Date end) {
 
         this.timeService = new TimeService();
 
         if (contributions != null && contributions.size() > 0) {
+
+            IndustryPoliticianContributionTotals totals = contributions.get(0);
+
             this.title =
                     "Industry contributions  to " +
-                            legislator.getFirstName() + " " +
-                            legislator.getLastName();
+                    totals.getFirstName() + " " +
+                    totals.getLastName() + " " +
+                    "from " + start.toString() + " to " + end.toString();
         }
         else
             this.title = "No data";

@@ -381,6 +381,8 @@ public class PoliticianIndustryHadoopRepo {
             String query =
                     "SELECT DISTINCT" +
                     "       bioguide_id" +
+                    "     , first_name " +
+                    "     , last_name " +
                     "     , industry_id" +
                     "     , party" +
                     "     , religion" +
@@ -392,6 +394,8 @@ public class PoliticianIndustryHadoopRepo {
                     "FROM" +
                     "     (SELECT " +
                     "            bioguide_id" +
+                    "          , first_name " +
+                    "          , last_name " +
                     "          , cat_order as industry_id" +
                     "          , party" +
                     "          , religion" +
@@ -400,6 +404,8 @@ public class PoliticianIndustryHadoopRepo {
                     "     FROM" +
                     "          (SELECT" +
                     "                 bioguide_id" +
+                    "               , first_name " +
+                    "               , last_name " +
                     "               , real_code" +
                     "               , party" +
                     "               , religion" +
@@ -415,6 +421,8 @@ public class PoliticianIndustryHadoopRepo {
                     "               bioguide_id = \'" + bioguideId + "\'" +
                     "          GROUP BY" +
                     "                 bioguide_id" +
+                    "               , first_name " +
+                    "               , last_name " +
                     "               , real_code" +
                     "               , party" +
                     "               , religion " +
@@ -425,6 +433,8 @@ public class PoliticianIndustryHadoopRepo {
                     "          real_code = cat_code " +
                     "     GROUP BY" +
                     "            bioguide_id" +
+                    "          , first_name " +
+                    "          , last_name " +
                     "          , cat_order" +
                     "          , party" +
                     "          , religion " +
@@ -454,6 +464,8 @@ public class PoliticianIndustryHadoopRepo {
             String query =
                     "SELECT  " +
                     "     bioguide_id" +
+                    "   , first_name " +
+                    "   , last_name " +
                     "   , real_code as category_id" +
                     "   , party" +
                     "   , religion" +
@@ -466,6 +478,8 @@ public class PoliticianIndustryHadoopRepo {
                     "FROM  " +
                     "   (SELECT  " +
                     "         bioguide_id " +
+                    "       , first_name " +
+                    "       , last_name " +
                     "       , real_code  " +
                     "       , party" +
                     "       , religion" +
@@ -474,6 +488,8 @@ public class PoliticianIndustryHadoopRepo {
                     "   FROM  " +
                     "       (SELECT  " +
                     "             bioguide_id " +
+                    "           , first_name " +
+                    "           , last_name " +
                     "           , real_code " +
                     "           , party" +
                     "           , religion" +
@@ -487,6 +503,8 @@ public class PoliticianIndustryHadoopRepo {
                     "       WHERE bioguide_id = \'" + bioguideId + "\'" +
                     "   GROUP BY  " +
                     "         bioguide_id " +
+                    "       , first_name " +
+                    "       , last_name " +
                     "       , real_code " +
                     "       , party" +
                     "       , religion    " +

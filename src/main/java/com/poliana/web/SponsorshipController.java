@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @date 12/31/13
  */
 @Controller
-@RequestMapping("/bill-sponsorship")
+@RequestMapping("/sponsorships")
 public class SponsorshipController extends AbstractBaseController {
 
     private SponsorshipService sponsorshipService;

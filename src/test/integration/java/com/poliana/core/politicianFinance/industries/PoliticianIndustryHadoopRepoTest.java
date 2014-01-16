@@ -154,6 +154,31 @@ public class PoliticianIndustryHadoopRepoTest {
     @Test
     public void testGetIndustryToPoliticianContributions() throws Exception {
 
+        List<IndustryPoliticianContributionTotals> totals =
+                politicianIndustryHadoopRepo.getIndustryToPoliticianContributions("O000167");
+
+        assertNotNull(totals);
+
+        IndustryPoliticianContributionTotals total = totals.get(0);
+
+        assertEquals("O000167", total.getBioguideId());
+
+        assertNotNull(total.getIndustryId());
+        assertNotNull(total.getFirstName());
+        assertNotNull(total.getLastName());
+        assertNotNull(total.getIndustryName());
+        assertNotNull(total.getSectorLong());
+        assertNotNull(total.getParty());
+        assertNotNull(total.getReligion());
+        assertNotNull(total.getContributionCount());
+        assertNotNull(total.getContributionSum());
+
+        assertNull(total.getCategoryId());
+        assertNull(total.getBeginTimestamp());
+        assertNull(total.getEndTimestamp());
+        assertNull(total.getCongress());
+        assertNull(total.getYear());
+        assertNull(total.getMonth());
     }
 
     @Test
@@ -169,6 +194,8 @@ public class PoliticianIndustryHadoopRepoTest {
         assertEquals("O000167", total.getBioguideId());
 
         assertNotNull(total.getCategoryId());
+        assertNotNull(total.getFirstName());
+        assertNotNull(total.getLastName());
         assertNotNull(total.getIndustryName());
         assertNotNull(total.getCategoryName());
         assertNotNull(total.getSector());

@@ -57,6 +57,24 @@ public class PoliticianIndustryFinanceServiceUnitTest {
                 .andReturn(new ArrayList<Key<IndustryPoliticianContributionTotals>>());
 
         this.control.replay();
+
+        this.politicianIndustryFinanceService.getIndustryToPoliticianTotals("O000167", 113);
+    }
+
+    @Test
+    public void testGetIndustryCategoryToPoliticianTotals_ByCongress() throws Exception {
+
+        List<IndustryPoliticianContributionTotals> contributionsListMock = new LinkedList<>();
+        contributionsListMock.add(new IndustryPoliticianContributionTotals());
+
+        expect(this.politicianIndustryMongoRepoMock.getIndustryCategoryToPoliticianContributions("O000167", 113)).andReturn(null);
+        expect(this.politicianIndustryHadoopRepoMock.getIndustryCategoryToPoliticianContributions("O000167", 113)).andReturn(contributionsListMock);
+        expect(this.politicianIndustryMongoRepoMock.saveIndustryToPoliticianContributions(contributionsListMock))
+                .andReturn(new ArrayList<Key<IndustryPoliticianContributionTotals>>());
+
+        this.control.replay();
+
+        this.politicianIndustryFinanceService.getIndustryCategoryToPoliticianTotals("O000167", 113);
     }
 
     @Test
@@ -71,6 +89,24 @@ public class PoliticianIndustryFinanceServiceUnitTest {
                 .andReturn(new ArrayList<Key<IndustryPoliticianContributionTotals>>());
 
         this.control.replay();
+
+        this.politicianIndustryFinanceService.getIndustryToPoliticianTotals("O000167", 123456789L, 123456789L);
+    }
+
+    @Test
+    public void testGetIndustryCategoryToPoliticianTotals_ByStartAndEnd() throws Exception {
+
+        List<IndustryPoliticianContributionTotals> contributionsListMock = new LinkedList<>();
+        contributionsListMock.add(new IndustryPoliticianContributionTotals());
+
+        expect(this.politicianIndustryMongoRepoMock.getIndustryCateogryToPoliticianContributions("O000167", 123456789L, 123456789L)).andReturn(null);
+        expect(this.politicianIndustryHadoopRepoMock.getIndustryCategoryToPoliticianContributions("O000167", 123456789L, 123456789L)).andReturn(contributionsListMock);
+        expect(this.politicianIndustryMongoRepoMock.saveIndustryToPoliticianContributions(contributionsListMock))
+                .andReturn(new ArrayList<Key<IndustryPoliticianContributionTotals>>());
+
+        this.control.replay();
+
+        this.politicianIndustryFinanceService.getIndustryCategoryToPoliticianTotals("O000167", 123456789L, 123456789L);
     }
 
     @Test

@@ -1,10 +1,8 @@
 package com.poliana.core.amendments.entities;
 
 import org.mongodb.morphia.annotations.*;
-import com.google.gson.annotations.Expose;
 import com.poliana.core.bills.entities.Action;
-import com.poliana.core.bills.entities.Bill;
-import com.poliana.core.bills.govtrack.bills.Sponsor;
+import com.poliana.core.bills.entities.Sponsor;
 
 import java.util.List;
 
@@ -12,42 +10,51 @@ import java.util.List;
  * @author David Gilmore
  * @date 11/22/13
  */
-@Entity("amendments_120113")
+@Entity("amendments")
 public class Amendment {
 
     @Id
-    @Expose
     private String id;
 
     @Embedded
     private List<Action> actionGts;
+
     @Property("amendment_id")
     private String amendmentId;
+
     @Property("amendment_type")
     private String amendmentType;
+
     @Reference("amends_amendment")
     private Amendment amendsAmendment;
-    @Reference
-    private Bill bill;
-    @Embedded("amends_bill")
-    private BillRef amendsBill;
+
+    @Embedded("bill_reference")
+    private AmendmentBillReference amendmentBillReference;
+
     @Embedded("amends_treaty")
     private TreatyRef treatyRef;
+
     @Embedded("amends_amendment")
-    private AmendmentRef amendmentRef;
+    private AmendmentReference amendmentReference;
+
     private String chamber;
     private int congress;
     private String description;
+
     @Property("house_number")
     private int houseNumber;
+
     @Property("introduced_at")
     private int introducedAt;
+
     private int number;
     private String purpose;
     private Sponsor sponsor;
     private String status;
+
     @Property("status_at")
     private int statusAt;
+
     @Property("updated_at")
     private int updatedAt;
 
@@ -67,20 +74,20 @@ public class Amendment {
         this.actionGts = actionGts;
     }
 
-    public BillRef getAmendsBill() {
-        return amendsBill;
+    public AmendmentBillReference getAmendmentBillReference() {
+        return amendmentBillReference;
     }
 
-    public void setAmendsBill(BillRef amendsBill) {
-        this.amendsBill = amendsBill;
+    public void setAmendmentBillReference(AmendmentBillReference amendmentBillReference) {
+        this.amendmentBillReference = amendmentBillReference;
     }
 
-    public AmendmentRef getAmendmentRef() {
-        return amendmentRef;
+    public AmendmentReference getAmendmentReference() {
+        return amendmentReference;
     }
 
-    public void setAmendmentRef(AmendmentRef amendmentRef) {
-        this.amendmentRef = amendmentRef;
+    public void setAmendmentReference(AmendmentReference amendmentReference) {
+        this.amendmentReference = amendmentReference;
     }
 
     public String getAmendmentId() {
@@ -105,14 +112,6 @@ public class Amendment {
 
     public void setAmendsAmendment(Amendment amendsAmendment) {
         this.amendsAmendment = amendsAmendment;
-    }
-
-    public Bill getBill() {
-        return bill;
-    }
-
-    public void setBill(Bill bill) {
-        this.bill = bill;
     }
 
     public TreatyRef getTreatyRef() {

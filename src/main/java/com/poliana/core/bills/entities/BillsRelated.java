@@ -1,4 +1,4 @@
-package com.poliana.core.bills.govtrack.bills;
+package com.poliana.core.bills.entities;
 
 import org.mongodb.morphia.annotations.Property;
 
@@ -6,9 +6,11 @@ import org.mongodb.morphia.annotations.Property;
  * @author David Gilmore
  * @date 11/22/13
  */
-public class RelatedBill {
+public class BillsRelated {
+
     @Property("bill_id")
     private String billId;
+
     private String reason;
     private String type;
 

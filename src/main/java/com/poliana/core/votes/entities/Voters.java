@@ -1,18 +1,24 @@
-package com.poliana.core.bills.govtrack.votes;
+package com.poliana.core.votes.entities;
 
-import org.mongodb.morphia.annotations.Embedded;
-
+import javax.jdo.annotations.Embedded;
 import java.util.List;
 
 /**
  * @author David Gilmore
  * @date 11/13/13
  */
-@Embedded
 public class Voters {
+
+    @Embedded
     private List<Voter> nay;
+
+    @Embedded
     private List<Voter> not_voting;
+
+    @Embedded
     private List<Voter> present;
+
+    @Embedded
     private List<Voter> yea;
 
     public List<Voter> getNay() {

@@ -7,7 +7,7 @@ import org.mongodb.morphia.annotations.Embedded;
  * @date 11/15/13
  */
 @Embedded
-public class VoteAmendmentRef {
+public class VoteAmendmentReference {
     private int number;
     private String purpose;
     private String type;

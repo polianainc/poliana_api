@@ -24,12 +24,12 @@ public class SponsorshipController extends AbstractBaseController {
 
 
     @RequestMapping(value="/matrix/{chamber}/{congress}", headers="Accept=*/*", method = RequestMethod.GET)
-    public @ResponseBody String getSponsorshipMatrix(
+    public @ResponseBody SponsorshipMatrix getSponsorshipMatrix(
             @PathVariable("chamber") String chamber,
             @PathVariable("congress") Integer congress) {
 
         SponsorshipMatrix sponsorshipMatrix = sponsorshipService.getSponsorshipMatrix(chamber, congress);
-        return this.gson.toJson(sponsorshipMatrix);
+        return sponsorshipMatrix;
     }
 
 

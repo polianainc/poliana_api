@@ -6,11 +6,14 @@ import org.mongodb.morphia.annotations.Property;
  * @author David Gilmore
  * @date 11/22/13
  */
-public class BillRef {
+public class AmendmentBillReference {
+
     @Property("bill_id")
     private String billId;
+
     @Property("bill_type")
     private String billType;
+
     private int congress;
     private int number;
 

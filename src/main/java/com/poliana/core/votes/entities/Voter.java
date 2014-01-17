@@ -1,4 +1,4 @@
-package com.poliana.core.bills.govtrack.votes;
+package com.poliana.core.votes.entities;
 
 /**
  * @author David Gilmore

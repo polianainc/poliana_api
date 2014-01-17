@@ -23,8 +23,9 @@ public class PoliticianController extends AbstractBaseController {
      * @param fields
      * @return
      */
-    @RequestMapping(value="/", params={"congress, fields"}, method = RequestMethod.GET)
-    public @ResponseBody String getRoot (
+    @ResponseBody
+    @RequestMapping(value = "", params={"congress, fields"}, method = RequestMethod.GET)
+    public String getRoot (
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
             @RequestParam(value = "fields", required = false, defaultValue = "") String fields){
 
@@ -39,8 +40,9 @@ public class PoliticianController extends AbstractBaseController {
      * @param fields
      * @return
      */
-    @RequestMapping(value="/{bioguide_id}", params={"congress, fields"}, method = RequestMethod.GET)
-    public @ResponseBody String getPolitician (
+    @ResponseBody
+    @RequestMapping(value = "{bioguide_id}", params = {"congress, fields"}, method = RequestMethod.GET)
+    public String getPolitician (
             @PathVariable("bioguide_id") String bioguideId,
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
             @RequestParam(value = "fields", required = false, defaultValue = "") String fields) {
@@ -55,8 +57,9 @@ public class PoliticianController extends AbstractBaseController {
      * @param congress
      * @return
      */
-    @RequestMapping(value="/{bioguide_id}/votes", params={"congress, fields"}, method = RequestMethod.GET)
-    public @ResponseBody String getVotes (
+    @ResponseBody
+    @RequestMapping(value = "{bioguide_id}/votes", params = {"congress, fields"}, method = RequestMethod.GET)
+    public String getVotes (
             @PathVariable("bioguide_id") String bioguideId,
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
             @RequestParam(value = "fields", required = false, defaultValue = "") String fields) {
@@ -71,8 +74,9 @@ public class PoliticianController extends AbstractBaseController {
      * @param congress
      * @return
      */
-    @RequestMapping(value="/{bioguide_id}/expenditures", params={"congress, fields"}, method = RequestMethod.GET)
-    public @ResponseBody String getExpenditures (
+    @ResponseBody
+    @RequestMapping(value="{bioguide_id}/expenditures", params = {"congress, fields"}, method = RequestMethod.GET)
+    public String getExpenditures (
             @PathVariable("bioguide_id") String bioguideId,
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
             @RequestParam(value = "fields", required = false, defaultValue = "") String fields) {
@@ -86,8 +90,9 @@ public class PoliticianController extends AbstractBaseController {
      * @param congress
      * @return
      */
-    @RequestMapping(value="/{bioguide_id}/sponsorship", params={"congress, fields"}, method = RequestMethod.GET)
-    public @ResponseBody String getSponsorship(
+    @ResponseBody
+    @RequestMapping(value="{bioguide_id}/sponsorship", params = {"congress, fields"}, method = RequestMethod.GET)
+    public String getSponsorship(
             @PathVariable("bioguide_id") String bioguideId,
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
             @RequestParam(value = "fields", required = false, defaultValue = "") String fields) {

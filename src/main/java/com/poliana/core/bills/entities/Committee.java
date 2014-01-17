@@ -1,4 +1,4 @@
-package com.poliana.core.bills.govtrack;
+package com.poliana.core.bills.entities;
 
 import org.mongodb.morphia.annotations.Property;
 

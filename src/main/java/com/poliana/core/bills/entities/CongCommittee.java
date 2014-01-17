@@ -3,17 +3,15 @@ package com.poliana.core.bills.entities;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Property;
-import com.google.gson.annotations.Expose;
-import org.bson.types.ObjectId;
 
 @Entity("congressional_committees")
 public class CongCommittee {
 
     @Id
-    @Expose
-    private ObjectId id;
+    private String id;
 
     private String code;
+
     @Property("committee_name")
     private String committeeName;
 

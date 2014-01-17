@@ -34,76 +34,81 @@ public class PoliticianIndustryFinanceController extends AbstractBaseController 
     /**
      * Get all industry contribution totals for a given congressional cycle. The default congress cycle value is
      * the current congress.
+     *
      * @param bioguideId
      * @return
      */
     @RequestMapping(value="/{bioguide_id}/contributions/industries", method = RequestMethod.GET)
-    public @ResponseBody String getIndustryToPoliticianTotals (
+    public @ResponseBody List<IndustryPoliticianContributionTotals> getIndustryToPoliticianTotals(
             @PathVariable("bioguide_id") String bioguideId) {
 
         List<IndustryPoliticianContributionTotals> allTotals = politicianIndustryFinanceService.getIndustryToPoliticianTotals(bioguideId);
-        return this.gson.toJson(allTotals);
+        return allTotals;
     }
 
     /**
      * Get all industry category contribution totals for a given congressional cycle. The default congress cycle value is
      * the current congress.
+     *
      * @param bioguideId
      * @return
      */
     @RequestMapping(value="/{bioguide_id}/contributions/industries/categories", method = RequestMethod.GET)
-    public @ResponseBody String getIndustryCategoryToPoliticianTotals (
+    public @ResponseBody List<IndustryPoliticianContributionTotals> getIndustryCategoryToPoliticianTotals(
             @PathVariable("bioguide_id") String bioguideId) {
 
         List<IndustryPoliticianContributionTotals> allTotals =
                 politicianIndustryFinanceService.getIndustryCategoryToPoliticianTotals(bioguideId);
 
-        return this.gson.toJson(allTotals);
+        return allTotals;
     }
 
     /**
      * Get all industry contribution totals for a given congressional cycle. The default congress cycle value is
      * the current congress.
+     *
      * @param bioguideId
      * @param congress
      * @return
      */
     @RequestMapping(value="/{bioguide_id}/contributions/industries", params = {"congress"}, method = RequestMethod.GET)
-    public @ResponseBody String getIndustryToPoliticianTotals (
+    public @ResponseBody List<IndustryPoliticianContributionTotals> getIndustryToPoliticianTotals(
             @PathVariable("bioguide_id") String bioguideId,
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress) {
 
         List<IndustryPoliticianContributionTotals> allTotals = politicianIndustryFinanceService.getIndustryToPoliticianTotals(bioguideId, congress);
-        return this.gson.toJson(allTotals);
+        return allTotals;
     }
 
     /**
      * Get all industry category contribution totals for a given congressional cycle. The default congress cycle value is
      * the current congress.
+     *
      * @param bioguideId
      * @param congress
      * @return
      */
     @RequestMapping(value="/{bioguide_id}/contributions/industries/categories", params = {"congress"}, method = RequestMethod.GET)
-    public @ResponseBody String getIndustryCategoryToPoliticianTotals (
+    public @ResponseBody List<IndustryPoliticianContributionTotals> getIndustryCategoryToPoliticianTotals(
             @PathVariable("bioguide_id") String bioguideId,
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress) {
 
         List<IndustryPoliticianContributionTotals> allTotals =
                 politicianIndustryFinanceService.getIndustryCategoryToPoliticianTotals(bioguideId, congress);
 
-        return this.gson.toJson(allTotals);
+        return allTotals;
     }
 
     /**
      * Get industry contribution sums to a given politician over a given time range
+     *
      * @param bioguideId
      * @param start
      * @param end
      * @return
      */
     @RequestMapping(value = "/{bioguide_id}/contributions/industries", params = {"start", "end"}, method = RequestMethod.GET)
-    public @ResponseBody String getIndustryToPoliticianTotals(
+    public @ResponseBody List<IndustryPoliticianContributionTotals> getIndustryToPoliticianTotals(
             @PathVariable("bioguide_id") String bioguideId,
             @RequestParam(value = "start", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date start,
             @RequestParam(value = "end", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date end) {
@@ -111,18 +116,19 @@ public class PoliticianIndustryFinanceController extends AbstractBaseController 
         List<IndustryPoliticianContributionTotals> totals =
                 politicianIndustryFinanceService.getIndustryToPoliticianTotals(bioguideId, start.getTime()/1000, end.getTime()/1000);
 
-        return this.gson.toJson(totals);
+        return totals;
     }
 
     /**
      * Get industry category contribution sums to a given politician over a given time range
+     *
      * @param bioguideId
      * @param start
      * @param end
      * @return
      */
     @RequestMapping(value = "/{bioguide_id}/contributions/industries/categories", params = {"start", "end"}, method = RequestMethod.GET)
-    public @ResponseBody String getIndustryCategoryToPoliticianTotals(
+    public @ResponseBody List<IndustryPoliticianContributionTotals> getIndustryCategoryToPoliticianTotals(
             @PathVariable("bioguide_id") String bioguideId,
             @RequestParam(value = "start", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date start,
             @RequestParam(value = "end", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date end) {
@@ -130,7 +136,7 @@ public class PoliticianIndustryFinanceController extends AbstractBaseController 
         List<IndustryPoliticianContributionTotals> totals =
                 politicianIndustryFinanceService.getIndustryCategoryToPoliticianTotals(bioguideId, start.getTime() / 1000, end.getTime() / 1000);
 
-        return this.gson.toJson(totals);
+        return totals;
     }
 
     /**

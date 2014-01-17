@@ -7,7 +7,8 @@ import org.mongodb.morphia.annotations.Embedded;
  * @date 11/15/13
  */
 @Embedded
-public class BillRef {
+public class BillReference {
+
     private String congress;
     private String number;
     private String title;

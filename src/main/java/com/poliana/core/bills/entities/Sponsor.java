@@ -1,4 +1,4 @@
-package com.poliana.core.bills.govtrack.bills;
+package com.poliana.core.bills.entities;
 
 import org.mongodb.morphia.annotations.Property;
 
@@ -7,14 +7,20 @@ import org.mongodb.morphia.annotations.Property;
  * @date 11/22/13
  */
 public class Sponsor {
+
     private String district;
     private String name;
+
     @Property("sponsored_at")
     private String sponsoredAt;
+
     private String state;
+
     @Property("thomas_id")
     private String thomasId;
+
     private String title;
+
     @Property("withdrawn_at")
     private String withdrawnAt;
 

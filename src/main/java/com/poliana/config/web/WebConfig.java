@@ -1,9 +1,6 @@
 package com.poliana.config.web;
 
 import com.poliana.config.ApplicationConfig;
-import com.poliana.config.HiveConfig;
-import com.poliana.config.ImpalaConfig;
-import com.poliana.config.MongoConfig;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -34,6 +31,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+
         registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
     }
 
@@ -58,7 +56,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
         viewResolver.setViewClass(JstlView.class);
-        viewResolver.setPrefix("/WEB-INF/views");
+        viewResolver.setPrefix("/WEB-INF/views/");
         viewResolver.setSuffix(".jsp");
         return viewResolver;
     }

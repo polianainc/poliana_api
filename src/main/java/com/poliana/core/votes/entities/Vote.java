@@ -2,8 +2,11 @@ package com.poliana.core.votes.entities;
 
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Property;
-import org.springframework.data.annotation.Id;
+
+import java.util.Date;
+
 
 /**
  * @author David Gilmore
@@ -19,17 +22,17 @@ public class Vote {
     private BillReference bill;
 
     @Embedded
-    private VoteAmendmentReference amendment;
+    private VoteAmendmentReference amendmentReference;
 
     private String category;
     private String chamber;
     private int congress;
-    private String date;
+    private Date date;
 
     @Embedded
     private Nomination nomination;
 
-    private String number;
+    private Integer number;
     private String question;
     private String requires;
     private String result;
@@ -46,7 +49,7 @@ public class Vote {
     private String type;
 
     @Property("updated_at")
-    private String updatedAt;
+    private Date updatedAt;
 
     @Property("vote_id")
     private String voteId;
@@ -70,12 +73,12 @@ public class Vote {
         this.bill = bill;
     }
 
-    public VoteAmendmentReference getAmendment() {
-        return amendment;
+    public VoteAmendmentReference getAmendmentReference() {
+        return amendmentReference;
     }
 
-    public void setAmendment(VoteAmendmentReference amendment) {
-        this.amendment = amendment;
+    public void setAmendmentReference(VoteAmendmentReference amendmentReference) {
+        this.amendmentReference = amendmentReference;
     }
 
     public String getCategory() {
@@ -98,15 +101,15 @@ public class Vote {
         return congress;
     }
 
-    public void setCongress(String congress) {
-        this.congress = Integer.getInteger(congress).intValue();
+    public void setCongress(int congress) {
+        this.congress = congress;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 
@@ -118,11 +121,11 @@ public class Vote {
         this.nomination = nomination;
     }
 
-    public String getNumber() {
+    public Integer getNumber() {
         return number;
     }
 
-    public void setNumber(String number) {
+    public void setNumber(Integer number) {
         this.number = number;
     }
 
@@ -190,11 +193,11 @@ public class Vote {
         this.type = type;
     }
 
-    public String getUpdatedAt() {
+    public Date getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(String updatedAt) {
+    public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
 

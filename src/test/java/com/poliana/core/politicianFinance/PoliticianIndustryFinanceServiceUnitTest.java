@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.createStrictControl;
 import static org.easymock.EasyMock.expect;
 

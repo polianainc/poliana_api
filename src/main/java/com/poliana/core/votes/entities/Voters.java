@@ -1,6 +1,7 @@
 package com.poliana.core.votes.entities;
 
-import javax.jdo.annotations.Embedded;
+import org.mongodb.morphia.annotations.Embedded;
+
 import java.util.List;
 
 /**
@@ -9,16 +10,16 @@ import java.util.List;
  */
 public class Voters {
 
-    @Embedded
+    @Embedded("Nay")
     private List<Voter> nay;
 
-    @Embedded
-    private List<Voter> not_voting;
+    @Embedded("Not Voting")
+    private List<Voter> notVoting;
 
-    @Embedded
+    @Embedded("Present")
     private List<Voter> present;
 
-    @Embedded
+    @Embedded("Yea")
     private List<Voter> yea;
 
     public List<Voter> getNay() {
@@ -30,11 +31,11 @@ public class Voters {
     }
 
     public List<Voter> getNotVoting() {
-        return not_voting;
+        return notVoting;
     }
 
     public void setNotVoting(List<Voter> not_voting) {
-        this.not_voting = not_voting;
+        this.notVoting = not_voting;
     }
 
     public List<Voter> getPresent() {

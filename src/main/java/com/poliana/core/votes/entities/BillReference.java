@@ -10,7 +10,7 @@ import org.mongodb.morphia.annotations.Embedded;
 public class BillReference {
 
     private String congress;
-    private String number;
+    private Integer number;
     private String title;
     private String type;
 
@@ -22,11 +22,11 @@ public class BillReference {
         this.congress = congress;
     }
 
-    public String getNumber() {
+    public Integer getNumber() {
         return number;
     }
 
-    public void setNumber(String number) {
+    public void setNumber(Integer number) {
         this.number = number;
     }
 

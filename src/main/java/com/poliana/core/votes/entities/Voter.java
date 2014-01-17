@@ -1,47 +1,64 @@
 package com.poliana.core.votes.entities;
 
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Property;
+
 /**
  * @author David Gilmore
  * @date 11/13/13
  */
+@Entity("voter")
 public class Voter {
-    private String display_name;
-    private String first_name;
-    private String politician_id;
-    private String last_name;
+
+    @Id
+    private String id;
+
+    @Property("display_name")
+    private String displayName;
+
+    @Property("first_name")
+    private String firstName;
+
+    @Property("id")
+    private String bioguideId;
+
+    @Property("last_name")
+    private String lastName;
+
     private String party;
     private String state;
 
     public String getDisplayName() {
-        return display_name;
+        return displayName;
     }
 
     public void setDisplayName(String display_name) {
-        this.display_name = display_name;
+        this.displayName = display_name;
     }
 
     public String getFirstName() {
-        return first_name;
+        return firstName;
     }
 
     public void setFirstName(String first_name) {
-        this.first_name = first_name;
+        this.firstName = first_name;
     }
 
-    public String getPoliticianId() {
-        return politician_id;
+    public String getBioguideId() {
+        return bioguideId;
     }
 
-    public void setPoliticianId(String politicianId) {
-        this.politician_id = politicianId;
+    public void setBioguideId(String bioguideId) {
+        this.bioguideId = bioguideId;
     }
 
     public String getLastName() {
-        return last_name;
+        return lastName;
     }
 
     public void setLastName(String last_name) {
-        this.last_name = last_name;
+        this.lastName = last_name;
     }
 
     public String getParty() {

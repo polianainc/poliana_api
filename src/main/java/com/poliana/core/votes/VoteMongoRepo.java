@@ -24,13 +24,12 @@ public class VoteMongoRepo {
      * @param voteId
      * @return
      */
-    public Vote getVote(String voteId, int congress) {
+    public Vote getVote(String voteId) {
 
         Query<Vote> query = mongoStore.find(Vote.class);
 
         query.and(
-                query.criteria("voteId").equal(voteId),
-                query.criteria("congress").equal(congress));
+                query.criteria("voteId").equal(voteId));
 
         return query.get();
     }

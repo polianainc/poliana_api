@@ -16,6 +16,7 @@ import java.util.Date;
 public class TimeService {
 
     public static final String CURRENT_CONGRESS = "113";
+    public static final String CURRENT_YEAR = "2014";
 
     /**
      *

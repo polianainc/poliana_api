@@ -45,6 +45,9 @@ GLOBAL PARAMETERS:
 
        ?plot=type
 
+       ?include
+       ?exclude
+
 /politician 
 
        /contributions

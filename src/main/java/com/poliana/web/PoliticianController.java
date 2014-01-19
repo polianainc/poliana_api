@@ -1,102 +1,103 @@
 package com.poliana.web;
 
-import com.poliana.core.industryFinance.IndustryContributionService;
-import com.poliana.core.industryFinance.entities.IndustryPoliticianContributions;
-import com.poliana.core.legislators.Legislator;
-import com.poliana.core.legislators.LegislatorService;
-import com.poliana.core.time.TimeService;
-import com.poliana.views.PoliticianContributionView;
 import org.apache.log4j.Logger;
-import org.jfree.chart.ChartUtilities;
-import org.jfree.chart.JFreeChart;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.List;
-
 import static com.poliana.core.time.TimeService.CURRENT_CONGRESS;
-
 /**
- * @author David Gilmore
- * @date 1/6/14
+ * @author Grayson Carroll
+ * @date 1/15/14
  */
+
 @Controller
-@RequestMapping("/politician/")
+@RequestMapping("/politicians/")
 public class PoliticianController extends AbstractBaseController {
 
-    private IndustryContributionService industryContributionService;
-    private LegislatorService legislatorService;
+    private static final Logger logger = Logger.getLogger(PoliticianController.class);
 
-    private TimeService timeService;
-
-    private static final Logger logger = Logger.getLogger(IndustryContributionController.class);
-
-
-    public PoliticianController() {
-        this.timeService = new TimeService();
-    }
 
     /**
-     * Get all industry contribution totals for a given congressional cycle. The default congress cycle value is
-     * the current congress.
-     * @param bioguideId
+     * Politician root
      * @param congress
+     * @param fields
      * @return
      */
-    @RequestMapping(value="/{bioguideId}/contributions/industries", params = {"congress"}, method = RequestMethod.GET)
-    public @ResponseBody String getAllIndustryContributionsByCongress (
-            @PathVariable("bioguideId") String bioguideId,
-            @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress) {
-
-        List<IndustryPoliticianContributions> allTotals = industryContributionService.getIndustryToPoliticianTotals(bioguideId, congress);
-        return this.gson.toJson(allTotals);
-    }
-
-    /**
-     * Plot all industry contribution totals for a given congressional cycle. The default congress cycle value is
-     * the current congress.
-     * @param bioguideId
-     * @param congress
-     * @return
-     */
-    @RequestMapping(value="/{bioguideId}/contributions/industries", params = {"congress", "plot"}, method = RequestMethod.GET)
-    public void plotAllIndustryContributionsByCongress (
-            OutputStream stream,
-            @PathVariable("bioguideId") String bioguideId,
+    @ResponseBody
+    @RequestMapping(value = "", params={"congress, fields"}, method = RequestMethod.GET)
+    public String getRoot (
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
-            @RequestParam(value = "plot", required = true) String plotType) {
+            @RequestParam(value = "fields", required = false, defaultValue = "") String fields){
 
-        List<IndustryPoliticianContributions> allTotals = industryContributionService.getIndustryToPoliticianTotals(bioguideId, congress);
 
-        Legislator legislator;
-        try {
-            legislator = legislatorService.getLegislatorTermsById(bioguideId).get(0);
-        }
-        catch (Exception e) {
-            legislator = new Legislator();
-        }
-
-        PoliticianContributionView view = new PoliticianContributionView(allTotals, legislator, congress);
-
-        JFreeChart chart = view.generateChart(plotType);
-
-        try {
-            ChartUtilities.writeChartAsPNG(stream, chart, 1600, 1000);
-        } catch (IOException e) {
-            logger.error(e);
-        }
+        return "politician root, congress " + congress + "with fields " + fields;
     }
 
-    @Autowired
-    public void setIndustryContributionService(IndustryContributionService industryContributionService) {
-        this.industryContributionService = industryContributionService;
+    /**
+     * Grabs politician data for a given bioguide and congresssional cycle.
+     * @param bioguideId
+     * @param congress
+     * @param fields
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "{bioguide_id}", params = {"congress, fields"}, method = RequestMethod.GET)
+    public String getPolitician (
+            @PathVariable("bioguide_id") String bioguideId,
+            @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
+            @RequestParam(value = "fields", required = false, defaultValue = "") String fields) {
+
+
+        return "politician whose bioguide is " + bioguideId + ", in the congress " + congress + "with fields " + fields;
     }
 
-    @Autowired
-    public void setLegislatorService(LegislatorService legislatorService) {
-        this.legislatorService = legislatorService;
+    /**
+     * Grabs vote data for a politician identified by the given bioguide and congresssional cycle.
+     * @param bioguideId
+     * @param congress
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "{bioguide_id}/votes", params = {"congress, fields"}, method = RequestMethod.GET)
+    public String getVotes (
+            @PathVariable("bioguide_id") String bioguideId,
+            @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
+            @RequestParam(value = "fields", required = false, defaultValue = "") String fields) {
+
+
+        return "votes for politician whose bioguide is " + bioguideId + ", in the congress " + congress;
+    }
+
+    /**
+     * Grabs expenditure data for a politician identified by the given bioguide and congresssional cycle.
+     * @param bioguideId
+     * @param congress
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value="{bioguide_id}/expenditures", params = {"congress, fields"}, method = RequestMethod.GET)
+    public String getExpenditures (
+            @PathVariable("bioguide_id") String bioguideId,
+            @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
+            @RequestParam(value = "fields", required = false, defaultValue = "") String fields) {
+
+
+        return "expenditures for politician whose bioguide is " + bioguideId + ", in the congress " + congress;
+    }
+    /**
+     * Grabs sponsorship data for a politician identified by the given bioguide and congresssional cycle.
+     * @param bioguideId
+     * @param congress
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value="{bioguide_id}/sponsorship", params = {"congress, fields"}, method = RequestMethod.GET)
+    public String getSponsorship(
+            @PathVariable("bioguide_id") String bioguideId,
+            @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
+            @RequestParam(value = "fields", required = false, defaultValue = "") String fields) {
+
+
+        return "sponsorship for politician whose bioguide is " + bioguideId + ", in the congress " + congress;
     }
 }

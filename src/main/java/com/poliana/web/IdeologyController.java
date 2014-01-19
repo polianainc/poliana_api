@@ -16,19 +16,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @date 12/15/13
  */
 @Controller
-@RequestMapping("/ideology")
+@RequestMapping("/ideologies")
 public class IdeologyController extends AbstractBaseController {
 
     private IdeologyService ideologyService;
 
 
     @RequestMapping(value="/{chamber}/{congress}", headers="Accept=*/*", method = RequestMethod.GET)
-    public @ResponseBody String getIdeologyMatrix(
+    public @ResponseBody
+    IdeologyMatrix getIdeologyMatrix(
             @PathVariable("chamber") String chamber,
             @PathVariable("congress") Integer congress) {
 
         IdeologyMatrix ideologyMatrix = ideologyService.getIdeologyMatrix(chamber,congress);
-        return this.gson.toJson(ideologyMatrix);
+        return ideologyMatrix;
     }
 
     @Autowired

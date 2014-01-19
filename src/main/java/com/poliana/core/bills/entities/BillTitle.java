@@ -7,9 +7,12 @@ import org.mongodb.morphia.annotations.Property;
  * @date 11/22/13
  */
 public class BillTitle {
+
     private String as;
+
     @Property("is_for_portion")
     private String isForPortion;
+
     private String title;
     private String type;
 

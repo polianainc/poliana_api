@@ -1,17 +1,12 @@
 package com.poliana.core.bills.entities;
 
-import org.mongodb.morphia.annotations.Property;
-
 /**
  * @author David Gilmore
  * @date 11/22/13
  */
 public class BillSummary {
     private String as;
-    @Property("date_ts")
-    private long dateTs;
-    @Property("date_string")
-    private String dateString;
+    private String date;
     private String text;
 
     public String getAs() {
@@ -22,20 +17,12 @@ public class BillSummary {
         this.as = as;
     }
 
-    public long getDateTs() {
-        return dateTs;
+    public String getDate() {
+        return date;
     }
 
-    public void setDateTs(long dateTs) {
-        this.dateTs = dateTs;
-    }
-
-    public String getDateString() {
-        return dateString;
-    }
-
-    public void setDateString(String dateString) {
-        this.dateString = dateString;
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public String getText() {

@@ -18,7 +18,7 @@ import java.util.List;
  * @date 1/4/14
  */
 @Controller
-@RequestMapping("/pac-finance/")
+@RequestMapping("/pacs/")
 public class PacContributionsController extends AbstractBaseController {
 
     private PacContributionService pacContributionService;

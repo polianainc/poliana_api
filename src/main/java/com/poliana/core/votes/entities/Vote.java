@@ -1,71 +1,61 @@
 package com.poliana.core.votes.entities;
 
-import org.mongodb.morphia.annotations.*;
-import com.google.gson.annotations.Expose;
-import com.poliana.core.bills.entities.Bill;
+import org.mongodb.morphia.annotations.Embedded;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Property;
 
+import java.util.Date;
 
-import java.util.List;
 
 /**
  * @author David Gilmore
- * @date 11/13/13
+ * @date 11/17/13
  */
-@Entity("votes_120113")
+@Entity("votes")
 public class Vote {
 
     @Id
-    @Expose
     private String id;
 
-    @Reference
-    private Bill bill;
-    @Indexed @Property("vote_id")
-    private String voteId;
-    @Indexed @Property("bill_id")
-    private String billId;
-    private String category;
-    private int congress;
-    private long date;
-    @Embedded("bill_info")
-    private BillRef billInfo;
     @Embedded
-    private VoteAmendmentRef amendment;
+    private BillReference bill;
+
+    @Embedded
+    private VoteAmendmentReference amendmentReference;
+
+    private String category;
+    private String chamber;
+    private int congress;
+    private Date date;
+
     @Embedded
     private Nomination nomination;
-    private String number;
+
+    private Integer number;
     private String question;
     private String requires;
     private String result;
+
     @Property("result_text")
     private String resultText;
+
     private String session;
+
     @Property("source_url")
     private String sourceUrl;
+
     private String subject;
     private String type;
-    @Property("updated_at")
-    private String updatedAt;
-    private String chamber;
-    private int year;
-    private int month;
-    @Property("yea_total")
-    private int yeaTotal;
-    @Property("nay_total")
-    private int nayTotal;
-    @Property("not_voting_total")
-    private int notVotingTotal;
-    @Property("present_total")
-    private int presentTotal;
 
-    @Reference
-    private List<String> yeas;
-    @Reference
-    private List<String> nays;
-    @Reference("not_voting")
-    private List<String> notVoting;
-    @Reference
-    private List<String> present;
+    @Property("updated_at")
+    private Date updatedAt;
+
+    @Property("vote_id")
+    private String voteId;
+
+    @Embedded
+    private Voters votes;
 
     public String getId() {
         return id;
@@ -75,28 +65,20 @@ public class Vote {
         this.id = id;
     }
 
-    public Bill getBill() {
+    public BillReference getBill() {
         return bill;
     }
 
-    public void setBill(Bill bill) {
+    public void setBill(BillReference bill) {
         this.bill = bill;
     }
 
-    public String getVoteId() {
-        return voteId;
+    public VoteAmendmentReference getAmendmentReference() {
+        return amendmentReference;
     }
 
-    public void setVoteId(String voteId) {
-        this.voteId = voteId;
-    }
-
-    public String getBillId() {
-        return billId;
-    }
-
-    public void setBillId(String billId) {
-        this.billId = billId;
+    public void setAmendmentReference(VoteAmendmentReference amendmentReference) {
+        this.amendmentReference = amendmentReference;
     }
 
     public String getCategory() {
@@ -107,6 +89,14 @@ public class Vote {
         this.category = category;
     }
 
+    public String getChamber() {
+        return chamber;
+    }
+
+    public void setChamber(String chamber) {
+        this.chamber = chamber;
+    }
+
     public int getCongress() {
         return congress;
     }
@@ -115,28 +105,12 @@ public class Vote {
         this.congress = congress;
     }
 
-    public long getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(long date) {
+    public void setDate(Date date) {
         this.date = date;
-    }
-
-    public BillRef getBillInfo() {
-        return billInfo;
-    }
-
-    public void setBillInfo(BillRef billInfo) {
-        this.billInfo = billInfo;
-    }
-
-    public VoteAmendmentRef getAmendment() {
-        return amendment;
-    }
-
-    public void setAmendment(VoteAmendmentRef amendment) {
-        this.amendment = amendment;
     }
 
     public Nomination getNomination() {
@@ -147,11 +121,11 @@ public class Vote {
         this.nomination = nomination;
     }
 
-    public String getNumber() {
+    public Integer getNumber() {
         return number;
     }
 
-    public void setNumber(String number) {
+    public void setNumber(Integer number) {
         this.number = number;
     }
 
@@ -219,99 +193,27 @@ public class Vote {
         this.type = type;
     }
 
-    public String getUpdatedAt() {
+    public Date getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(String updatedAt) {
+    public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
 
-    public String getChamber() {
-        return chamber;
+    public String getVoteId() {
+        return voteId;
     }
 
-    public void setChamber(String chamber) {
-        this.chamber = chamber;
+    public void setVoteId(String voteId) {
+        this.voteId = voteId;
     }
 
-    public int getYear() {
-        return year;
+    public Voters getVotes() {
+        return votes;
     }
 
-    public void setYear(int year) {
-        this.year = year;
-    }
-
-    public int getMonth() {
-        return month;
-    }
-
-    public void setMonth(int month) {
-        this.month = month;
-    }
-
-    public int getYeaTotal() {
-        return yeaTotal;
-    }
-
-    public void setYeaTotal(int yeaTotal) {
-        this.yeaTotal = yeaTotal;
-    }
-
-    public int getNayTotal() {
-        return nayTotal;
-    }
-
-    public void setNayTotal(int nayTotal) {
-        this.nayTotal = nayTotal;
-    }
-
-    public int getNotVotingTotal() {
-        return notVotingTotal;
-    }
-
-    public void setNotVotingTotal(int notVotingTotal) {
-        this.notVotingTotal = notVotingTotal;
-    }
-
-    public int getPresentTotal() {
-        return presentTotal;
-    }
-
-    public void setPresentTotal(int presentTotal) {
-        this.presentTotal = presentTotal;
-    }
-
-    public List<String> getYeas() {
-        return yeas;
-    }
-
-    public void setYeas(List<String> yeas) {
-        this.yeas = yeas;
-    }
-
-    public List<String> getNays() {
-        return nays;
-    }
-
-    public void setNays(List<String> nays) {
-        this.nays = nays;
-    }
-
-    public List<String> getNotVoting() {
-        return notVoting;
-    }
-
-    public void setNotVoting(List<String> notVoting) {
-        this.notVoting = notVoting;
-    }
-
-    public List<String> getPresent() {
-        return present;
-    }
-
-    public void setPresent(List<String> present) {
-        this.present = present;
+    public void setVotes(Voters votes) {
+        this.votes = votes;
     }
 }

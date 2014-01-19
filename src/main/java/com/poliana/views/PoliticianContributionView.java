@@ -1,6 +1,6 @@
 package com.poliana.views;
 
-import com.poliana.core.industryFinance.entities.IndustryPoliticianContributions;
+import com.poliana.core.politicianFinance.industries.IndustryPoliticianContributionTotals;
 import com.poliana.core.legislators.Legislator;
 import com.poliana.core.time.TimeService;
 import org.jfree.chart.ChartFactory;
@@ -15,6 +15,7 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,28 +29,77 @@ public class PoliticianContributionView extends JFrame {
     private TimeService timeService;
 
 
+
+    /**
+     * Plot industry to politician contribution totals for a given chamber in a given congressional cycle.
+     */
+    public PoliticianContributionView(List<IndustryPoliticianContributionTotals> contributions) {
+
+        this.timeService = new TimeService();
+
+        if (contributions != null && contributions.size() > 0) {
+
+            IndustryPoliticianContributionTotals totals = contributions.get(0);
+
+            this.title =
+                    "Industry contributions  to " +
+                            totals.getFirstName() + " " +
+                            totals.getLastName();
+        }
+        else
+            this.title = "No data";
+
+        this.dataset = getContributionDataset(contributions);
+    }
+
     /**
      * Plot industry to politician contribution totals for a given chamber in a given congressional cycle.
      * @param contributions
      * @param congress
      */
-    public PoliticianContributionView(List<IndustryPoliticianContributions> contributions, Legislator legislator, int congress) {
+    public PoliticianContributionView(List<IndustryPoliticianContributionTotals> contributions, int congress) {
 
         this.timeService = new TimeService();
 
         if (contributions != null && contributions.size() > 0) {
+
+            IndustryPoliticianContributionTotals totals = contributions.get(0);
+
             this.title =
-                    "Industry contributions from " +
-                    contributions.get(0) + " to " +
-                    legislator.getFirstName() + " " +
-                    legislator.getLastName() +
+                    "Industry contributions  to " +
+                    totals.getFirstName() + " " +
+                    totals.getLastName() +
                     " during the " +
                     congress +
                     timeService.getNumberSuffix(congress) +
                     " congress";
         }
         else
-            this.title = " No data";
+            this.title = "No data";
+
+        this.dataset = getContributionDataset(contributions);
+    }
+
+
+    /**
+     * Plot industry to politician contribution totals for a given chamber in a given congressional cycle.
+     */
+    public PoliticianContributionView(List<IndustryPoliticianContributionTotals> contributions, Date start, Date end) {
+
+        this.timeService = new TimeService();
+
+        if (contributions != null && contributions.size() > 0) {
+
+            IndustryPoliticianContributionTotals totals = contributions.get(0);
+
+            this.title =
+                    "Industry contributions  to " +
+                    totals.getFirstName() + " " +
+                    totals.getLastName() + " " +
+                    "from " + start.toString() + " to " + end.toString();
+        }
+        else
+            this.title = "No data";
 
         this.dataset = getContributionDataset(contributions);
     }
@@ -97,11 +147,14 @@ public class PoliticianContributionView extends JFrame {
         return chart;
     }
 
-    private CategoryDataset getContributionDataset(List<IndustryPoliticianContributions> contributions) {
+    private CategoryDataset getContributionDataset(List<IndustryPoliticianContributionTotals> contributions) {
 
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
-        for (IndustryPoliticianContributions contribution: contributions) {
+        if (contributions == null)
+            return dataset;
+
+        for (IndustryPoliticianContributionTotals contribution: contributions) {
             dataset.addValue(contribution.getContributionSum(), "", contribution.getIndustryName());
         }
 

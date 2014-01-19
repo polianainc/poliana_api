@@ -9,10 +9,13 @@ import org.mongodb.morphia.annotations.Property;
  */
 @Embedded
 public class BillAmendmentRef {
+
     @Property("amendment_id")
     private String amendmentId;
+
     @Property("amendment_type")
     private String amendmentType;
+
     private String chamber;
     private int number;
 

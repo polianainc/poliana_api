@@ -2,6 +2,7 @@ package com.poliana.core.bills.entities;
 
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Property;
+import com.poliana.core.bills.entities.Reference;
 
 import java.util.List;
 
@@ -9,37 +10,31 @@ import java.util.List;
  * @author David Gilmore
  * @date 11/22/13
  */
-@Embedded
 public class Action {
-    @Property("acted_ts")
-    private long actedTs;
+
     @Property("acted_at")
     private String actedAt;
+
     @Embedded("bill_ids")
     private List<String> billIds;
+
     @Embedded
     private List<Reference> references;
+
     private String calendar;
     private String text;
     private String type;
     private String roll;
     private String under;
-    private int number;
+    private String number;
     private String how;
     private String result;
     private String status;
     private String suspension;
     private String where;
+
     @Property("vote_type")
     private String voteType;
-
-    public long getActedTs() {
-        return actedTs;
-    }
-
-    public void setActedTs(long actedTs) {
-        this.actedTs = actedTs;
-    }
 
     public String getActedAt() {
         return actedAt;
@@ -105,11 +100,11 @@ public class Action {
         this.under = under;
     }
 
-    public int getNumber() {
+    public String getNumber() {
         return number;
     }
 
-    public void setNumber(int number) {
+    public void setNumber(String number) {
         this.number = number;
     }
 

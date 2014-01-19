@@ -1,69 +1,79 @@
 package com.poliana.core.bills.entities;
 
-import org.mongodb.morphia.annotations.*;
-import org.mongodb.morphia.annotations.Reference;
-import com.google.gson.annotations.Expose;
+import org.mongodb.morphia.annotations.Embedded;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.Property;
 
 import java.util.List;
 
 /**
  * @author David Gilmore
- * @date 11/16/13
+ * @date 11/22/13
  */
-@Entity("bills")
+@Entity("bills_govtrack")
 public class Bill {
 
     @Id
-    @Expose
     private String id;
 
-    @Indexed @Property("bill_id")
-    private String billId;
-    @Property("vote_id")
-    private String voteId;
-    @Property("official_title")
-    private String officialTitle;
-    @Property("popular_title")
-    private String popularTitle;
-    @Property("short_title")
-    private String shortTitle;
-    @Embedded
-    private List<BillTitle> titles;
-    @Property("top_subject")
-    private String topSubject;
-    private List<String> subjects;
-    @Embedded
-    private BillSummary summary;
-    @Reference
-    private String sponsor;
-    @Reference
-    private List<String> cosponsors;
-    @Property("introduced_ts")
-    private long introducedTs;
-    @Property("introduced_at")
-    private String introducedAt;
-    private String status;
-    @Property("status_ts")
-    private long statusTs;
-    @Property("status_at")
-    private String statusAt;
-    private int congress;
-    @Property("bill_type")
-    private String billType;
-    private int year;
-    private int month;
     @Embedded
     private List<Action> actions;
+
     @Embedded
     private List<BillAmendmentRef> amendments;
+
+    @Property("bill_id")
+    private String billId;
+
+    @Property("bill_type")
+    private String billType;
+    private List<Committee> committees;
+    private String congress;
+    private Sponsor sponsor;
+    private List<Sponsor> cosponsors;
+
+    @Property("enacted_as")
+    private String enactedAs;
+
     @Embedded
     private BillHistory history;
-    @Reference
-    private List<CongCommittee> committees;
+
+    @Property("introduced_at")
+    private String introducedAt;
+
+    private String number;
+
+    @Property("official_title")
+    private String officialTitle;
+
+    @Property("popular_title")
+    private String popularTitle;
+
+    @Property("short_title")
+    private String shortTitle;
+
+    @Embedded("related_bills")
+    private List<BillsRelated> billsRelateds;
+
+    private String status;
+
+    @Property("status_at")
+    private String statusAt;
+
+    private List<String> subjects;
+
+    @Property("subjects_top_term")
+    private String subjectsTopTerm;
+
+    @Embedded
+    private BillSummary summary;
+
+    @Embedded
+    private List<BillTitle> titles;
+
     @Property("updated_at")
     private String updatedAt;
-    @Property("updated_ts")
-    private long updatedTs;
 
     public String getId() {
         return id;
@@ -71,6 +81,22 @@ public class Bill {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public List<Action> getActions() {
+        return actions;
+    }
+
+    public void setActions(List<Action> actions) {
+        this.actions = actions;
+    }
+
+    public List<BillAmendmentRef> getAmendments() {
+        return amendments;
+    }
+
+    public void setAmendments(List<BillAmendmentRef> amendments) {
+        this.amendments = amendments;
     }
 
     public String getBillId() {
@@ -81,12 +107,76 @@ public class Bill {
         this.billId = billId;
     }
 
-    public String getVoteId() {
-        return voteId;
+    public String getBillType() {
+        return billType;
     }
 
-    public void setVoteId(String voteId) {
-        this.voteId = voteId;
+    public void setBillType(String billType) {
+        this.billType = billType;
+    }
+
+    public List<Committee> getCommittees() {
+        return committees;
+    }
+
+    public void setCommittees(List<Committee> committees) {
+        this.committees = committees;
+    }
+
+    public String getCongress() {
+        return congress;
+    }
+
+    public void setCongress(String congress) {
+        this.congress = congress;
+    }
+
+    public Sponsor getSponsor() {
+        return sponsor;
+    }
+
+    public void setSponsor(Sponsor sponsor) {
+        this.sponsor = sponsor;
+    }
+
+    public List<Sponsor> getCosponsors() {
+        return cosponsors;
+    }
+
+    public void setCosponsors(List<Sponsor> cosponsors) {
+        this.cosponsors = cosponsors;
+    }
+
+    public String getEnactedAs() {
+        return enactedAs;
+    }
+
+    public void setEnactedAs(String enactedAs) {
+        this.enactedAs = enactedAs;
+    }
+
+    public BillHistory getHistory() {
+        return history;
+    }
+
+    public void setHistory(BillHistory history) {
+        this.history = history;
+    }
+
+    public String getIntroducedAt() {
+        return introducedAt;
+    }
+
+    public void setIntroducedAt(String introducedAt) {
+        this.introducedAt = introducedAt;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
     }
 
     public String getOfficialTitle() {
@@ -113,68 +203,12 @@ public class Bill {
         this.shortTitle = shortTitle;
     }
 
-    public List<BillTitle> getTitles() {
-        return titles;
+    public List<BillsRelated> getBillsRelateds() {
+        return billsRelateds;
     }
 
-    public void setTitles(List<BillTitle> titles) {
-        this.titles = titles;
-    }
-
-    public String getTopSubject() {
-        return topSubject;
-    }
-
-    public void setTopSubject(String topSubject) {
-        this.topSubject = topSubject;
-    }
-
-    public List<String> getSubjects() {
-        return subjects;
-    }
-
-    public void setSubjects(List<String> subjects) {
-        this.subjects = subjects;
-    }
-
-    public BillSummary getSummary() {
-        return summary;
-    }
-
-    public void setSummary(BillSummary summary) {
-        this.summary = summary;
-    }
-
-    public String getSponsor() {
-        return sponsor;
-    }
-
-    public void setSponsor(String sponsor) {
-        this.sponsor = sponsor;
-    }
-
-    public List<String> getCosponsors() {
-        return cosponsors;
-    }
-
-    public void setCosponsors(List<String> cosponsors) {
-        this.cosponsors = cosponsors;
-    }
-
-    public long getIntroducedTs() {
-        return introducedTs;
-    }
-
-    public void setIntroducedTs(long introducedTs) {
-        this.introducedTs = introducedTs;
-    }
-
-    public String getIntroducedAt() {
-        return introducedAt;
-    }
-
-    public void setIntroducedAt(String introducedAt) {
-        this.introducedAt = introducedAt;
+    public void setBillsRelateds(List<BillsRelated> billsRelateds) {
+        this.billsRelateds = billsRelateds;
     }
 
     public String getStatus() {
@@ -185,14 +219,6 @@ public class Bill {
         this.status = status;
     }
 
-    public long getStatusTs() {
-        return statusTs;
-    }
-
-    public void setStatusTs(long statusTs) {
-        this.statusTs = statusTs;
-    }
-
     public String getStatusAt() {
         return statusAt;
     }
@@ -201,68 +227,36 @@ public class Bill {
         this.statusAt = statusAt;
     }
 
-    public int getCongress() {
-        return congress;
+    public List<String> getSubjects() {
+        return subjects;
     }
 
-    public void setCongress(int congress) {
-        this.congress = congress;
+    public void setSubjects(List<String> subjects) {
+        this.subjects = subjects;
     }
 
-    public String getBillType() {
-        return billType;
+    public String getSubjectsTopTerm() {
+        return subjectsTopTerm;
     }
 
-    public void setBillType(String billType) {
-        this.billType = billType;
+    public void setSubjectsTopTerm(String subjectsTopTerm) {
+        this.subjectsTopTerm = subjectsTopTerm;
     }
 
-    public int getYear() {
-        return year;
+    public BillSummary getSummary() {
+        return summary;
     }
 
-    public void setYear(int year) {
-        this.year = year;
+    public void setSummary(BillSummary summary) {
+        this.summary = summary;
     }
 
-    public int getMonth() {
-        return month;
+    public List<BillTitle> getTitles() {
+        return titles;
     }
 
-    public void setMonth(int month) {
-        this.month = month;
-    }
-
-    public List<Action> getActions() {
-        return actions;
-    }
-
-    public void setActions(List<Action> actions) {
-        this.actions = actions;
-    }
-
-    public List<BillAmendmentRef> getAmendments() {
-        return amendments;
-    }
-
-    public void setAmendments(List<BillAmendmentRef> amendments) {
-        this.amendments = amendments;
-    }
-
-    public BillHistory getHistory() {
-        return history;
-    }
-
-    public void setHistory(BillHistory history) {
-        this.history = history;
-    }
-
-    public List<CongCommittee> getCommittees() {
-        return committees;
-    }
-
-    public void setCommittees(List<CongCommittee> committees) {
-        this.committees = committees;
+    public void setTitles(List<BillTitle> titles) {
+        this.titles = titles;
     }
 
     public String getUpdatedAt() {
@@ -271,13 +265,5 @@ public class Bill {
 
     public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
-    }
-
-    public long getUpdatedTs() {
-        return updatedTs;
-    }
-
-    public void setUpdatedTs(long updatedTs) {
-        this.updatedTs = updatedTs;
     }
 }

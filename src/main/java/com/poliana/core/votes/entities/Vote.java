@@ -1,5 +1,6 @@
 package com.poliana.core.votes.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
@@ -13,6 +14,7 @@ import java.util.Date;
  * @date 11/17/13
  */
 @Entity("votes")
+@JsonIgnoreProperties({"id"})
 public class Vote {
 
     @Id

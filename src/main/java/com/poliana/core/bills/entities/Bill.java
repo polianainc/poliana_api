@@ -1,5 +1,6 @@
 package com.poliana.core.bills.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
@@ -12,6 +13,7 @@ import java.util.List;
  * @date 11/22/13
  */
 @Entity("bills_govtrack")
+@JsonIgnoreProperties({"id"})
 public class Bill {
 
     @Id
@@ -29,7 +31,7 @@ public class Bill {
     @Property("bill_type")
     private String billType;
     private List<Committee> committees;
-    private String congress;
+    private Integer congress;
     private Sponsor sponsor;
     private List<Sponsor> cosponsors;
 
@@ -42,7 +44,7 @@ public class Bill {
     @Property("introduced_at")
     private String introducedAt;
 
-    private String number;
+    private Integer number;
 
     @Property("official_title")
     private String officialTitle;
@@ -54,7 +56,7 @@ public class Bill {
     private String shortTitle;
 
     @Embedded("related_bills")
-    private List<BillsRelated> billsRelateds;
+    private List<BillsRelated> billsRelated;
 
     private String status;
 
@@ -123,11 +125,11 @@ public class Bill {
         this.committees = committees;
     }
 
-    public String getCongress() {
+    public Integer getCongress() {
         return congress;
     }
 
-    public void setCongress(String congress) {
+    public void setCongress(Integer congress) {
         this.congress = congress;
     }
 
@@ -171,11 +173,11 @@ public class Bill {
         this.introducedAt = introducedAt;
     }
 
-    public String getNumber() {
+    public Integer getNumber() {
         return number;
     }
 
-    public void setNumber(String number) {
+    public void setNumber(Integer number) {
         this.number = number;
     }
 
@@ -203,12 +205,12 @@ public class Bill {
         this.shortTitle = shortTitle;
     }
 
-    public List<BillsRelated> getBillsRelateds() {
-        return billsRelateds;
+    public List<BillsRelated> getBillsRelated() {
+        return billsRelated;
     }
 
-    public void setBillsRelateds(List<BillsRelated> billsRelateds) {
-        this.billsRelateds = billsRelateds;
+    public void setBillsRelated(List<BillsRelated> billsRelated) {
+        this.billsRelated = billsRelated;
     }
 
     public String getStatus() {

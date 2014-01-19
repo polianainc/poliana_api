@@ -23,7 +23,7 @@ import static com.poliana.core.time.TimeService.CURRENT_CONGRESS;
  * @date 1/6/14
  */
 @Controller
-@RequestMapping("/politicians/")
+@RequestMapping("/politicians/") //TODO: start and end assumed if one or other is not given
 public class PoliticianIndustryFinanceController extends AbstractBaseController {
 
     private PoliticianIndustryFinanceService politicianIndustryFinanceService;

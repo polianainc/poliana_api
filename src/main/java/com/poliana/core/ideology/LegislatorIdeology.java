@@ -1,5 +1,6 @@
 package com.poliana.core.ideology;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Indexed;
@@ -11,6 +12,7 @@ import com.google.gson.annotations.Expose;
  * @date 12/31/13
  */
 @Entity("legislator_ideology")
+@JsonIgnoreProperties({"id"})
 public class LegislatorIdeology {
 
     @Id

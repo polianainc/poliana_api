@@ -32,6 +32,8 @@ public class VoteService {
     public Vote getVote(String voteId, int congress, int year) {
 
         voteId += "-" + congress + "." + year;
+        //TODO: Update MS timestamps to seconds
+        //TODO: present to absent
 
         Vote vote = voteMongoRepo.getVote(voteId);
 

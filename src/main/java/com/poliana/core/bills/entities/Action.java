@@ -2,7 +2,6 @@ package com.poliana.core.bills.entities;
 
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Property;
-import com.poliana.core.bills.entities.Reference;
 
 import java.util.List;
 
@@ -26,7 +25,7 @@ public class Action {
     private String type;
     private String roll;
     private String under;
-    private String number;
+    private Integer number;
     private String how;
     private String result;
     private String status;
@@ -100,11 +99,11 @@ public class Action {
         this.under = under;
     }
 
-    public String getNumber() {
+    public Integer getNumber() {
         return number;
     }
 
-    public void setNumber(String number) {
+    public void setNumber(Integer number) {
         this.number = number;
     }
 

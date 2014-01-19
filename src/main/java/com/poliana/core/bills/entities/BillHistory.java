@@ -8,18 +8,18 @@ import org.mongodb.morphia.annotations.Property;
  */
 public class BillHistory {
 
-    private boolean active;
+    private Boolean active;
 
     @Property("active_at")
     private String activeAt;
 
     @Property("awaiting_signature")
-    private boolean awaitingSignature;
+    private Boolean awaitingSignature;
 
     @Property("awaiting_signature_since")
     private String awaitingSignatureSince;
 
-    private boolean enacted;
+    private Boolean enacted;
 
     @Property("enacted_at")
     private String enactedAt;
@@ -42,16 +42,16 @@ public class BillHistory {
     @Property("senate_override_result")
     private String senateOverrideResult;
 
-    private boolean vetoed;
+    private Boolean vetoed;
 
     @Property("vetoed_at")
     private String vetoedAt;
 
-    public boolean isActive() {
+    public Boolean getActive() {
         return active;
     }
 
-    public void setActive(boolean active) {
+    public void setActive(Boolean active) {
         this.active = active;
     }
 
@@ -63,11 +63,11 @@ public class BillHistory {
         this.activeAt = activeAt;
     }
 
-    public boolean isAwaitingSignature() {
+    public Boolean getAwaitingSignature() {
         return awaitingSignature;
     }
 
-    public void setAwaitingSignature(boolean awaitingSignature) {
+    public void setAwaitingSignature(Boolean awaitingSignature) {
         this.awaitingSignature = awaitingSignature;
     }
 
@@ -79,11 +79,11 @@ public class BillHistory {
         this.awaitingSignatureSince = awaitingSignatureSince;
     }
 
-    public boolean isEnacted() {
+    public Boolean getEnacted() {
         return enacted;
     }
 
-    public void setEnacted(boolean enacted) {
+    public void setEnacted(Boolean enacted) {
         this.enacted = enacted;
     }
 
@@ -143,11 +143,11 @@ public class BillHistory {
         this.senateOverrideResult = senateOverrideResult;
     }
 
-    public boolean isVetoed() {
+    public Boolean getVetoed() {
         return vetoed;
     }
 
-    public void setVetoed(boolean vetoed) {
+    public void setVetoed(Boolean vetoed) {
         this.vetoed = vetoed;
     }
 

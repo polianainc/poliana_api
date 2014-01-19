@@ -1,5 +1,6 @@
 package com.poliana.core.legislators;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.mongodb.morphia.annotations.*;
 import com.google.gson.annotations.Expose;
 import org.msgpack.annotation.Message;
@@ -12,6 +13,7 @@ import java.io.Serializable;
  */
 @Message
 @Entity("legislators")
+@JsonIgnoreProperties({"id"})
 public class Legislator implements Serializable {
 
     @Id

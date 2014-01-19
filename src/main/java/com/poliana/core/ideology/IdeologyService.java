@@ -65,7 +65,7 @@ public class IdeologyService {
 
         //If no return, get an IdeologyMatrix and find the correct LegislatorIdeology in it.
         //We don't know what term it is, query for the correct term using the average of the congress timestamps.
-        CongressTimestamps timestamps = timeService.congressTimestamps(congress);
+        CongressTimestamps timestamps = timeService.getCongressTimestamps(congress);
         int avg = (int) ((timestamps.getBegin() + timestamps.getEnd()) / 2);
 
         Legislator legislator = legislatorService.getLegislatorByIdTimestamp(bioguideId, avg);

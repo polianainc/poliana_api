@@ -48,7 +48,7 @@ public class SponsorshipRepo {
 
         Query<SponsorshipMatrix> query = mongoStore.find(SponsorshipMatrix.class);
 
-        CongressTimestamps ts = timeService.congressTimestamps(congress);
+        CongressTimestamps ts = timeService.getCongressTimestamps(congress);
 
         query.and(
                 query.criteria("chamber").equal(chamber),

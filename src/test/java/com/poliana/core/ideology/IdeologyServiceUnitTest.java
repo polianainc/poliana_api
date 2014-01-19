@@ -81,7 +81,7 @@ public class IdeologyServiceUnitTest extends AbstractSponsorshipTest {
         legislator.setBioguideId(bioguideId);
         legislator.setTermType("sen");
 
-        CongressTimestamps timestamps = timeService.congressTimestamps(110);
+        CongressTimestamps timestamps = timeService.getCongressTimestamps(110);
         int avg = (int) ((timestamps.getBegin() + timestamps.getEnd()) / 2);
 
         expect(this.ideologyRepoMock.getLegislatorIdeology(bioguideId, 110)).andReturn(ideology);
@@ -93,7 +93,7 @@ public class IdeologyServiceUnitTest extends AbstractSponsorshipTest {
 
     private IdeologyMatrix getIdeologyMatrixMockData(String chamber, int congress) {
 
-        CongressTimestamps timestamps = this.timeService.congressTimestamps(congress);
+        CongressTimestamps timestamps = this.timeService.getCongressTimestamps(congress);
 
         IdeologyMatrix ideologyMatrix = new IdeologyMatrix();
 

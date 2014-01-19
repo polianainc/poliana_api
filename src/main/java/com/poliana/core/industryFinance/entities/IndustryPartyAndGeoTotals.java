@@ -1,5 +1,6 @@
 package com.poliana.core.industryFinance.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
@@ -13,12 +14,11 @@ import java.util.List;
  * @author David Gilmore
  * @date 11/15/13
  */
-@SuppressWarnings("serial")
 @Entity("industry_monthly_totals")
+@JsonIgnoreProperties({"id"})
 public class IndustryPartyAndGeoTotals {
 
     @Id
-    @Expose
     private String id;
 
     private String industry;

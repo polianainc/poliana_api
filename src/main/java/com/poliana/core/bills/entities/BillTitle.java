@@ -11,7 +11,7 @@ public class BillTitle {
     private String as;
 
     @Property("is_for_portion")
-    private String isForPortion;
+    private Boolean isForPortion;
 
     private String title;
     private String type;
@@ -24,11 +24,11 @@ public class BillTitle {
         this.as = as;
     }
 
-    public String getForPortion() {
+    public Boolean getForPortion() {
         return isForPortion;
     }
 
-    public void setForPortion(String forPortion) {
+    public void setForPortion(Boolean forPortion) {
         isForPortion = forPortion;
     }
 

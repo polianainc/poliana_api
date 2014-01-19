@@ -133,7 +133,7 @@ public class TimeService {
      * @param congress
      * @return
      */
-    public CongressTimestamps congressTimestamps(int congress) {
+    public CongressTimestamps getCongressTimestamps(int congress) {
 
         Calendar cal = Calendar.getInstance();
 
@@ -155,6 +155,16 @@ public class TimeService {
         timestamps.setEnd(end/1000);
 
         return timestamps;
+    }
+
+    /**
+     * Given a year, return the corresponding congressional cycle
+     * @param year
+     * @return
+     */
+    public int getYearToCongress(int year) {
+
+        return (year - 1787) / 2;
     }
 
     public String getNumberSuffix(int n) {

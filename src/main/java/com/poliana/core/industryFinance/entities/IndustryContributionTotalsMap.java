@@ -1,5 +1,6 @@
 package com.poliana.core.industryFinance.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
@@ -12,6 +13,7 @@ import java.util.HashMap;
  * @date 1/6/14
  */
 @Entity("industry_contribution_totals")
+@JsonIgnoreProperties({"id"})
 public class IndustryContributionTotalsMap {
 
     @Id

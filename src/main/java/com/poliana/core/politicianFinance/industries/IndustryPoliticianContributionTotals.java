@@ -1,5 +1,6 @@
 package com.poliana.core.politicianFinance.industries;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Property;
@@ -12,6 +13,7 @@ import org.mongodb.morphia.annotations.Property;
  * @date 11/1/13
  */
 @Entity("industry_to_politician_contribution_totals")
+@JsonIgnoreProperties({"id"})
 public class IndustryPoliticianContributionTotals {
 
     @Id

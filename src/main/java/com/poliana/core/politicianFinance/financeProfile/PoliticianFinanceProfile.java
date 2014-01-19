@@ -1,5 +1,6 @@
 package com.poliana.core.politicianFinance.financeProfile;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.mongodb.morphia.annotations.*;
 import com.google.gson.annotations.Expose;
 
@@ -10,6 +11,7 @@ import java.util.List;
  * @date 12/11/13
  */
 @Entity("politician_finance_profile")
+@JsonIgnoreProperties({"id"})
 public class PoliticianFinanceProfile {
 
     @Id

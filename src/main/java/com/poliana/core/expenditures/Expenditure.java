@@ -1,5 +1,8 @@
 package com.poliana.core.expenditures;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties({"id"})
 public class Expenditure {
     private String cycle;
     private String id;

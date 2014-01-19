@@ -51,9 +51,9 @@ public class SponsorshipServiceUnitTest extends AbstractSponsorshipTest {
     @Test
     public void testGetSponsorshipMatrix__congress() throws Exception {
 
-        List<Legislator> legislatorListMock = getLegislatorsMockData(100);
-        List<SponsorshipCount> sponsorshipCountsMock = getSponsorsMockData(legislatorListMock);
-        CongressTimestamps timestamps = this.timeService.congressTimestamps(110);
+        List<Legislator> legislatorListMock = getLegislatorsFixture(100);
+        List<SponsorshipCount> sponsorshipCountsMock = getSponsorsFixture(legislatorListMock);
+        CongressTimestamps timestamps = this.timeService.getCongressTimestamps(110);
 
         expect(this.sponsorshipRepoMock.getSponsorshipMatrix("s", 110)).andReturn(null);
         expect(this.sponsorshipRepoMock.getSponsorshipCounts("s", 110)).andReturn(sponsorshipCountsMock);

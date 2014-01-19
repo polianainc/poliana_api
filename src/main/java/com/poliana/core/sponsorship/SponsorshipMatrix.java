@@ -1,5 +1,6 @@
 package com.poliana.core.sponsorship;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.mongodb.morphia.annotations.Embedded;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
@@ -14,6 +15,7 @@ import java.util.List;
  * @date 12/30/13
  */
 @Entity("sponsorship_matrix")
+@JsonIgnoreProperties({"id"})
 public class SponsorshipMatrix {
 
     @Id

@@ -26,6 +26,8 @@ public class BillService {
      */
     public Bill getBill(String billId, int congress) {
 
+        billId += "-" + congress;
+
         return billMongoRepo.getBill(billId);
     }
 

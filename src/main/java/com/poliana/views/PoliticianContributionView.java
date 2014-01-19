@@ -149,6 +149,8 @@ public class PoliticianContributionView extends JFrame {
 
     private CategoryDataset getContributionDataset(List<IndustryPoliticianContributionTotals> contributions) {
 
+        //TODO: sort contributions and add include/exclude functionality
+
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
         if (contributions == null)

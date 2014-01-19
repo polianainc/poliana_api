@@ -17,7 +17,7 @@ public class BillAmendmentRef {
     private String amendmentType;
 
     private String chamber;
-    private int number;
+    private Integer number;
 
     public String getAmendmentId() {
         return amendmentId;
@@ -43,11 +43,11 @@ public class BillAmendmentRef {
         this.chamber = chamber;
     }
 
-    public int getNumber() {
+    public Integer getNumber() {
         return number;
     }
 
-    public void setNumber(int number) {
+    public void setNumber(Integer number) {
         this.number = number;
     }
 }

@@ -1,5 +1,6 @@
 package com.poliana.core.amendments.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.mongodb.morphia.annotations.*;
 import com.poliana.core.bills.entities.Action;
 import com.poliana.core.bills.entities.Sponsor;
@@ -11,6 +12,7 @@ import java.util.List;
  * @date 11/22/13
  */
 @Entity("amendments")
+@JsonIgnoreProperties({"id"})
 public class Amendment {
 
     @Id

@@ -40,7 +40,7 @@ public class IndustryContributionHadoopRepo {
      */
     public IndustryContributionTotalsMap getIndustryContributionTotalsMap(String industryId, int congress) {
 
-        CongressTimestamps ts = timeService.congressTimestamps(congress);
+        CongressTimestamps ts = timeService.getCongressTimestamps(congress);
 
         try {
             String query =
@@ -125,7 +125,7 @@ public class IndustryContributionHadoopRepo {
      */
     public IndustryContributionTotalsMap getIndustryCategoryContributionTotalsMap(String categoryId, int congress) {
 
-        CongressTimestamps ts = timeService.congressTimestamps(congress);
+        CongressTimestamps ts = timeService.getCongressTimestamps(congress);
 
         try {
             String query =
@@ -221,7 +221,7 @@ public class IndustryContributionHadoopRepo {
      */
     public IndustryContributionTotalsMap getIndustryContributionTotalsMapByChamber(String industryId, String chamber, int congress) {
 
-        CongressTimestamps ts = timeService.congressTimestamps(congress);
+        CongressTimestamps ts = timeService.getCongressTimestamps(congress);
 
         try {
             String query =
@@ -305,9 +305,9 @@ public class IndustryContributionHadoopRepo {
      * @return
      * @see com.poliana.core.industryFinance.entities.IndustryContributionTotalsMap
      */
-    public IndustryContributionTotalsMap getIndustryCategoryContributionTotalsMap(String categoryId, String chamber, int congress) {
+    public IndustryContributionTotalsMap    getIndustryCategoryContributionTotalsMap(String categoryId, String chamber, int congress) {
 
-        CongressTimestamps ts = timeService.congressTimestamps(congress);
+        CongressTimestamps ts = timeService.getCongressTimestamps(congress);
 
         try {
             String query =
@@ -382,42 +382,6 @@ public class IndustryContributionHadoopRepo {
         }
 
         return null;
-    }
-
-    /**
-     * Get a list of of industry to politician contributions for all years passed in
-     * @param industryId
-     * @param years
-     * @return
-     */
-    public List<IndustryPoliticianContributionTotals> getIndustryContributionTotals(String industryId, int... years) {
-
-        String yrs;
-
-        if (years.length > 1) {
-            yrs = "( year = ";
-
-            for (int i = 0; i < years.length; i++) {
-
-                if (i != years.length - 1)
-                    yrs += years[i] + " OR year = ";
-                else
-                    yrs += years[i] + ")";
-            }
-        }
-        else
-            yrs = "year = " + years[0];
-
-
-        String query =
-                "SELECT " +
-                    "* " +
-                "FROM " +
-                "   campaign_finance.industry_to_pol_contribution_monthly_totals " +
-                "WHERE " +
-                "   industry_id = \'" + industryId + "\' AND " + yrs;
-
-        return impalaTemplate.query(query, new IndustryPoliticianContributionTotalsMapper());
     }
 
     /**
@@ -553,7 +517,41 @@ public class IndustryContributionHadoopRepo {
         return null;
     }
 
+    /**
+     * Get a list of of industry to politician contributions for all years passed in
+     * @param industryId
+     * @param years
+     * @return
+     */
+    public List<IndustryPoliticianContributionTotals> getIndustryContributionTotals(String industryId, int... years) {
 
+        String yrs;
+
+        if (years.length > 1) {
+            yrs = "( year = ";
+
+            for (int i = 0; i < years.length; i++) {
+
+                if (i != years.length - 1)
+                    yrs += years[i] + " OR year = ";
+                else
+                    yrs += years[i] + ")";
+            }
+        }
+        else
+            yrs = "year = " + years[0];
+
+
+        String query =
+                "SELECT " +
+                        "* " +
+                        "FROM " +
+                        "   campaign_finance.industry_to_pol_contribution_monthly_totals " +
+                        "WHERE " +
+                        "   industry_id = \'" + industryId + "\' AND " + yrs;
+
+        return impalaTemplate.query(query, new IndustryPoliticianContributionTotalsMapper());
+    }
 
     @Autowired
     public void setImpalaTemplate(JdbcTemplate impalaTemplate) {

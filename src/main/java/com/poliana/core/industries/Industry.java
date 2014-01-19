@@ -1,5 +1,6 @@
 package com.poliana.core.industries;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Property;
@@ -11,6 +12,7 @@ import com.google.gson.annotations.Expose;
  * @date 11/12/13
  */
 @Entity("industries")
+@JsonIgnoreProperties({"id"})
 public class Industry {
 
     @Id

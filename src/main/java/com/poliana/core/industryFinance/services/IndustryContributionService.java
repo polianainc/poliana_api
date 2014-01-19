@@ -185,6 +185,8 @@ public class IndustryContributionService {
         return chamberTotals;
     }
 
+
+
     @Autowired
     public void setIndustryRepo(IndustryRepo industryRepo) {
         this.industryRepo = industryRepo;

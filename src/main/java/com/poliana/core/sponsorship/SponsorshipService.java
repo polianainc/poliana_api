@@ -50,7 +50,7 @@ public class SponsorshipService {
                 sponsorshipRepo.getSponsorshipCounts(chamber, congress);
 
         //Get beginning and ending timestamps for the given congress to use for a legislator query
-        CongressTimestamps timestamps = timeService.congressTimestamps(congress);
+        CongressTimestamps timestamps = timeService.getCongressTimestamps(congress);
 
         //Get all legislators in the given chamber during the congress given
         Iterator<Legislator> legislatorIterator =

@@ -21,7 +21,7 @@ public abstract class AbstractSponsorshipTest {
         this.timeService = new TimeService();
     }
 
-    protected List<Legislator> getLegislatorsMockData(int numLegislators) {
+    protected List<Legislator> getLegislatorsFixture(int numLegislators) {
 
         List<Legislator> legislators = new ArrayList<>(numLegislators);
 
@@ -39,7 +39,7 @@ public abstract class AbstractSponsorshipTest {
         return legislators;
     }
 
-    protected List<SponsorshipCount> getSponsorsMockData(List<Legislator> legislators) {
+    protected List<SponsorshipCount> getSponsorsFixture(List<Legislator> legislators) {
 
         int dims = legislators.size();
         int size = dims*(dims/2);

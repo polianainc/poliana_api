@@ -47,7 +47,7 @@ public class IndustryContributionController extends AbstractBaseController {
             @RequestParam(value = "chamber", required = false) String chamber,
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress) {
 
-        if (chamber != null) //Get contributions for a specifc chamber
+        if (chamber != null) //Get contributions for a specific chamber
             return industryContributionService.getIndustryContributionTotalsMap(industryId, chamber, congress);
 
         else  //If no chamber is specified, return both the house and senate contributions.
@@ -70,7 +70,7 @@ public class IndustryContributionController extends AbstractBaseController {
             @RequestParam(value = "chamber", required = false) String chamber,
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress) {
 
-        if (chamber != null) //Get contributions for a specifc chamber
+        if (chamber != null) //Get contributions for a specific chamber
             return industryContributionService.getIndustryCategoryContributionTotalsMap(categoryId, chamber, congress);
 
         else  //If no chamber is specified, return both the house and senate contributions.
@@ -95,7 +95,7 @@ public class IndustryContributionController extends AbstractBaseController {
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
             @RequestParam(value = "plot") String plotType) {
 
-        if (chamber != null) //Get contributions for a specifc chamber
+        if (chamber != null) //Get contributions for a specific chamber
             return industryContributionService.getIndustryContributionTotalsMap(industryId, chamber, congress);
 
         else  //If no chamber is specified, return both the house and senate contributions.
@@ -120,7 +120,7 @@ public class IndustryContributionController extends AbstractBaseController {
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
             @RequestParam(value = "plot") String plotType) {
 
-        if (chamber != null) //Get contributions for a specifc chamber
+        if (chamber != null) //Get contributions for a specific chamber
             return industryContributionService.getIndustryCategoryContributionTotalsMap(categoryId, chamber, congress);
 
         else  //If no chamber is specified, return both the house and senate contributions.

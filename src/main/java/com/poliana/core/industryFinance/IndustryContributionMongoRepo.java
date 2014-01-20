@@ -91,7 +91,7 @@ public class IndustryContributionMongoRepo {
      * @return
      * @see com.poliana.core.industryFinance.entities.IndustryContributionTotalsMap
      */
-    public IndustryContributionTotalsMap getIndustryCategoryContributionTotalsMap(String categoryId, String chamber, int congress) {
+    public IndustryContributionTotalsMap getIndustryCategoryContributionTotalsMapByChamber(String categoryId, String chamber, int congress) {
 
         Query<IndustryContributionTotalsMap> query = mongoStore.createQuery(IndustryContributionTotalsMap.class);
 
@@ -99,6 +99,50 @@ public class IndustryContributionMongoRepo {
                 query.criteria("categoryId").equal(categoryId),
                 query.criteria("chamber").equal(chamber),
                 query.criteria("congress").equal(congress));
+
+        return query.get();
+    }
+
+    /**
+     * Get totals for an industry's contributions to all legislators in a certain chamber during a given time range.
+     * @param industryId
+     * @param chamber
+     * @param beginTimestamp
+     * @param endTimestamp
+     * @return
+     * @see com.poliana.core.industryFinance.entities.IndustryContributionTotalsMap
+     */
+    public IndustryContributionTotalsMap getIndustryContributionTotalsMapByChamber(String industryId, String chamber, long beginTimestamp, long endTimestamp) {
+
+        Query<IndustryContributionTotalsMap> query = mongoStore.createQuery(IndustryContributionTotalsMap.class);
+
+        query.and(
+                query.criteria("industryId").equal(industryId),
+                query.criteria("chamber").equal(chamber),
+                query.criteria("beginTimestamp").equal(beginTimestamp),
+                query.criteria("endTimestamp").equal(endTimestamp));
+
+        return query.get();
+    }
+
+    /**
+     * Get totals for an industry category contributions to all legislators in a certain chamber during a given time range.
+     * @param categoryId
+     * @param chamber
+     * @param beginTimestamp
+     * @param endTimestamp
+     * @return
+     * @see com.poliana.core.industryFinance.entities.IndustryContributionTotalsMap
+     */
+    public IndustryContributionTotalsMap getIndustryCategoryContributionTotalsMapByChamber(String categoryId, String chamber, long beginTimestamp, long endTimestamp) {
+
+        Query<IndustryContributionTotalsMap> query = mongoStore.createQuery(IndustryContributionTotalsMap.class);
+
+        query.and(
+                query.criteria("categoryId").equal(categoryId),
+                query.criteria("chamber").equal(chamber),
+                query.criteria("beginTimestamp").equal(beginTimestamp),
+                query.criteria("endTimestamp").equal(endTimestamp));
 
         return query.get();
     }

@@ -168,7 +168,7 @@ public class IndustryContributionService {
 
         //Check MongoDB for a cached industry chamber total document
         IndustryContributionTotalsMap chamberTotals =
-                industryContributionMongoRepo.getIndustryCategoryContributionTotalsMap(categoryId, chamber, congress);
+                industryContributionMongoRepo.getIndustryCategoryContributionTotalsMapByChamber(categoryId, chamber, congress);
 
         //If it exists, return it
         if (chamberTotals != null)
@@ -185,7 +185,59 @@ public class IndustryContributionService {
         return chamberTotals;
     }
 
+    /**
+     * Get a map of BioguideId->Total sum of industry contributions to all legislators in a given chamber during the given
+     * congressional cycles
+     * @param chamber
+     * @param beginTimestamp
+     * @param endTimestamp
+     * @return
+     */
+    public IndustryContributionTotalsMap getIndustryContributionTotalsMap(String industryId, String chamber, long beginTimestamp, long endTimestamp) {
 
+        //Check MongoDB for a cached industry chamber total document
+        IndustryContributionTotalsMap chamberTotals =
+                industryContributionMongoRepo.getIndustryContributionTotalsMapByChamber(industryId, chamber, beginTimestamp, endTimestamp);
+
+        //If it exists, return it
+        if (chamberTotals != null)
+            return chamberTotals;
+
+        //If not we'll use Impala to get it
+        chamberTotals = industryContributionHadoopRepo.getIndustryContributionTotalsMapByChamber(industryId, chamber, beginTimestamp, endTimestamp);
+
+        if (chamberTotals != null)
+            industryContributionMongoRepo.saveIndustryContributionTotalsMap(chamberTotals);
+
+        return chamberTotals;
+    }
+
+    /**
+     * Get a map of BioguideId->Total sum of industry contributions to all legislators in a given chamber during the given
+     * congressional cycles
+     * @param chamber
+     * @param beginTimestamp
+     * @param endTimestamp
+     * @return
+     */
+    public IndustryContributionTotalsMap getIndustryCategoryContributionTotalsMap(String categoryId, String chamber, long beginTimestamp, long endTimestamp) {
+
+        //Check MongoDB for a cached industry chamber total document
+        IndustryContributionTotalsMap chamberTotals =
+                industryContributionMongoRepo.getIndustryCategoryContributionTotalsMapByChamber(categoryId, chamber, beginTimestamp, endTimestamp);
+
+        //If it exists, return it
+        if (chamberTotals != null)
+            return chamberTotals;
+
+        chamberTotals = industryContributionHadoopRepo.getIndustryCategoryContributionTotalsMapByChamber(categoryId, chamber, beginTimestamp, endTimestamp);
+
+        if (chamberTotals != null)
+            industryContributionMongoRepo.saveIndustryContributionTotalsMap(chamberTotals);
+
+
+        return chamberTotals;
+    }
 
     @Autowired
     public void setIndustryRepo(IndustryRepo industryRepo) {

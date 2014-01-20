@@ -19,10 +19,19 @@ public class IndustryContributionTotalsHashMapper implements ResultSetExtractor<
     private Long endTimestamp;
 
     public IndustryContributionTotalsHashMapper(String chamber) {
+
         this.chamber = chamber;
     }
 
     public IndustryContributionTotalsHashMapper(long beginTimestamp, long endTimestamp) {
+
+        this.beginTimestamp = beginTimestamp;
+        this.endTimestamp = endTimestamp;
+    }
+
+    public IndustryContributionTotalsHashMapper(String chamber, long beginTimestamp, long endTimestamp) {
+
+        this.chamber = chamber;
         this.beginTimestamp = beginTimestamp;
         this.endTimestamp = endTimestamp;
     }
@@ -40,8 +49,9 @@ public class IndustryContributionTotalsHashMapper implements ResultSetExtractor<
             sums.put(rs.getString("bioguide_id"), rs.getInt("total"));
 
             if (!detailsSet) {
-                if (chamber != null)
+                if (chamber != null) {
                     totals.setChamber(chamber);
+                }
 
                 try {
                     totals.setIndustryId(rs.getString("industry_id"));
@@ -67,7 +77,7 @@ public class IndustryContributionTotalsHashMapper implements ResultSetExtractor<
                     totals.setBeginTimestamp(beginTimestamp);
 
                 if (this.endTimestamp != null)
-                    totals.setBeginTimestamp(endTimestamp);
+                    totals.setEndTimestamp(endTimestamp);
 
                 detailsSet = true;
             }

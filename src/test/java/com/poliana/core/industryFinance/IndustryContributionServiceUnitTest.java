@@ -1,7 +1,5 @@
 package com.poliana.core.industryFinance;
 
-import com.poliana.core.industryFinance.IndustryContributionHadoopRepo;
-import com.poliana.core.industryFinance.IndustryContributionMongoRepo;
 import com.poliana.core.industryFinance.entities.IndustryContributionTotalsMap;
 import com.poliana.core.industryFinance.services.IndustryContributionService;
 import com.poliana.core.legislators.LegislatorService;
@@ -56,6 +54,8 @@ public class IndustryContributionServiceUnitTest {
                 .andReturn(new Key<>(IndustryContributionTotalsMap.class, new ObjectId()));
 
         this.control.replay();
+
+        this.industryContributionService.getIndustryContributionTotalsMap("K01", 113);
     }
 
     @Test
@@ -69,6 +69,8 @@ public class IndustryContributionServiceUnitTest {
                 .andReturn(new Key<>(IndustryContributionTotalsMap.class, new ObjectId()));
 
         this.control.replay();
+
+        this.industryContributionService.getIndustryCategoryContributionTotalsMap("K1000", 113);
     }
 
     @Test
@@ -82,6 +84,8 @@ public class IndustryContributionServiceUnitTest {
                 .andReturn(new Key<>(IndustryContributionTotalsMap.class, new ObjectId()));
 
         this.control.replay();
+
+        this.industryContributionService.getIndustryContributionTotalsMap("K01", "s", 113);
     }
 
     @Test
@@ -89,11 +93,43 @@ public class IndustryContributionServiceUnitTest {
 
         IndustryContributionTotalsMap contributionMap = new IndustryContributionTotalsMap();
 
-        expect(this.industryContributionMongoRepoMock.getIndustryCategoryContributionTotalsMap("K01", "s", 113)).andReturn(null);
-        expect(this.industryContributionHadoopRepoMock.getIndustryCategoryContributionTotalsMap("K01", "s", 113)).andReturn(contributionMap);
+        expect(this.industryContributionMongoRepoMock.getIndustryCategoryContributionTotalsMapByChamber("K1000", "s", 113)).andReturn(null);
+        expect(this.industryContributionHadoopRepoMock.getIndustryCategoryContributionTotalsMap("K1000", "s", 113)).andReturn(contributionMap);
         expect(this.industryContributionMongoRepoMock.saveIndustryContributionTotalsMap(contributionMap))
                 .andReturn(new Key<>(IndustryContributionTotalsMap.class, new ObjectId()));
 
         this.control.replay();
+
+        this.industryContributionService.getIndustryCategoryContributionTotalsMap("K1000", "s", 113);
+    }
+
+    @Test
+    public void testGetIndustryContributionTotalsMap_ByChamberAndTimeRange() {
+
+        IndustryContributionTotalsMap contributionMap = new IndustryContributionTotalsMap();
+
+        expect(this.industryContributionMongoRepoMock.getIndustryContributionTotalsMapByChamber("K01", "s", 1230185819, 1290185819)).andReturn(null);
+        expect(this.industryContributionHadoopRepoMock.getIndustryContributionTotalsMapByChamber("K01", "s", 1230185819, 1290185819)).andReturn(contributionMap);
+        expect(this.industryContributionMongoRepoMock.saveIndustryContributionTotalsMap(contributionMap))
+                .andReturn(new Key<>(IndustryContributionTotalsMap.class, new ObjectId()));
+
+        this.control.replay();
+
+        this.industryContributionService.getIndustryContributionTotalsMap("K01", "s", 1230185819, 1290185819);
+    }
+
+    @Test
+    public void testGetIndustryCategoryContributionTotalsMap_ByChamberAndTimeRange() {
+
+        IndustryContributionTotalsMap contributionMap = new IndustryContributionTotalsMap();
+
+        expect(this.industryContributionMongoRepoMock.getIndustryCategoryContributionTotalsMapByChamber("K1000", "s", 1230185819, 1290185819)).andReturn(null);
+        expect(this.industryContributionHadoopRepoMock.getIndustryCategoryContributionTotalsMapByChamber("K1000", "s", 1230185819, 1290185819)).andReturn(contributionMap);
+        expect(this.industryContributionMongoRepoMock.saveIndustryContributionTotalsMap(contributionMap))
+                .andReturn(new Key<>(IndustryContributionTotalsMap.class, new ObjectId()));
+
+        this.control.replay();
+
+        this.industryContributionService.getIndustryCategoryContributionTotalsMap("K1000", "s", 1230185819, 1290185819);
     }
 }

@@ -1,5 +1,9 @@
 package com.poliana.web;
 
+import com.poliana.core.contributionsVsVotes.VoteVsIndustryContributions;
+import com.poliana.core.contributionsVsVotes.VotesCompareService;
+import com.poliana.core.industryFinance.entities.IndustryContributionTotalsMap;
+import com.poliana.core.industryFinance.services.IndustryContributionCompareService;
 import com.poliana.core.industryFinance.services.IndustryContributionService;
 import com.poliana.core.time.TimeService;
 import com.poliana.core.votes.VoteService;
@@ -26,7 +30,7 @@ public class BillVotesIndustryContributionsController {
 
     private VoteService voteService;
     private IndustryContributionService industryContributionService;
-
+    private VotesCompareService votesCompareService;
 
     public BillVotesIndustryContributionsController() {
 
@@ -40,20 +44,31 @@ public class BillVotesIndustryContributionsController {
      * @param year
      * @return
      */
-    @RequestMapping(value = "{vote_id}", params = {"compare_to", "industry_id", "start", "end"}, method = RequestMethod.GET)
-    public @ResponseBody Vote getVoteVsIndustryContributions(
+    @RequestMapping(value = "{vote_id}", params = {"industry_id", "start", "end"}, method = RequestMethod.GET)
+    public @ResponseBody VoteVsIndustryContributions getVoteVsIndustryContributions(
             @PathVariable("vote_id") String voteId,
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
             @RequestParam(value = "year", required = false, defaultValue = CURRENT_YEAR) Integer year,
+            @RequestParam(value = "industry_id", required = true) String industryId,
             @RequestParam(value = "start", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date start,
             @RequestParam(value = "end", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date end) {
+
+        String chamber = voteId.substring(0, 1);
 
         if (!year.equals(CURRENT_YEAR) && congress.equals(CURRENT_CONGRESS))
             congress = timeService.getYearToCongress(year);
 
         Vote vote = voteService.getVote(voteId, congress, year);
 
-        return vote;
+        IndustryContributionTotalsMap totalsMap =
+                industryContributionService.getIndustryContributionTotalsMap(industryId, chamber, start.getTime()/1000, end.getTime()/1000);
+
+        VoteVsIndustryContributions voteVsIndustryContributions = new VoteVsIndustryContributions();
+
+        if (vote != null && totalsMap != null)
+            voteVsIndustryContributions = votesCompareService.getVoteVsIndustryContributions(vote, totalsMap);
+
+        return voteVsIndustryContributions;
     }
 
     @Autowired
@@ -64,5 +79,10 @@ public class BillVotesIndustryContributionsController {
     @Autowired
     public void setIndustryContributionService(IndustryContributionService industryContributionService) {
         this.industryContributionService = industryContributionService;
+    }
+
+    @Autowired
+    public void setVotesCompareService(VotesCompareService votesCompareService) {
+        this.votesCompareService = votesCompareService;
     }
 }

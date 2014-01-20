@@ -2,6 +2,7 @@ package com.poliana.web;
 
 import com.poliana.core.ideology.IdeologyMatrix;
 import com.poliana.core.ideology.IdeologyService;
+import com.poliana.core.industryFinance.services.IndustryContributionCompareService;
 import com.poliana.core.industryFinance.services.IndustryContributionService;
 import com.poliana.core.industryFinance.entities.IndustryContributionCompare;
 import com.poliana.core.industryFinance.entities.IndustryContributionTotalsMap;
@@ -29,6 +30,7 @@ public class IndustryContributionController extends AbstractBaseController {
 
     private IdeologyService ideologyService;
     private IndustryContributionService industryContributionService;
+    private IndustryContributionCompareService industryContributionCompareService;
 
     private static final Logger logger = Logger.getLogger(IndustryContributionController.class);
 
@@ -152,7 +154,7 @@ public class IndustryContributionController extends AbstractBaseController {
             default: {
                 totals = industryContributionService.getIndustryContributionTotalsMap(industryId, chamber, congress);
                 ideologyMatrix = ideologyService.getIdeologyMatrix(chamber, congress);
-                return industryContributionService.getIndustryContributionsVsIdeology(ideologyMatrix, totals);
+                return industryContributionCompareService.getIndustryContributionsVsIdeology(ideologyMatrix, totals);
             }
         }
     }
@@ -181,7 +183,7 @@ public class IndustryContributionController extends AbstractBaseController {
             default: {
                 totals = industryContributionService.getIndustryCategoryContributionTotalsMap(categoryId, chamber, congress);
                 ideologyMatrix = ideologyService.getIdeologyMatrix(chamber, congress);
-                return industryContributionService.getIndustryContributionsVsIdeology(ideologyMatrix, totals);
+                return industryContributionCompareService.getIndustryContributionsVsIdeology(ideologyMatrix, totals);
             }
         }
     }
@@ -211,7 +213,7 @@ public class IndustryContributionController extends AbstractBaseController {
                 IndustryContributionTotalsMap industryTotals = industryContributionService.getIndustryContributionTotalsMap(industryId, chamber, congress);
                 IdeologyMatrix ideologyMatrix = ideologyService.getIdeologyMatrix(chamber, congress);
 
-                compareTotals = industryContributionService.getIndustryContributionsVsIdeology(ideologyMatrix, industryTotals);
+                compareTotals = industryContributionCompareService.getIndustryContributionsVsIdeology(ideologyMatrix, industryTotals);
             }
         }
 
@@ -251,7 +253,7 @@ public class IndustryContributionController extends AbstractBaseController {
                         industryContributionService.getIndustryCategoryContributionTotalsMap(categoryId, chamber, congress);
                 IdeologyMatrix ideologyMatrix = ideologyService.getIdeologyMatrix(chamber, congress);
 
-                compareTotals = industryContributionService.getIndustryContributionsVsIdeology(ideologyMatrix, industryTotals);
+                compareTotals = industryContributionCompareService.getIndustryContributionsVsIdeology(ideologyMatrix, industryTotals);
             }
         }
 
@@ -274,5 +276,10 @@ public class IndustryContributionController extends AbstractBaseController {
     @Autowired
     public void setIndustryContributionService(IndustryContributionService industryContributionService) {
         this.industryContributionService = industryContributionService;
+    }
+
+    @Autowired
+    public void setIndustryContributionCompareService(IndustryContributionCompareService industryContributionCompareService) {
+        this.industryContributionCompareService = industryContributionCompareService;
     }
 }

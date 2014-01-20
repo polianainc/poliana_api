@@ -215,7 +215,7 @@ public class Vote {
         return votes;
     }
 
-    public void setVotes(Voters votes) {
+    public void setVoters(Voters votes) {
         this.votes = votes;
     }
 }

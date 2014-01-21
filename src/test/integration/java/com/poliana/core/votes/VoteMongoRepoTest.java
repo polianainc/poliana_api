@@ -53,7 +53,7 @@ public class VoteMongoRepoTest {
         assertNotNull(billReference.getNumber());
         assertNotNull(billReference.getType());
 
-        Voter voter = vote.getVotes().getYea().get(0);
+        Voter voter = vote.getVoters().getYea().get(0);
 
         assertNotNull(voter.getDisplayName());
         assertNotNull(voter.getBioguideId());

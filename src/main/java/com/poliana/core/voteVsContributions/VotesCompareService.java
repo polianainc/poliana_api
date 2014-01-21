@@ -30,13 +30,13 @@ public class VotesCompareService {
         voteVsContribution.setBeginDate(new Date(totalsMap.getBeginTimestamp() * 1000));
         voteVsContribution.setEndDate(new Date(totalsMap.getEndTimestamp() * 1000));
 
-        if (vote.getVotes() != null) {
+        if (vote.getVoters() != null) {
 
-            if (vote.getVotes().getYea() != null) {
+            if (vote.getVoters().getYea() != null) {
 
                 List<VoteVsContribution> yeaContributions = new LinkedList<>();
 
-                for (Voter voter : vote.getVotes().getYea()) {
+                for (Voter voter : vote.getVoters().getYea()) {
 
                     VoteVsContribution compare = new VoteVsContribution();
 
@@ -52,11 +52,11 @@ public class VotesCompareService {
                 voteVsContribution.setYeas(yeaContributions);
             }
 
-            if (vote.getVotes().getNay() != null) {
+            if (vote.getVoters().getNay() != null) {
 
                 List<VoteVsContribution> nayContributions = new LinkedList<>();
 
-                for (Voter voter : vote.getVotes().getNay()) {
+                for (Voter voter : vote.getVoters().getNay()) {
 
                     VoteVsContribution compare = new VoteVsContribution();
 
@@ -72,11 +72,11 @@ public class VotesCompareService {
                 voteVsContribution.setNays(nayContributions);
             }
 
-            if (vote.getVotes().getNotVoting() != null) {
+            if (vote.getVoters().getNotVoting() != null) {
 
                 List<VoteVsContribution> notVotingContributions = new LinkedList<>();
 
-                for (Voter voter : vote.getVotes().getNotVoting()) {
+                for (Voter voter : vote.getVoters().getNotVoting()) {
 
                     VoteVsContribution compare = new VoteVsContribution();
 
@@ -92,11 +92,11 @@ public class VotesCompareService {
                 voteVsContribution.setNotVoting(notVotingContributions);
             }
 
-            if (vote.getVotes().getPresent() != null) {
+            if (vote.getVoters().getPresent() != null) {
 
                 List<VoteVsContribution> absentContributions = new LinkedList<>();
 
-                for (Voter voter : vote.getVotes().getPresent()) {
+                for (Voter voter : vote.getVoters().getPresent()) {
 
                     VoteVsContribution compare = new VoteVsContribution();
 
@@ -114,5 +114,115 @@ public class VotesCompareService {
         }
 
         return voteVsContribution;
+    }
+
+    public VoteVsContributionTotals getVoteVsContributionTotals(Vote vote, IndustryContributionTotalsMap totalsMap) {
+
+        VoteVsContributionTotals contributionTotals = new VoteVsContributionTotals();
+
+        contributionTotals.setVoteId(vote.getVoteId());
+        contributionTotals.setIndustryId(totalsMap.getIndustryId());
+        contributionTotals.setIndustryName(totalsMap.getIndustryName());
+
+        contributionTotals.setVoteDate(vote.getDate());
+        contributionTotals.setBeginDate(new Date(totalsMap.getBeginTimestamp() * 1000));
+        contributionTotals.setEndDate(new Date(totalsMap.getEndTimestamp() * 1000));
+
+        if (vote.getVoters() != null) {
+
+            if (vote.getVoters().getYea() != null) {
+
+                int sum = 0;
+                int count = 0;
+                double avg;
+
+                for (Voter voter : vote.getVoters().getYea()) {
+
+                    count++;
+
+                    try {
+                        sum += totalsMap.getSums().get(voter.getBioguideId());
+                    }
+                    catch (NullPointerException e) {}
+                }
+
+                avg = sum / count;
+
+                contributionTotals.setYeaContributionSums(sum);
+                contributionTotals.setYeaContributionCount(count);
+                contributionTotals.setYeaContributionAvg(avg);
+            }
+
+            if (vote.getVoters().getNay() != null) {
+
+                int sum = 0;
+                int count = 0;
+                double avg;
+
+                for (Voter voter : vote.getVoters().getNay()) {
+
+                    count++;
+
+                    try {
+                        sum += totalsMap.getSums().get(voter.getBioguideId());
+                    }
+                    catch (NullPointerException e) {}
+                }
+
+                avg = sum / count;
+
+                contributionTotals.setNayContributionSums(sum);
+                contributionTotals.setNayContributionCount(count);
+                contributionTotals.setNayContributionAvg(avg);
+            }
+
+            if (vote.getVoters().getNotVoting() != null) {
+
+                int sum = 0;
+                int count = 0;
+                double avg;
+
+                for (Voter voter : vote.getVoters().getNotVoting()) {
+
+                    count++;
+
+                    try {
+                        sum += totalsMap.getSums().get(voter.getBioguideId());
+                    }
+                    catch (NullPointerException e) {}
+                }
+
+                avg = sum / count;
+
+                contributionTotals.setNotVotingContributionSums(sum);
+                contributionTotals.setNotVotingContributionCount(count);
+                contributionTotals.setNotVotingContributionAvg(avg);
+            }
+
+            if (vote.getVoters().getPresent() != null) {
+
+                int sum = 0;
+                int count = 0;
+                double avg;
+
+                for (Voter voter : vote.getVoters().getPresent()) {
+
+                    count++;
+
+                    try {
+                        sum += totalsMap.getSums().get(voter.getBioguideId());
+                    }
+                    catch (NullPointerException e) {}
+                }
+
+                avg = sum / count;
+
+                contributionTotals.setPresentContributionSums(sum);
+                contributionTotals.setPresentContributionCount(count);
+                contributionTotals.setPresentContributionAvg(avg);
+            }
+        }
+
+        return contributionTotals;
     }
 }

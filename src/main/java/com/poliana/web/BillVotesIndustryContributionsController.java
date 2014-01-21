@@ -1,5 +1,6 @@
 package com.poliana.web;
 
+import com.poliana.core.voteVsContributions.VoteVsContributionTotals;
 import com.poliana.core.voteVsContributions.VoteVsIndustryContributions;
 import com.poliana.core.voteVsContributions.VotesCompareService;
 import com.poliana.core.industryFinance.entities.IndustryContributionTotalsMap;
@@ -121,6 +122,40 @@ public class BillVotesIndustryContributionsController {
         } catch (IOException e) {
             logger.error(e);
         }
+    }
+
+    /**
+     * Get contribution total sums, counts, and averages from an industry compared against the voting body of a given vote
+     * @param voteId
+     * @param congress
+     * @param year
+     * @return
+     */
+    @RequestMapping(value = "{vote_id}/sums", params = {"industry_id", "start", "end"}, method = RequestMethod.GET)
+    public @ResponseBody VoteVsContributionTotals getVoteVsIndustryContributionTotals (
+            @PathVariable("vote_id") String voteId,
+            @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
+            @RequestParam(value = "year", required = false, defaultValue = CURRENT_YEAR) Integer year,
+            @RequestParam(value = "industry_id", required = true) String industryId,
+            @RequestParam(value = "start", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date start,
+            @RequestParam(value = "end", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date end) {
+
+        String chamber = voteId.substring(0, 1);
+
+        if (!year.equals(CURRENT_YEAR) && congress.equals(CURRENT_CONGRESS))
+            congress = timeService.getYearToCongress(year);
+
+        Vote vote = voteService.getVote(voteId, congress, year);
+
+        IndustryContributionTotalsMap totalsMap =
+                industryContributionService.getIndustryContributionTotalsMap(industryId, chamber, start.getTime()/1000, end.getTime()/1000);
+
+        VoteVsContributionTotals voteVsContributionTotals = new VoteVsContributionTotals();
+
+        if (vote != null && totalsMap != null)
+            voteVsContributionTotals = votesCompareService.getVoteVsContributionTotals(vote, totalsMap);
+
+        return voteVsContributionTotals;
     }
 
     @Autowired

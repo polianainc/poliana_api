@@ -1,4 +1,4 @@
-package com.poliana.core.contributionsVsVotes;
+package com.poliana.core.voteVsContributions;
 
 import com.poliana.core.industryFinance.entities.IndustryContributionTotalsMap;
 import com.poliana.core.votes.entities.Vote;
@@ -26,6 +26,7 @@ public class VotesCompareService {
         voteVsContribution.setVoteId(vote.getVoteId());
         voteVsContribution.setCongress(vote.getCongress());
         voteVsContribution.setVoteDate(vote.getDate());
+        voteVsContribution.setIndustryName(totalsMap.getIndustryName());
         voteVsContribution.setBeginDate(new Date(totalsMap.getBeginTimestamp() * 1000));
         voteVsContribution.setEndDate(new Date(totalsMap.getEndTimestamp() * 1000));
 

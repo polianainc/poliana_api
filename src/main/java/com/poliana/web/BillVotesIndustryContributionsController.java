@@ -1,18 +1,23 @@
 package com.poliana.web;
 
-import com.poliana.core.contributionsVsVotes.VoteVsIndustryContributions;
-import com.poliana.core.contributionsVsVotes.VotesCompareService;
+import com.poliana.core.voteVsContributions.VoteVsIndustryContributions;
+import com.poliana.core.voteVsContributions.VotesCompareService;
 import com.poliana.core.industryFinance.entities.IndustryContributionTotalsMap;
-import com.poliana.core.industryFinance.services.IndustryContributionCompareService;
 import com.poliana.core.industryFinance.services.IndustryContributionService;
 import com.poliana.core.time.TimeService;
 import com.poliana.core.votes.VoteService;
 import com.poliana.core.votes.entities.Vote;
+import com.poliana.views.VoteVsContributionsView;
+import org.apache.log4j.Logger;
+import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.JFreeChart;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Date;
 
 import static com.poliana.core.time.TimeService.CURRENT_CONGRESS;
@@ -31,6 +36,9 @@ public class BillVotesIndustryContributionsController {
     private VoteService voteService;
     private IndustryContributionService industryContributionService;
     private VotesCompareService votesCompareService;
+
+
+    private static final Logger logger = Logger.getLogger(BillVotesIndustryContributionsController.class);
 
     public BillVotesIndustryContributionsController() {
 
@@ -69,6 +77,50 @@ public class BillVotesIndustryContributionsController {
             voteVsIndustryContributions = votesCompareService.getVoteVsIndustryContributions(vote, totalsMap);
 
         return voteVsIndustryContributions;
+    }
+
+    /**
+     * Plot contribution totals from an industry compared against the voting body of a given vote
+     * @param voteId
+     * @param congress
+     * @param year
+     * @return
+     */
+    @RequestMapping(value = "{vote_id}", params = {"industry_id", "start", "end", "plot"}, method = RequestMethod.GET)
+    public @ResponseBody void getVoteVsIndustryContributions(
+            OutputStream stream,
+            @PathVariable("vote_id") String voteId,
+            @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
+            @RequestParam(value = "year", required = false, defaultValue = CURRENT_YEAR) Integer year,
+            @RequestParam(value = "industry_id", required = true) String industryId,
+            @RequestParam(value = "start", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date start,
+            @RequestParam(value = "end", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date end,
+            @RequestParam(value = "plot", required = true) String plotType) {
+
+        String chamber = voteId.substring(0, 1);
+
+        if (!year.equals(CURRENT_YEAR) && congress.equals(CURRENT_CONGRESS))
+            congress = timeService.getYearToCongress(year);
+
+        Vote vote = voteService.getVote(voteId, congress, year);
+
+        IndustryContributionTotalsMap totalsMap =
+                industryContributionService.getIndustryContributionTotalsMap(industryId, chamber, start.getTime()/1000, end.getTime()/1000);
+
+        VoteVsIndustryContributions voteVsIndustryContributions = new VoteVsIndustryContributions();
+
+        if (vote != null && totalsMap != null)
+            voteVsIndustryContributions = votesCompareService.getVoteVsIndustryContributions(vote, totalsMap);
+
+        VoteVsContributionsView view = new VoteVsContributionsView(voteVsIndustryContributions);
+
+        JFreeChart chart = view.generateChart(plotType);
+
+        try {
+            ChartUtilities.writeChartAsPNG(stream, chart, 1200, 800);
+        } catch (IOException e) {
+            logger.error(e);
+        }
     }
 
     @Autowired

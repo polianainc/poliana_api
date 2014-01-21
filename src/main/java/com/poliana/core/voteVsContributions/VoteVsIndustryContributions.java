@@ -1,4 +1,4 @@
-package com.poliana.core.contributionsVsVotes;
+package com.poliana.core.voteVsContributions;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.mongodb.morphia.annotations.Embedded;
@@ -24,6 +24,15 @@ public class VoteVsIndustryContributions {
     private String voteId;
 
     private Integer congress;
+
+    private String chamber;
+
+    private String industryId;
+    private String industryName;
+    private String categoryName;
+    private String sector;
+    private String sectorLong;
+
 
     @Property("vote_date")
     private Date voteDate;
@@ -68,6 +77,54 @@ public class VoteVsIndustryContributions {
 
     public void setCongress(Integer congress) {
         this.congress = congress;
+    }
+
+    public String getChamber() {
+        return chamber;
+    }
+
+    public void setChamber(String chamber) {
+        this.chamber = chamber;
+    }
+
+    public String getIndustryId() {
+        return industryId;
+    }
+
+    public void setIndustryId(String industryId) {
+        this.industryId = industryId;
+    }
+
+    public String getIndustryName() {
+        return industryName;
+    }
+
+    public void setIndustryName(String industryName) {
+        this.industryName = industryName;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public String getSector() {
+        return sector;
+    }
+
+    public void setSector(String sector) {
+        this.sector = sector;
+    }
+
+    public String getSectorLong() {
+        return sectorLong;
+    }
+
+    public void setSectorLong(String sectorLong) {
+        this.sectorLong = sectorLong;
     }
 
     public Date getVoteDate() {

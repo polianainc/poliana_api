@@ -1,4 +1,4 @@
-package com.poliana.core.contributionsVsVotes;
+package com.poliana.core.voteVsContributions;
 
 import org.mongodb.morphia.annotations.Property;
 

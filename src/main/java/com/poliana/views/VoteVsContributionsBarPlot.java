@@ -18,7 +18,7 @@ import java.awt.*;
  * @author David Gilmore
  * @date 1/20/14
  */
-public class VoteVsContributionsView  extends JFrame {
+public class VoteVsContributionsBarPlot extends JFrame {
 
     private String title;
     private CategoryDataset dataset;
@@ -26,7 +26,7 @@ public class VoteVsContributionsView  extends JFrame {
     /**
      * Plot industry to politician contribution totals for a given chamber in a given congressional cycle.
      */
-    public VoteVsContributionsView(VoteVsIndustryContributions voteContributionCompare) {
+    public VoteVsContributionsBarPlot(VoteVsIndustryContributions voteContributionCompare) {
 
         if (voteContributionCompare != null) {
 
@@ -55,6 +55,10 @@ public class VoteVsContributionsView  extends JFrame {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     private JFreeChart generateBarChart() {
 
         JFreeChart chart = ChartFactory.createBarChart(
@@ -85,6 +89,11 @@ public class VoteVsContributionsView  extends JFrame {
         return chart;
     }
 
+    /**
+     *
+     * @param voteContributionCompare
+     * @return
+     */
     private CategoryDataset getContributionDataset(VoteVsIndustryContributions voteContributionCompare) {
 
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();

@@ -28,7 +28,10 @@ public class MongoConfig extends AbstractMongoConfiguration {
 
     @Override
     protected UserCredentials getUserCredentials() {
-        return new UserCredentials(env.getProperty("mongo.username"), env.getProperty("mongo.password"));
+        return new UserCredentials(
+                  env.getProperty("mongo.username")
+                , env.getProperty("mongo.password")
+        );
     }
 
     @Override
@@ -42,17 +45,20 @@ public class MongoConfig extends AbstractMongoConfiguration {
     @Bean
     public DB mongoDb() throws Exception {
         DB db =  mongo().getDB(env.getProperty("mongo.dbname"));
-        db.authenticate(env.getProperty("mongo.username"),env.getProperty("mongo.password").toCharArray());
+        db.authenticate(
+                  env.getProperty("mongo.username")
+                , env.getProperty("mongo.password").toCharArray()
+        );
         return db;
     }
 
     @Bean
     public Datastore mongoStore() throws Exception {
         return new Morphia().createDatastore(
-                mongo(),
-                env.getProperty("mongo.dbname"),
-                env.getProperty("mongo.username"),
-                env.getProperty("mongo.password").toCharArray()
+                mongo()
+                , env.getProperty("mongo.dbname")
+                , env.getProperty("mongo.username")
+                , env.getProperty("mongo.password").toCharArray()
         );
     }
 

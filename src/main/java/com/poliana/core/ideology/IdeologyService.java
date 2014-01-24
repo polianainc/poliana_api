@@ -68,7 +68,7 @@ public class IdeologyService {
         CongressTimestamps timestamps = timeService.getCongressTimestamps(congress);
         int avg = (int) ((timestamps.getBegin() + timestamps.getEnd()) / 2);
 
-        Legislator legislator = legislatorService.getLegislatorByIdTimestamp(bioguideId, avg);
+        Legislator legislator = legislatorService.getCachedLegislatorByIdTimestamp(bioguideId, avg);
 
         //Avoid null pointer exception
         if (legislator != null) {

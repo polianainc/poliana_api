@@ -6,7 +6,7 @@ import com.poliana.core.industryFinance.services.IndustryContributionCompareServ
 import com.poliana.core.industryFinance.services.IndustryContributionService;
 import com.poliana.core.industryFinance.entities.IndustryContributionCompare;
 import com.poliana.core.industryFinance.entities.IndustryContributionTotalsMap;
-import com.poliana.views.IndustryContributionView;
+import com.poliana.views.IndustryContributionBarPlot;
 import org.apache.log4j.Logger;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
@@ -217,7 +217,7 @@ public class IndustryContributionController extends AbstractBaseController {
             }
         }
 
-        IndustryContributionView view = new IndustryContributionView(compareTotals, chamber, congress);
+        IndustryContributionBarPlot view = new IndustryContributionBarPlot(compareTotals, chamber, congress);
         JFreeChart chart = view.generateChart(plotType);
 
         try {
@@ -257,7 +257,7 @@ public class IndustryContributionController extends AbstractBaseController {
             }
         }
 
-        IndustryContributionView view = new IndustryContributionView(compareTotals, chamber, congress);
+        IndustryContributionBarPlot view = new IndustryContributionBarPlot(compareTotals, chamber, congress);
         JFreeChart chart = view.generateChart(plotType);
 
         try {

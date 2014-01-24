@@ -23,7 +23,7 @@ public class TimeService {
      * @param dateString
      * @return
      */
-    public static long getTimestamp(String dateString) {
+    public long getTimestamp(String dateString) {
 
         if (dateString == null)
             return 0;

@@ -85,7 +85,7 @@ public class IdeologyServiceUnitTest extends AbstractSponsorshipTest {
         int avg = (int) ((timestamps.getBegin() + timestamps.getEnd()) / 2);
 
         expect(this.ideologyRepoMock.getLegislatorIdeology(bioguideId, 110)).andReturn(ideology);
-        expect(this.legislatorServiceMock.getLegislatorByIdTimestamp(bioguideId, avg)).andReturn(legislator);
+        expect(this.legislatorServiceMock.getCachedLegislatorByIdTimestamp(bioguideId, avg)).andReturn(legislator);
         expect(this.ideologyRepoMock.getIdeologyMatrix("s", 110)).andReturn(ideologyMatrix);
 
 

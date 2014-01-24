@@ -8,7 +8,8 @@ import com.poliana.core.industryFinance.services.IndustryContributionService;
 import com.poliana.core.time.TimeService;
 import com.poliana.core.votes.VoteService;
 import com.poliana.core.votes.entities.Vote;
-import com.poliana.views.VoteVsContributionsView;
+import com.poliana.views.VoteVsContributionsBarPlot;
+import com.poliana.views.VoteVsContributionsPiePlot;
 import org.apache.log4j.Logger;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
@@ -113,7 +114,7 @@ public class BillVotesIndustryContributionsController {
         if (vote != null && totalsMap != null)
             voteVsIndustryContributions = votesCompareService.getVoteVsIndustryContributions(vote, totalsMap);
 
-        VoteVsContributionsView view = new VoteVsContributionsView(voteVsIndustryContributions);
+        VoteVsContributionsBarPlot view = new VoteVsContributionsBarPlot(voteVsIndustryContributions);
 
         JFreeChart chart = view.generateChart(plotType);
 
@@ -156,6 +157,51 @@ public class BillVotesIndustryContributionsController {
             voteVsContributionTotals = votesCompareService.getVoteVsContributionTotals(vote, totalsMap);
 
         return voteVsContributionTotals;
+    }
+
+    /**
+     * Get contribution total sums, counts, and averages from an industry compared against the voting body of a given vote
+     * @param voteId
+     * @param congress
+     * @param year
+     * @return
+     */
+    @RequestMapping(value = "{vote_id}/sums", params = {"industry_id", "start", "end", "plot"}, method = RequestMethod.GET)
+    public void plotVoteVsIndustryContributionTotals (
+            OutputStream stream,
+            @PathVariable("vote_id") String voteId,
+            @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
+            @RequestParam(value = "year", required = false, defaultValue = CURRENT_YEAR) Integer year,
+            @RequestParam(value = "industry_id", required = true) String industryId,
+            @RequestParam(value = "start", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date start,
+            @RequestParam(value = "end", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date end,
+            @RequestParam(value = "plot", required = true) String plotType) {
+
+        String chamber = voteId.substring(0, 1);
+
+        if (!year.equals(CURRENT_YEAR) && congress.equals(CURRENT_CONGRESS))
+            congress = timeService.getYearToCongress(year);
+
+        Vote vote = voteService.getVote(voteId, congress, year);
+
+        IndustryContributionTotalsMap totalsMap =
+                industryContributionService.getIndustryContributionTotalsMap(industryId, chamber, start.getTime()/1000, end.getTime()/1000);
+
+        VoteVsContributionTotals voteVsContributionTotals = new VoteVsContributionTotals();
+
+        if (vote != null && totalsMap != null)
+            voteVsContributionTotals = votesCompareService.getVoteVsContributionTotals(vote, totalsMap);
+
+
+        VoteVsContributionsPiePlot view = new VoteVsContributionsPiePlot(voteVsContributionTotals);
+
+        JFreeChart chart = view.generateChart();
+
+        try {
+            ChartUtilities.writeChartAsPNG(stream, chart, 1200, 800);
+        } catch (IOException e) {
+            logger.error(e);
+        }
     }
 
     @Autowired

@@ -383,6 +383,13 @@
             <version>2.2.2</version>
         </dependency>
 
+        <!-- SSH -->
+        <dependency>
+            <groupId>ch.ethz.ganymed</groupId>
+            <artifactId>ganymed-ssh2</artifactId>
+            <version>build210</version>
+        </dependency>
+
     </dependencies>
 
     <repositories>

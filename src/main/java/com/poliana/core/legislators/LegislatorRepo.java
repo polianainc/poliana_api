@@ -1,6 +1,5 @@
 package com.poliana.core.legislators;
 
-import com.poliana.core.time.TimeService;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.query.Query;
@@ -60,6 +59,9 @@ public class LegislatorRepo {
     public Iterator<Legislator> getAllLegislators() {
         Query<Legislator> query =
                 mongoStore.createQuery(Legislator.class);
+
+        query.disableCursorTimeout();
+
         return query.iterator();
     }
 
@@ -69,7 +71,9 @@ public class LegislatorRepo {
     public void loadLegislatorTermsToRedis() {
 
         Iterator<Legislator> legislatorIterator = getAllLegislators();
+
         Jedis jedis = jedisPool.getResource();
+
         String bioguideKey;
         String thomasKey;
         String lisKey;
@@ -82,10 +86,14 @@ public class LegislatorRepo {
             lisKey = TERMS_BY_LIS + legislator.getLisId();
             mongoKey = TERMS_BY_MONGO + legislator.getId();
             try {
-                jedis.lpush(messagePack.write(bioguideKey), messagePack.write(legislator));
-                jedis.lpush(messagePack.write(thomasKey), messagePack.write(legislator));
-                jedis.lpush(messagePack.write(lisKey), messagePack.write(legislator));
-                jedis.lpush(messagePack.write(mongoKey), messagePack.write(legislator));
+                if (!jedis.exists(messagePack.write(bioguideKey)))
+                    jedis.lpush(messagePack.write(bioguideKey), messagePack.write(legislator));
+                if (!jedis.exists(messagePack.write(thomasKey)))
+                    jedis.lpush(messagePack.write(thomasKey), messagePack.write(legislator));
+                if (!jedis.exists(messagePack.write(lisKey)))
+                    jedis.lpush(messagePack.write(lisKey), messagePack.write(legislator));
+                if (!jedis.exists(messagePack.write(mongoKey)))
+                    jedis.lpush(messagePack.write(mongoKey), messagePack.write(legislator));
             } catch (IOException e) {
                 logger.error(e.getMessage());
             }

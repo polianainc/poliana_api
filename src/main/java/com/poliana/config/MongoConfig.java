@@ -37,7 +37,10 @@ public class MongoConfig extends AbstractMongoConfiguration {
     @Override
     @Bean
     public Mongo mongo() throws Exception {
-        Mongo mongo = new MongoClient(env.getProperty("mongo.url"));
+        Mongo mongo = new MongoClient(
+                  env.getProperty("mongo.host")
+                , Integer.parseInt(env.getProperty("mongo.port"))
+        );
         mongo.setWriteConcern(WriteConcern.SAFE);
         return mongo;
     }

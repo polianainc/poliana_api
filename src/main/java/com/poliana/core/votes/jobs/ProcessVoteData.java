@@ -1,13 +1,23 @@
 package com.poliana.core.votes.jobs;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import com.mongodb.*;
 import com.poliana.core.legislators.Legislator;
 import com.poliana.core.legislators.LegislatorService;
 import com.poliana.core.time.TimeService;
 import org.apache.log4j.Logger;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import ch.ethz.ssh2.Connection;
+import ch.ethz.ssh2.Session;
+import ch.ethz.ssh2.StreamGobbler;
 
 import java.util.Date;
 
@@ -18,10 +28,15 @@ import java.util.Date;
 @Component
 public class ProcessVoteData {
 
+    @Autowired
+    Environment env;
+
     private TimeService timeService;
 
     private DB mongoDb;
     private LegislatorService legislatorService;
+
+    private Date lastCron;
 
     private static final Logger logger = Logger.getLogger(ProcessVoteData.class);
 
@@ -39,12 +54,71 @@ public class ProcessVoteData {
     @Scheduled(cron = "0 0 12 ? * ?")
     public void voteJob() {
 
-
+        setLastCron(new Date());
     }
 
-    public void runPythonScraper() {
+    /**
+     * Check out https://code.google.com/p/ganymed-ssh-2/source/browse/trunk/examples/Basic.java?r=2
+     * for some cool ssh tips
+     * @throws IOException
+     */
+    public void runPythonScraper() throws IOException {
 
+        String hostname = env.getProperty("mongo.host");
+        String username = env.getProperty("mongo.username");
+        String password = env.getProperty("mongo.password");
 
+        Connection conn = new Connection(hostname);
+
+        /* Now connect */
+
+        conn.connect();
+
+        /* Authenticate.
+         * If you get an IOException saying something like
+         * "Authentication method password not supported by the server at this stage."
+         * then please check the FAQ.
+         */
+
+        boolean isAuthenticated = conn.authenticateWithPassword(username, password);
+
+        if (isAuthenticated == false)
+            throw new IOException("Authentication failed.");
+
+        /* Create a session */
+
+        Session sess = conn.openSession();
+
+        sess.execCommand("cd congress ; ./run bills --bill_id=s743-113--host=localhost --db=test");
+
+        /*
+         * This basic example does not handle stderr, which is sometimes dangerous
+         * (please read the FAQ).
+         */
+
+        InputStream stdout = new StreamGobbler(sess.getStdout());
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(stdout));
+
+        while (true)
+        {
+            String line = br.readLine();
+            if (line == null)
+                break;
+            System.out.println(line);
+        }
+
+        /* Show exit status, if available (otherwise "null") */
+
+        System.out.println("ExitCode: " + sess.getExitStatus());
+
+        /* Close this session */
+
+        sess.close();
+
+        /* Close the connection */
+
+        conn.close();
     }
 
     /**
@@ -58,7 +132,10 @@ public class ProcessVoteData {
 
         DBCollection coll = mongoDb.getCollection("votes");
 
-        DBCursor cursor = coll.find();
+        BasicDBObject query = new BasicDBObject("_id", new BasicDBObject("$gt", new ObjectId(this.lastCron)));
+
+        DBCursor cursor = coll.find(query);
+
         cursor.addOption(com.mongodb.Bytes.QUERYOPTION_NOTIMEOUT);
 
         while ( cursor.hasNext() ) {
@@ -165,18 +242,19 @@ public class ProcessVoteData {
         String thomasId = (String) voter.get("thomas_id");
         String firstName = (String) voter.get("first_name");
         String lastName = (String) voter.get("last_name");
+        String religion = (String) voter.get("religion");
 
         Legislator legislator = null;
 
         if (id != null) {
             try {
-                legislator = legislatorService.getCachedLegislatorByIdTimestamp(id, timestamp);
+                legislator = legislatorService.getLegislatorByIdTimestamp(id, timestamp);
             }
             catch (NullPointerException e) {}
         }
         else if (thomasId != null) {
             try {
-                legislator = legislatorService.getCachedLegislatorByIdTimestamp(thomasId, timestamp);
+                legislator = legislatorService.getLegislatorByIdTimestamp(thomasId, timestamp);
             }
             catch (NullPointerException e) {}
         }
@@ -191,6 +269,9 @@ public class ProcessVoteData {
 
             if (lastName == null)
                 voter.append("last_name", legislator.getLastName());
+
+            if (religion == null)
+                voter.append("religion", legislator.getReligion());
         }
 
         return voter;
@@ -258,6 +339,10 @@ public class ProcessVoteData {
         }
 
         return date;
+    }
+
+    public void setLastCron(Date lastCron) {
+        this.lastCron = lastCron;
     }
 
     @Autowired

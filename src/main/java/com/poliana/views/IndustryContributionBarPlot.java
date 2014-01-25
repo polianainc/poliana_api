@@ -19,7 +19,7 @@ import java.util.List;
  * @author David Gilmore
  * @date 12/3/13
  */
-public class IndustryContributionView extends JFrame {
+public class IndustryContributionBarPlot extends JFrame {
 
     private String title;
     private CategoryDataset dataset;
@@ -31,7 +31,7 @@ public class IndustryContributionView extends JFrame {
      * @param chamber
      * @param congress
      */
-    public IndustryContributionView(List<IndustryContributionCompare> compareList, String chamber, int congress) {
+    public IndustryContributionBarPlot(List<IndustryContributionCompare> compareList, String chamber, int congress) {
 
         this.timeService = new TimeService();
 

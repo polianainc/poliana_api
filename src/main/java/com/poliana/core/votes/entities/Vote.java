@@ -56,8 +56,8 @@ public class Vote {
     @Property("vote_id")
     private String voteId;
 
-    @Embedded
-    private Voters votes;
+    @Embedded("votes")
+    private Voters voters;
 
     public String getId() {
         return id;
@@ -211,11 +211,11 @@ public class Vote {
         this.voteId = voteId;
     }
 
-    public Voters getVotes() {
-        return votes;
+    public Voters getVoters() {
+        return voters;
     }
 
-    public void setVotes(Voters votes) {
-        this.votes = votes;
+    public void setVoters(Voters votes) {
+        this.voters = votes;
     }
 }

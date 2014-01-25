@@ -22,7 +22,7 @@ import java.util.List;
  * @author David Gilmore
  * @date 1/10/14
  */
-public class PoliticianContributionView extends JFrame {
+public class PoliticianContributionBarPlot extends JFrame {
 
     private String title;
     private CategoryDataset dataset;
@@ -33,7 +33,7 @@ public class PoliticianContributionView extends JFrame {
     /**
      * Plot industry to politician contribution totals for a given chamber in a given congressional cycle.
      */
-    public PoliticianContributionView(List<IndustryPoliticianContributionTotals> contributions) {
+    public PoliticianContributionBarPlot(List<IndustryPoliticianContributionTotals> contributions) {
 
         this.timeService = new TimeService();
 
@@ -57,7 +57,7 @@ public class PoliticianContributionView extends JFrame {
      * @param contributions
      * @param congress
      */
-    public PoliticianContributionView(List<IndustryPoliticianContributionTotals> contributions, int congress) {
+    public PoliticianContributionBarPlot(List<IndustryPoliticianContributionTotals> contributions, int congress) {
 
         this.timeService = new TimeService();
 
@@ -84,7 +84,7 @@ public class PoliticianContributionView extends JFrame {
     /**
      * Plot industry to politician contribution totals for a given chamber in a given congressional cycle.
      */
-    public PoliticianContributionView(List<IndustryPoliticianContributionTotals> contributions, Date start, Date end) {
+    public PoliticianContributionBarPlot(List<IndustryPoliticianContributionTotals> contributions, Date start, Date end) {
 
         this.timeService = new TimeService();
 

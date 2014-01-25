@@ -37,13 +37,13 @@ public class IndustryContributionTotalsMap {
     private String categoryName;
 
     private String chamber;
-    private int congress;
+    private Integer congress;
 
     @Property("begin_timestamp")
-    private long beginTimestamp;
+    private Long beginTimestamp;
 
     @Property("end_timestamp")
-    private long endTimestamp;
+    private Long endTimestamp;
 
     @Embedded
     private HashMap<String, Integer> sums;
@@ -112,27 +112,27 @@ public class IndustryContributionTotalsMap {
         this.chamber = chamber;
     }
 
-    public int getCongress() {
+    public Integer getCongress() {
         return congress;
     }
 
-    public void setCongress(int congress) {
+    public void setCongress(Integer congress) {
         this.congress = congress;
     }
 
-    public long getBeginTimestamp() {
+    public Long getBeginTimestamp() {
         return beginTimestamp;
     }
 
-    public void setBeginTimestamp(long beginTimestamp) {
+    public void setBeginTimestamp(Long beginTimestamp) {
         this.beginTimestamp = beginTimestamp;
     }
 
-    public long getEndTimestamp() {
+    public Long getEndTimestamp() {
         return endTimestamp;
     }
 
-    public void setEndTimestamp(long endTimestamp) {
+    public void setEndTimestamp(Long endTimestamp) {
         this.endTimestamp = endTimestamp;
     }
 

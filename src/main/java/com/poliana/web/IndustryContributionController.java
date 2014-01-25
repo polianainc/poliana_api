@@ -2,10 +2,11 @@ package com.poliana.web;
 
 import com.poliana.core.ideology.IdeologyMatrix;
 import com.poliana.core.ideology.IdeologyService;
+import com.poliana.core.industryFinance.services.IndustryContributionCompareService;
 import com.poliana.core.industryFinance.services.IndustryContributionService;
 import com.poliana.core.industryFinance.entities.IndustryContributionCompare;
 import com.poliana.core.industryFinance.entities.IndustryContributionTotalsMap;
-import com.poliana.views.IndustryContributionView;
+import com.poliana.views.IndustryContributionBarPlot;
 import org.apache.log4j.Logger;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
@@ -29,6 +30,7 @@ public class IndustryContributionController extends AbstractBaseController {
 
     private IdeologyService ideologyService;
     private IndustryContributionService industryContributionService;
+    private IndustryContributionCompareService industryContributionCompareService;
 
     private static final Logger logger = Logger.getLogger(IndustryContributionController.class);
 
@@ -47,7 +49,7 @@ public class IndustryContributionController extends AbstractBaseController {
             @RequestParam(value = "chamber", required = false) String chamber,
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress) {
 
-        if (chamber != null) //Get contributions for a specifc chamber
+        if (chamber != null) //Get contributions for a specific chamber
             return industryContributionService.getIndustryContributionTotalsMap(industryId, chamber, congress);
 
         else  //If no chamber is specified, return both the house and senate contributions.
@@ -70,7 +72,7 @@ public class IndustryContributionController extends AbstractBaseController {
             @RequestParam(value = "chamber", required = false) String chamber,
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress) {
 
-        if (chamber != null) //Get contributions for a specifc chamber
+        if (chamber != null) //Get contributions for a specific chamber
             return industryContributionService.getIndustryCategoryContributionTotalsMap(categoryId, chamber, congress);
 
         else  //If no chamber is specified, return both the house and senate contributions.
@@ -95,7 +97,7 @@ public class IndustryContributionController extends AbstractBaseController {
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
             @RequestParam(value = "plot") String plotType) {
 
-        if (chamber != null) //Get contributions for a specifc chamber
+        if (chamber != null) //Get contributions for a specific chamber
             return industryContributionService.getIndustryContributionTotalsMap(industryId, chamber, congress);
 
         else  //If no chamber is specified, return both the house and senate contributions.
@@ -120,7 +122,7 @@ public class IndustryContributionController extends AbstractBaseController {
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
             @RequestParam(value = "plot") String plotType) {
 
-        if (chamber != null) //Get contributions for a specifc chamber
+        if (chamber != null) //Get contributions for a specific chamber
             return industryContributionService.getIndustryCategoryContributionTotalsMap(categoryId, chamber, congress);
 
         else  //If no chamber is specified, return both the house and senate contributions.
@@ -152,7 +154,7 @@ public class IndustryContributionController extends AbstractBaseController {
             default: {
                 totals = industryContributionService.getIndustryContributionTotalsMap(industryId, chamber, congress);
                 ideologyMatrix = ideologyService.getIdeologyMatrix(chamber, congress);
-                return industryContributionService.getIndustryContributionsVsIdeology(ideologyMatrix, totals);
+                return industryContributionCompareService.getIndustryContributionsVsIdeology(ideologyMatrix, totals);
             }
         }
     }
@@ -181,7 +183,7 @@ public class IndustryContributionController extends AbstractBaseController {
             default: {
                 totals = industryContributionService.getIndustryCategoryContributionTotalsMap(categoryId, chamber, congress);
                 ideologyMatrix = ideologyService.getIdeologyMatrix(chamber, congress);
-                return industryContributionService.getIndustryContributionsVsIdeology(ideologyMatrix, totals);
+                return industryContributionCompareService.getIndustryContributionsVsIdeology(ideologyMatrix, totals);
             }
         }
     }
@@ -211,11 +213,11 @@ public class IndustryContributionController extends AbstractBaseController {
                 IndustryContributionTotalsMap industryTotals = industryContributionService.getIndustryContributionTotalsMap(industryId, chamber, congress);
                 IdeologyMatrix ideologyMatrix = ideologyService.getIdeologyMatrix(chamber, congress);
 
-                compareTotals = industryContributionService.getIndustryContributionsVsIdeology(ideologyMatrix, industryTotals);
+                compareTotals = industryContributionCompareService.getIndustryContributionsVsIdeology(ideologyMatrix, industryTotals);
             }
         }
 
-        IndustryContributionView view = new IndustryContributionView(compareTotals, chamber, congress);
+        IndustryContributionBarPlot view = new IndustryContributionBarPlot(compareTotals, chamber, congress);
         JFreeChart chart = view.generateChart(plotType);
 
         try {
@@ -251,11 +253,11 @@ public class IndustryContributionController extends AbstractBaseController {
                         industryContributionService.getIndustryCategoryContributionTotalsMap(categoryId, chamber, congress);
                 IdeologyMatrix ideologyMatrix = ideologyService.getIdeologyMatrix(chamber, congress);
 
-                compareTotals = industryContributionService.getIndustryContributionsVsIdeology(ideologyMatrix, industryTotals);
+                compareTotals = industryContributionCompareService.getIndustryContributionsVsIdeology(ideologyMatrix, industryTotals);
             }
         }
 
-        IndustryContributionView view = new IndustryContributionView(compareTotals, chamber, congress);
+        IndustryContributionBarPlot view = new IndustryContributionBarPlot(compareTotals, chamber, congress);
         JFreeChart chart = view.generateChart(plotType);
 
         try {
@@ -274,5 +276,10 @@ public class IndustryContributionController extends AbstractBaseController {
     @Autowired
     public void setIndustryContributionService(IndustryContributionService industryContributionService) {
         this.industryContributionService = industryContributionService;
+    }
+
+    @Autowired
+    public void setIndustryContributionCompareService(IndustryContributionCompareService industryContributionCompareService) {
+        this.industryContributionCompareService = industryContributionCompareService;
     }
 }

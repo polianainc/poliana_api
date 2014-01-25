@@ -28,13 +28,19 @@ public class MongoConfig extends AbstractMongoConfiguration {
 
     @Override
     protected UserCredentials getUserCredentials() {
-        return new UserCredentials(env.getProperty("mongo.username"), env.getProperty("mongo.password"));
+        return new UserCredentials(
+                  env.getProperty("mongo.username")
+                , env.getProperty("mongo.password")
+        );
     }
 
     @Override
     @Bean
     public Mongo mongo() throws Exception {
-        Mongo mongo = new MongoClient(env.getProperty("mongo.url"));
+        Mongo mongo = new MongoClient(
+                  env.getProperty("mongo.host")
+                , Integer.parseInt(env.getProperty("mongo.port"))
+        );
         mongo.setWriteConcern(WriteConcern.SAFE);
         return mongo;
     }
@@ -42,17 +48,20 @@ public class MongoConfig extends AbstractMongoConfiguration {
     @Bean
     public DB mongoDb() throws Exception {
         DB db =  mongo().getDB(env.getProperty("mongo.dbname"));
-        db.authenticate(env.getProperty("mongo.username"),env.getProperty("mongo.password").toCharArray());
+        db.authenticate(
+                  env.getProperty("mongo.username")
+                , env.getProperty("mongo.password").toCharArray()
+        );
         return db;
     }
 
     @Bean
     public Datastore mongoStore() throws Exception {
         return new Morphia().createDatastore(
-                mongo(),
-                env.getProperty("mongo.dbname"),
-                env.getProperty("mongo.username"),
-                env.getProperty("mongo.password").toCharArray()
+                mongo()
+                , env.getProperty("mongo.dbname")
+                , env.getProperty("mongo.username")
+                , env.getProperty("mongo.password").toCharArray()
         );
     }
 

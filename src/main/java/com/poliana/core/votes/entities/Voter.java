@@ -10,7 +10,7 @@ import org.mongodb.morphia.annotations.Property;
  * @date 11/13/13
  */
 @Entity("voter")
-@JsonIgnoreProperties({"id"})
+@JsonIgnoreProperties({"id", "oldId"})
 public class Voter {
 
     @Id
@@ -23,6 +23,9 @@ public class Voter {
     private String firstName;
 
     @Property("id")
+    private String oldId;
+
+    @Property("bioguide_id")
     private String bioguideId;
 
     @Property("last_name")

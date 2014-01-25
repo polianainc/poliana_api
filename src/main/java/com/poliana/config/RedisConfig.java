@@ -24,9 +24,10 @@ public class RedisConfig {
     public JedisPool jedisPool() {
 
         return new JedisPool(
-                new JedisPoolConfig(),
-                env.getProperty("redis.host"),
-                Integer.parseInt(env.getProperty("redis.port"))
+                new JedisPoolConfig()
+                , env.getProperty("redis.host")
+                , Integer.parseInt(env.getProperty("redis.port"))
+//                , 10000000
         );
     }
 

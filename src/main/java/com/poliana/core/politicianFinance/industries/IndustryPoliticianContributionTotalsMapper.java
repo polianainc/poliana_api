@@ -17,6 +17,7 @@ public class IndustryPoliticianContributionTotalsMapper implements RowMapper<Ind
     public IndustryPoliticianContributionTotalsMapper() {}
 
     public IndustryPoliticianContributionTotalsMapper(long beginTimestamp, long endTimestamp) {
+
         this.beginTimestamp = beginTimestamp;
         this.endTimestamp = endTimestamp;
     }

@@ -160,7 +160,7 @@ public class IndustryPoliticianContributionTotals {
         this.sector = sector;
     }
 
-    public int getContributionCount() {
+    public Integer getContributionCount() {
         return contributionCount;
     }
 

@@ -46,8 +46,6 @@ public class IndustryContributionHadoopRepo {
             String query =
                     "SELECT  " +
                     "      bioguide_id " +
-                    "    , first_name " +
-                    "    , last_name   " +
                     "    , cat_order as industry_id " +
                     "    , industry " +
                     "    , cat_name " +
@@ -131,8 +129,6 @@ public class IndustryContributionHadoopRepo {
             String query =
                     "SELECT " +
                             "  bioguide_id" +
-                            ", first_name" +
-                            ", last_name" +
                             ", real_code as category_id" +
                             ", industry" +
                             ", cat_name" +
@@ -143,32 +139,18 @@ public class IndustryContributionHadoopRepo {
                             "FROM " +
                             "       (SELECT " +
                             "         bioguide_id" +
-                            "       , first_name" +
-                            "       , last_name" +
                             "       , real_code" +
-                            "       , industry " +
-                            "       , cat_name " +
-                            "       , sector " +
-                            "       , sector_long " +
                             "       , congress" +
                             "       , SUM(amount) as total" +
                             "       FROM" +
                             "              (SELECT " +
                             "                bioguide_id" +
-                            "              , first_name" +
-                            "              , last_name" +
                             "              , real_code" +
-                            "              , industry " +
-                            "              , cat_name " +
-                            "              , sector " +
-                            "              , sector_long " +
                             "              , amount" +
                             "              , congress" +
                             "              FROM " +
                             "                     (SELECT " +
                             "                       bioguide_id" +
-                            "                     , first_name" +
-                            "                     , last_name" +
                             "                     , opensecrets_id" +
                             "                     FROM" +
                             "                         entities.legislators_flat_terms" +
@@ -189,13 +171,7 @@ public class IndustryContributionHadoopRepo {
                             "       candidate_receipts " +
                             "       GROUP BY " +
                             "         bioguide_id" +
-                            "       , first_name" +
-                            "       , last_name" +
                             "       , real_code" +
-                            "       , industry " +
-                            "       , cat_name " +
-                            "       , sector " +
-                            "       , sector_long " +
                             "       , congress) " +
                             "sums " +
                             "JOIN " +
@@ -223,12 +199,12 @@ public class IndustryContributionHadoopRepo {
 
         CongressTimestamps ts = timeService.getCongressTimestamps(congress);
 
+        String legislatorType = chamber.contains("h") ? "r" : "s";
+
         try {
             String query =
                     "SELECT  " +
                     "      bioguide_id " +
-                    "    , first_name " +
-                    "    , last_name   " +
                     "    , cat_order as industry_id " +
                     "    , industry " +
                     "    , cat_name " +
@@ -277,7 +253,7 @@ public class IndustryContributionHadoopRepo {
                     "    AND " +
                     "       (begin_timestamp < " + ts.getBegin() +  " OR end_timestamp > " + ts.getEnd() +  ")     " +
                     "    AND  " +
-                    "       SUBSTR(term_type, 1, 1) = \'" + chamber + "\' ) industry_contributions " +
+                    "       SUBSTR(term_type, 1, 1) = \'" + legislatorType + "\' ) industry_contributions " +
                     "GROUP BY " +
                     "      bioguide_id     " +
                     "    , first_name   " +
@@ -305,17 +281,17 @@ public class IndustryContributionHadoopRepo {
      * @return
      * @see com.poliana.core.industryFinance.entities.IndustryContributionTotalsMap
      */
-    public IndustryContributionTotalsMap    getIndustryCategoryContributionTotalsMap(String categoryId, String chamber, int congress) {
+    public IndustryContributionTotalsMap getIndustryCategoryContributionTotalsMap(String categoryId, String chamber, int congress) {
 
         CongressTimestamps ts = timeService.getCongressTimestamps(congress);
+
+        String legislatorType = chamber.contains("h") ? "r" : "s";
 
         try {
             String query =
                     "SELECT " +
                     "  bioguide_id" +
-                    ", first_name" +
-                    ", last_name" +
-                    ", real_code as industry_id" +
+                    ", real_code as category_id" +
                     ", industry" +
                     ", cat_name" +
                     ", sector" +
@@ -325,24 +301,18 @@ public class IndustryContributionHadoopRepo {
                     "FROM " +
                     "       (SELECT " +
                     "         bioguide_id" +
-                    "       , first_name" +
-                    "       , last_name" +
                     "       , real_code" +
                     "       , congress" +
                     "       , SUM(amount) as total" +
                     "       FROM" +
                     "              (SELECT " +
                     "                bioguide_id" +
-                    "              , first_name" +
-                    "              , last_name" +
                     "              , real_code" +
                     "              , amount" +
                     "              , congress" +
                     "              FROM " +
                     "                     (SELECT " +
                     "                       bioguide_id" +
-                    "                     , first_name" +
-                    "                     , last_name" +
                     "                     , opensecrets_id" +
                     "                     FROM" +
                     "                         entities.legislators_flat_terms" +
@@ -351,7 +321,7 @@ public class IndustryContributionHadoopRepo {
                     "                     AND" +
                     "                         (begin_timestamp < " + ts.getBegin() + " OR end_timestamp > " + ts.getEnd() + ")    " +
                     "                     AND " +
-                    "                         SUBSTR(term_type, 1, 1) = \'" + chamber + "\'" +
+                    "                         SUBSTR(term_type, 1, 1) = \'" + legislatorType + "\'" +
                     "                     ) legislators " +
                     "              JOIN " +
                     "                  crp.individual_contributions c " +
@@ -365,8 +335,6 @@ public class IndustryContributionHadoopRepo {
                     "       candidate_receipts " +
                     "       GROUP BY " +
                     "         bioguide_id" +
-                    "       , first_name" +
-                    "       , last_name" +
                     "       , real_code" +
                     "       , congress) " +
                     "sums " +
@@ -385,6 +353,168 @@ public class IndustryContributionHadoopRepo {
     }
 
     /**
+     * Get total sums of all money contributed to each legislator in a given chamber during a given time range by a certain
+     * industry.
+     *
+     * @param industryId
+     * @param chamber
+     * @param beginTimestamp
+     * @param endTimestamp
+     * @return
+     */
+    public IndustryContributionTotalsMap getIndustryContributionTotalsMapByChamber(String industryId, String chamber, long beginTimestamp, long endTimestamp) {
+
+        String legislatorType = chamber.contains("h") ? "r" : "s";
+
+        try {
+            String query =
+                    "SELECT  " +
+                            "      bioguide_id " +
+                            "    , cat_order as industry_id " +
+                            "    , industry " +
+                            "    , cat_name " +
+                            "    , sector " +
+                            "    , sector_long " +
+                            "    , congress " +
+                            "    , SUM(amount) as total     " +
+                            "FROM " +
+                            "    (SELECT  " +
+                            "          bioguide_id " +
+                            "        , first_name " +
+                            "        , last_name " +
+                            "        , cat_order " +
+                            "        , industry " +
+                            "        , cat_name " +
+                            "        , sector " +
+                            "        , sector_long " +
+                            "        , congress " +
+                            "        , amount " +
+                            "    FROM      " +
+                            "        (SELECT  " +
+                            "              recip_id   " +
+                            "            , cat_order " +
+                            "            , industry " +
+                            "            , cat_name " +
+                            "            , sector " +
+                            "            , sector_long " +
+                            "            , congress " +
+                            "            , amount " +
+                            "        FROM  " +
+                            "            crp.individual_contributions contributions " +
+                            "        JOIN  " +
+                            "            entities.industry_codes industries " +
+                            "        ON  " +
+                            "            real_code = cat_code " +
+                            "        WHERE  " +
+                            "            cat_order = \'" + industryId + "\' " +
+                            "        AND  " +
+                            "            (transaction_ts < " + endTimestamp + " AND transaction_ts > " + beginTimestamp + ")   ) order_contributions " +
+                            "    JOIN " +
+                            "        entities.legislators_flat_terms " +
+                            "    ON  " +
+                            "       opensecrets_id = recip_id       " +
+                            "    WHERE  " +
+                            "       (begin_timestamp < " + endTimestamp +  " AND end_timestamp > " + beginTimestamp +  ")    " +
+                            "    AND " +
+                            "       (begin_timestamp < " + beginTimestamp +  " OR end_timestamp > " + endTimestamp +  ")     " +
+                            "    AND  " +
+                            "       SUBSTR(term_type, 1, 1) = \'" + legislatorType + "\' ) industry_contributions " +
+                            "GROUP BY " +
+                            "      bioguide_id     " +
+                            "    , first_name   " +
+                            "    , last_name   " +
+                            "    , industry_id " +
+                            "    , industry " +
+                            "    , cat_name " +
+                            "    , sector " +
+                            "    , sector_long " +
+                            "    , congress";
+
+            return impalaTemplate.query(query, new IndustryContributionTotalsHashMapper(chamber, beginTimestamp, endTimestamp));
+        }
+        catch (Exception e) {
+            logger.error(e);
+        }
+
+        return null;
+    }
+
+    /**
+     * Get total sums of all money contributed to each legislator in a given chamber during a given time range by a certain
+     * industry category.
+     *
+     * @param categoryId
+     * @param chamber
+     * @param beginTimestamp
+     * @param endTimestamp
+     * @return
+     */
+    public IndustryContributionTotalsMap getIndustryCategoryContributionTotalsMapByChamber(String categoryId, String chamber, long beginTimestamp, long endTimestamp) {
+
+        String legislatorType = chamber.contains("h") ? "r" : "s";
+
+        try {
+            String query =
+                    "SELECT " +
+                            "  bioguide_id" +
+                            ", real_code as category_id" +
+                            ", industry" +
+                            ", cat_name" +
+                            ", sector" +
+                            ", sector_long" +
+                            ", total " +
+                            "FROM " +
+                            "       (SELECT " +
+                            "         bioguide_id" +
+                            "       , real_code" +
+                            "       , SUM(amount) as total" +
+                            "       FROM" +
+                            "              (SELECT " +
+                            "                bioguide_id" +
+                            "              , real_code" +
+                            "              , amount" +
+                            "              FROM " +
+                            "                     (SELECT " +
+                            "                       bioguide_id" +
+                            "                     , opensecrets_id" +
+                            "                     FROM" +
+                            "                         entities.legislators_flat_terms" +
+                            "                     WHERE " +
+                            "                         (begin_timestamp < " + endTimestamp + " AND end_timestamp > " + beginTimestamp + ")   " +
+                            "                     AND" +
+                            "                         (begin_timestamp < " + beginTimestamp + " OR end_timestamp > " + endTimestamp + ")    " +
+                            "                     AND " +
+                            "                         SUBSTR(term_type, 1, 1) = \'" + legislatorType + "\'" +
+                            "                     ) legislators " +
+                            "              JOIN " +
+                            "                  crp.individual_contributions c " +
+                            "              ON " +
+                            "                  opensecrets_id = c.recip_id" +
+                            "              WHERE " +
+                            "                  real_code = \'" + categoryId + "\'" +
+                            "              AND " +
+                            "                   (transaction_ts < " + endTimestamp + " AND transaction_ts > " + beginTimestamp + ")   " +
+                            "              )" +
+                            "       candidate_receipts " +
+                            "       GROUP BY " +
+                            "         bioguide_id" +
+                            "       , real_code) " +
+                            "sums " +
+                            "JOIN " +
+                            "   entities.industry_codes l " +
+                            "ON " +
+                            "   real_code = cat_code";
+
+            return impalaTemplate.query(query, new IndustryContributionTotalsHashMapper(chamber, beginTimestamp, endTimestamp));
+        }
+        catch (Exception e) {
+            logger.error(e);
+        }
+
+        return null;
+    }
+
+    /**
      * Get a list of Industry to politician contribution sums for all politicians for all time
      * @param industryId
      * @return
@@ -394,60 +524,60 @@ public class IndustryContributionHadoopRepo {
         try {
             String query =
                     "SELECT DISTINCT" +
-                            "       bioguide_id" +
-                            "     , industry_id" +
-                            "     , party" +
-                            "     , religion" +
-                            "     , industry" +
-                            "     , sector" +
-                            "     , sector_long" +
-                            "     , contribution_count" +
-                            "     , contribution_sum" +
-                            "FROM" +
-                            "     (SELECT " +
-                            "            bioguide_id" +
-                            "          , cat_order as industry_id" +
-                            "          , party" +
-                            "          , religion" +
-                            "          , SUM(contribution_count) as contribution_count" +
-                            "          , SUM(contribution_sum) as contribution_sum      " +
-                            "     FROM" +
-                            "          (SELECT" +
-                            "                 bioguide_id" +
-                            "               , real_code" +
-                            "               , party" +
-                            "               , religion" +
-                            "               , COUNT(amount) as contribution_count" +
-                            "               , SUM(amount) as contribution_sum" +
-                            "          FROM" +
-                            "               entities.legislators m" +
-                            "          JOIN" +
-                            "               crp.individual_contributions c" +
-                            "          ON" +
-                            "               opensecrets_id = c.recip_id " +
-                            "          GROUP BY" +
-                            "                 bioguide_id" +
-                            "               , real_code" +
-                            "               , party" +
-                            "               , religion " +
-                            "          ) q1" +
-                            "     JOIN" +
-                            "          entities.industry_codes l" +
-                            "     ON" +
-                            "          real_code = cat_code " +
-                            "     GROUP BY" +
-                            "            bioguide_id" +
-                            "          , cat_order" +
-                            "          , party" +
-                            "          , religion " +
-                            "     " +
-                            "     ) distinct_sums" +
-                            "" +
-                            "JOIN" +
-                            "     entities.industry_codes l" +
-                            "ON" +
-                            "     industry_id = cat_order" +
-                            "WHERE industry_id = \'" + industryId + "\'";
+                    "       bioguide_id" +
+                    "     , industry_id" +
+                    "     , party" +
+                    "     , religion" +
+                    "     , industry" +
+                    "     , sector" +
+                    "     , sector_long" +
+                    "     , contribution_count" +
+                    "     , contribution_sum " +
+                    "FROM" +
+                    "     (SELECT " +
+                    "            bioguide_id" +
+                    "          , cat_order as industry_id" +
+                    "          , party" +
+                    "          , religion" +
+                    "          , SUM(contribution_count) as contribution_count" +
+                    "          , SUM(contribution_sum) as contribution_sum      " +
+                    "     FROM" +
+                    "          (SELECT" +
+                    "                 bioguide_id" +
+                    "               , real_code" +
+                    "               , party" +
+                    "               , religion" +
+                    "               , COUNT(amount) as contribution_count" +
+                    "               , SUM(amount) as contribution_sum" +
+                    "          FROM" +
+                    "               entities.legislators m" +
+                    "          JOIN" +
+                    "               crp.individual_contributions c" +
+                    "          ON" +
+                    "               opensecrets_id = c.recip_id " +
+                    "          GROUP BY" +
+                    "                 bioguide_id" +
+                    "               , real_code" +
+                    "               , party" +
+                    "               , religion " +
+                    "          ) q1" +
+                    "     JOIN" +
+                    "          entities.industry_codes l" +
+                    "     ON" +
+                    "          real_code = cat_code " +
+                    "     GROUP BY" +
+                    "            bioguide_id" +
+                    "          , cat_order" +
+                    "          , party" +
+                    "          , religion " +
+                    "     " +
+                    "     ) distinct_sums " +
+                    "" +
+                    "JOIN" +
+                    "     entities.industry_codes l " +
+                    "ON" +
+                    "     industry_id = cat_order " +
+                    "WHERE industry_id = \'" + industryId + "\'";
 
             return impalaTemplate.query(query, new IndustryPoliticianContributionTotalsMapper());
         }
@@ -469,20 +599,23 @@ public class IndustryContributionHadoopRepo {
             String query =
                     "SELECT  " +
                     "     bioguide_id " +
-                    "   , real_code " +
+                    "   , real_code as category_id" +
+                    "   , cat_name as category_name" +
                     "   , party" +
                     "   , religion        " +
                     "   , industry " +
                     "   , sector " +
                     "   , sector_long " +
-                    "   , total" +
+                    "   , contribution_count" +
+                    "   , contribution_sum " +
                     "FROM  " +
                     "   (SELECT  " +
                     "         bioguide_id " +
                     "       , real_code  " +
                     "       , party" +
                     "       , religion" +
-                    "       , SUM(amount) as total" +
+                    "       , COUNT(amount) as contribution_count" +
+                    "       , SUM(amount) as contribution_sum" +
                     "   FROM  " +
                     "       (SELECT  " +
                     "             bioguide_id " +
@@ -505,7 +638,7 @@ public class IndustryContributionHadoopRepo {
                     "JOIN  " +
                     "   entities.industry_codes l  " +
                     "ON  " +
-                    "   real_code = cat_code" +
+                    "   real_code = cat_code " +
                     "WHERE real_code = \'" + categoryId + "\'";
 
             return impalaTemplate.query(query, new IndustryPoliticianContributionTotalsMapper());

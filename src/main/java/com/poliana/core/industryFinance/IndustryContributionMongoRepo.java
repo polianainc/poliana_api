@@ -118,6 +118,7 @@ public class IndustryContributionMongoRepo {
 
         query.and(
                 query.criteria("industryId").equal(industryId),
+                query.criteria("categoryId").doesNotExist(),
                 query.criteria("chamber").equal(chamber),
                 query.criteria("beginTimestamp").equal(beginTimestamp),
                 query.criteria("endTimestamp").equal(endTimestamp));
@@ -140,6 +141,7 @@ public class IndustryContributionMongoRepo {
 
         query.and(
                 query.criteria("categoryId").equal(categoryId),
+                query.criteria("industryId").doesNotExist(),
                 query.criteria("chamber").equal(chamber),
                 query.criteria("beginTimestamp").equal(beginTimestamp),
                 query.criteria("endTimestamp").equal(endTimestamp));

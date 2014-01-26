@@ -19,16 +19,35 @@ public class VotesCompareService {
 
     private static final Logger logger = Logger.getLogger(VotesCompareService.class);
 
+
+    /**
+     * Get a breakdown of industry contributions to the entire voting body of a vote PER INDIVIDUAL
+     * @param vote
+     * @param totalsMap
+     * @return
+     */
     public VoteVsIndustryContributions getVoteVsIndustryContributions(Vote vote, IndustryContributionTotalsMap totalsMap) {
+
+        if (vote == null || totalsMap == null)
+            return null;
 
         VoteVsIndustryContributions voteVsContribution = new VoteVsIndustryContributions();
 
         voteVsContribution.setVoteId(vote.getVoteId());
         voteVsContribution.setCongress(vote.getCongress());
         voteVsContribution.setVoteDate(vote.getDate());
-        voteVsContribution.setIndustryName(totalsMap.getIndustryName());
-        voteVsContribution.setBeginDate(new Date(totalsMap.getBeginTimestamp() * 1000));
-        voteVsContribution.setEndDate(new Date(totalsMap.getEndTimestamp() * 1000));
+
+        String name = totalsMap.getIndustryId() != null ? totalsMap.getIndustryName() : totalsMap.getCategoryName();
+
+        voteVsContribution.setIndustryName(name);
+
+        try {
+            voteVsContribution.setBeginDate(new Date(totalsMap.getBeginTimestamp() * 1000));
+            voteVsContribution.setEndDate(new Date(totalsMap.getEndTimestamp() * 1000));
+        }
+        catch (NullPointerException e) {
+            logger.error(e);
+        }
 
         if (vote.getVoters() != null) {
 
@@ -116,17 +135,34 @@ public class VotesCompareService {
         return voteVsContribution;
     }
 
-    public VoteVsContributionTotals getVoteVsContributionTotals(Vote vote, IndustryContributionTotalsMap totalsMap) {
 
-        VoteVsContributionTotals contributionTotals = new VoteVsContributionTotals();
+    public VoteVsIndustryContributionTotals getVoteVsIndustryContributionTotals(Vote vote, IndustryContributionTotalsMap totalsMap) {
 
-        contributionTotals.setVoteId(vote.getVoteId());
-        contributionTotals.setIndustryId(totalsMap.getIndustryId());
-        contributionTotals.setIndustryName(totalsMap.getIndustryName());
+        if (vote == null || totalsMap == null)
+            return null;
 
-        contributionTotals.setVoteDate(vote.getDate());
-        contributionTotals.setBeginDate(new Date(totalsMap.getBeginTimestamp() * 1000));
-        contributionTotals.setEndDate(new Date(totalsMap.getEndTimestamp() * 1000));
+        VoteVsIndustryContributionTotals voteVsContributionTotals = new VoteVsIndustryContributionTotals();
+
+        voteVsContributionTotals.setVoteId(vote.getVoteId());
+
+        String name = totalsMap.getCategoryId() != null ? totalsMap.getCategoryName() : totalsMap.getIndustryName();
+        String id = totalsMap.getCategoryId() != null ? totalsMap.getCategoryId() : totalsMap.getIndustryId();
+
+        voteVsContributionTotals.setIndustryName(name);
+        voteVsContributionTotals.setIndustryId(id);
+
+        voteVsContributionTotals.setVoteId(vote.getVoteId());
+        voteVsContributionTotals.setVoteDate(vote.getDate());
+
+        voteVsContributionTotals.setVoteDate(vote.getDate());
+
+        try {
+            voteVsContributionTotals.setBeginDate(new Date(totalsMap.getBeginTimestamp() * 1000));
+            voteVsContributionTotals.setEndDate(new Date(totalsMap.getEndTimestamp() * 1000));
+        }
+        catch (NullPointerException e) {
+            logger.error(e);
+        }
 
         if (vote.getVoters() != null) {
 
@@ -148,9 +184,9 @@ public class VotesCompareService {
 
                 avg = sum / count;
 
-                contributionTotals.setYeaContributionSums(sum);
-                contributionTotals.setYeaContributionCount(count);
-                contributionTotals.setYeaContributionAvg(avg);
+                voteVsContributionTotals.setYeaContributionSums(sum);
+                voteVsContributionTotals.setYeaContributionCount(count);
+                voteVsContributionTotals.setYeaContributionAvg(avg);
             }
 
             if (vote.getVoters().getNay() != null) {
@@ -171,9 +207,9 @@ public class VotesCompareService {
 
                 avg = sum / count;
 
-                contributionTotals.setNayContributionSums(sum);
-                contributionTotals.setNayContributionCount(count);
-                contributionTotals.setNayContributionAvg(avg);
+                voteVsContributionTotals.setNayContributionSums(sum);
+                voteVsContributionTotals.setNayContributionCount(count);
+                voteVsContributionTotals.setNayContributionAvg(avg);
             }
 
             if (vote.getVoters().getNotVoting() != null) {
@@ -194,9 +230,9 @@ public class VotesCompareService {
 
                 avg = sum / count;
 
-                contributionTotals.setNotVotingContributionSums(sum);
-                contributionTotals.setNotVotingContributionCount(count);
-                contributionTotals.setNotVotingContributionAvg(avg);
+                voteVsContributionTotals.setNotVotingContributionSums(sum);
+                voteVsContributionTotals.setNotVotingContributionCount(count);
+                voteVsContributionTotals.setNotVotingContributionAvg(avg);
             }
 
             if (vote.getVoters().getPresent() != null) {
@@ -217,12 +253,12 @@ public class VotesCompareService {
 
                 avg = sum / count;
 
-                contributionTotals.setPresentContributionSums(sum);
-                contributionTotals.setPresentContributionCount(count);
-                contributionTotals.setPresentContributionAvg(avg);
+                voteVsContributionTotals.setPresentContributionSums(sum);
+                voteVsContributionTotals.setPresentContributionCount(count);
+                voteVsContributionTotals.setPresentContributionAvg(avg);
             }
         }
 
-        return contributionTotals;
+        return voteVsContributionTotals;
     }
 }

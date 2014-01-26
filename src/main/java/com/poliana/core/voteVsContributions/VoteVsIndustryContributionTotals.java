@@ -6,7 +6,7 @@ import java.util.Date;
  * @author David Gilmore
  * @date 1/21/14
  */
-public class VoteVsContributionTotals {
+public class VoteVsIndustryContributionTotals {
 
     private String voteId;
     private String industryId;

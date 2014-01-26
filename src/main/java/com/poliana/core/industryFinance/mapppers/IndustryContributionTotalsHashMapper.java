@@ -23,12 +23,6 @@ public class IndustryContributionTotalsHashMapper implements ResultSetExtractor<
         this.chamber = chamber;
     }
 
-    public IndustryContributionTotalsHashMapper(long beginTimestamp, long endTimestamp) {
-
-        this.beginTimestamp = beginTimestamp;
-        this.endTimestamp = endTimestamp;
-    }
-
     public IndustryContributionTotalsHashMapper(String chamber, long beginTimestamp, long endTimestamp) {
 
         this.chamber = chamber;

@@ -6,7 +6,7 @@ import com.poliana.core.industryFinance.services.IndustryContributionService;
 import com.poliana.core.legislators.Legislator;
 import com.poliana.core.legislators.LegislatorService;
 import com.poliana.core.pacFinance.PacContributionService;
-import com.poliana.core.pacFinance.PacPoliticianContrTotals;
+import com.poliana.core.pacFinance.entities.PacPoliticianContributionTotals;
 import com.poliana.core.politicianFinance.industries.IndustryPoliticianContributionTotals;
 import com.poliana.core.politicianFinance.industries.PoliticianIndustryFinanceService;
 import com.poliana.core.politicianFinance.industries.PoliticianIndustryMongoRepo;
@@ -121,7 +121,7 @@ public class PoliticianFinanceProfileService {
      */
     private void setPacTotals(String bioguideId, HashMap<Integer, SessionTotals> termTotalsMap) {
 
-        HashMap<Integer, List<PacPoliticianContrTotals>> totalsHashMap = pacContributionService.getPacTotalsAllTime(bioguideId);
+        HashMap<Integer, List<PacPoliticianContributionTotals>> totalsHashMap = pacContributionService.getPacTotalsAllTime(bioguideId);
 
         //Get an iterator for the values in the hash map
         Iterator it = totalsHashMap.entrySet().iterator();
@@ -132,11 +132,11 @@ public class PoliticianFinanceProfileService {
             pairs = (Map.Entry) it.next();
 
             if (termTotalsMap.containsKey(pairs.getKey()))
-                termTotalsMap.get(pairs.getKey()).setTopPACContributions((List<PacPoliticianContrTotals>)pairs.getValue());
+                termTotalsMap.get(pairs.getKey()).setTopPACContributions((List<PacPoliticianContributionTotals>)pairs.getValue());
             else {
                 //If the termTotalsMap doesn't have the current cycle, make a new object for it
                 SessionTotals termTotals = new SessionTotals();
-                termTotals.setTopPACContributions((List<PacPoliticianContrTotals>) pairs.getValue());
+                termTotals.setTopPACContributions((List<PacPoliticianContributionTotals>) pairs.getValue());
                 termTotalsMap.put((Integer)pairs.getKey(), termTotals);
             }
         }

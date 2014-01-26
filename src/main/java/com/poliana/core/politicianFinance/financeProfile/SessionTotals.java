@@ -1,9 +1,9 @@
 package com.poliana.core.politicianFinance.financeProfile;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.poliana.core.pacFinance.entities.PacPoliticianContributionTotals;
 import com.poliana.core.politicianFinance.industries.IndustryPoliticianContributionTotals;
 import org.mongodb.morphia.annotations.*;
-import com.poliana.core.pacFinance.PacPoliticianContrTotals;
 
 
 import java.util.List;
@@ -40,7 +40,7 @@ public class SessionTotals {
     private List<IndustryPoliticianContributionTotals> topIndustryContributions;
 
     @Embedded("top_pac_contributions")
-    private List<PacPoliticianContrTotals> topPACContributions;
+    private List<PacPoliticianContributionTotals> topPACContributions;
 
     public String getId() {
         return id;
@@ -110,11 +110,11 @@ public class SessionTotals {
         this.topIndustryContributions = topIndustryContributions;
     }
 
-    public List<PacPoliticianContrTotals> getTopPACContributions() {
+    public List<PacPoliticianContributionTotals> getTopPACContributions() {
         return topPACContributions;
     }
 
-    public void setTopPACContributions(List<PacPoliticianContrTotals> topPACContributions) {
+    public void setTopPACContributions(List<PacPoliticianContributionTotals> topPACContributions) {
         this.topPACContributions = topPACContributions;
     }
 }

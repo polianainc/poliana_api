@@ -1,4 +1,4 @@
-package com.poliana.core.pacFinance;
+package com.poliana.core.pacFinance.entities;
 
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
@@ -10,7 +10,7 @@ import com.google.gson.annotations.Expose;
  * @date 12/19/13
  */
 @Entity("pac_to_politician_contribution_sums")
-public class PacPoliticianContrTotals {
+public class PacPoliticianContributionTotals {
 
     @Id
     private transient String id;

@@ -1,6 +1,6 @@
 package com.poliana.views;
 
-import com.poliana.core.voteVsContributions.VoteVsContributionTotals;
+import com.poliana.core.voteVsContributions.VoteVsIndustryContributionTotals;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PiePlot;
@@ -19,7 +19,7 @@ public class VoteVsContributionsPiePlot extends JFrame {
     private String title;
     private PieDataset dataset;
 
-    public VoteVsContributionsPiePlot(VoteVsContributionTotals contributionTotals) {
+    public VoteVsContributionsPiePlot(VoteVsIndustryContributionTotals contributionTotals) {
 
         if (contributionTotals != null) {
 
@@ -69,7 +69,7 @@ public class VoteVsContributionsPiePlot extends JFrame {
         return chart;
     }
 
-    private PieDataset getDataset(VoteVsContributionTotals contributionTotals) {
+    private PieDataset getDataset(VoteVsIndustryContributionTotals contributionTotals) {
 
         DefaultPieDataset dataset = new DefaultPieDataset();
 

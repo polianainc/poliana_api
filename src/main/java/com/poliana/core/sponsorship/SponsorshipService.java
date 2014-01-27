@@ -25,9 +25,15 @@ public class SponsorshipService {
     private SponsorshipRepo sponsorshipRepo;
     private LegislatorRepo legislatorRepo;
     private LegislatorService legislatorService;
+
     private TimeService timeService;
 
     private static final Logger logger = Logger.getLogger(SponsorshipService.class);
+
+    public SponsorshipService() {
+
+        this.timeService = new TimeService();
+    }
 
     /**
      * Return a matrix of sponsorships for a given congressional cycle. The Ith dimension corresponds to bills
@@ -76,7 +82,7 @@ public class SponsorshipService {
 
         //TODO: Need to run a hive job to properly select by timestamps in the sponsorship repo
         List<SponsorshipCount> sponsorships =
-                sponsorshipRepo.getSponsorshipCounts(chamber, TimeService.timestampToCongress(beginTimestamp));
+                sponsorshipRepo.getSponsorshipCounts(chamber, timeService.getCongressByTimestamp(beginTimestamp));
         Iterator<Legislator> legislatorIterator = legislatorRepo.getLegislators(chamber, beginTimestamp, endTimestamp);
 
         return getSponsorshipMatrix(chamber, sponsorships, legislatorIterator, beginTimestamp, endTimestamp);

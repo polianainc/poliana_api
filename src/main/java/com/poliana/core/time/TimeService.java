@@ -118,7 +118,7 @@ public class TimeService {
      * @param timestamp
      * @return
      */
-    public static int timestampToCongress(long timestamp) {
+    public int getCongressByTimestamp(long timestamp) {
 
         Calendar cal = Calendar.getInstance();
 

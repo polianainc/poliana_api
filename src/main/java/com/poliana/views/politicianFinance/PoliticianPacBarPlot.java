@@ -1,8 +1,6 @@
-package com.poliana.views;
+package com.poliana.views.politicianFinance;
 
-import com.poliana.core.politicianFinance.industries.IndustryPoliticianContributionTotals;
-import com.poliana.core.legislators.Legislator;
-import com.poliana.core.time.TimeService;
+import com.poliana.core.politicianFinance.pacs.PoliticianPacContributionsTotals;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryLabelPositions;
@@ -20,26 +18,21 @@ import java.util.List;
 
 /**
  * @author David Gilmore
- * @date 1/10/14
+ * @date 1/27/14
  */
-public class PoliticianContributionBarPlot extends JFrame {
+public class PoliticianPacBarPlot extends JFrame {
 
     private String title;
     private CategoryDataset dataset;
-    private TimeService timeService;
-
-
 
     /**
-     * Plot industry to politician contribution totals for a given chamber in a given congressional cycle.
+     * Plot PAC to politician contribution totals for all time.
      */
-    public PoliticianContributionBarPlot(List<IndustryPoliticianContributionTotals> contributions) {
-
-        this.timeService = new TimeService();
+    public PoliticianPacBarPlot(List<PoliticianPacContributionsTotals> contributions) {
 
         if (contributions != null && contributions.size() > 0) {
 
-            IndustryPoliticianContributionTotals totals = contributions.get(0);
+            PoliticianPacContributionsTotals totals = contributions.get(0);
 
             this.title =
                     "Industry contributions  to " +
@@ -53,50 +46,19 @@ public class PoliticianContributionBarPlot extends JFrame {
     }
 
     /**
-     * Plot industry to politician contribution totals for a given chamber in a given congressional cycle.
-     * @param contributions
-     * @param congress
+     * Plot PAC to politician contribution totals for a given time range
      */
-    public PoliticianContributionBarPlot(List<IndustryPoliticianContributionTotals> contributions, int congress) {
-
-        this.timeService = new TimeService();
+    public PoliticianPacBarPlot(List<PoliticianPacContributionsTotals> contributions, Date start, Date end) {
 
         if (contributions != null && contributions.size() > 0) {
 
-            IndustryPoliticianContributionTotals totals = contributions.get(0);
+            PoliticianPacContributionsTotals totals = contributions.get(0);
 
             this.title =
                     "Industry contributions  to " +
-                    totals.getFirstName() + " " +
-                    totals.getLastName() +
-                    " during the " +
-                    congress +
-                    timeService.getNumberSuffix(congress) +
-                    " congress";
-        }
-        else
-            this.title = "No data";
-
-        this.dataset = getContributionDataset(contributions);
-    }
-
-
-    /**
-     * Plot industry to politician contribution totals for a given chamber in a given congressional cycle.
-     */
-    public PoliticianContributionBarPlot(List<IndustryPoliticianContributionTotals> contributions, Date start, Date end) {
-
-        this.timeService = new TimeService();
-
-        if (contributions != null && contributions.size() > 0) {
-
-            IndustryPoliticianContributionTotals totals = contributions.get(0);
-
-            this.title =
-                    "Industry contributions  to " +
-                    totals.getFirstName() + " " +
-                    totals.getLastName() + " " +
-                    "from " + start.toString() + " to " + end.toString();
+                            totals.getFirstName() + " " +
+                            totals.getLastName() + " " +
+                            "from " + start.toString() + " to " + end.toString();
         }
         else
             this.title = "No data";
@@ -147,17 +109,16 @@ public class PoliticianContributionBarPlot extends JFrame {
         return chart;
     }
 
-    private CategoryDataset getContributionDataset(List<IndustryPoliticianContributionTotals> contributions) {
 
-        //TODO: sort contributions and add include/exclude functionality
+    private CategoryDataset getContributionDataset(List<PoliticianPacContributionsTotals> contributions) {
 
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
         if (contributions == null)
             return dataset;
 
-        for (IndustryPoliticianContributionTotals contribution: contributions) {
-            dataset.addValue(contribution.getContributionSum(), "", contribution.getIndustryName());
+        for (PoliticianPacContributionsTotals contribution: contributions) {
+            dataset.addValue(contribution.getContributionSum(), "", contribution.getPacName());
         }
 
         return dataset;

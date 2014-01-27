@@ -1,8 +1,9 @@
-package com.poliana.web;
+package com.poliana.web.politicianFinance;
 
 import com.poliana.core.politicianFinance.industries.PoliticianIndustryFinanceService;
 import com.poliana.core.politicianFinance.industries.IndustryPoliticianContributionTotals;
-import com.poliana.views.PoliticianContributionBarPlot;
+import com.poliana.views.politicianFinance.PoliticianIndustryBarPlot;
+import com.poliana.web.AbstractBaseController;
 import org.apache.log4j.Logger;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
@@ -152,7 +153,7 @@ public class PoliticianIndustryFinanceController extends AbstractBaseController 
 
         List<IndustryPoliticianContributionTotals> allTotals = politicianIndustryFinanceService.getIndustryToPoliticianTotals(bioguideId);
 
-        PoliticianContributionBarPlot view = new PoliticianContributionBarPlot(allTotals);
+        PoliticianIndustryBarPlot view = new PoliticianIndustryBarPlot(allTotals);
 
         JFreeChart chart = view.generateChart(plotType);
 
@@ -177,7 +178,7 @@ public class PoliticianIndustryFinanceController extends AbstractBaseController 
         List<IndustryPoliticianContributionTotals> allTotals =
                 politicianIndustryFinanceService.getIndustryCategoryToPoliticianTotals(bioguideId);
 
-        PoliticianContributionBarPlot view = new PoliticianContributionBarPlot(allTotals);
+        PoliticianIndustryBarPlot view = new PoliticianIndustryBarPlot(allTotals);
 
         JFreeChart chart = view.generateChart(plotType);
 
@@ -204,7 +205,7 @@ public class PoliticianIndustryFinanceController extends AbstractBaseController 
 
         List<IndustryPoliticianContributionTotals> allTotals = politicianIndustryFinanceService.getIndustryToPoliticianTotals(bioguideId, congress);
 
-        PoliticianContributionBarPlot view = new PoliticianContributionBarPlot(allTotals, congress);
+        PoliticianIndustryBarPlot view = new PoliticianIndustryBarPlot(allTotals, congress);
 
         JFreeChart chart = view.generateChart(plotType);
 
@@ -231,7 +232,7 @@ public class PoliticianIndustryFinanceController extends AbstractBaseController 
 
         List<IndustryPoliticianContributionTotals> allTotals = politicianIndustryFinanceService.getIndustryCategoryToPoliticianTotals(bioguideId, congress);
 
-        PoliticianContributionBarPlot view = new PoliticianContributionBarPlot(allTotals, congress);
+        PoliticianIndustryBarPlot view = new PoliticianIndustryBarPlot(allTotals, congress);
 
         JFreeChart chart = view.generateChart(plotType);
 
@@ -262,7 +263,7 @@ public class PoliticianIndustryFinanceController extends AbstractBaseController 
         List<IndustryPoliticianContributionTotals> allTotals =
                 politicianIndustryFinanceService.getIndustryToPoliticianTotals(bioguideId, start.getTime()/1000, end.getTime()/1000);
 
-        PoliticianContributionBarPlot view = new PoliticianContributionBarPlot(allTotals, start, end);
+        PoliticianIndustryBarPlot view = new PoliticianIndustryBarPlot(allTotals, start, end);
 
         JFreeChart chart = view.generateChart(plotType);
 
@@ -290,7 +291,7 @@ public class PoliticianIndustryFinanceController extends AbstractBaseController 
         List<IndustryPoliticianContributionTotals> allTotals =
                 politicianIndustryFinanceService.getIndustryCategoryToPoliticianTotals(bioguideId, start.getTime()/1000, end.getTime()/1000);
 
-        PoliticianContributionBarPlot view = new PoliticianContributionBarPlot(allTotals, start, end);
+        PoliticianIndustryBarPlot view = new PoliticianIndustryBarPlot(allTotals, start, end);
 
         JFreeChart chart = view.generateChart(plotType);
 

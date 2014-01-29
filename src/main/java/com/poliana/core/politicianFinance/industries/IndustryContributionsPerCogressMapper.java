@@ -14,7 +14,7 @@ import java.util.List;
  * @author David Gilmore
  * @date 12/27/13
  */
-public class AllContrPerCogressMapper implements ResultSetExtractor<HashMap<Integer, List<IndustryPoliticianContributionTotals>>> {
+public class IndustryContributionsPerCogressMapper implements ResultSetExtractor<HashMap<Integer, List<IndustryPoliticianContributionTotals>>> {
     @Override
     public HashMap<Integer, List<IndustryPoliticianContributionTotals>> extractData(ResultSet rs) throws SQLException, DataAccessException {
 

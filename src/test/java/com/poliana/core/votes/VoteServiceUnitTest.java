@@ -41,5 +41,7 @@ public class VoteServiceUnitTest {
         this.control.replay();
 
         voteService.getVote("h768", 111, 2009);
+
+        this.control.verify();
     }
 }

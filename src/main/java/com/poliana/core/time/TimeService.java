@@ -97,7 +97,7 @@ public class TimeService {
      * Return the number of seconds in a year.
      * @return
      */
-    public static long oneYear() {
+    public long oneYear() {
 
         return 31556900;
     }
@@ -107,7 +107,7 @@ public class TimeService {
      * @param timestamp
      * @return
      */
-    public static long termBeginning(long timestamp) {
+    public long termBeginning(long timestamp) {
 
         long thisTerm = nearestTermStart(timestamp);
         return thisTerm-oneYear()*4;
@@ -126,6 +126,17 @@ public class TimeService {
         int year = cal.get(cal.YEAR);
 
         return (year-1787)/2;
+    }
+
+    /**
+     *
+     * @param beginTimestamp
+     * @param endTimestamp
+     * @return
+     */
+    public int[] getCongressionalCyclesByTimeRange(long beginTimestamp, long endTimestamp) {
+
+        return new int[0];
     }
 
     /**

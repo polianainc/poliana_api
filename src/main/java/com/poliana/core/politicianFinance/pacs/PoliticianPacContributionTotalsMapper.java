@@ -14,6 +14,7 @@ public class PoliticianPacContributionTotalsMapper implements RowMapper<Politici
     private Long beginTimestamp;
     private Long endTimestamp;
 
+    public PoliticianPacContributionTotalsMapper() {}
 
     public PoliticianPacContributionTotalsMapper(Long beginTimestamp, Long endTimestamp) {
 

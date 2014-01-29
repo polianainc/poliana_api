@@ -569,7 +569,7 @@ public class PoliticianIndustryHadoopRepo {
                     "       ON " +
                     "           real_code = cat_code";
 
-            return impalaTemplate.query(query, new AllContrPerCogressMapper());
+            return impalaTemplate.query(query, new IndustryContributionsPerCogressMapper());
         }
         catch (Exception e) {
             logger.error(e);

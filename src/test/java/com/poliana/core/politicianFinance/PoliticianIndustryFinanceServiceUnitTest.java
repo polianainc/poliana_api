@@ -58,6 +58,8 @@ public class PoliticianIndustryFinanceServiceUnitTest {
         this.control.replay();
 
         this.politicianIndustryFinanceService.getIndustryToPoliticianTotals("O000167", 113);
+
+        this.control.verify();
     }
 
     @Test
@@ -74,6 +76,8 @@ public class PoliticianIndustryFinanceServiceUnitTest {
         this.control.replay();
 
         this.politicianIndustryFinanceService.getIndustryCategoryToPoliticianTotals("O000167", 113);
+
+        this.control.verify();
     }
 
     @Test
@@ -90,6 +94,8 @@ public class PoliticianIndustryFinanceServiceUnitTest {
         this.control.replay();
 
         this.politicianIndustryFinanceService.getIndustryToPoliticianTotals("O000167", 123456789L, 123456789L);
+
+        this.control.verify();
     }
 
     @Test
@@ -106,6 +112,8 @@ public class PoliticianIndustryFinanceServiceUnitTest {
         this.control.replay();
 
         this.politicianIndustryFinanceService.getIndustryCategoryToPoliticianTotals("O000167", 123456789L, 123456789L);
+
+        this.control.verify();
     }
 
     @Test
@@ -122,5 +130,7 @@ public class PoliticianIndustryFinanceServiceUnitTest {
         this.control.replay();
 
         this.politicianIndustryFinanceService.getIndustryToPoliticianTotals("O000167");
+
+        this.control.verify();
     }
 }

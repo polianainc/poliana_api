@@ -99,7 +99,7 @@ public class PoliticianPacFinanceServiceUnitTest {
         contributionsMapMock.put(new Integer(110), contributionsListMock);
         contributionsMapMock.put(new Integer(111), contributionsListMock1);
 
-        expect(this.timeServiceMock.getCongressionalCyclesByTimeRange(1290935588, 1390935588)).andReturn(new int[] {110, 111});
+        expect(this.timeServiceMock.getCongressionalCyclesByTimeRange(1290935588, 1390935588)).andReturn(new Integer[] {110, 111});
         expect(this.politicianPacMongoRepoMock.getPacToPoliticianContributionsIterator("O000167", 110, 111)).andReturn(null);
         expect(this.politicianPacHadoopRepoMock.getPacToPoliticianTotalsPerCongress("O000167", 1290935588, 1390935588)).andReturn(contributionsMapMock);
 

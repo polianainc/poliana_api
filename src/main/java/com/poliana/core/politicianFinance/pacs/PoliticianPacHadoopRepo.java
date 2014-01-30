@@ -177,11 +177,42 @@ public class PoliticianPacHadoopRepo {
      */
     public HashMap<Integer, List<PoliticianPacContributionsTotals>> getPacToPoliticianTotalsPerCongress(String bioguideId, long beginTimestamp, long endTimestamp) {
 
-        int[] cycles = timeService.getCongressionalCyclesByTimeRange(beginTimestamp, endTimestamp);
+        Integer[] cycles = timeService.getCongressionalCyclesByTimeRange(beginTimestamp, endTimestamp);
 
         try {
             String query =
-                    "";
+                    "SELECT \n" +
+                    "      pac_id\n" +
+                    "    , cmte_nm AS pac_name\n" +
+                    "    , COUNT(amount) AS contribution_count\n" +
+                    "    , SUM(amount) AS contribution_sum\n" +
+                    "    , CASE\n" +
+                    "          WHEN PMOD(CAST(contributions.cycle AS INT), 2) > 0\n" +
+                    "              THEN CAST((CAST(contributions.cycle AS INT) - 1787) / 2 AS INT)\n" +
+                    "          ELSE CAST((CAST(contributions.cycle AS INT) - 1788) / 2 AS INT)\n" +
+                    "      END AS congress\n" +
+                    "FROM\n" +
+                    "    entities.pacs pacs\n" +
+                    "JOIN\n" +
+                    "    crp.pac_to_candidate_contributions contributions\n" +
+                    "ON\n" +
+                    "    pac_id = cmte_id\n" +
+                    "AND\n" +
+                    "    pacs.cycle = CASE\n" +
+                    "                     WHEN PMOD(CAST(contributions.cycle AS INT), 2) > 0\n" +
+                    "                         THEN CAST((CAST(contributions.cycle AS INT) - 1787) / 2 AS INT)\n" +
+                    "                     ELSE CAST((CAST(contributions.cycle AS INT) - 1788) / 2 AS INT)\n" +
+                    "                 END\n" +
+                    "\n" +
+                    "WHERE\n" +
+                    "    date_ts > 1075429263\n" +
+                    "AND\n" +
+                    "    date_ts < 1385769077\n" +
+                    "GROUP BY \n" +
+                    "      pac_id\n" +
+                    "    , pac_name\n" +
+                    "    , congress\n" +
+                    ";";
 
             HashMap< Integer, List<PoliticianPacContributionsTotals>> contributionsList =
                     impalaTemplate.query(query, new PacContributionsPerCongressMapper());

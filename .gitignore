@@ -24,6 +24,7 @@ target/
 out/
 spring-shell.log
 .DS_Store
+*/.DS_Store
 derby.log
 py_scripts/
 serdes/

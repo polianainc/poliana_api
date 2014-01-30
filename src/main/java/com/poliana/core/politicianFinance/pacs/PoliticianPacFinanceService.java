@@ -82,7 +82,7 @@ public class PoliticianPacFinanceService {
      */
     public HashMap<Integer, List<PoliticianPacContributionsTotals>> getPacToPoliticianTotalsPerCongress(String bioguideId, long beginTimestamp, long endTimestamp) {
 
-        int[] cycles = timeService.getCongressionalCyclesByTimeRange(beginTimestamp, endTimestamp);
+        Integer[] cycles = timeService.getCongressionalCyclesByTimeRange(beginTimestamp, endTimestamp);
 
         //Query MongoDB for PAC to politician objects
         Iterator<PoliticianPacContributionsTotals> totalsIterator = politicianPacMongoRepo.getPacToPoliticianContributionsIterator(bioguideId, cycles);
@@ -91,19 +91,20 @@ public class PoliticianPacFinanceService {
 
         //Add industry totals to the HashMap. Check the size, if it's zero, fall back to Impala.
         while (totalsIterator != null && totalsIterator.hasNext()) {
-            PoliticianPacContributionsTotals industryTotals = totalsIterator.next();
+            PoliticianPacContributionsTotals pacTotals = totalsIterator.next();
 
             //If the hashmap already has a list of industry totals for the object's cycle
-            if (totalsHashMap.containsKey(industryTotals.getCongress()))
-                totalsHashMap.get(industryTotals.getCongress()).add(industryTotals);
+            if (totalsHashMap.containsKey(pacTotals.getCongress()))
+                totalsHashMap.get(pacTotals.getCongress()).add(pacTotals);
                 //If the hashmap doesn't contain a list of industry totals, make it
             else {
                 List<PoliticianPacContributionsTotals> totalsList = new LinkedList<>();
-                totalsList.add(industryTotals);
-                totalsHashMap.put(industryTotals.getCongress(), totalsList);
+                totalsList.add(pacTotals);
+                totalsHashMap.put(pacTotals.getCongress(), totalsList);
             }
         }
 
+        //TODO: check for all needed cycles
         //A size greater than 0 means that MongoDB had the sums cached
         if (totalsHashMap.size() > 0)
             return totalsHashMap;

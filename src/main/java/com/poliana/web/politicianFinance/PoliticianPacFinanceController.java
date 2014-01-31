@@ -3,6 +3,7 @@ package com.poliana.web.politicianFinance;
 import com.poliana.core.politicianFinance.pacs.PoliticianPacContributionsTotals;
 import com.poliana.core.politicianFinance.pacs.PoliticianPacFinanceService;
 import com.poliana.views.politicianFinance.PoliticianPacBarPlot;
+import com.poliana.web.AbstractBaseController;
 import org.apache.log4j.Logger;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -21,7 +23,8 @@ import java.util.List;
  * @date 1/27/14
  */
 @Controller
-public class PoliticianPacFinanceController {
+@RequestMapping("/politicians/")
+public class PoliticianPacFinanceController extends AbstractBaseController {
 
     private PoliticianPacFinanceService politicianPacFinanceService;
 
@@ -61,6 +64,19 @@ public class PoliticianPacFinanceController {
         return totals;
     }
 
+    @RequestMapping(value="/{bioguideId}/contributions/pacs", params = {"start", "end", "unit"}, method = RequestMethod.GET)
+    public @ResponseBody HashMap<Integer, List<PoliticianPacContributionsTotals>> getPacToPoliticianTotalsPerCongress(
+            @PathVariable(value = "bioguideId") String bioguideId,
+            @RequestParam(value = "start", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date start,
+            @RequestParam(value = "end", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date end,
+            @RequestParam(value = "unit", required = true) String unit) {
+
+        HashMap<Integer, List<PoliticianPacContributionsTotals>> pacTotals =
+                politicianPacFinanceService.getPacToPoliticianTotalsPerCongress(bioguideId, start.getTime()/1000, end.getTime()/1000);
+
+        return pacTotals;
+    }
+
     /**
      * Plot all PAC contribution totals for all time
      * @param bioguideId
@@ -90,7 +106,7 @@ public class PoliticianPacFinanceController {
      * @param bioguideId
      * @return
      */
-    @RequestMapping(value="/{bioguide_id}/contributions/pacs", params = {"plot"}, method = RequestMethod.GET)
+    @RequestMapping(value="/{bioguide_id}/contributions/pacs", params = {"plot", "start", "end"}, method = RequestMethod.GET)
     public void plotPacToPoliticianTotals (
             OutputStream stream,
             @PathVariable("bioguide_id") String bioguideId,

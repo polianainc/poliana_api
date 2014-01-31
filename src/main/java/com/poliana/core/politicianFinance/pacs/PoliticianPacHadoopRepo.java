@@ -179,40 +179,56 @@ public class PoliticianPacHadoopRepo {
 
         Integer[] cycles = timeService.getCongressionalCyclesByTimeRange(beginTimestamp, endTimestamp);
 
+        String cyclesList = "";
+
+        if (cycles.length > 0) {
+            int i = 0;
+            for (; i < cycles.length-1; i++)
+                cyclesList += cycles[i] + ",";
+            cyclesList += cycles[i];
+        }
+
         try {
             String query =
-                    "SELECT \n" +
-                    "      pac_id\n" +
-                    "    , cmte_nm AS pac_name\n" +
-                    "    , COUNT(amount) AS contribution_count\n" +
-                    "    , SUM(amount) AS contribution_sum\n" +
-                    "    , CASE\n" +
-                    "          WHEN PMOD(CAST(contributions.cycle AS INT), 2) > 0\n" +
-                    "              THEN CAST((CAST(contributions.cycle AS INT) - 1787) / 2 AS INT)\n" +
-                    "          ELSE CAST((CAST(contributions.cycle AS INT) - 1788) / 2 AS INT)\n" +
-                    "      END AS congress\n" +
-                    "FROM\n" +
-                    "    entities.pacs pacs\n" +
-                    "JOIN\n" +
-                    "    crp.pac_to_candidate_contributions contributions\n" +
-                    "ON\n" +
-                    "    pac_id = cmte_id\n" +
-                    "AND\n" +
-                    "    pacs.cycle = CASE\n" +
-                    "                     WHEN PMOD(CAST(contributions.cycle AS INT), 2) > 0\n" +
-                    "                         THEN CAST((CAST(contributions.cycle AS INT) - 1787) / 2 AS INT)\n" +
-                    "                     ELSE CAST((CAST(contributions.cycle AS INT) - 1788) / 2 AS INT)\n" +
-                    "                 END\n" +
-                    "\n" +
-                    "WHERE\n" +
-                    "    date_ts > 1075429263\n" +
-                    "AND\n" +
-                    "    date_ts < 1385769077\n" +
-                    "GROUP BY \n" +
-                    "      pac_id\n" +
-                    "    , pac_name\n" +
-                    "    , congress\n" +
-                    ";";
+                    "SELECT " +
+                    "       bioguide_id " +
+                    "     , first_name " +
+                    "     , last_name " +
+                    "     , party " +
+                    "     , religion " +
+                    "     , pac_id   " +
+                    "     , pac_name  " +
+                    "     , contribution_count " +
+                    "     , contribution_sum " +
+                    "     , congress " +
+                    "FROM  " +
+                    "     entities.legislators legislators " +
+                    "JOIN " +
+                    "     (SELECT    " +
+                    "            cid " +
+                    "         ,  pac_id   " +
+                    "         , cmte_nm AS pac_name   " +
+                    "         , COUNT(amount) AS contribution_count   " +
+                    "         , SUM(amount) AS contribution_sum   " +
+                    "         , congress " +
+                    "     FROM   " +
+                    "         entities.pacs pacs   " +
+                    "     JOIN   " +
+                    "         crp.pac_to_candidate_contributions contributions   " +
+                    "     ON   " +
+                    "         pac_id = cmte_id   " +
+                    "     AND   " +
+                    "         cycle = congress        " +
+                    "     WHERE   " +
+                    "          congress in (" + cyclesList + ") " +
+                    "     GROUP BY    " +
+                    "           cid " +
+                    "         , pac_id   " +
+                    "         , pac_name   " +
+                    "         , congress) pac_contributions " +
+                    "ON " +
+                    "     legislators.opensecrets_id = cid " +
+                    "WHERE bioguide_id = \'" + bioguideId + "\'";
 
             HashMap< Integer, List<PoliticianPacContributionsTotals>> contributionsList =
                     impalaTemplate.query(query, new PacContributionsPerCongressMapper());

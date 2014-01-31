@@ -24,6 +24,11 @@ public class PoliticianPacMongoRepo {
     private static final Logger logger = Logger.getLogger(PoliticianPacMongoRepo.class);
 
 
+    /**
+     * Save a list of PAC to Politician contribution totals
+     * @param contributionsList
+     * @return
+     */
     public Iterable<Key<PoliticianPacContributionsTotals>> savePacToPoliticianContributions(List<PoliticianPacContributionsTotals> contributionsList) {
 
         return mongoStore.save(contributionsList);

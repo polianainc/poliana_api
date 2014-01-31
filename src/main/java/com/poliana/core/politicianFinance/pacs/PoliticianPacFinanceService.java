@@ -24,7 +24,7 @@ public class PoliticianPacFinanceService {
 
     public PoliticianPacFinanceService() {
 
-        this.timeService = timeService;
+        this.timeService = new TimeService();
     }
 
     /**
@@ -104,10 +104,16 @@ public class PoliticianPacFinanceService {
             }
         }
 
-        //TODO: check for all needed cycles
         //A size greater than 0 means that MongoDB had the sums cached
-        if (totalsHashMap.size() > 0)
-            return totalsHashMap;
+        if (totalsHashMap.size() > 0) {
+            boolean totalsMapContainsAllCycles = true;
+
+            for (int i = 0; i < cycles.length; i++)
+                totalsMapContainsAllCycles = totalsHashMap.containsKey(cycles[i]) ? totalsMapContainsAllCycles : false;
+
+            if (totalsMapContainsAllCycles)
+                return totalsHashMap;
+        }
 
         //Fall back to Impala if MongoDB did not have the sums cached
         totalsHashMap = politicianPacHadoopRepo.getPacToPoliticianTotalsPerCongress(bioguideId, beginTimestamp, endTimestamp);

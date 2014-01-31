@@ -56,6 +56,8 @@ public class IndustryContributionServiceUnitTest {
         this.control.replay();
 
         this.industryContributionService.getIndustryContributionTotalsMap("K01", 113);
+
+        this.control.verify();
     }
 
     @Test
@@ -71,6 +73,8 @@ public class IndustryContributionServiceUnitTest {
         this.control.replay();
 
         this.industryContributionService.getIndustryCategoryContributionTotalsMap("K1000", 113);
+
+        this.control.verify();
     }
 
     @Test
@@ -86,6 +90,8 @@ public class IndustryContributionServiceUnitTest {
         this.control.replay();
 
         this.industryContributionService.getIndustryContributionTotalsMap("K01", "s", 113);
+
+        this.control.verify();
     }
 
     @Test
@@ -101,6 +107,8 @@ public class IndustryContributionServiceUnitTest {
         this.control.replay();
 
         this.industryContributionService.getIndustryCategoryContributionTotalsMap("K1000", "s", 113);
+
+        this.control.verify();
     }
 
     @Test
@@ -116,6 +124,8 @@ public class IndustryContributionServiceUnitTest {
         this.control.replay();
 
         this.industryContributionService.getIndustryContributionTotalsMap("K01", "s", 1230185819, 1290185819);
+
+        this.control.verify();
     }
 
     @Test
@@ -131,5 +141,7 @@ public class IndustryContributionServiceUnitTest {
         this.control.replay();
 
         this.industryContributionService.getIndustryCategoryContributionTotalsMap("K1000", "s", 1230185819, 1290185819);
+
+        this.control.verify();
     }
 }

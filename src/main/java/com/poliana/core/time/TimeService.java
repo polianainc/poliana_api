@@ -1,11 +1,14 @@
 package com.poliana.core.time;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 
 /**
  * This class contains functions for commonly needed date transformations in the Poliana API
@@ -95,10 +98,11 @@ public class TimeService {
 
     /**
      * Return the number of seconds in a year.
+     * Leap years could cause some problems with this method and methods that it depends on.
      * @return
      */
-    public static long oneYear() {
 
+    public long getOneYear() {
         return 31556900;
     }
 
@@ -107,10 +111,10 @@ public class TimeService {
      * @param timestamp
      * @return
      */
-    public static long termBeginning(long timestamp) {
+    public long termBeginning(long timestamp) {
 
         long thisTerm = nearestTermStart(timestamp);
-        return thisTerm-oneYear()*4;
+        return thisTerm - getOneYear()*4;
     }
 
     /**
@@ -118,7 +122,7 @@ public class TimeService {
      * @param timestamp
      * @return
      */
-    public static int timestampToCongress(long timestamp) {
+    public int getCongressByTimestamp(long timestamp) {
 
         Calendar cal = Calendar.getInstance();
 
@@ -126,6 +130,38 @@ public class TimeService {
         int year = cal.get(cal.YEAR);
 
         return (year-1787)/2;
+    }
+
+    /**
+     *
+     * @param beginTimestamp
+     * @param endTimestamp
+     * @return
+     */
+    public Integer[] getCongressionalCyclesByTimeRange(long beginTimestamp, long endTimestamp) {
+
+        HashSet<Integer> cycleSet = new HashSet<>();
+
+        Calendar begin = Calendar.getInstance();
+        begin.setTimeInMillis(beginTimestamp*1000);
+
+        int currentYear = begin.get(begin.YEAR);
+
+        Calendar end = Calendar.getInstance();
+        end.setTimeInMillis(endTimestamp*1000);
+
+        int endYear = end.get(end.YEAR);
+
+
+        while(currentYear <= endYear) {
+            int cycle = getYearToCongress(currentYear);
+            cycleSet.add(cycle);
+            currentYear += 1;
+        }
+
+        Object[] cycleObjects = cycleSet.toArray();
+        Integer[] cycles = Arrays.copyOf(cycleObjects, cycleObjects.length, Integer[].class);
+        return cycles;
     }
 
     /**

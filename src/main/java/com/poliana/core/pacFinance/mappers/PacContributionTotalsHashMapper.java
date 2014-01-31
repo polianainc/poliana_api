@@ -65,4 +65,5 @@ public class PacContributionTotalsHashMapper implements ResultSetExtractor<PacCo
 
         return totals;
     }
+
 }

@@ -166,7 +166,7 @@ public class PoliticianIndustryFinanceService {
      * @param bioguideId
      * @return
      */
-    public HashMap<Integer, List<IndustryPoliticianContributionTotals>> getIndustryTotalsAllTime(String bioguideId) {
+    public HashMap<Integer, List<IndustryPoliticianContributionTotals>> getIndustryToPoliticianTotalsPerCongress(String bioguideId) {
 
         //Query MongoDB for industry to politician objects
         Iterator<IndustryPoliticianContributionTotals> totalsIterator = politicianIndustryMongoRepo.getIndustryToPoliticianContributionsIterator(bioguideId);

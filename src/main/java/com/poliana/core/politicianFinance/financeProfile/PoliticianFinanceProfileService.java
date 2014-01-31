@@ -150,7 +150,7 @@ public class PoliticianFinanceProfileService {
      */
     private void setIndustryTotals(String bioguideId, HashMap<Integer, SessionTotals> termTotalsMap) {
 
-        HashMap<Integer, List<IndustryPoliticianContributionTotals>> totalsHashMap = politicianIndustryFinanceService.getIndustryTotalsAllTime(bioguideId);
+        HashMap<Integer, List<IndustryPoliticianContributionTotals>> totalsHashMap = politicianIndustryFinanceService.getIndustryToPoliticianTotalsPerCongress(bioguideId);
 
         for (Integer cycle: totalsHashMap.keySet()) {
             if (termTotalsMap.containsKey(cycle)) {

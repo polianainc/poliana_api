@@ -3,6 +3,8 @@ package com.poliana.core.time;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
+
 import static org.junit.Assert.*;
 
 /**
@@ -56,5 +58,17 @@ public class TimeServiceUnitTest {
     @Test
     public void testYearTimestamps() throws Exception {
 
+    }
+
+    @Test
+    public void testGetCongressionalCyclesByTimeRange__TwoCyclesOneYearDateRange() throws Exception {
+
+        long beginTimeStamp = 1264809077L;
+        long endTimeStamp  = 1296345077L;
+
+        Integer[] cycles = timeService.getCongressionalCyclesByTimeRange(beginTimeStamp, endTimeStamp);
+
+        assertTrue(Arrays.asList(cycles).contains(new Integer(111)));
+        assertTrue(Arrays.asList(cycles).contains(new Integer(112)));
     }
 }

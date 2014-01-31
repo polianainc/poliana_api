@@ -37,7 +37,7 @@ public class PacContributionService {
             return pacTotals;
 
         //If MongoDB doesn't have the sums cached, fall back to Impala
-        pacTotals = pacContributionHadoopRepo.getPacPoliticianContrTotals(bioguideId, congress);
+        pacTotals = pacContributionHadoopRepo.getPacPoliticianContributionTotals(bioguideId, congress);
 
         //If Impala had sums to return, save them
         if (pacTotals.size() > 0)

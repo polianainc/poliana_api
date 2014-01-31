@@ -65,6 +65,8 @@ public class IdeologyServiceUnitTest extends AbstractSponsorshipTest {
 
         LegislatorIdeology actual = this.ideologyService.getLegislatorIdeology("O000167", 110);
 
+        this.control.verify();
+
         assertEquals("O000167", actual.getBioguideId());
         assertEquals(110, actual.getCongress());
     }
@@ -88,7 +90,11 @@ public class IdeologyServiceUnitTest extends AbstractSponsorshipTest {
         expect(this.legislatorServiceMock.getCachedLegislatorByIdTimestamp(bioguideId, avg)).andReturn(legislator);
         expect(this.ideologyRepoMock.getIdeologyMatrix("s", 110)).andReturn(ideologyMatrix);
 
+        this.control.replay();
 
+        this.ideologyService.getLegislatorIdeology(bioguideId, 110);
+
+        this.control.verify();
     }
 
     private IdeologyMatrix getIdeologyMatrixMockData(String chamber, int congress) {

@@ -51,7 +51,7 @@ public class ProcessVoteData {
      *
      * Process Voter information:
      */
-    @Scheduled(cron = "0 0 12 ? * ?")
+//    @Scheduled(cron = "0 0 12 ? * ?")
     public void voteJob() {
 
         setLastCron(new Date());

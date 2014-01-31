@@ -54,7 +54,7 @@ public class BillVotesIndustryContributionsController {
      * @param year
      * @return
      */
-    @RequestMapping(value = "{vote_id}", params = {"industry_id", "start", "end"}, method = RequestMethod.GET)
+    @RequestMapping(value = "{vote_id}/contributions", params = {"industry_id", "start", "end"}, method = RequestMethod.GET)
     public @ResponseBody VoteVsIndustryContributions getVoteVsIndustryContributions(
             @PathVariable("vote_id") String voteId,
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
@@ -88,7 +88,7 @@ public class BillVotesIndustryContributionsController {
      * @param year
      * @return
      */
-    @RequestMapping(value = "{vote_id}", params = {"industry_id", "start", "end", "plot"}, method = RequestMethod.GET)
+    @RequestMapping(value = "{vote_id}/contributions", params = {"industry_id", "start", "end", "plot"}, method = RequestMethod.GET)
     public @ResponseBody void getVoteVsIndustryContributions(
             OutputStream stream,
             @PathVariable("vote_id") String voteId,
@@ -132,7 +132,7 @@ public class BillVotesIndustryContributionsController {
      * @param year
      * @return
      */
-    @RequestMapping(value = "{vote_id}/sums", params = {"industry_id", "start", "end"}, method = RequestMethod.GET)
+    @RequestMapping(value = "{vote_id}/contributions/sums", params = {"industry_id", "start", "end"}, method = RequestMethod.GET)
     public @ResponseBody
     VoteVsIndustryContributionTotals getVoteVsIndustryContributionTotals (
             @PathVariable("vote_id") String voteId,
@@ -167,7 +167,7 @@ public class BillVotesIndustryContributionsController {
      * @param year
      * @return
      */
-    @RequestMapping(value = "{vote_id}/sums", params = {"industry_id", "start", "end", "plot"}, method = RequestMethod.GET)
+    @RequestMapping(value = "{vote_id}/contributions/sums", params = {"industry_id", "start", "end", "plot"}, method = RequestMethod.GET)
     public void plotVoteVsIndustryContributionTotals (
             OutputStream stream,
             @PathVariable("vote_id") String voteId,
@@ -211,7 +211,7 @@ public class BillVotesIndustryContributionsController {
      * @param voteId
      * @return
      */
-    @RequestMapping(value = "{vote_id}", params = {"category_id", "start", "end"}, method = RequestMethod.GET)
+    @RequestMapping(value = "{vote_id}/contributions", params = {"category_id", "start", "end"}, method = RequestMethod.GET)
     public @ResponseBody VoteVsIndustryContributions getVoteVsIndustryCategoryContributions(
             @PathVariable("vote_id") String voteId,
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
@@ -243,7 +243,7 @@ public class BillVotesIndustryContributionsController {
      * @param voteId
      * @return
      */
-    @RequestMapping(value = "{vote_id}", params = {"category_id", "start", "end", "plot"}, method = RequestMethod.GET)
+    @RequestMapping(value = "{vote_id}/contributions", params = {"category_id", "start", "end", "plot"}, method = RequestMethod.GET)
     public @ResponseBody void getVoteVsIndustryCategoryContributions(
             OutputStream stream,
             @PathVariable("vote_id") String voteId,
@@ -285,7 +285,7 @@ public class BillVotesIndustryContributionsController {
      * @param voteId
      * @return
      */
-    @RequestMapping(value = "{vote_id}/sums", params = {"category_id", "start", "end"}, method = RequestMethod.GET)
+    @RequestMapping(value = "{vote_id}/contributions/sums", params = {"category_id", "start", "end"}, method = RequestMethod.GET)
     public @ResponseBody
     VoteVsIndustryContributionTotals getVoteVsIndustryCategoryContributionTotals (
             @PathVariable("vote_id") String voteId,
@@ -318,7 +318,7 @@ public class BillVotesIndustryContributionsController {
      * @param voteId
      * @return
      */
-    @RequestMapping(value = "{vote_id}/sums", params = {"category_id", "start", "end", "plot"}, method = RequestMethod.GET)
+    @RequestMapping(value = "{vote_id}/contributions/sums", params = {"category_id", "start", "end", "plot"}, method = RequestMethod.GET)
     public void plotVoteVsIndustryCategoryContributionTotals (
             OutputStream stream,
             @PathVariable("vote_id") String voteId,

@@ -34,7 +34,7 @@ public class PacContributionHadoopRepo {
      * @param congress
      * @return
      */
-    public List<PacPoliticianContributionTotals> getPacPoliticianContrTotals(String bioguideId, int congress) {
+    public List<PacPoliticianContributionTotals> getPacPoliticianContributionTotals(String bioguideId, int congress) {
 
         try {
             String query =

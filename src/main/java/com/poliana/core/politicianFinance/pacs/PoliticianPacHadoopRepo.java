@@ -168,6 +168,67 @@ public class PoliticianPacHadoopRepo {
     }
 
     /**
+     * Get a PAC to Politician contribution sums for all time.
+     * @param bioguideId
+     * @return
+     */
+    public HashMap<Integer, List<PoliticianPacContributionsTotals>> getPacToPoliticianTotalsPerCongress(String bioguideId) {
+
+        try {
+            String query =
+                    "SELECT " +
+                            "       bioguide_id " +
+                            "     , first_name " +
+                            "     , last_name " +
+                            "     , party " +
+                            "     , religion " +
+                            "     , pac_id   " +
+                            "     , pac_name  " +
+                            "     , contribution_count " +
+                            "     , contribution_sum " +
+                            "     , congress " +
+                            "FROM  " +
+                            "     entities.legislators legislators " +
+                            "JOIN " +
+                            "     (SELECT    " +
+                            "            cid " +
+                            "         ,  pac_id   " +
+                            "         , cmte_nm AS pac_name   " +
+                            "         , COUNT(amount) AS contribution_count   " +
+                            "         , SUM(amount) AS contribution_sum   " +
+                            "         , congress " +
+                            "     FROM   " +
+                            "         entities.pacs pacs   " +
+                            "     JOIN   " +
+                            "         crp.pac_to_candidate_contributions contributions   " +
+                            "     ON   " +
+                            "         pac_id = cmte_id   " +
+                            "     AND   " +
+                            "         cycle = congress        " +
+                            "     GROUP BY    " +
+                            "           cid " +
+                            "         , pac_id   " +
+                            "         , pac_name   " +
+                            "         , congress) pac_contributions " +
+                            "ON " +
+                            "     legislators.opensecrets_id = cid " +
+                            "WHERE bioguide_id = \'" + bioguideId + "\'";
+
+            HashMap< Integer, List<PoliticianPacContributionsTotals>> contributionsList =
+                    impalaTemplate.query(query, new PacContributionsPerCongressMapper());
+
+            logger.info("PAC contribution sums to " + bioguideId + " for all time returned from Impala");
+
+            return contributionsList;
+        }
+        catch (Exception e) {
+            logger.error(e);
+        }
+
+        return null;
+    }
+
+    /**
      * Get a PAC to Politician contribution sums for a given timerange.
      * Note: The committee name filed during the congressional cycle of the beginTimestamp will be used
      * @param bioguideId

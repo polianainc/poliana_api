@@ -27,12 +27,12 @@ public class PoliticianIndustryHadoopRepoTest {
     @Test
     public void testGetIndustryToPoliticianContributions_ByCongress() throws Exception {
 
-        List<IndustryPoliticianContributionTotals> totals =
+        List<PoliticianIndustryContributionTotals> totals =
                 politicianIndustryHadoopRepo.getIndustryToPoliticianContributions("O000167", 110);
 
         assertNotNull(totals);
 
-        IndustryPoliticianContributionTotals total = totals.get(0);
+        PoliticianIndustryContributionTotals total = totals.get(0);
 
         assertEquals("O000167", total.getBioguideId());
         assertEquals(110, total.getCongress().intValue());
@@ -58,12 +58,12 @@ public class PoliticianIndustryHadoopRepoTest {
     @Test
     public void testGetIndustryCategoryToPoliticianContributions_ByCongress() throws Exception {
 
-        List<IndustryPoliticianContributionTotals> totals =
+        List<PoliticianIndustryContributionTotals> totals =
                 politicianIndustryHadoopRepo.getIndustryCategoryToPoliticianContributions("O000167", 110);
 
         assertNotNull(totals);
 
-        IndustryPoliticianContributionTotals total = totals.get(0);
+        PoliticianIndustryContributionTotals total = totals.get(0);
 
         assertEquals("O000167", total.getBioguideId());
         assertEquals(110, total.getCongress().intValue());
@@ -90,12 +90,12 @@ public class PoliticianIndustryHadoopRepoTest {
     @Test
     public void testGetIndustryToPoliticianContributions_ByTimeRange() throws Exception {
 
-        List<IndustryPoliticianContributionTotals> totals =
+        List<PoliticianIndustryContributionTotals> totals =
                 politicianIndustryHadoopRepo.getIndustryToPoliticianContributions("O000167", 1189796049, 1289796049);
 
         assertNotNull(totals);
 
-        IndustryPoliticianContributionTotals total = totals.get(0);
+        PoliticianIndustryContributionTotals total = totals.get(0);
 
         assertEquals("O000167", total.getBioguideId());
         assertEquals(1189796049, total.getBeginTimestamp().intValue());
@@ -122,12 +122,12 @@ public class PoliticianIndustryHadoopRepoTest {
     @Test
     public void testGetIndustryCategoryToPoliticianContributions_ByTimeRange() throws Exception {
 
-        List<IndustryPoliticianContributionTotals> totals =
+        List<PoliticianIndustryContributionTotals> totals =
                 politicianIndustryHadoopRepo.getIndustryCategoryToPoliticianContributions("O000167", 1189796049, 1289796049);
 
         assertNotNull(totals);
 
-        IndustryPoliticianContributionTotals total = totals.get(0);
+        PoliticianIndustryContributionTotals total = totals.get(0);
 
         assertEquals("O000167", total.getBioguideId());
         assertEquals(1189796049, total.getBeginTimestamp().intValue());
@@ -154,12 +154,12 @@ public class PoliticianIndustryHadoopRepoTest {
     @Test
     public void testGetIndustryToPoliticianContributions() throws Exception {
 
-        List<IndustryPoliticianContributionTotals> totals =
+        List<PoliticianIndustryContributionTotals> totals =
                 politicianIndustryHadoopRepo.getIndustryToPoliticianContributions("O000167");
 
         assertNotNull(totals);
 
-        IndustryPoliticianContributionTotals total = totals.get(0);
+        PoliticianIndustryContributionTotals total = totals.get(0);
 
         assertEquals("O000167", total.getBioguideId());
 
@@ -184,12 +184,12 @@ public class PoliticianIndustryHadoopRepoTest {
     @Test
     public void testGetIndustryCategoryToPoliticianContributions() throws Exception {
 
-        List<IndustryPoliticianContributionTotals> totals =
+        List<PoliticianIndustryContributionTotals> totals =
                 politicianIndustryHadoopRepo.getIndustryCategoryToPoliticianContributions("O000167");
 
         assertNotNull(totals);
 
-        IndustryPoliticianContributionTotals total = totals.get(0);
+        PoliticianIndustryContributionTotals total = totals.get(0);
 
         assertEquals("O000167", total.getBioguideId());
 

@@ -23,6 +23,12 @@ public class PacContributionTotalsHashMapper implements ResultSetExtractor<PacCo
         this.chamber = chamber;
     }
 
+    public PacContributionTotalsHashMapper(long beginTimestamp, long endTimestamp) {
+
+        this.beginTimestamp = beginTimestamp;
+        this.endTimestamp = endTimestamp;
+    }
+
     public PacContributionTotalsHashMapper(String chamber, long beginTimestamp, long endTimestamp) {
 
         this.chamber = chamber;

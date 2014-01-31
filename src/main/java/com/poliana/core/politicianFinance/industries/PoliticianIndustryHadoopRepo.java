@@ -25,7 +25,7 @@ public class PoliticianIndustryHadoopRepo {
      * @param bioguideId
      * @return
      */
-    public List<IndustryPoliticianContributionTotals> getIndustryToPoliticianContributions(String bioguideId, int congress) {
+    public List<PoliticianIndustryContributionTotals> getIndustryToPoliticianContributions(String bioguideId, int congress) {
 
         try {
             String query =
@@ -101,8 +101,8 @@ public class PoliticianIndustryHadoopRepo {
                     "ON " +
                     "     industry_id = cat_order";
 
-            List<IndustryPoliticianContributionTotals> contributionsList =
-                    impalaTemplate.query(query, new IndustryPoliticianContributionTotalsMapper());
+            List<PoliticianIndustryContributionTotals> contributionsList =
+                    impalaTemplate.query(query, new PoliticianIndustryContributionTotalsMapper());
 
             logger.info("Industry contribution sums to " + bioguideId + " for congress " + congress + "returned from Impala");
 
@@ -120,7 +120,7 @@ public class PoliticianIndustryHadoopRepo {
      * @param bioguideId
      * @return
      */
-    public List<IndustryPoliticianContributionTotals> getIndustryCategoryToPoliticianContributions(String bioguideId, int congress) {
+    public List<PoliticianIndustryContributionTotals> getIndustryCategoryToPoliticianContributions(String bioguideId, int congress) {
 
         try {
             String query =
@@ -181,8 +181,8 @@ public class PoliticianIndustryHadoopRepo {
                     "   real_code = cat_code " +
                     "WHERE congress = " + congress;
 
-            List<IndustryPoliticianContributionTotals> contributionsList =
-                    impalaTemplate.query(query, new IndustryPoliticianContributionTotalsMapper());
+            List<PoliticianIndustryContributionTotals> contributionsList =
+                    impalaTemplate.query(query, new PoliticianIndustryContributionTotalsMapper());
 
             logger.info("Industry category contribution sums to " + bioguideId + " for all time returned from Impala");
 
@@ -200,7 +200,7 @@ public class PoliticianIndustryHadoopRepo {
      * @param bioguideId
      * @return
      */
-    public List<IndustryPoliticianContributionTotals> getIndustryToPoliticianContributions(
+    public List<PoliticianIndustryContributionTotals> getIndustryToPoliticianContributions(
             String bioguideId, long beginTimestamp, long endTimestamp) {
 
         try {
@@ -274,8 +274,8 @@ public class PoliticianIndustryHadoopRepo {
                     "ON " +
                     "     industry_id = cat_order";
 
-            List<IndustryPoliticianContributionTotals> contributionsList =
-                    impalaTemplate.query(query, new IndustryPoliticianContributionTotalsMapper(beginTimestamp, endTimestamp));
+            List<PoliticianIndustryContributionTotals> contributionsList =
+                    impalaTemplate.query(query, new PoliticianIndustryContributionTotalsMapper(beginTimestamp, endTimestamp));
 
             logger.info("Industry contribution sums to " + bioguideId + " from " + beginTimestamp + " to " + endTimestamp + " returned from Impala");
 
@@ -293,7 +293,7 @@ public class PoliticianIndustryHadoopRepo {
      * @param bioguideId
      * @return
      */
-    public List<IndustryPoliticianContributionTotals> getIndustryCategoryToPoliticianContributions(
+    public List<PoliticianIndustryContributionTotals> getIndustryCategoryToPoliticianContributions(
             String bioguideId, long beginTimestamp, long endTimestamp) {
 
         try {
@@ -356,8 +356,8 @@ public class PoliticianIndustryHadoopRepo {
                     "ON  " +
                     "   real_code = cat_code";
 
-            List<IndustryPoliticianContributionTotals> contributionsList =
-                    impalaTemplate.query(query, new IndustryPoliticianContributionTotalsMapper(beginTimestamp, endTimestamp));
+            List<PoliticianIndustryContributionTotals> contributionsList =
+                    impalaTemplate.query(query, new PoliticianIndustryContributionTotalsMapper(beginTimestamp, endTimestamp));
 
             logger.info("Industry category contribution sums to " + bioguideId + " from " + beginTimestamp + " to " + endTimestamp + " returned from Impala");
 
@@ -375,7 +375,7 @@ public class PoliticianIndustryHadoopRepo {
      * @param bioguideId
      * @return
      */
-    public List<IndustryPoliticianContributionTotals> getIndustryToPoliticianContributions(String bioguideId) {
+    public List<PoliticianIndustryContributionTotals> getIndustryToPoliticianContributions(String bioguideId) {
 
         try {
             String query =
@@ -444,7 +444,7 @@ public class PoliticianIndustryHadoopRepo {
                     "ON" +
                     "     industry_id = cat_order";
 
-            return impalaTemplate.query(query, new IndustryPoliticianContributionTotalsMapper());
+            return impalaTemplate.query(query, new PoliticianIndustryContributionTotalsMapper());
         }
         catch (Exception e) {
             logger.error(e);
@@ -458,7 +458,7 @@ public class PoliticianIndustryHadoopRepo {
      * @param bioguideId
      * @return
      */
-    public List<IndustryPoliticianContributionTotals> getIndustryCategoryToPoliticianContributions(String bioguideId) {
+    public List<PoliticianIndustryContributionTotals> getIndustryCategoryToPoliticianContributions(String bioguideId) {
 
         try {
             String query =
@@ -514,7 +514,7 @@ public class PoliticianIndustryHadoopRepo {
                     "ON  " +
                     "   real_code = cat_code";
 
-            return impalaTemplate.query(query, new IndustryPoliticianContributionTotalsMapper());
+            return impalaTemplate.query(query, new PoliticianIndustryContributionTotalsMapper());
         }
         catch (Exception e) {
             logger.error(e);
@@ -524,11 +524,66 @@ public class PoliticianIndustryHadoopRepo {
     }
 
     /**
-     * Get a map of Cycle->Industry to politician contributions from Impala.
+     * Get a map of Cycle->Industry-Category to politician contributions from Impala.
      * @param bioguideId
      * @return
      */
-    public HashMap<Integer, List<IndustryPoliticianContributionTotals>> getAllIndustryContributionsPerCongress(String bioguideId) {
+    public HashMap<Integer, List<PoliticianIndustryContributionTotals>> getIndustryToPoliticianTotalsPerCongress(String bioguideId) {
+
+        try {
+            String query =
+                    "SELECT " +
+                            "     bioguide_id" +
+                            "   , real_code" +
+                            "   , industry" +
+                            "   , sector" +
+                            "   , sector_long" +
+                            "   , congress" +
+                            "   , _c3 " +
+                            "FROM " +
+                            "   (SELECT " +
+                            "         bioguide_id" +
+                            "       , real_code" +
+                            "       , congress" +
+                            "       , SUM(amount) " +
+                            "   FROM " +
+                            "       (SELECT " +
+                            "             bioguide_id" +
+                            "           , real_code" +
+                            "           , congress" +
+                            "           , amount " +
+                            "       FROM " +
+                            "           entities.legislators m " +
+                            "       JOIN " +
+                            "           crp.individual_contributions c " +
+                            "       ON " +
+                            "           opensecrets_id = c.recip_id " +
+                            "       WHERE " +
+                            "           bioguide_id = \'" + bioguideId + "\') candidate_receipts " +
+                            "       GROUP BY " +
+                            "             bioguide_id" +
+                            "           , real_code" +
+                            "           , congress) sums " +
+                            "       JOIN " +
+                            "           entities.industry_codes l " +
+                            "       ON " +
+                            "           real_code = cat_code";
+
+            return impalaTemplate.query(query, new IndustryContributionsPerCogressMapper());
+        }
+        catch (Exception e) {
+            logger.error(e);
+        }
+
+        return null;
+    }
+
+    /**
+     * Get a map of Cycle->Industry-Category to politician contributions from Impala.
+     * @param bioguideId
+     * @return
+     */
+    public HashMap<Integer, List<PoliticianIndustryContributionTotals>> getIndustryCategoryToPoliticianTotalsPerCongress(String bioguideId) {
 
         try {
             String query =
@@ -568,6 +623,116 @@ public class PoliticianIndustryHadoopRepo {
                     "           entities.industry_codes l " +
                     "       ON " +
                     "           real_code = cat_code";
+
+            return impalaTemplate.query(query, new IndustryContributionsPerCogressMapper());
+        }
+        catch (Exception e) {
+            logger.error(e);
+        }
+
+        return null;
+    }
+
+    /**
+     * Get a map of Cycle->Industry-Category to politician contributions from Impala.
+     * @param bioguideId
+     * @return
+     */
+    public HashMap<Integer, List<PoliticianIndustryContributionTotals>> getIndustryToPoliticianTotalsPerCongress(String bioguideId, long beginTimestamp, long endTimestamp) {
+
+        try {
+            String query =
+                    "SELECT " +
+                            "     bioguide_id" +
+                            "   , real_code" +
+                            "   , industry" +
+                            "   , sector" +
+                            "   , sector_long" +
+                            "   , congress" +
+                            "   , _c3 " +
+                            "FROM " +
+                            "   (SELECT " +
+                            "         bioguide_id" +
+                            "       , real_code" +
+                            "       , congress" +
+                            "       , SUM(amount) " +
+                            "   FROM " +
+                            "       (SELECT " +
+                            "             bioguide_id" +
+                            "           , real_code" +
+                            "           , congress" +
+                            "           , amount " +
+                            "       FROM " +
+                            "           entities.legislators m " +
+                            "       JOIN " +
+                            "           crp.individual_contributions c " +
+                            "       ON " +
+                            "           opensecrets_id = c.recip_id " +
+                            "       WHERE " +
+                            "           bioguide_id = \'" + bioguideId + "\') candidate_receipts " +
+                            "       GROUP BY " +
+                            "             bioguide_id" +
+                            "           , real_code" +
+                            "           , congress) sums " +
+                            "       JOIN " +
+                            "           entities.industry_codes l " +
+                            "       ON " +
+                            "           real_code = cat_code";
+
+            return impalaTemplate.query(query, new IndustryContributionsPerCogressMapper());
+        }
+        catch (Exception e) {
+            logger.error(e);
+        }
+
+        return null;
+    }
+
+    /**
+     * Get a map of Cycle->Industry-Category to politician contributions from Impala.
+     * @param bioguideId
+     * @return
+     */
+    public HashMap<Integer, List<PoliticianIndustryContributionTotals>> getIndustryCategoryToPoliticianTotalsPerCongress(String bioguideId, long beginTimestamp, long endTimestamp) {
+
+        try {
+            String query =
+                    "SELECT " +
+                            "     bioguide_id" +
+                            "   , real_code" +
+                            "   , industry" +
+                            "   , sector" +
+                            "   , sector_long" +
+                            "   , congress" +
+                            "   , _c3 " +
+                            "FROM " +
+                            "   (SELECT " +
+                            "         bioguide_id" +
+                            "       , real_code" +
+                            "       , congress" +
+                            "       , SUM(amount) " +
+                            "   FROM " +
+                            "       (SELECT " +
+                            "             bioguide_id" +
+                            "           , real_code" +
+                            "           , congress" +
+                            "           , amount " +
+                            "       FROM " +
+                            "           entities.legislators m " +
+                            "       JOIN " +
+                            "           crp.individual_contributions c " +
+                            "       ON " +
+                            "           opensecrets_id = c.recip_id " +
+                            "       WHERE " +
+                            "           bioguide_id = \'" + bioguideId + "\') candidate_receipts " +
+                            "       GROUP BY " +
+                            "             bioguide_id" +
+                            "           , real_code" +
+                            "           , congress) sums " +
+                            "       JOIN " +
+                            "           entities.industry_codes l " +
+                            "       ON " +
+                            "           real_code = cat_code";
 
             return impalaTemplate.query(query, new IndustryContributionsPerCogressMapper());
         }

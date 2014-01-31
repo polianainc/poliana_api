@@ -1,8 +1,9 @@
 package com.poliana.core.industryFinance;
 
 import com.poliana.core.industryFinance.entities.IndustryContributionTotalsMap;
+import com.poliana.core.industryFinance.repositories.IndustryContributionHadoopRepo;
+import com.poliana.core.industryFinance.repositories.IndustryContributionMongoRepo;
 import com.poliana.core.industryFinance.services.IndustryContributionService;
-import com.poliana.core.legislators.LegislatorService;
 import org.bson.types.ObjectId;
 import org.easymock.IMocksControl;
 import org.junit.Before;
@@ -20,7 +21,6 @@ public class IndustryContributionServiceUnitTest {
 
     private IndustryContributionService industryContributionService;
 
-    private LegislatorService legislatorServiceMock;
     private IndustryContributionMongoRepo industryContributionMongoRepoMock;
     private IndustryContributionHadoopRepo industryContributionHadoopRepoMock;
 
@@ -32,13 +32,11 @@ public class IndustryContributionServiceUnitTest {
 
         this.control = createStrictControl();
 
-        this.legislatorServiceMock = this.control.createMock(LegislatorService.class);
         this.industryContributionMongoRepoMock = this.control.createMock(IndustryContributionMongoRepo.class);
         this.industryContributionHadoopRepoMock = this.control.createMock(IndustryContributionHadoopRepo.class);
 
         this.industryContributionService = new IndustryContributionService();
 
-        this.industryContributionService.setLegislatorService(this.legislatorServiceMock);
         this.industryContributionService.setIndustryContributionMongoRepo(this.industryContributionMongoRepoMock);
         this.industryContributionService.setIndustryContributionHadoopRepo(this.industryContributionHadoopRepoMock);
     }

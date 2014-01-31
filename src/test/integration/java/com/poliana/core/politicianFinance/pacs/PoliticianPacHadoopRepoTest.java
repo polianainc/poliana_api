@@ -51,7 +51,34 @@ public class PoliticianPacHadoopRepoTest {
     }
 
     @Test
-    public void testGetPacToPoliticianTotalsPerCongress() throws Exception {
+    public void testGetPacToPoliticianTotalsPerCongress_AllTime() throws Exception {
+
+        HashMap<Integer, List<PoliticianPacContributionsTotals>> totalsMap =
+                politicianPacHadoopRepo.getPacToPoliticianTotalsPerCongress("O000167");
+
+        assertNotNull(totalsMap);
+
+        assertNotNull(totalsMap.get(108));
+        assertNotNull(totalsMap.get(109));
+        List<PoliticianPacContributionsTotals> contributions110 = totalsMap.get(110);
+
+        PoliticianPacContributionsTotals contributionFrom110 = contributions110.get(0);
+
+        assertEquals("O000167", contributionFrom110.getBioguideId());
+        assertEquals("Barack", contributionFrom110.getFirstName());
+        assertEquals("Obama", contributionFrom110.getLastName());
+
+        assertEquals("Democrat", contributionFrom110.getParty());
+        assertEquals("United Church of Christ", contributionFrom110.getReligion());
+
+        assertEquals(new Integer(110), contributionFrom110.getCongress());
+
+        assertNotNull(contributionFrom110.getContributionCount());
+        assertNotNull(contributionFrom110.getContributionSum());
+    }
+
+    @Test
+    public void testGetPacToPoliticianTotalsPerCongress_ByTimeRange() throws Exception {
 
         HashMap<Integer, List<PoliticianPacContributionsTotals>> totalsMap =
                 politicianPacHadoopRepo.getPacToPoliticianTotalsPerCongress("O000167", 1075429263, 1201727289);

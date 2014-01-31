@@ -1,6 +1,5 @@
 package com.poliana.core.politicianFinance.pacs;
 
-import org.apache.commons.collections.iterators.ArrayIterator;
 import org.apache.log4j.Logger;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Key;
@@ -39,11 +38,6 @@ public class PoliticianPacMongoRepo {
         return null;
     }
 
-    public Iterator<PoliticianPacContributionsTotals> getPacToPoliticianContributionsIterator(String bioguideId) {
-
-        return null;
-    }
-
     /**
      * Get an iterator of a list of politician to pac contributions for a given time range
      * @param bioguideId
@@ -63,11 +57,6 @@ public class PoliticianPacMongoRepo {
     }
 
     public List<PoliticianPacContributionsTotals> getPacToPoliticianContributions(String bioguideId, long beginTimestamp, long endTimestamp) {
-
-        return null;
-    }
-
-    public List<PoliticianPacContributionsTotals> getPacToPoliticianTotalsPerCongress(String bioguideId, long beginTimestamp, long endTimestamp) {
 
         return null;
     }

@@ -1,18 +1,11 @@
 package com.poliana.core.industryFinance.services;
 
-import com.poliana.core.ideology.IdeologyMatrix;
-import com.poliana.core.ideology.LegislatorIdeology;
-import com.poliana.core.industryFinance.IndustryContributionHadoopRepo;
-import com.poliana.core.industryFinance.IndustryContributionMongoRepo;
+import com.poliana.core.industryFinance.repositories.IndustryContributionHadoopRepo;
+import com.poliana.core.industryFinance.repositories.IndustryContributionMongoRepo;
 import com.poliana.core.industryFinance.entities.*;
-import com.poliana.core.time.TimeService;
-import com.poliana.core.industries.IndustryRepo;
-import com.poliana.core.legislators.LegislatorService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.*;
 
 /**
  * @author David Gilmore
@@ -21,11 +14,9 @@ import java.util.*;
 @Service
 public class IndustryContributionService {
 
-    private IndustryRepo industryRepo;
-    private LegislatorService legislatorService;
     private IndustryContributionMongoRepo industryContributionMongoRepo;
     private IndustryContributionHadoopRepo industryContributionHadoopRepo;
-    private TimeService timeService;
+
 
     private static final Logger logger = Logger.getLogger(IndustryContributionService.class);
 
@@ -190,16 +181,6 @@ public class IndustryContributionService {
     }
 
     @Autowired
-    public void setIndustryRepo(IndustryRepo industryRepo) {
-        this.industryRepo = industryRepo;
-    }
-
-    @Autowired
-    public void setLegislatorService(LegislatorService legislatorService) {
-        this.legislatorService = legislatorService;
-    }
-
-    @Autowired
     public void setIndustryContributionMongoRepo(IndustryContributionMongoRepo industryContributionMongoRepo) {
         this.industryContributionMongoRepo = industryContributionMongoRepo;
     }
@@ -207,10 +188,5 @@ public class IndustryContributionService {
     @Autowired
     public void setIndustryContributionHadoopRepo(IndustryContributionHadoopRepo industryContributionHadoopRepo) {
         this.industryContributionHadoopRepo = industryContributionHadoopRepo;
-    }
-
-    @Autowired
-    public void setTimeService(TimeService timeService) {
-        this.timeService = timeService;
     }
 }

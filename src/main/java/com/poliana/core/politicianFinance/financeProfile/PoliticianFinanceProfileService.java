@@ -2,14 +2,14 @@ package com.poliana.core.politicianFinance.financeProfile;
 
 import com.poliana.core.ideology.IdeologyService;
 import com.poliana.core.ideology.LegislatorIdeology;
-import com.poliana.core.industryFinance.services.IndustryContributionService;
 import com.poliana.core.legislators.Legislator;
 import com.poliana.core.legislators.LegislatorService;
-import com.poliana.core.pacFinance.PacContributionService;
 import com.poliana.core.pacFinance.entities.PacPoliticianContributionTotals;
-import com.poliana.core.politicianFinance.industries.IndustryPoliticianContributionTotals;
+import com.poliana.core.politicianFinance.industries.PoliticianIndustryContributionTotals;
 import com.poliana.core.politicianFinance.industries.PoliticianIndustryFinanceService;
 import com.poliana.core.politicianFinance.industries.PoliticianIndustryMongoRepo;
+import com.poliana.core.politicianFinance.pacs.PoliticianPacContributionsTotals;
+import com.poliana.core.politicianFinance.pacs.PoliticianPacFinanceService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,11 +26,10 @@ import java.util.*;
 @Service
 public class PoliticianFinanceProfileService {
 
-    private PacContributionService pacContributionService;
-    private IndustryContributionService industryContributionService;
     private IdeologyService ideologyService;
     private LegislatorService legislatorService;
     private PoliticianIndustryFinanceService politicianIndustryFinanceService;
+    private PoliticianPacFinanceService politicianPacFinanceService;
     private PoliticianIndustryMongoRepo politicianIndustryMongoRepo;
 
     private static final Logger logger = Logger.getLogger(PoliticianFinanceProfileService.class);
@@ -121,7 +120,7 @@ public class PoliticianFinanceProfileService {
      */
     private void setPacTotals(String bioguideId, HashMap<Integer, SessionTotals> termTotalsMap) {
 
-        HashMap<Integer, List<PacPoliticianContributionTotals>> totalsHashMap = pacContributionService.getPacTotalsAllTime(bioguideId);
+        HashMap<Integer, List<PoliticianPacContributionsTotals>> totalsHashMap = politicianPacFinanceService.getPacToPoliticianTotalsPerCongress(bioguideId);
 
         //Get an iterator for the values in the hash map
         Iterator it = totalsHashMap.entrySet().iterator();
@@ -150,7 +149,7 @@ public class PoliticianFinanceProfileService {
      */
     private void setIndustryTotals(String bioguideId, HashMap<Integer, SessionTotals> termTotalsMap) {
 
-        HashMap<Integer, List<IndustryPoliticianContributionTotals>> totalsHashMap = politicianIndustryFinanceService.getIndustryToPoliticianTotalsPerCongress(bioguideId);
+        HashMap<Integer, List<PoliticianIndustryContributionTotals>> totalsHashMap = politicianIndustryFinanceService.getIndustryToPoliticianTotalsPerCongress(bioguideId);
 
         for (Integer cycle: totalsHashMap.keySet()) {
             if (termTotalsMap.containsKey(cycle)) {
@@ -193,16 +192,6 @@ public class PoliticianFinanceProfileService {
     }
 
     @Autowired
-    public void setPacContributionService(PacContributionService pacContributionService) {
-        this.pacContributionService = pacContributionService;
-    }
-
-    @Autowired
-    public void setIndustryContributionService(IndustryContributionService industryContributionService) {
-        this.industryContributionService = industryContributionService;
-    }
-
-    @Autowired
     public void setIdeologyService(IdeologyService ideologyService) {
         this.ideologyService = ideologyService;
     }
@@ -215,6 +204,11 @@ public class PoliticianFinanceProfileService {
     @Autowired
     public void setPoliticianIndustryFinanceService(PoliticianIndustryFinanceService politicianIndustryFinanceService) {
         this.politicianIndustryFinanceService = politicianIndustryFinanceService;
+    }
+
+    @Autowired
+    public void setPoliticianPacFinanceService(PoliticianPacFinanceService politicianPacFinanceService) {
+        this.politicianPacFinanceService = politicianPacFinanceService;
     }
 
     @Autowired

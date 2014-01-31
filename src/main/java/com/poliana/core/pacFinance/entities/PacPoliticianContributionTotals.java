@@ -9,7 +9,7 @@ import com.google.gson.annotations.Expose;
  * @author David Gilmore
  * @date 12/19/13
  */
-@Entity("pac_to_politician_contribution_sums")
+@Entity("pac_contribution_totals")
 public class PacPoliticianContributionTotals {
 
     @Id

@@ -1,9 +1,9 @@
-package com.poliana.core.industryFinance;
+package com.poliana.core.industryFinance.repositories;
 
 import com.poliana.core.industryFinance.entities.IndustryContributionTotalsMap;
 import com.poliana.core.industryFinance.mapppers.IndustryContributionTotalsHashMapper;
-import com.poliana.core.politicianFinance.industries.IndustryPoliticianContributionTotals;
-import com.poliana.core.politicianFinance.industries.IndustryPoliticianContributionTotalsMapper;
+import com.poliana.core.politicianFinance.industries.PoliticianIndustryContributionsTotals;
+import com.poliana.core.politicianFinance.industries.PoliticianIndustryContributionTotalsMapper;
 import com.poliana.core.time.CongressTimestamps;
 import com.poliana.core.time.TimeService;
 import org.apache.log4j.Logger;
@@ -519,7 +519,7 @@ public class IndustryContributionHadoopRepo {
      * @param industryId
      * @return
      */
-    public List<IndustryPoliticianContributionTotals> getIndustryToPoliticianContributions(String industryId) {
+    public List<PoliticianIndustryContributionsTotals> getIndustryToPoliticianContributions(String industryId) {
 
         try {
             String query =
@@ -579,7 +579,7 @@ public class IndustryContributionHadoopRepo {
                     "     industry_id = cat_order " +
                     "WHERE industry_id = \'" + industryId + "\'";
 
-            return impalaTemplate.query(query, new IndustryPoliticianContributionTotalsMapper());
+            return impalaTemplate.query(query, new PoliticianIndustryContributionTotalsMapper());
         }
         catch (Exception e) {
             logger.error(e);
@@ -593,7 +593,7 @@ public class IndustryContributionHadoopRepo {
      * @param categoryId
      * @return
      */
-    public List<IndustryPoliticianContributionTotals> getIndustryCategoryToPoliticianContributions(String categoryId) {
+    public List<PoliticianIndustryContributionsTotals> getIndustryCategoryToPoliticianContributions(String categoryId) {
 
         try {
             String query =
@@ -641,7 +641,7 @@ public class IndustryContributionHadoopRepo {
                     "   real_code = cat_code " +
                     "WHERE real_code = \'" + categoryId + "\'";
 
-            return impalaTemplate.query(query, new IndustryPoliticianContributionTotalsMapper());
+            return impalaTemplate.query(query, new PoliticianIndustryContributionTotalsMapper());
         }
         catch (Exception e) {
             logger.error(e);
@@ -656,7 +656,7 @@ public class IndustryContributionHadoopRepo {
      * @param years
      * @return
      */
-    public List<IndustryPoliticianContributionTotals> getIndustryContributionTotals(String industryId, int... years) {
+    public List<PoliticianIndustryContributionsTotals> getIndustryContributionTotals(String industryId, int... years) {
 
         String yrs;
 
@@ -683,7 +683,7 @@ public class IndustryContributionHadoopRepo {
                         "WHERE " +
                         "   industry_id = \'" + industryId + "\' AND " + yrs;
 
-        return impalaTemplate.query(query, new IndustryPoliticianContributionTotalsMapper());
+        return impalaTemplate.query(query, new PoliticianIndustryContributionTotalsMapper());
     }
 
     @Autowired

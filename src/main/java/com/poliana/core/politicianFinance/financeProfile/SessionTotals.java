@@ -2,7 +2,7 @@ package com.poliana.core.politicianFinance.financeProfile;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.poliana.core.pacFinance.entities.PacPoliticianContributionTotals;
-import com.poliana.core.politicianFinance.industries.IndustryPoliticianContributionTotals;
+import com.poliana.core.politicianFinance.industries.PoliticianIndustryContributionsTotals;
 import org.mongodb.morphia.annotations.*;
 
 
@@ -37,7 +37,7 @@ public class SessionTotals {
     private double leadershipScore;
 
     @Embedded("top_industry_contributions")
-    private List<IndustryPoliticianContributionTotals> topIndustryContributions;
+    private List<PoliticianIndustryContributionsTotals> topIndustryContributions;
 
     @Embedded("top_pac_contributions")
     private List<PacPoliticianContributionTotals> topPACContributions;
@@ -102,11 +102,11 @@ public class SessionTotals {
         this.leadershipScore = leadershipScore;
     }
 
-    public List<IndustryPoliticianContributionTotals> getTopIndustryContributions() {
+    public List<PoliticianIndustryContributionsTotals> getTopIndustryContributions() {
         return topIndustryContributions;
     }
 
-    public void setTopIndustryContributions(List<IndustryPoliticianContributionTotals> topIndustryContributions) {
+    public void setTopIndustryContributions(List<PoliticianIndustryContributionsTotals> topIndustryContributions) {
         this.topIndustryContributions = topIndustryContributions;
     }
 

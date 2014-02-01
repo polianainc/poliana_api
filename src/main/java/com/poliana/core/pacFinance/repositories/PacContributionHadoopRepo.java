@@ -1,20 +1,12 @@
 package com.poliana.core.pacFinance.repositories;
 
-import com.poliana.core.pacFinance.AllPacPolContrTotalsMapper;
-import com.poliana.core.pacFinance.entities.PacPoliticianContributionTotals;
-import com.poliana.core.pacFinance.mappers.PacPoliticianContributionMapper;
+import com.poliana.core.pacFinance.entities.PacContributionTotalsMap;
+import com.poliana.core.pacFinance.mappers.PacContributionTotalsHashMapper;
+import com.poliana.core.time.TimeService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.stereotype.Repository;
-
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * @author David Gilmore
@@ -23,115 +15,64 @@ import java.util.List;
 @Repository
 public class PacContributionHadoopRepo {
 
+    private TimeService timeService;
+
     private JdbcTemplate impalaTemplate;
 
     private static final Logger logger = Logger.getLogger(PacContributionHadoopRepo.class);
 
 
-    /**
-     * Get PAC contributions for a politician in a certain congress.
-     * @param bioguideId
-     * @param congress
-     * @return
-     */
-    public List<PacPoliticianContributionTotals> getPacPoliticianContributionTotals(String bioguideId, int congress) {
+    public PacContributionHadoopRepo() {
 
-        try {
-            String query =
-                    "SELECT " +
-                    "     bioguide_id" +
-                    "   , sums.cmte_id" +
-                    "   , p.cmte_nm" +
-                    "   , cycle" +
-                    "   , _c3 " +
-                    "FROM " +
-                    "   (SELECT " +
-                    "         bioguide_id" +
-                    "       , cmte_id" +
-                    "       , cycle" +
-                    "       , SUM(transaction_amt) " +
-                    "   FROM " +
-                    "       (SELECT " +
-                    "             m.bioguide_id" +
-                    "           , c.cmte_id" +
-                    "           , c.transaction_amt" +
-                    "           , c.cycle " +
-                    "       FROM " +
-                    "           entities.legislators m " +
-                    "       JOIN " +
-                    "           fec.pac_to_candidate_contributions c " +
-                    "       ON " +
-                    "           m.fec_id = c.cand_id " +
-                    "       WHERE m.bioguide_id = \'" + bioguideId + "\') " +
-                    "   candidate_receipts \n" +
-                    "   GROUP BY " +
-                    "         bioguide_id" +
-                    "       , cmte_id" +
-                    "       , cycle) " +
-                    "   sums " +
-                    "JOIN " +
-                    "   entities.pacs p " +
-                    "ON " +
-                    "   sums.cmte_id = p.cmte_id " +
-                    "WHERE cycle = " + congress;
-
-
-            return impalaTemplate.query(query, new PacPoliticianContributionMapper());
-        }
-        catch (Exception e) {
-            logger.error(e);
-        }
-
-        return new LinkedList<>();
+        this.timeService = new TimeService();
     }
 
+
     /**
-     * Get a HashMap of Lists of PAC contributions to politicians
-     * @param bioguideId
+     * Get total sums of all money contributed to each legislator during a given congress by a certain
+     * pac
+     *
      * @return
+     * @see com.poliana.core.pacFinance.entities.PacContributionTotalsMap
      */
-    public HashMap<Integer, List<PacPoliticianContributionTotals>> getAllLegislatorReceivedPacTotals(String bioguideId) {
+    public PacContributionTotalsMap getPacContributionTotalsMap(String pacId, int congress) {
 
+        String query =
+                "SELECT DISTINCT " +
+                "       bioguide_id " +
+                "     , pac_id " +
+                "     , cmte_nm AS pac_name " +
+                "     , congress " +
+                "     , total " +
+                "FROM " +
+                "    (SELECT " +
+                "           bioguide_id " +
+                "         , pac_id " +
+                "         , congress " +
+                "         , SUM(amount) as total " +
+                "    FROM  " +
+                "        crp.pac_to_candidate_contributions   " +
+                "    JOIN   " +
+                "        entities.legislators   " +
+                "    ON   " +
+                "        cid = opensecrets_id   " +
+                "    WHERE " +
+                "        pac_id = \'" + pacId + "\' " +
+                "    AND " +
+                "        congress = " + congress +
+                "    GROUP BY   " +
+                "          pac_id   " +
+                "        , bioguide_id " +
+                "        , congress) totals " +
+                "JOIN   " +
+                "    entities.pacs    " +
+                "ON    " +
+                "    cmte_id = pac_id " +
+                "WHERE  " +
+                "    cycle = " + congress;
         try {
-            String query =
-                    "SELECT " +
-                    "     bioguide_id" +
-                    "   , sums.cmte_id" +
-                    "   , p.cmte_nm" +
-                    "   , cycle" +
-                    "   , _c3 " +
-                    "FROM " +
-                    "   (SELECT " +
-                    "         bioguide_id" +
-                    "       , cmte_id" +
-                    "       , cycle" +
-                    "       , SUM(transaction_amt) " +
-                    "   FROM " +
-                    "       (SELECT " +
-                    "             m.bioguide_id" +
-                    "           , c.cmte_id" +
-                    "           , c.transaction_amt" +
-                    "           , c.cycle " +
-                    "       FROM " +
-                    "           entities.legislators m " +
-                    "       JOIN " +
-                    "           fec.pac_to_candidate_contributions c " +
-                    "       ON " +
-                    "           m.fec_id = c.cand_id " +
-                    "       WHERE " +
-                    "           m.bioguide_id = \'" + bioguideId + "\') " +
-                    "   candidate_receipts \n" +
-                    "GROUP BY " +
-                    "     bioguide_id" +
-                    "   , cmte_id" +
-                    "   , cycle) " +
-                    "sums " +
-                    "JOIN " +
-                    "   entities.pacs p " +
-                    "ON " +
-                    "   sums.cmte_id = p.cmte_id";
 
-            return impalaTemplate.query(query, new AllPacPolContrTotalsMapper());
+            return impalaTemplate.query(query, new PacContributionTotalsHashMapper(null));
         }
         catch (Exception e) {
             logger.error(e);
@@ -140,102 +81,179 @@ public class PacContributionHadoopRepo {
         return null;
     }
 
+    /**
+     * Get total sums of all money contributed to each legislator in a given chamber during a given congress by a certain
+     * pac
+     *
+     * @return
+     * @see com.poliana.core.pacFinance.entities.PacContributionTotalsMap
+     */
+    public PacContributionTotalsMap getPacContributionTotalsMap(String pacId, String chamber, int congress) {
 
-    public List<PacPoliticianContributionTotals> legislatorReceivedPacTotals(final String bioguideId, final int cycle) {
+        String legislatorType = chamber.contains("h") ? "rep" : "sen";
 
         try {
             String query =
-                    "SELECT " +
-                    "     bioguide_id" +
-                    "   , cmte_id" +
-                    "   , SUM(transaction_amt) " +
+                    "SELECT DISTINCT " +
+                    "       bioguide_id " +
+                    "     , pac_id " +
+                    "     , cmte_nm AS pac_name " +
+                    "     , congress " +
+                    "     , total     " +
                     "FROM " +
-                    "   (SELECT " +
-                    "         c.bioguide_id" +
-                    "       , m.cmte_id " +
-                    "       , m.cmte_nm" +
-                    "       , c.transaction_amt " +
-                    "   FROM " +
-                    "       entities.pacs m " +
-                    "   JOIN " +
-                    "       fec.pac_to_candidate_contributions c " +
-                    "   ON " +
-                    "       m.cand_id = c.cand_id  " +
-                    "   WHERE " +
-                    "       c.bioguide_id = \'?\' AND c.cycle = ?) " +
-                    "   candidate_receipts " +
-                    "GROUP BY " +
-                    "     c.bioguide_id" +
-                    "   , c.cmte_id" +
-                    "   , m.cmte_nm";
+                    "    (SELECT " +
+                    "           bioguide_id " +
+                    "         , pac_id " +
+                    "         , congress " +
+                    "         , SUM(amount) as total " +
+                    "    FROM  " +
+                    "        crp.pac_to_candidate_contributions   " +
+                    "    JOIN   " +
+                    "        entities.legislators_flat_terms   " +
+                    "    ON   " +
+                    "        cid = opensecrets_id   " +
+                    "    WHERE " +
+                    "        pac_id = \'" + pacId + "\' " +
+                    "    AND " +
+                    "        congress = " + congress +
+                    "    AND  " +
+                    "        term_type = \'" + legislatorType + "\' " +
+                    "    GROUP BY   " +
+                    "          pac_id   " +
+                    "        , bioguide_id " +
+                    "        , congress) totals " +
+                    "JOIN   " +
+                    "    entities.pacs    " +
+                    "ON    " +
+                    "    cmte_id = pac_id " +
+                    "WHERE  " +
+                    "    cycle = " + congress;
 
-            PreparedStatementSetter pss = new PreparedStatementSetter() {
-                public void setValues(PreparedStatement preparedStatement) throws
-                        SQLException {
-                    preparedStatement.setString(1, bioguideId);
-                    preparedStatement.setInt(2, cycle);
-                }
-            };
-
-            return impalaTemplate.query(query, pss, new PacPoliticianContributionMapper());
+            return impalaTemplate.query(query, new PacContributionTotalsHashMapper(chamber));
         }
-        catch (Exception e) {}
+        catch (Exception e) {
+            logger.error(e);
+        }
 
-        return new ArrayList<>();
+        return null;
     }
 
     /**
+     * Get total sums of all money contributed to each legislator during a given time range by a certain
+     * pac. If a PAC has multiple names, the name listed at the begin timestamp will be used.
      *
-     * @param bioguideId
+     * @param pacId
      * @param beginTimestamp
      * @param endTimestamp
-     * @param limit
      * @return
      */
-    public List<PacPoliticianContributionTotals> legislatorReceivedPacTotals(final String bioguideId, final int beginTimestamp,
-                                                                             final int endTimestamp, final int limit) {
+    public PacContributionTotalsMap getPacContributionTotalsMap(String pacId, long beginTimestamp, long endTimestamp) {
+
+        int congress = timeService.getCongressByTimestamp(beginTimestamp);
 
         try {
             String query =
-                    "SELECT " +
-                    "     bioguide_id" +
-                    "   , cmte_id" +
-                    "   , SUM(transaction_amt) " +
+                    "SELECT DISTINCT " +
+                    "       bioguide_id " +
+                    "     , pac_id " +
+                    "     , cmte_nm AS pac_name " +
+                    "     , total     " +
                     "FROM " +
-                    "   (SELECT " +
-                    "         c.bioguide_id" +
-                    "       , m.cmte_id " +
-                    "       , m.cmte_nm" +
-                    "       , c.transaction_amt " +
-                    "   FROM " +
-                    "       entities.pacs m " +
-                    "   JOIN " +
-                    "       fec.pac_to_candidate_contributions c " +
-                    "   ON " +
-                    "       m.cand_id = c.cand_id " +
-                    "   WHERE c.bioguide_id = \'?\' AND c.transation_ts > ? AND c.transation_ts < ?) " +
-                    "candidate_receipts " +
-                    "GROUP BY " +
-                    "     c.bioguide_id" +
-                    "   , c.cmte_id" +
-                    "   , m.cmte_nm";
+                    "    (SELECT " +
+                    "           bioguide_id " +
+                    "         , pac_id " +
+                    "         , SUM(amount) as total " +
+                    "    FROM  " +
+                    "        crp.pac_to_candidate_contributions   " +
+                    "    JOIN   " +
+                    "        entities.legislators_flat_terms   " +
+                    "    ON   " +
+                    "        cid = opensecrets_id   " +
+                    "    WHERE " +
+                    "        pac_id = \'" + pacId + "\' " +
+                    "    AND " +
+                    "        date_ts > " + beginTimestamp +
+                    "    AND  " +
+                    "        date_ts < " + endTimestamp +
+                    "    GROUP BY   " +
+                    "          pac_id   " +
+                    "        , bioguide_id) totals " +
+                    "JOIN   " +
+                    "    entities.pacs    " +
+                    "ON    " +
+                    "    cmte_id = pac_id " +
+                    "AND " +
+                    "    cycle = " + congress;
 
-            PreparedStatementSetter pss = new PreparedStatementSetter() {
-                public void setValues(PreparedStatement preparedStatement) throws
-                        SQLException {
-                    preparedStatement.setString(1, bioguideId);
-                    preparedStatement.setInt(2, beginTimestamp);
-                    preparedStatement.setInt(3, endTimestamp);
-                }
-            };
-
-            return impalaTemplate.query(query, pss, new PacPoliticianContributionMapper());
+            return impalaTemplate.query(query, new PacContributionTotalsHashMapper(beginTimestamp, endTimestamp));
         }
-        catch (Exception e) {}
+        catch (Exception e) {
+            logger.error(e);
+        }
 
-        return new ArrayList<>();
+        return null;
     }
 
+    /**
+     * Get total sums of all money contributed to each legislator in a given chamber during a given time range by a certain
+     * pac. If a PAC has multiple names, the name listed at the begin timestamp will be used.
+     *
+     * @param pacId
+     * @param chamber
+     * @param beginTimestamp
+     * @param endTimestamp
+     * @return
+     */
+    public PacContributionTotalsMap getPacContributionTotalsMap(String pacId, String chamber, long beginTimestamp, long endTimestamp) {
+
+        int congress = timeService.getCongressByTimestamp(beginTimestamp);
+
+        String legislatorType = chamber.contains("h") ? "rep" : "sen";
+
+        String query =
+                "SELECT DISTINCT " +
+                "       bioguide_id " +
+                "     , pac_id " +
+                "     , cmte_nm AS pac_name " +
+                "     , total     " +
+                "FROM " +
+                "    (SELECT " +
+                "           bioguide_id " +
+                "         , pac_id " +
+                "         , SUM(amount) as total " +
+                "    FROM  " +
+                "        crp.pac_to_candidate_contributions   " +
+                "    JOIN   " +
+                "        entities.legislators_flat_terms   " +
+                "    ON   " +
+                "        cid = opensecrets_id   " +
+                "    WHERE " +
+                "        pac_id = \'" + pacId + "\' " +
+                "    AND " +
+                "        date_ts > " + beginTimestamp +
+                "    AND  " +
+                "        date_ts < " + endTimestamp +
+                "    AND " +
+                "        term_type = \'" + legislatorType + "\' " +
+                "    GROUP BY   " +
+                "          pac_id   " +
+                "        , bioguide_id) totals " +
+                "JOIN   " +
+                "    entities.pacs    " +
+                "ON    " +
+                "    cmte_id = pac_id " +
+                "AND " +
+                "    cycle = " + congress;
+        try {
+
+            return impalaTemplate.query(query, new PacContributionTotalsHashMapper(chamber, beginTimestamp, endTimestamp));
+        }
+        catch (Exception e) {
+            logger.error(e);
+        }
+
+        return null;
+    }
 
     @Autowired
     public void setImpalaTemplate(JdbcTemplate impalaTemplate) {

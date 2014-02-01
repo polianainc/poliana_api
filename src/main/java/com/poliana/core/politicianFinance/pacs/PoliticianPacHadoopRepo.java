@@ -38,45 +38,45 @@ public class PoliticianPacHadoopRepo {
         try {
             String query =
                     "SELECT DISTINCT" +
-                            "      pac_id" +
-                            "    , cmte_nm as pac_name" +
-                            "    , bioguide_id" +
-                            "    , first_name" +
-                            "    , last_name  " +
-                            "    , party" +
-                            "    , religion" +
-                            "    , contribution_count" +
-                            "    , contribution_sum " +
-                            "FROM" +
-                            "    (SELECT" +
-                            "          pac_id" +
-                            "        , bioguide_id" +
-                            "        , first_name" +
-                            "        , last_name  " +
-                            "        , party" +
-                            "        , religion" +
-                            "        , COUNT(amount) as contribution_count" +
-                            "        , SUM(amount) as contribution_sum" +
-                            "    FROM " +
-                            "        crp.pac_to_candidate_contributions" +
-                            "    JOIN" +
-                            "        entities.legislators" +
-                            "    ON" +
-                            "        cid = opensecrets_id" +
-                            "    WHERE" +
-                            "        bioguide_id = \'" + bioguideId + "\'" +
-                            "    GROUP BY" +
-                            "          pac_id" +
-                            "        , bioguide_id" +
-                            "        , first_name" +
-                            "        , last_name" +
-                            "        , party" +
-                            "        , religion) " +
-                            "    totals " +
-                            "JOIN" +
-                            "    entities.pacs " +
-                            "ON " +
-                            "    cmte_id = pac_id ";
+                    "      pac_id" +
+                    "    , cmte_nm as pac_name" +
+                    "    , bioguide_id" +
+                    "    , first_name" +
+                    "    , last_name  " +
+                    "    , party" +
+                    "    , religion" +
+                    "    , contribution_count" +
+                    "    , contribution_sum " +
+                    "FROM" +
+                    "    (SELECT" +
+                    "          pac_id" +
+                    "        , bioguide_id" +
+                    "        , first_name" +
+                    "        , last_name  " +
+                    "        , party" +
+                    "        , religion" +
+                    "        , COUNT(amount) as contribution_count" +
+                    "        , SUM(amount) as contribution_sum" +
+                    "    FROM " +
+                    "        crp.pac_to_candidate_contributions" +
+                    "    JOIN" +
+                    "        entities.legislators" +
+                    "    ON" +
+                    "        cid = opensecrets_id" +
+                    "    WHERE" +
+                    "        bioguide_id = \'" + bioguideId + "\'" +
+                    "    GROUP BY" +
+                    "          pac_id" +
+                    "        , bioguide_id" +
+                    "        , first_name" +
+                    "        , last_name" +
+                    "        , party" +
+                    "        , religion) " +
+                    "    totals " +
+                    "JOIN" +
+                    "    entities.pacs " +
+                    "ON " +
+                    "    cmte_id = pac_id ";
 
             List<PoliticianPacContributionsTotals> contributionsList =
                     impalaTemplate.query(query, new PoliticianPacContributionTotalsMapper());
@@ -157,6 +157,67 @@ public class PoliticianPacHadoopRepo {
                     impalaTemplate.query(query, new PoliticianPacContributionTotalsMapper(beginTimestamp, endTimestamp));
 
             logger.info("PAC contribution sums to " + bioguideId + " from " + beginTimestamp + " to " + endTimestamp + " returned from Impala");
+
+            return contributionsList;
+        }
+        catch (Exception e) {
+            logger.error(e);
+        }
+
+        return null;
+    }
+
+    /**
+     * Get a PAC to Politician contribution sums for all time.
+     * @param bioguideId
+     * @return
+     */
+    public HashMap<Integer, List<PoliticianPacContributionsTotals>> getPacToPoliticianTotalsPerCongress(String bioguideId) {
+
+        try {
+            String query =
+                    "SELECT " +
+                    "       bioguide_id " +
+                    "     , first_name " +
+                    "     , last_name " +
+                    "     , party " +
+                    "     , religion " +
+                    "     , pac_id   " +
+                    "     , pac_name  " +
+                    "     , contribution_count " +
+                    "     , contribution_sum " +
+                    "     , congress " +
+                    "FROM  " +
+                    "     entities.legislators legislators " +
+                    "JOIN " +
+                    "     (SELECT    " +
+                    "            cid " +
+                    "         ,  pac_id   " +
+                    "         , cmte_nm AS pac_name   " +
+                    "         , COUNT(amount) AS contribution_count   " +
+                    "         , SUM(amount) AS contribution_sum   " +
+                    "         , congress " +
+                    "     FROM   " +
+                    "         entities.pacs pacs   " +
+                    "     JOIN   " +
+                    "         crp.pac_to_candidate_contributions contributions   " +
+                    "     ON   " +
+                    "         pac_id = cmte_id   " +
+                    "     AND   " +
+                    "         cycle = congress        " +
+                    "     GROUP BY    " +
+                    "           cid " +
+                    "         , pac_id   " +
+                    "         , pac_name   " +
+                    "         , congress) pac_contributions " +
+                    "ON " +
+                    "     legislators.opensecrets_id = cid " +
+                    "WHERE bioguide_id = \'" + bioguideId + "\'";
+
+            HashMap< Integer, List<PoliticianPacContributionsTotals>> contributionsList =
+                    impalaTemplate.query(query, new PacContributionsPerCongressMapper());
+
+            logger.info("PAC contribution sums to " + bioguideId + " for all time returned from Impala");
 
             return contributionsList;
         }

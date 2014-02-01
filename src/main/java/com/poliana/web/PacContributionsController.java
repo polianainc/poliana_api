@@ -30,8 +30,7 @@ public class PacContributionsController extends AbstractBaseController {
     public @ResponseBody String getAllPacContributions(
             @PathVariable("bioguideId") String bioguideId) {
 
-        HashMap<Integer, List<PacPoliticianContributionTotals>> allTotals = pacContributionService.getPacTotalsAllTime(bioguideId);
-        return this.gson.toJson(allTotals);
+        return "";
     }
 
     @RequestMapping(value="/{bioguideId}/{congress}", method = RequestMethod.GET)
@@ -39,8 +38,7 @@ public class PacContributionsController extends AbstractBaseController {
             @PathVariable("bioguideId") String bioguideId,
             @PathVariable("congress") Integer congress) {
 
-        List<PacPoliticianContributionTotals> pacTotals = pacContributionService.getPacTotals(bioguideId, congress);
-        return this.gson.toJson(pacTotals);
+        return "";
     }
 
     @Autowired

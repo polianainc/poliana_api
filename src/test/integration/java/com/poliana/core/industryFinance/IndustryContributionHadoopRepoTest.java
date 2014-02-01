@@ -2,7 +2,8 @@ package com.poliana.core.industryFinance;
 
 import com.poliana.config.ApplicationConfig;
 import com.poliana.core.industryFinance.entities.IndustryContributionTotalsMap;
-import com.poliana.core.politicianFinance.industries.IndustryPoliticianContributionTotals;
+import com.poliana.core.industryFinance.repositories.IndustryContributionHadoopRepo;
+import com.poliana.core.politicianFinance.industries.PoliticianIndustryContributionsTotals;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -218,12 +219,12 @@ public class IndustryContributionHadoopRepoTest {
     @Test
     public void testGetIndustryToPoliticianContributions() {
 
-        List<IndustryPoliticianContributionTotals> totalsList =
+        List<PoliticianIndustryContributionsTotals> totalsList =
                 industryContributionHadoopRepo.getIndustryToPoliticianContributions("K01");
 
         assertNotNull(totalsList);
 
-        IndustryPoliticianContributionTotals totals = totalsList.get(0);
+        PoliticianIndustryContributionsTotals totals = totalsList.get(0);
 
         assertEquals("K01", totals.getIndustryId());
 
@@ -244,12 +245,12 @@ public class IndustryContributionHadoopRepoTest {
     @Test
     public void testGetIndustryCategoryToPoliticianContributions() {
 
-        List<IndustryPoliticianContributionTotals> totalsList =
+        List<PoliticianIndustryContributionsTotals> totalsList =
                 industryContributionHadoopRepo.getIndustryCategoryToPoliticianContributions("K1000");
 
         assertNotNull(totalsList);
 
-        IndustryPoliticianContributionTotals totals = totalsList.get(1);
+        PoliticianIndustryContributionsTotals totals = totalsList.get(1);
 
         assertEquals("K1000", totals.getCategoryId());
 

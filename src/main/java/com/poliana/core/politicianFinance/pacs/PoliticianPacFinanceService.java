@@ -80,6 +80,32 @@ public class PoliticianPacFinanceService {
      * @param bioguideId
      * @return
      */
+    public HashMap<Integer, List<PoliticianPacContributionsTotals>> getPacToPoliticianTotalsPerCongress(String bioguideId) {
+
+        HashMap<Integer, List<PoliticianPacContributionsTotals>> totalsHashMap = politicianPacHadoopRepo.getPacToPoliticianTotalsPerCongress(bioguideId);
+
+        //Cache sums to MongoDB
+
+        //Get an iterator for the values in the hash map
+        Iterator it = totalsHashMap.entrySet().iterator();
+        Map.Entry pairs;
+
+        //Iterate through all entry pairs in the map and update the TermTotalsMap with the values.
+        while (it.hasNext()) {
+            pairs = (Map.Entry) it.next();
+
+            if (politicianPacMongoRepo.countPacToPoliticianContributions(bioguideId, (Integer) pairs.getKey()) <= 0)
+                politicianPacMongoRepo.savePacToPoliticianContributions((List<PoliticianPacContributionsTotals>) pairs.getValue());
+        }
+
+        return totalsHashMap;
+    }
+
+    /**
+     * Get a HashMap of Cycle->PAC contribution lists for all congressional cycles in the given time range
+     * @param bioguideId
+     * @return
+     */
     public HashMap<Integer, List<PoliticianPacContributionsTotals>> getPacToPoliticianTotalsPerCongress(String bioguideId, long beginTimestamp, long endTimestamp) {
 
         Integer[] cycles = timeService.getCongressionalCyclesByTimeRange(beginTimestamp, endTimestamp);
@@ -104,7 +130,7 @@ public class PoliticianPacFinanceService {
             }
         }
 
-        //A size greater than 0 means that MongoDB had the sums cached
+        //Ensure that all the necessary cycles were returned from MongoDB, if not, we'll use Impala
         if (totalsHashMap.size() > 0) {
             boolean totalsMapContainsAllCycles = true;
 

@@ -1,7 +1,7 @@
 package com.poliana.web.politicianFinance;
 
+import com.poliana.core.politicianFinance.industries.PoliticianIndustryContributionsTotals;
 import com.poliana.core.politicianFinance.industries.PoliticianIndustryFinanceService;
-import com.poliana.core.politicianFinance.industries.IndustryPoliticianContributionTotals;
 import com.poliana.views.politicianFinance.PoliticianIndustryBarPlot;
 import com.poliana.web.AbstractBaseController;
 import org.apache.log4j.Logger;
@@ -40,10 +40,10 @@ public class PoliticianIndustryFinanceController extends AbstractBaseController 
      * @return
      */
     @RequestMapping(value="/{bioguide_id}/contributions/industries", method = RequestMethod.GET)
-    public @ResponseBody List<IndustryPoliticianContributionTotals> getIndustryToPoliticianTotals(
+    public @ResponseBody List<PoliticianIndustryContributionsTotals> getIndustryToPoliticianTotals(
             @PathVariable("bioguide_id") String bioguideId) {
 
-        List<IndustryPoliticianContributionTotals> allTotals = politicianIndustryFinanceService.getIndustryToPoliticianTotals(bioguideId);
+        List<PoliticianIndustryContributionsTotals> allTotals = politicianIndustryFinanceService.getIndustryToPoliticianTotals(bioguideId);
         return allTotals;
     }
 
@@ -55,10 +55,10 @@ public class PoliticianIndustryFinanceController extends AbstractBaseController 
      * @return
      */
     @RequestMapping(value="/{bioguide_id}/contributions/industries/categories", method = RequestMethod.GET)
-    public @ResponseBody List<IndustryPoliticianContributionTotals> getIndustryCategoryToPoliticianTotals(
+    public @ResponseBody List<PoliticianIndustryContributionsTotals> getIndustryCategoryToPoliticianTotals(
             @PathVariable("bioguide_id") String bioguideId) {
 
-        List<IndustryPoliticianContributionTotals> allTotals =
+        List<PoliticianIndustryContributionsTotals> allTotals =
                 politicianIndustryFinanceService.getIndustryCategoryToPoliticianTotals(bioguideId);
 
         return allTotals;
@@ -73,11 +73,11 @@ public class PoliticianIndustryFinanceController extends AbstractBaseController 
      * @return
      */
     @RequestMapping(value="/{bioguide_id}/contributions/industries", params = {"congress"}, method = RequestMethod.GET)
-    public @ResponseBody List<IndustryPoliticianContributionTotals> getIndustryToPoliticianTotals(
+    public @ResponseBody List<PoliticianIndustryContributionsTotals> getIndustryToPoliticianTotals(
             @PathVariable("bioguide_id") String bioguideId,
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress) {
 
-        List<IndustryPoliticianContributionTotals> allTotals = politicianIndustryFinanceService.getIndustryToPoliticianTotals(bioguideId, congress);
+        List<PoliticianIndustryContributionsTotals> allTotals = politicianIndustryFinanceService.getIndustryToPoliticianTotals(bioguideId, congress);
         return allTotals;
     }
 
@@ -90,11 +90,11 @@ public class PoliticianIndustryFinanceController extends AbstractBaseController 
      * @return
      */
     @RequestMapping(value="/{bioguide_id}/contributions/industries/categories", params = {"congress"}, method = RequestMethod.GET)
-    public @ResponseBody List<IndustryPoliticianContributionTotals> getIndustryCategoryToPoliticianTotals(
+    public @ResponseBody List<PoliticianIndustryContributionsTotals> getIndustryCategoryToPoliticianTotals(
             @PathVariable("bioguide_id") String bioguideId,
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress) {
 
-        List<IndustryPoliticianContributionTotals> allTotals =
+        List<PoliticianIndustryContributionsTotals> allTotals =
                 politicianIndustryFinanceService.getIndustryCategoryToPoliticianTotals(bioguideId, congress);
 
         return allTotals;
@@ -109,12 +109,12 @@ public class PoliticianIndustryFinanceController extends AbstractBaseController 
      * @return
      */
     @RequestMapping(value = "/{bioguide_id}/contributions/industries", params = {"start", "end"}, method = RequestMethod.GET)
-    public @ResponseBody List<IndustryPoliticianContributionTotals> getIndustryToPoliticianTotals(
+    public @ResponseBody List<PoliticianIndustryContributionsTotals> getIndustryToPoliticianTotals(
             @PathVariable("bioguide_id") String bioguideId,
             @RequestParam(value = "start", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date start,
             @RequestParam(value = "end", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date end) {
 
-        List<IndustryPoliticianContributionTotals> totals =
+        List<PoliticianIndustryContributionsTotals> totals =
                 politicianIndustryFinanceService.getIndustryToPoliticianTotals(bioguideId, start.getTime()/1000, end.getTime()/1000);
 
         return totals;
@@ -129,12 +129,12 @@ public class PoliticianIndustryFinanceController extends AbstractBaseController 
      * @return
      */
     @RequestMapping(value = "/{bioguide_id}/contributions/industries/categories", params = {"start", "end"}, method = RequestMethod.GET)
-    public @ResponseBody List<IndustryPoliticianContributionTotals> getIndustryCategoryToPoliticianTotals(
+    public @ResponseBody List<PoliticianIndustryContributionsTotals> getIndustryCategoryToPoliticianTotals(
             @PathVariable("bioguide_id") String bioguideId,
             @RequestParam(value = "start", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date start,
             @RequestParam(value = "end", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date end) {
 
-        List<IndustryPoliticianContributionTotals> totals =
+        List<PoliticianIndustryContributionsTotals> totals =
                 politicianIndustryFinanceService.getIndustryCategoryToPoliticianTotals(bioguideId, start.getTime() / 1000, end.getTime() / 1000);
 
         return totals;
@@ -151,7 +151,7 @@ public class PoliticianIndustryFinanceController extends AbstractBaseController 
             @PathVariable("bioguide_id") String bioguideId,
             @RequestParam(value = "plot", required = true) String plotType) {
 
-        List<IndustryPoliticianContributionTotals> allTotals = politicianIndustryFinanceService.getIndustryToPoliticianTotals(bioguideId);
+        List<PoliticianIndustryContributionsTotals> allTotals = politicianIndustryFinanceService.getIndustryToPoliticianTotals(bioguideId);
 
         PoliticianIndustryBarPlot view = new PoliticianIndustryBarPlot(allTotals);
 
@@ -175,7 +175,7 @@ public class PoliticianIndustryFinanceController extends AbstractBaseController 
             @PathVariable("bioguide_id") String bioguideId,
             @RequestParam(value = "plot", required = true) String plotType) {
 
-        List<IndustryPoliticianContributionTotals> allTotals =
+        List<PoliticianIndustryContributionsTotals> allTotals =
                 politicianIndustryFinanceService.getIndustryCategoryToPoliticianTotals(bioguideId);
 
         PoliticianIndustryBarPlot view = new PoliticianIndustryBarPlot(allTotals);
@@ -203,7 +203,7 @@ public class PoliticianIndustryFinanceController extends AbstractBaseController 
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
             @RequestParam(value = "plot", required = true) String plotType) {
 
-        List<IndustryPoliticianContributionTotals> allTotals = politicianIndustryFinanceService.getIndustryToPoliticianTotals(bioguideId, congress);
+        List<PoliticianIndustryContributionsTotals> allTotals = politicianIndustryFinanceService.getIndustryToPoliticianTotals(bioguideId, congress);
 
         PoliticianIndustryBarPlot view = new PoliticianIndustryBarPlot(allTotals, congress);
 
@@ -230,7 +230,7 @@ public class PoliticianIndustryFinanceController extends AbstractBaseController 
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
             @RequestParam(value = "plot", required = true) String plotType) {
 
-        List<IndustryPoliticianContributionTotals> allTotals = politicianIndustryFinanceService.getIndustryCategoryToPoliticianTotals(bioguideId, congress);
+        List<PoliticianIndustryContributionsTotals> allTotals = politicianIndustryFinanceService.getIndustryCategoryToPoliticianTotals(bioguideId, congress);
 
         PoliticianIndustryBarPlot view = new PoliticianIndustryBarPlot(allTotals, congress);
 
@@ -260,7 +260,7 @@ public class PoliticianIndustryFinanceController extends AbstractBaseController 
             @RequestParam(value = "end", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date end,
             @RequestParam(value = "plot", required = true) String plotType) {
 
-        List<IndustryPoliticianContributionTotals> allTotals =
+        List<PoliticianIndustryContributionsTotals> allTotals =
                 politicianIndustryFinanceService.getIndustryToPoliticianTotals(bioguideId, start.getTime()/1000, end.getTime()/1000);
 
         PoliticianIndustryBarPlot view = new PoliticianIndustryBarPlot(allTotals, start, end);
@@ -288,7 +288,7 @@ public class PoliticianIndustryFinanceController extends AbstractBaseController 
             @RequestParam(value = "end", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date end,
             @RequestParam(value = "plot", required = true) String plotType) {
 
-        List<IndustryPoliticianContributionTotals> allTotals =
+        List<PoliticianIndustryContributionsTotals> allTotals =
                 politicianIndustryFinanceService.getIndustryCategoryToPoliticianTotals(bioguideId, start.getTime()/1000, end.getTime()/1000);
 
         PoliticianIndustryBarPlot view = new PoliticianIndustryBarPlot(allTotals, start, end);

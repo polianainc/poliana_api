@@ -9,22 +9,22 @@ import java.sql.SQLException;
  * @author David Gilmore
  * @date 11/1/13
  */
-public class IndustryPoliticianContributionTotalsMapper implements RowMapper<IndustryPoliticianContributionTotals> {
+public class PoliticianIndustryContributionTotalsMapper implements RowMapper<PoliticianIndustryContributionsTotals> {
 
     private Long beginTimestamp;
     private Long endTimestamp;
 
-    public IndustryPoliticianContributionTotalsMapper() {}
+    public PoliticianIndustryContributionTotalsMapper() {}
 
-    public IndustryPoliticianContributionTotalsMapper(long beginTimestamp, long endTimestamp) {
+    public PoliticianIndustryContributionTotalsMapper(long beginTimestamp, long endTimestamp) {
 
         this.beginTimestamp = beginTimestamp;
         this.endTimestamp = endTimestamp;
     }
 
-    public IndustryPoliticianContributionTotals mapRow(ResultSet rs, int rowNum) throws SQLException {
+    public PoliticianIndustryContributionsTotals mapRow(ResultSet rs, int rowNum) throws SQLException {
 
-        IndustryPoliticianContributionTotals totals = new IndustryPoliticianContributionTotals();
+        PoliticianIndustryContributionsTotals totals = new PoliticianIndustryContributionsTotals();
 
         try {
             totals.setBioguideId(rs.getString("bioguide_id"));

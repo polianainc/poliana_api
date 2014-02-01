@@ -1,14 +1,12 @@
 package com.poliana.core.pacFinance.repositories;
 
-import com.poliana.core.pacFinance.entities.PacPoliticianContributionTotals;
+import com.poliana.core.pacFinance.entities.PacContributionTotalsMap;
 import org.mongodb.morphia.Datastore;
+import org.apache.log4j.Logger;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.query.Query;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import java.util.*;
 
 /**
  * @author David Gilmore
@@ -23,64 +21,91 @@ public class PacContributionMongoRepo {
 
 
     /**
-     * Save a list of PacPoliticianContrTotals.
-     * @param totalsList
+     * Save totals for an pac's contributions to all legislators in a certain chamber during a given cycle
+     * @param pacContributionTotalsMap
      * @return
-     * @see com.poliana.core.pacFinance.entities.PacPoliticianContributionTotals
+     * @see com.poliana.core.pacFinance.entities.PacContributionTotalsMap
      */
-    public Iterable<Key<PacPoliticianContributionTotals>> savePacPoliticianContrTotals(List<PacPoliticianContributionTotals> totalsList) {
+    public Key<PacContributionTotalsMap> savePacContributionTotalsMap(PacContributionTotalsMap pacContributionTotalsMap) {
 
-        return mongoStore.save(totalsList);
+        return mongoStore.save(pacContributionTotalsMap);
     }
 
     /**
-     * Get an iterator for all PacPoliticianContrTotals in MongoDB for a given bioguide ID
-     * @param bioguideId
-     * @return
-     */
-    public Iterator<PacPoliticianContributionTotals> getAllPacPoliticianContrTotals(String bioguideId) {
-
-        Query<PacPoliticianContributionTotals> query = mongoStore.find(PacPoliticianContributionTotals.class);
-
-        query.criteria("bioguideId").equal(bioguideId);
-
-        return query.iterator();
-    }
-
-    /**
-     * Get a list of PAC politician contributions totals for a politician in a given congressional cycle.
-     * @param bioguideId
+     * Get totals for an pac's contributions to all legislators during a given congressional cycle.
      * @param congress
      * @return
+     * @see com.poliana.core.pacFinance.entities.PacContributionTotalsMap
      */
-    public List<PacPoliticianContributionTotals> getPacPoliticianContrTotalsMongo(String bioguideId, int congress) {
+    public PacContributionTotalsMap getPacContributionTotalsMap(String pacId, int congress) {
 
-        Query<PacPoliticianContributionTotals> query = mongoStore.find(PacPoliticianContributionTotals.class);
+        Query<PacContributionTotalsMap> query = mongoStore.createQuery(PacContributionTotalsMap.class);
 
         query.and(
-                query.criteria("bioguideId").equal(bioguideId),
-                query.criteria("cycle").equal(congress));
+                query.criteria("pacId").equal(pacId),
+                query.criteria("congress").equal(congress));
 
-        return query.asList();
+        return query.get();
     }
 
     /**
-     *
-     * @param bioguideId
+     * Get totals for an pac's contributions to all legislators in a certain chamber during a given cycle.
+     * @param chamber
      * @param congress
      * @return
+     * @see com.poliana.core.pacFinance.entities.PacContributionTotalsMap
      */
-    public long countPacPoliticianContrTotals(String bioguideId, int congress) {
+    public PacContributionTotalsMap getPacContributionTotalsMap(String pacId, String chamber, int congress) {
 
-        Query<PacPoliticianContributionTotals> query = mongoStore.find(PacPoliticianContributionTotals.class);
+        Query<PacContributionTotalsMap> query = mongoStore.createQuery(PacContributionTotalsMap.class);
 
         query.and(
-                query.criteria("bioguideId").equal(bioguideId),
-                query.criteria("cycle").equal(congress));
+                query.criteria("pacId").equal(pacId),
+                query.criteria("chamber").equal(chamber),
+                query.criteria("congress").equal(congress));
 
-        return mongoStore.getCount(query);
+        return query.get();
     }
 
+    /**
+     * Get totals for an pac's contributions to all legislators during a given time range
+     * @param pacId
+     * @param beginTimestamp
+     * @param endTimestamp
+     * @return
+     */
+    public PacContributionTotalsMap getPacContributionTotalsMap(String pacId, long beginTimestamp, long endTimestamp) {
+
+        Query<PacContributionTotalsMap> query = mongoStore.createQuery(PacContributionTotalsMap.class);
+
+        query.and(
+                query.criteria("pacId").equal(pacId),
+                query.criteria("beginTimestamp").equal(beginTimestamp),
+                query.criteria("endTimestamp").equal(endTimestamp));
+
+        return query.get();
+    }
+
+    /**
+     * Get totals for an pac's contributions to all legislators in a certain chamber during a given time cycle
+     * @param pacId
+     * @param chamber
+     * @param beginTimestamp
+     * @param endTimestamp
+     * @return
+     */
+    public PacContributionTotalsMap getPacContributionTotalsMap(String pacId, String chamber, long beginTimestamp, long endTimestamp) {
+
+        Query<PacContributionTotalsMap> query = mongoStore.createQuery(PacContributionTotalsMap.class);
+
+        query.and(
+                query.criteria("pacId").equal(pacId),
+                query.criteria("chamber").equal(chamber),
+                query.criteria("beginTimestamp").equal(beginTimestamp),
+                query.criteria("endTimestamp").equal(endTimestamp));
+
+        return query.get();
+    }
 
     @Autowired
     public void setMongoStore(Datastore mongoStore) {

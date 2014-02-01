@@ -1,13 +1,11 @@
 package com.poliana.core.pacFinance;
 
-import com.poliana.core.pacFinance.entities.PacPoliticianContributionTotals;
+import com.poliana.core.pacFinance.entities.PacContributionTotalsMap;
 import com.poliana.core.pacFinance.repositories.PacContributionHadoopRepo;
 import com.poliana.core.pacFinance.repositories.PacContributionMongoRepo;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.*;
 
 /**
  * @author David Gilmore
@@ -23,88 +21,107 @@ public class PacContributionService {
 
 
     /**
-     * Get a list of PAC contribution totals in a given congressional cycle for a certain politician.
-     * @param bioguideId
+     * Get a map of BioguideId->Total sum of PAC contributions to all legislators during the given
+     * congressional cycle
+     * @param congress
      * @return
      */
-    public List<PacPoliticianContributionTotals> getPacTotals(String bioguideId, int congress) {
+    public PacContributionTotalsMap getPacContributionTotalsMap(String pacId, int congress) {
 
-        //Check MongoDB for PAC contributions
-        List<PacPoliticianContributionTotals> pacTotals = pacContributionMongoRepo.getPacPoliticianContrTotalsMongo(bioguideId, congress);
+        //Check MongoDB for a cached industry chamber total document
+        PacContributionTotalsMap chamberTotals =
+                pacContributionMongoRepo.getPacContributionTotalsMap(pacId, congress);
 
-        //If MongoDB returned a list, use it
-        if (pacTotals.size() > 0)
-            return pacTotals;
+        //If it exists, return it
+        if (chamberTotals != null)
+            return chamberTotals;
 
-        //If MongoDB doesn't have the sums cached, fall back to Impala
-        pacTotals = pacContributionHadoopRepo.getPacPoliticianContributionTotals(bioguideId, congress);
+        //If not we'll use Impala to get it
+        chamberTotals = pacContributionHadoopRepo.getPacContributionTotalsMap(pacId, congress);
 
-        //If Impala had sums to return, save them
-        if (pacTotals.size() > 0)
-            pacContributionMongoRepo.savePacPoliticianContrTotals(pacTotals);
+        if (chamberTotals != null)
+            pacContributionMongoRepo.savePacContributionTotalsMap(chamberTotals);
 
-        return pacTotals;
+        return chamberTotals;
     }
 
     /**
-     * Get a HashMap of Cycle->List<PacPoliticianContrTotals for all congressional cycles a politician has been apart of
-     * @param bioguideId
+     * Get a map of BioguideId->Total sum of PAC contributions to all legislators in a given chamber during the given
+     * congressional cycles
+     * @param chamber
+     * @param congress
      * @return
      */
-    public HashMap<Integer, List<PacPoliticianContributionTotals>> getPacTotalsAllTime(String bioguideId) {
+    public PacContributionTotalsMap getPacContributionTotalsMap(String pacId, String chamber, int congress) {
 
-        HashMap<Integer, List<PacPoliticianContributionTotals>> totalsHashMap = getPacTotalsAllTimeMongo(bioguideId);
+        //Check MongoDB for a cached pac chamber total document
+        PacContributionTotalsMap chamberTotals =
+                pacContributionMongoRepo.getPacContributionTotalsMap(pacId, chamber, congress);
 
-        //A size greater than 0 means that MongoDB had the sums cached
-        if (totalsHashMap.size() > 0)
-            return totalsHashMap;
+        //If it exists, return it
+        if (chamberTotals != null)
+            return chamberTotals;
 
-        //Fall back to Impala if MongoDB did not have the sums cached
-        totalsHashMap = pacContributionHadoopRepo.getAllLegislatorReceivedPacTotals(bioguideId);
+        //If not we'll use Impala to get it
+        chamberTotals = pacContributionHadoopRepo.getPacContributionTotalsMap(pacId, chamber, congress);
 
-        //Get an iterator for the values in the hash map
-        Iterator it = totalsHashMap.entrySet().iterator();
-        Map.Entry pairs;
+        if (chamberTotals != null)
+            pacContributionMongoRepo.savePacContributionTotalsMap(chamberTotals);
 
-        //Iterate through all entry pairs in the map and update the TermTotalsMap with the values.
-        while (it.hasNext()) {
-            pairs = (Map.Entry) it.next();
-
-            if (pacContributionMongoRepo.countPacPoliticianContrTotals(bioguideId, (Integer) pairs.getKey()) <= 0)
-                pacContributionMongoRepo.savePacPoliticianContrTotals((List<PacPoliticianContributionTotals>)pairs.getValue());
-        }
-
-        return totalsHashMap;
+        return chamberTotals;
     }
 
     /**
-     * Get a map of Cycle->PAC contribution lists for a politician from the MongoDB cache
-     * @param bioguideId
+     * Get a map of BioguideId->Total sum of industry contributions to all legislators during the given
+     * time period
+     * @param beginTimestamp
+     * @param endTimestamp
      * @return
-     * @see PacPoliticianContributionTotals
      */
-    private HashMap<Integer, List<PacPoliticianContributionTotals>> getPacTotalsAllTimeMongo(String bioguideId) {
+    public PacContributionTotalsMap getPacContributionTotalsMap(String pacId, long beginTimestamp, long endTimestamp) {
 
-        Iterator<PacPoliticianContributionTotals> totalsIterator = pacContributionMongoRepo.getAllPacPoliticianContrTotals(bioguideId);
+        //Check MongoDB for a cached pac chamber total document
+        PacContributionTotalsMap chamberTotals =
+                pacContributionMongoRepo.getPacContributionTotalsMap(pacId, beginTimestamp, endTimestamp);
 
-        HashMap<Integer, List<PacPoliticianContributionTotals>> totalsHashMap = new HashMap<>(30);
+        //If it exists, return it
+        if (chamberTotals != null)
+            return chamberTotals;
 
-        //Add PAC totals to the HashMap. Check the size, if it's zero, fall back to Impala.
-        while (totalsIterator.hasNext()) {
-            PacPoliticianContributionTotals pacTotals = totalsIterator.next();
+        //If not we'll use Impala to get it
+        chamberTotals = pacContributionHadoopRepo.getPacContributionTotalsMap(pacId, beginTimestamp, endTimestamp);
 
-            //If the hashmap already has a list of PAC totals for the object's cycle
-            if (totalsHashMap.containsKey(pacTotals.getCycle()))
-                totalsHashMap.get(pacTotals.getCycle()).add(pacTotals);
-                //If the hashmap doesn't contain a list of PAC totals, make it
-            else {
-                List<PacPoliticianContributionTotals> totalsList = new LinkedList<>();
-                totalsList.add(pacTotals);
-                totalsHashMap.put(pacTotals.getCycle(), totalsList);
-            }
-        }
+        if (chamberTotals != null)
+            pacContributionMongoRepo.savePacContributionTotalsMap(chamberTotals);
 
-        return totalsHashMap;
+        return chamberTotals;
+    }
+
+    /**
+     * Get a map of BioguideId->Total sum of pac contributions to all legislators in a given chamber during the given
+     * time period
+     * @param chamber
+     * @param beginTimestamp
+     * @param endTimestamp
+     * @return
+     */
+    public PacContributionTotalsMap getPacContributionTotalsMap(String pacId, String chamber, long beginTimestamp, long endTimestamp) {
+
+        //Check MongoDB for a cached pac chamber total document
+        PacContributionTotalsMap chamberTotals =
+                pacContributionMongoRepo.getPacContributionTotalsMap(pacId, chamber, beginTimestamp, endTimestamp);
+
+        //If it exists, return it
+        if (chamberTotals != null)
+            return chamberTotals;
+
+        //If not we'll use Impala to get it
+        chamberTotals = pacContributionHadoopRepo.getPacContributionTotalsMap(pacId, chamber, beginTimestamp, endTimestamp);
+
+        if (chamberTotals != null)
+            pacContributionMongoRepo.savePacContributionTotalsMap(chamberTotals);
+
+        return chamberTotals;
     }
 
     @Autowired

@@ -86,6 +86,37 @@ public class PoliticianPacFinanceServiceUnitTest {
     }
 
     @Test
+    public void testGetPacToPoliticianTotalsPerCongress__AllTime() throws Exception {
+
+
+        List<PoliticianPacContributionsTotals> contributionsListMock = new LinkedList<>();
+        List<PoliticianPacContributionsTotals> contributionsListMock1 = new LinkedList<>();
+
+        contributionsListMock.add(new PoliticianPacContributionsTotals());
+        contributionsListMock1.add(new PoliticianPacContributionsTotals());
+
+        HashMap<Integer, List<PoliticianPacContributionsTotals>> contributionsMapMock = new HashMap<>();
+
+        contributionsMapMock.put(new Integer(110), contributionsListMock);
+        contributionsMapMock.put(new Integer(111), contributionsListMock1);
+
+        expect(this.politicianPacHadoopRepoMock.getPacToPoliticianTotalsPerCongress("O000167")).andReturn(contributionsMapMock);
+
+        expect(this.politicianPacMongoRepoMock.countPacToPoliticianContributions("O000167", 110)).andReturn(0L);
+
+        expect(this.politicianPacMongoRepoMock.savePacToPoliticianContributions(contributionsListMock))
+                .andReturn(new ArrayList<Key<PoliticianPacContributionsTotals>>());
+
+        expect(this.politicianPacMongoRepoMock.countPacToPoliticianContributions("O000167", 111)).andReturn(1L);
+
+        this.control.replay();
+
+        this.politicianPacFinanceService.getPacToPoliticianTotalsPerCongress("O000167");
+
+        this.control.verify();
+    }
+
+    @Test
     public void testGetPacToPoliticianTotalsPerCongress__ByTimeRange() throws Exception {
 
         List<PoliticianPacContributionsTotals> contributionsListMock = new LinkedList<>();

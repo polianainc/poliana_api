@@ -23,6 +23,12 @@ public class PacContributionTotalsHashMapper implements ResultSetExtractor<PacCo
         this.chamber = chamber;
     }
 
+    public PacContributionTotalsHashMapper(long beginTimestamp, long endTimestamp) {
+
+        this.beginTimestamp = beginTimestamp;
+        this.endTimestamp = endTimestamp;
+    }
+
     public PacContributionTotalsHashMapper(String chamber, long beginTimestamp, long endTimestamp) {
 
         this.chamber = chamber;
@@ -44,6 +50,9 @@ public class PacContributionTotalsHashMapper implements ResultSetExtractor<PacCo
 
             if (!detailsSet) {
 
+                totals.setPacId(rs.getString("pac_id"));
+                totals.setPacName(rs.getString("pac_name"));
+
                 try {
                     totals.setCongress(rs.getInt("congress"));
                 }
@@ -63,7 +72,8 @@ public class PacContributionTotalsHashMapper implements ResultSetExtractor<PacCo
 
         }
 
+        totals.setSums(sums);
+
         return totals;
     }
-
 }

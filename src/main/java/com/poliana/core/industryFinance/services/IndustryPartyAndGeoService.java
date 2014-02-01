@@ -2,12 +2,12 @@ package com.poliana.core.industryFinance.services;
 
 import com.poliana.core.industries.Industry;
 import com.poliana.core.industries.IndustryRepo;
-import com.poliana.core.industryFinance.IndustryContributionHadoopRepo;
+import com.poliana.core.industryFinance.repositories.IndustryContributionHadoopRepo;
 import com.poliana.core.industryFinance.entities.IndustryPartyAndGeoTotals;
 import com.poliana.core.industryFinance.entities.Recipient;
 import com.poliana.core.legislators.Legislator;
 import com.poliana.core.legislators.LegislatorService;
-import com.poliana.core.politicianFinance.industries.IndustryPoliticianContributionTotals;
+import com.poliana.core.politicianFinance.industries.PoliticianIndustryContributionsTotals;
 import com.poliana.core.time.CongressYears;
 import com.poliana.core.time.TimeService;
 import org.apache.log4j.Logger;
@@ -46,7 +46,7 @@ public class IndustryPartyAndGeoService {
 
         CongressYears years = timeService.congressToYears(congress);
 
-        List<IndustryPoliticianContributionTotals> contributionTotals =
+        List<PoliticianIndustryContributionsTotals> contributionTotals =
                 industryContributionHadoopRepo.getIndustryContributionTotals(industryId, years.getYearOne(), years.getYearTwo());
 
 
@@ -59,7 +59,7 @@ public class IndustryPartyAndGeoService {
         HashMap<String,Recipient> recipients = new HashMap<>(500);
         HashMap<String,Recipient> stateAverages = new HashMap<>(60);
 
-        for (IndustryPoliticianContributionTotals contributions : contributionTotals) {
+        for (PoliticianIndustryContributionsTotals contributions : contributionTotals) {
             setPartyCounts(contributions, timeRangeTotals);
             setStateCounts(contributions, stateAverages, numSeries);
             setRecipientMap(contributions, recipients, numSeries);
@@ -79,7 +79,7 @@ public class IndustryPartyAndGeoService {
      * @param contribution
      * @return
      */
-    private Legislator getLegislator(IndustryPoliticianContributionTotals contribution) {
+    private Legislator getLegislator(PoliticianIndustryContributionsTotals contribution) {
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(contribution.getYear(),contribution.getMonth(),2);
@@ -159,7 +159,7 @@ public class IndustryPartyAndGeoService {
      * @param recipients
      * @param numSeries
      */
-    private void setRecipientMap(IndustryPoliticianContributionTotals contribution, HashMap<String, Recipient> recipients, int numSeries) {
+    private void setRecipientMap(PoliticianIndustryContributionsTotals contribution, HashMap<String, Recipient> recipients, int numSeries) {
 
         String bioguideId = contribution.getBioguideId();
         Legislator legislator = getLegislator(contribution);
@@ -193,7 +193,7 @@ public class IndustryPartyAndGeoService {
      * @param contribution
      * @param totals
      */
-    private void setPartyCounts(IndustryPoliticianContributionTotals contribution, IndustryPartyAndGeoTotals totals) {
+    private void setPartyCounts(PoliticianIndustryContributionsTotals contribution, IndustryPartyAndGeoTotals totals) {
 
         switch(contribution.getParty()) {
             case "Republican":
@@ -217,7 +217,7 @@ public class IndustryPartyAndGeoService {
      * @param stateAverages
      * @param numSeries
      */
-    private void setStateCounts(IndustryPoliticianContributionTotals contribution, HashMap<String, Recipient> stateAverages, int numSeries) {
+    private void setStateCounts(PoliticianIndustryContributionsTotals contribution, HashMap<String, Recipient> stateAverages, int numSeries) {
 
         Legislator legislator = getLegislator(contribution);
         String state = legislator.getTermState();

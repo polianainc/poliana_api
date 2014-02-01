@@ -1,4 +1,4 @@
-package com.poliana.core.industryFinance;
+package com.poliana.core.industryFinance.repositories;
 
 import com.poliana.core.industryFinance.entities.IndustryContributionTotalsMap;
 import org.apache.log4j.Logger;

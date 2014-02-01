@@ -1,41 +1,55 @@
-package com.poliana.streaming;
+package com.poliana.core.common.streaming;
 
+import org.apache.log4j.Logger;
 import org.msgpack.MessagePack;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.exceptions.JedisConnectionException;
 
 import javax.xml.xpath.*;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
  * @author Grayson Carroll
  * @date 1/31/14
  */
+@Component
 public class OpenSecretsSync {
 
     private XPathFactory factory;
     private XPath xpath;
     private InputSource crpXmlInput;
     private JedisPool jedisPool;
-    Jedis jedis;
 
+    private URL url;
 
+    private static final Logger logger = Logger.getLogger(OpenSecretsSync.class);
 
-    public OpenSecretsSync() throws IOException {
+    public OpenSecretsSync() {
         factory = XPathFactory.newInstance();
         xpath = factory.newXPath();
-        String url = "http://www.opensecrets.org/myos/odata_meta.xml";
-        crpXmlInput = new InputSource(new URL(url).openStream());
-        jedis = jedisPool.getResource();
+
+        try {
+            this.setUrl(new URL("http://www.opensecrets.org/myos/odata_meta.xml"));
+        } catch (MalformedURLException e) {
+            logger.error(e);
+        }
     }
 
     public void sync() {
+        try {
+            crpXmlInput = new InputSource(this.url.openStream());
+        } catch (IOException e) {
+            logger.error(e);
+        }
 
         try {
             // Creates an expression that will grab all the top level file objects in the XML
@@ -60,19 +74,20 @@ public class OpenSecretsSync {
                 }
             }
         } catch (XPathExpressionException e) {
-            e.printStackTrace();
+            logger.error(e);
         }
 
     }
 
     private void updateRedisRecord(String filename, String timestamp) {
 
-        MessagePack messagePack = new MessagePack();
+        Jedis jedis = jedisPool.getResource();
+        filename = filename.split("\\.")[0];
         try {
-
-            if(!jedis.exists(messagePack.write(filename))) {
+            if(!jedis.exists(filename)) {
                 //If this is the first run, just write it
-                jedis.lpush(messagePack.write(filename), messagePack.write(timestamp));
+                jedis.set(filename, timestamp);
+
             } else {
                 long oldTimestamp = Long.parseLong(jedis.get(filename), 10);
                 long newTimestamp = Long.parseLong(timestamp, 10);
@@ -86,8 +101,14 @@ public class OpenSecretsSync {
                     return;
                 }
             }
-        } catch(IOException e) {
-            e.printStackTrace();
+        } catch (JedisConnectionException e) {
+            if (null != jedis) {
+                jedisPool.returnBrokenResource(jedis);
+                jedis = null;
+            }
+        } finally {
+            if (null != jedis)
+                jedisPool.returnResource(jedis);
         }
 
 
@@ -98,19 +119,16 @@ public class OpenSecretsSync {
         return;
     }
 
+    public void setUrl(URL url) {
+        this.url = url;
+    }
+
+    public void setCrpXmlInput(InputSource crpXmlInput) {
+        this.crpXmlInput = crpXmlInput;
+    }
+
     @Autowired
     public void setJedisPool(JedisPool jedisPool) {
         this.jedisPool = jedisPool;
-    }
-
-    public static void main(String[] args) {
-
-        try {
-            OpenSecretsSync osSync = new OpenSecretsSync();
-            osSync.sync();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

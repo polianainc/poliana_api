@@ -14,7 +14,7 @@ import org.mongodb.morphia.annotations.Property;
  */
 @Entity("industry_to_politician_contribution_totals")
 @JsonIgnoreProperties({"id"})
-public class PoliticianIndustryContributionTotals {
+public class PoliticianIndustryContributionsTotals {
 
     @Id
     private String id;

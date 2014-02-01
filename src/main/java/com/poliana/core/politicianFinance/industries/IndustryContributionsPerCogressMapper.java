@@ -14,20 +14,21 @@ import java.util.List;
  * @author David Gilmore
  * @date 12/27/13
  */
-public class IndustryContributionsPerCogressMapper implements ResultSetExtractor<HashMap<Integer, List<PoliticianIndustryContributionTotals>>> {
-    @Override
-    public HashMap<Integer, List<PoliticianIndustryContributionTotals>> extractData(ResultSet rs) throws SQLException, DataAccessException {
+public class IndustryContributionsPerCogressMapper implements ResultSetExtractor<HashMap<Integer, List<PoliticianIndustryContributionsTotals>>> {
 
-        HashMap<Integer, List<PoliticianIndustryContributionTotals>> allTotals = new HashMap<>();
+    @Override
+    public HashMap<Integer, List<PoliticianIndustryContributionsTotals>> extractData(ResultSet rs) throws SQLException, DataAccessException {
+
+        HashMap<Integer, List<PoliticianIndustryContributionsTotals>> allTotals = new HashMap<>();
         ContributionMapper contrMapper = new ContributionMapper();
 
         int index = 1;
         while (rs.next()) {
-            PoliticianIndustryContributionTotals totals = contrMapper.mapRow(rs, index);
+            PoliticianIndustryContributionsTotals totals = contrMapper.mapRow(rs, index);
             if (allTotals.containsKey(totals.getCongress()))
                 allTotals.get(totals.getCongress()).add(totals);
             else {
-                List<PoliticianIndustryContributionTotals> cycleTotals = new LinkedList<>();
+                List<PoliticianIndustryContributionsTotals> cycleTotals = new LinkedList<>();
                 cycleTotals.add(totals);
                 allTotals.put(totals.getCongress(), cycleTotals);
             }
@@ -37,20 +38,43 @@ public class IndustryContributionsPerCogressMapper implements ResultSetExtractor
         return allTotals;
     }
 
-    class ContributionMapper implements RowMapper<PoliticianIndustryContributionTotals> {
+    class ContributionMapper implements RowMapper<PoliticianIndustryContributionsTotals> {
 
         @Override
-        public PoliticianIndustryContributionTotals mapRow(ResultSet rs, int rowNum) throws SQLException, DataAccessException {
+        public PoliticianIndustryContributionsTotals mapRow(ResultSet rs, int rowNum) throws SQLException, DataAccessException {
 
-            PoliticianIndustryContributionTotals ind = new PoliticianIndustryContributionTotals();
+            PoliticianIndustryContributionsTotals ind = new PoliticianIndustryContributionsTotals();
 
             ind.setBioguideId(rs.getString("bioguide_id"));
-            ind.setIndustryId(rs.getString("real_code"));
-            ind.setIndustryName(rs.getString("industry"));
+            ind.setFirstName(rs.getString("first_name"));
+            ind.setLastName(rs.getString("last_name"));
+            ind.setParty(rs.getString("party"));
+            ind.setReligion(rs.getString("religion"));
+
+            try {
+                ind.setCategoryId(rs.getString("category_id"));
+            } catch (Exception e) {}
+
+            try {
+                ind.setIndustryId(rs.getString("industry_id"));
+            } catch (Exception e) {}
+
+            try {
+                ind.setIndustryName(rs.getString("category_name"));
+            } catch (Exception e) {}
+
+            try {
+                ind.setIndustryName(rs.getString("industry"));
+            } catch (Exception e) {}
+
+
             ind.setSector(rs.getString("sector"));
             ind.setSectorLong(rs.getString("sector_long"));
+
             ind.setCongress(rs.getInt("congress"));
-            ind.setContributionSum(rs.getInt(7));
+
+            ind.setContributionCount(rs.getInt("contribution_count"));
+            ind.setContributionSum(rs.getInt("contribution_sum"));
 
             return ind;
         }

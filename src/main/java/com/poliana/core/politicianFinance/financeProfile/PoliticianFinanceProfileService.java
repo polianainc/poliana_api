@@ -5,7 +5,7 @@ import com.poliana.core.ideology.LegislatorIdeology;
 import com.poliana.core.legislators.Legislator;
 import com.poliana.core.legislators.LegislatorService;
 import com.poliana.core.pacFinance.entities.PacPoliticianContributionTotals;
-import com.poliana.core.politicianFinance.industries.PoliticianIndustryContributionTotals;
+import com.poliana.core.politicianFinance.industries.PoliticianIndustryContributionsTotals;
 import com.poliana.core.politicianFinance.industries.PoliticianIndustryFinanceService;
 import com.poliana.core.politicianFinance.industries.PoliticianIndustryMongoRepo;
 import com.poliana.core.politicianFinance.pacs.PoliticianPacContributionsTotals;
@@ -149,7 +149,7 @@ public class PoliticianFinanceProfileService {
      */
     private void setIndustryTotals(String bioguideId, HashMap<Integer, SessionTotals> termTotalsMap) {
 
-        HashMap<Integer, List<PoliticianIndustryContributionTotals>> totalsHashMap = politicianIndustryFinanceService.getIndustryToPoliticianTotalsPerCongress(bioguideId);
+        HashMap<Integer, List<PoliticianIndustryContributionsTotals>> totalsHashMap = politicianIndustryFinanceService.getIndustryToPoliticianTotalsPerCongress(bioguideId);
 
         for (Integer cycle: totalsHashMap.keySet()) {
             if (termTotalsMap.containsKey(cycle)) {

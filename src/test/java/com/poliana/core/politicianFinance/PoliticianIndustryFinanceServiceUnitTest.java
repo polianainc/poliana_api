@@ -1,6 +1,6 @@
 package com.poliana.core.politicianFinance;
 
-import com.poliana.core.politicianFinance.industries.PoliticianIndustryContributionTotals;
+import com.poliana.core.politicianFinance.industries.PoliticianIndustryContributionsTotals;
 import com.poliana.core.politicianFinance.industries.PoliticianIndustryFinanceService;
 import com.poliana.core.politicianFinance.industries.PoliticianIndustryHadoopRepo;
 import com.poliana.core.politicianFinance.industries.PoliticianIndustryMongoRepo;
@@ -52,13 +52,13 @@ public class PoliticianIndustryFinanceServiceUnitTest {
     @Test
     public void testGetIndustryToPoliticianTotals_ByCongress() throws Exception {
 
-        List<PoliticianIndustryContributionTotals> contributionsListMock = new LinkedList<>();
-        contributionsListMock.add(new PoliticianIndustryContributionTotals());
+        List<PoliticianIndustryContributionsTotals> contributionsListMock = new LinkedList<>();
+        contributionsListMock.add(new PoliticianIndustryContributionsTotals());
 
         expect(this.politicianIndustryMongoRepoMock.getIndustryToPoliticianContributions("O000167", 113)).andReturn(null);
         expect(this.politicianIndustryHadoopRepoMock.getIndustryToPoliticianContributions("O000167", 113)).andReturn(contributionsListMock);
         expect(this.politicianIndustryMongoRepoMock.saveIndustryToPoliticianContributions(contributionsListMock))
-                .andReturn(new ArrayList<Key<PoliticianIndustryContributionTotals>>());
+                .andReturn(new ArrayList<Key<PoliticianIndustryContributionsTotals>>());
 
         this.control.replay();
 
@@ -70,13 +70,13 @@ public class PoliticianIndustryFinanceServiceUnitTest {
     @Test
     public void testGetIndustryCategoryToPoliticianTotals_ByCongress() throws Exception {
 
-        List<PoliticianIndustryContributionTotals> contributionsListMock = new LinkedList<>();
-        contributionsListMock.add(new PoliticianIndustryContributionTotals());
+        List<PoliticianIndustryContributionsTotals> contributionsListMock = new LinkedList<>();
+        contributionsListMock.add(new PoliticianIndustryContributionsTotals());
 
         expect(this.politicianIndustryMongoRepoMock.getIndustryCategoryToPoliticianContributions("O000167", 113)).andReturn(null);
         expect(this.politicianIndustryHadoopRepoMock.getIndustryCategoryToPoliticianContributions("O000167", 113)).andReturn(contributionsListMock);
         expect(this.politicianIndustryMongoRepoMock.saveIndustryToPoliticianContributions(contributionsListMock))
-                .andReturn(new ArrayList<Key<PoliticianIndustryContributionTotals>>());
+                .andReturn(new ArrayList<Key<PoliticianIndustryContributionsTotals>>());
 
         this.control.replay();
 
@@ -88,13 +88,13 @@ public class PoliticianIndustryFinanceServiceUnitTest {
     @Test
     public void testGetIndustryToPoliticianTotals_ByStartAndEnd() throws Exception {
 
-        List<PoliticianIndustryContributionTotals> contributionsListMock = new LinkedList<>();
-        contributionsListMock.add(new PoliticianIndustryContributionTotals());
+        List<PoliticianIndustryContributionsTotals> contributionsListMock = new LinkedList<>();
+        contributionsListMock.add(new PoliticianIndustryContributionsTotals());
 
         expect(this.politicianIndustryMongoRepoMock.getIndustryToPoliticianContributions("O000167", 123456789L, 123456789L)).andReturn(null);
         expect(this.politicianIndustryHadoopRepoMock.getIndustryToPoliticianContributions("O000167", 123456789L, 123456789L)).andReturn(contributionsListMock);
         expect(this.politicianIndustryMongoRepoMock.saveIndustryToPoliticianContributions(contributionsListMock))
-                .andReturn(new ArrayList<Key<PoliticianIndustryContributionTotals>>());
+                .andReturn(new ArrayList<Key<PoliticianIndustryContributionsTotals>>());
 
         this.control.replay();
 
@@ -106,13 +106,13 @@ public class PoliticianIndustryFinanceServiceUnitTest {
     @Test
     public void testGetIndustryCategoryToPoliticianTotals_ByStartAndEnd() throws Exception {
 
-        List<PoliticianIndustryContributionTotals> contributionsListMock = new LinkedList<>();
-        contributionsListMock.add(new PoliticianIndustryContributionTotals());
+        List<PoliticianIndustryContributionsTotals> contributionsListMock = new LinkedList<>();
+        contributionsListMock.add(new PoliticianIndustryContributionsTotals());
 
         expect(this.politicianIndustryMongoRepoMock.getIndustryCateogryToPoliticianContributions("O000167", 123456789L, 123456789L)).andReturn(null);
         expect(this.politicianIndustryHadoopRepoMock.getIndustryCategoryToPoliticianContributions("O000167", 123456789L, 123456789L)).andReturn(contributionsListMock);
         expect(this.politicianIndustryMongoRepoMock.saveIndustryToPoliticianContributions(contributionsListMock))
-                .andReturn(new ArrayList<Key<PoliticianIndustryContributionTotals>>());
+                .andReturn(new ArrayList<Key<PoliticianIndustryContributionsTotals>>());
 
         this.control.replay();
 
@@ -124,13 +124,13 @@ public class PoliticianIndustryFinanceServiceUnitTest {
     @Test
     public void testGetIndustryToPoliticianTotals_AllTime() throws Exception {
 
-        List<PoliticianIndustryContributionTotals> contributionsListMock = new LinkedList<>();
-        contributionsListMock.add(new PoliticianIndustryContributionTotals());
+        List<PoliticianIndustryContributionsTotals> contributionsListMock = new LinkedList<>();
+        contributionsListMock.add(new PoliticianIndustryContributionsTotals());
 
         expect(this.politicianIndustryMongoRepoMock.getIndustryToPoliticianContributions("O000167")).andReturn(null);
         expect(this.politicianIndustryHadoopRepoMock.getIndustryToPoliticianContributions("O000167")).andReturn(contributionsListMock);
         expect(this.politicianIndustryMongoRepoMock.saveIndustryToPoliticianContributions(contributionsListMock))
-                .andReturn(new ArrayList<Key<PoliticianIndustryContributionTotals>>());
+                .andReturn(new ArrayList<Key<PoliticianIndustryContributionsTotals>>());
 
         this.control.replay();
 
@@ -142,13 +142,13 @@ public class PoliticianIndustryFinanceServiceUnitTest {
     @Test
     public void testGetIndustryCategoryToPoliticianTotals_AllTime() throws Exception {
 
-        List<PoliticianIndustryContributionTotals> contributionsListMock = new LinkedList<>();
-        contributionsListMock.add(new PoliticianIndustryContributionTotals());
+        List<PoliticianIndustryContributionsTotals> contributionsListMock = new LinkedList<>();
+        contributionsListMock.add(new PoliticianIndustryContributionsTotals());
 
         expect(this.politicianIndustryMongoRepoMock.getIndustryToPoliticianContributions("O000167")).andReturn(null);
         expect(this.politicianIndustryHadoopRepoMock.getIndustryToPoliticianContributions("O000167")).andReturn(contributionsListMock);
         expect(this.politicianIndustryMongoRepoMock.saveIndustryToPoliticianContributions(contributionsListMock))
-                .andReturn(new ArrayList<Key<PoliticianIndustryContributionTotals>>());
+                .andReturn(new ArrayList<Key<PoliticianIndustryContributionsTotals>>());
 
         this.control.replay();
 
@@ -161,13 +161,13 @@ public class PoliticianIndustryFinanceServiceUnitTest {
     public void testGetIndustryToPoliticianTotalsPerCongress__AllTime() throws Exception {
 
 
-        List<PoliticianIndustryContributionTotals> contributionsListMock = new LinkedList<>();
-        List<PoliticianIndustryContributionTotals> contributionsListMock1 = new LinkedList<>();
+        List<PoliticianIndustryContributionsTotals> contributionsListMock = new LinkedList<>();
+        List<PoliticianIndustryContributionsTotals> contributionsListMock1 = new LinkedList<>();
 
-        contributionsListMock.add(new PoliticianIndustryContributionTotals());
-        contributionsListMock1.add(new PoliticianIndustryContributionTotals());
+        contributionsListMock.add(new PoliticianIndustryContributionsTotals());
+        contributionsListMock1.add(new PoliticianIndustryContributionsTotals());
 
-        HashMap<Integer, List<PoliticianIndustryContributionTotals>> contributionsMapMock = new HashMap<>();
+        HashMap<Integer, List<PoliticianIndustryContributionsTotals>> contributionsMapMock = new HashMap<>();
 
         contributionsMapMock.put(new Integer(110), contributionsListMock);
         contributionsMapMock.put(new Integer(111), contributionsListMock1);
@@ -177,7 +177,7 @@ public class PoliticianIndustryFinanceServiceUnitTest {
         expect(this.politicianIndustryMongoRepoMock.countIndustryToPoliticianContributions("O000167", 110)).andReturn(0L);
 
         expect(this.politicianIndustryMongoRepoMock.saveIndustryToPoliticianContributions(contributionsListMock))
-                .andReturn(new ArrayList<Key<PoliticianIndustryContributionTotals>>());
+                .andReturn(new ArrayList<Key<PoliticianIndustryContributionsTotals>>());
 
         expect(this.politicianIndustryMongoRepoMock.countIndustryToPoliticianContributions("O000167", 111)).andReturn(1L);
 
@@ -191,13 +191,13 @@ public class PoliticianIndustryFinanceServiceUnitTest {
     @Test
     public void testGetIndustryCategoryToPoliticianTotalsPerCongress__AllTime() throws Exception {
 
-        List<PoliticianIndustryContributionTotals> contributionsListMock = new LinkedList<>();
-        List<PoliticianIndustryContributionTotals> contributionsListMock1 = new LinkedList<>();
+        List<PoliticianIndustryContributionsTotals> contributionsListMock = new LinkedList<>();
+        List<PoliticianIndustryContributionsTotals> contributionsListMock1 = new LinkedList<>();
 
-        contributionsListMock.add(new PoliticianIndustryContributionTotals());
-        contributionsListMock1.add(new PoliticianIndustryContributionTotals());
+        contributionsListMock.add(new PoliticianIndustryContributionsTotals());
+        contributionsListMock1.add(new PoliticianIndustryContributionsTotals());
 
-        HashMap<Integer, List<PoliticianIndustryContributionTotals>> contributionsMapMock = new HashMap<>();
+        HashMap<Integer, List<PoliticianIndustryContributionsTotals>> contributionsMapMock = new HashMap<>();
 
         contributionsMapMock.put(new Integer(110), contributionsListMock);
         contributionsMapMock.put(new Integer(111), contributionsListMock1);
@@ -207,7 +207,7 @@ public class PoliticianIndustryFinanceServiceUnitTest {
         expect(this.politicianIndustryMongoRepoMock.countIndustryCategoryToPoliticianContributions("O000167", 110)).andReturn(0L);
 
         expect(this.politicianIndustryMongoRepoMock.saveIndustryToPoliticianContributions(contributionsListMock))
-                .andReturn(new ArrayList<Key<PoliticianIndustryContributionTotals>>());
+                .andReturn(new ArrayList<Key<PoliticianIndustryContributionsTotals>>());
 
         expect(this.politicianIndustryMongoRepoMock.countIndustryCategoryToPoliticianContributions("O000167", 111)).andReturn(1L);
 
@@ -221,13 +221,13 @@ public class PoliticianIndustryFinanceServiceUnitTest {
     @Test
     public void testGetIndustryToPoliticianTotalsPerCongress__ByTimeRange() throws Exception {
 
-        List<PoliticianIndustryContributionTotals> contributionsListMock = new LinkedList<>();
-        List<PoliticianIndustryContributionTotals> contributionsListMock1 = new LinkedList<>();
+        List<PoliticianIndustryContributionsTotals> contributionsListMock = new LinkedList<>();
+        List<PoliticianIndustryContributionsTotals> contributionsListMock1 = new LinkedList<>();
 
-        contributionsListMock.add(new PoliticianIndustryContributionTotals());
-        contributionsListMock1.add(new PoliticianIndustryContributionTotals());
+        contributionsListMock.add(new PoliticianIndustryContributionsTotals());
+        contributionsListMock1.add(new PoliticianIndustryContributionsTotals());
 
-        HashMap<Integer, List<PoliticianIndustryContributionTotals>> contributionsMapMock = new HashMap<>();
+        HashMap<Integer, List<PoliticianIndustryContributionsTotals>> contributionsMapMock = new HashMap<>();
 
         contributionsMapMock.put(new Integer(110), contributionsListMock);
         contributionsMapMock.put(new Integer(111), contributionsListMock1);
@@ -239,7 +239,7 @@ public class PoliticianIndustryFinanceServiceUnitTest {
         expect(this.politicianIndustryMongoRepoMock.countIndustryToPoliticianContributions("O000167", 110)).andReturn(0L);
 
         expect(this.politicianIndustryMongoRepoMock.saveIndustryToPoliticianContributions(contributionsListMock))
-                .andReturn(new ArrayList<Key<PoliticianIndustryContributionTotals>>());
+                .andReturn(new ArrayList<Key<PoliticianIndustryContributionsTotals>>());
 
         expect(this.politicianIndustryMongoRepoMock.countIndustryToPoliticianContributions("O000167", 111)).andReturn(1L);
 
@@ -253,13 +253,13 @@ public class PoliticianIndustryFinanceServiceUnitTest {
     @Test
     public void testGetIndustryCategoryToPoliticianTotalsPerCongress__ByTimeRange() throws Exception {
 
-        List<PoliticianIndustryContributionTotals> contributionsListMock = new LinkedList<>();
-        List<PoliticianIndustryContributionTotals> contributionsListMock1 = new LinkedList<>();
+        List<PoliticianIndustryContributionsTotals> contributionsListMock = new LinkedList<>();
+        List<PoliticianIndustryContributionsTotals> contributionsListMock1 = new LinkedList<>();
 
-        contributionsListMock.add(new PoliticianIndustryContributionTotals());
-        contributionsListMock1.add(new PoliticianIndustryContributionTotals());
+        contributionsListMock.add(new PoliticianIndustryContributionsTotals());
+        contributionsListMock1.add(new PoliticianIndustryContributionsTotals());
 
-        HashMap<Integer, List<PoliticianIndustryContributionTotals>> contributionsMapMock = new HashMap<>();
+        HashMap<Integer, List<PoliticianIndustryContributionsTotals>> contributionsMapMock = new HashMap<>();
 
         contributionsMapMock.put(new Integer(110), contributionsListMock);
         contributionsMapMock.put(new Integer(111), contributionsListMock1);
@@ -271,7 +271,7 @@ public class PoliticianIndustryFinanceServiceUnitTest {
         expect(this.politicianIndustryMongoRepoMock.countIndustryCategoryToPoliticianContributions("O000167", 110)).andReturn(0L);
 
         expect(this.politicianIndustryMongoRepoMock.saveIndustryToPoliticianContributions(contributionsListMock))
-                .andReturn(new ArrayList<Key<PoliticianIndustryContributionTotals>>());
+                .andReturn(new ArrayList<Key<PoliticianIndustryContributionsTotals>>());
 
         expect(this.politicianIndustryMongoRepoMock.countIndustryCategoryToPoliticianContributions("O000167", 111)).andReturn(1L);
 

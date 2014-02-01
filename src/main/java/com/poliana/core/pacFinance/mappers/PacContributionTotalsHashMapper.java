@@ -50,6 +50,9 @@ public class PacContributionTotalsHashMapper implements ResultSetExtractor<PacCo
 
             if (!detailsSet) {
 
+                totals.setPacId(rs.getString("pac_id"));
+                totals.setPacName(rs.getString("pac_name"));
+
                 try {
                     totals.setCongress(rs.getInt("congress"));
                 }
@@ -69,7 +72,8 @@ public class PacContributionTotalsHashMapper implements ResultSetExtractor<PacCo
 
         }
 
+        totals.setSums(sums);
+
         return totals;
     }
-
 }

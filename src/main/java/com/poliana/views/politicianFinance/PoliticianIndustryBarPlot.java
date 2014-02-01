@@ -1,6 +1,6 @@
 package com.poliana.views.politicianFinance;
 
-import com.poliana.core.politicianFinance.industries.PoliticianIndustryContributionTotals;
+import com.poliana.core.politicianFinance.industries.PoliticianIndustryContributionsTotals;
 import com.poliana.core.time.TimeService;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -32,13 +32,13 @@ public class PoliticianIndustryBarPlot extends JFrame {
     /**
      * Plot industry to politician contribution totals for a given chamber in a given congressional cycle.
      */
-    public PoliticianIndustryBarPlot(List<PoliticianIndustryContributionTotals> contributions) {
+    public PoliticianIndustryBarPlot(List<PoliticianIndustryContributionsTotals> contributions) {
 
         this.timeService = new TimeService();
 
         if (contributions != null && contributions.size() > 0) {
 
-            PoliticianIndustryContributionTotals totals = contributions.get(0);
+            PoliticianIndustryContributionsTotals totals = contributions.get(0);
 
             this.title =
                     "Industry contributions  to " +
@@ -56,13 +56,13 @@ public class PoliticianIndustryBarPlot extends JFrame {
      * @param contributions
      * @param congress
      */
-    public PoliticianIndustryBarPlot(List<PoliticianIndustryContributionTotals> contributions, int congress) {
+    public PoliticianIndustryBarPlot(List<PoliticianIndustryContributionsTotals> contributions, int congress) {
 
         this.timeService = new TimeService();
 
         if (contributions != null && contributions.size() > 0) {
 
-            PoliticianIndustryContributionTotals totals = contributions.get(0);
+            PoliticianIndustryContributionsTotals totals = contributions.get(0);
 
             this.title =
                     "Industry contributions  to " +
@@ -83,13 +83,13 @@ public class PoliticianIndustryBarPlot extends JFrame {
     /**
      * Plot industry to politician contribution totals for a given chamber in a given congressional cycle.
      */
-    public PoliticianIndustryBarPlot(List<PoliticianIndustryContributionTotals> contributions, Date start, Date end) {
+    public PoliticianIndustryBarPlot(List<PoliticianIndustryContributionsTotals> contributions, Date start, Date end) {
 
         this.timeService = new TimeService();
 
         if (contributions != null && contributions.size() > 0) {
 
-            PoliticianIndustryContributionTotals totals = contributions.get(0);
+            PoliticianIndustryContributionsTotals totals = contributions.get(0);
 
             this.title =
                     "Industry contributions  to " +
@@ -146,7 +146,7 @@ public class PoliticianIndustryBarPlot extends JFrame {
         return chart;
     }
 
-    private CategoryDataset getContributionDataset(List<PoliticianIndustryContributionTotals> contributions) {
+    private CategoryDataset getContributionDataset(List<PoliticianIndustryContributionsTotals> contributions) {
 
         //TODO: sort contributions and add include/exclude functionality
 
@@ -155,7 +155,7 @@ public class PoliticianIndustryBarPlot extends JFrame {
         if (contributions == null)
             return dataset;
 
-        for (PoliticianIndustryContributionTotals contribution: contributions) {
+        for (PoliticianIndustryContributionsTotals contribution: contributions) {
             dataset.addValue(contribution.getContributionSum(), "", contribution.getIndustryName());
         }
 

@@ -9,7 +9,7 @@ import java.sql.SQLException;
  * @author David Gilmore
  * @date 11/1/13
  */
-public class PoliticianIndustryContributionTotalsMapper implements RowMapper<PoliticianIndustryContributionTotals> {
+public class PoliticianIndustryContributionTotalsMapper implements RowMapper<PoliticianIndustryContributionsTotals> {
 
     private Long beginTimestamp;
     private Long endTimestamp;
@@ -22,9 +22,9 @@ public class PoliticianIndustryContributionTotalsMapper implements RowMapper<Pol
         this.endTimestamp = endTimestamp;
     }
 
-    public PoliticianIndustryContributionTotals mapRow(ResultSet rs, int rowNum) throws SQLException {
+    public PoliticianIndustryContributionsTotals mapRow(ResultSet rs, int rowNum) throws SQLException {
 
-        PoliticianIndustryContributionTotals totals = new PoliticianIndustryContributionTotals();
+        PoliticianIndustryContributionsTotals totals = new PoliticianIndustryContributionsTotals();
 
         try {
             totals.setBioguideId(rs.getString("bioguide_id"));

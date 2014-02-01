@@ -1,7 +1,6 @@
 package com.poliana.core.politicianFinance.industries;
 
 import com.poliana.core.politicianFinance.financeProfile.SessionTotals;
-import com.poliana.core.politicianFinance.pacs.PoliticianPacContributionsTotals;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.query.Query;
@@ -31,7 +30,7 @@ public class PoliticianIndustryMongoRepo {
      * @param totalsList
      * @return
      */
-    public Iterable<Key<PoliticianIndustryContributionTotals>> saveIndustryToPoliticianContributions(List<PoliticianIndustryContributionTotals> totalsList) {
+    public Iterable<Key<PoliticianIndustryContributionsTotals>> saveIndustryToPoliticianContributions(List<PoliticianIndustryContributionsTotals> totalsList) {
 
         return mongoStore.save(totalsList);
     }
@@ -58,9 +57,9 @@ public class PoliticianIndustryMongoRepo {
      * @param bioguideId
      * @return
      */
-    public List<PoliticianIndustryContributionTotals> getIndustryToPoliticianContributions(String bioguideId, int congress) {
+    public List<PoliticianIndustryContributionsTotals> getIndustryToPoliticianContributions(String bioguideId, int congress) {
 
-        Query<PoliticianIndustryContributionTotals> query = mongoStore.find(PoliticianIndustryContributionTotals.class);
+        Query<PoliticianIndustryContributionsTotals> query = mongoStore.find(PoliticianIndustryContributionsTotals.class);
 
         query.and(
                 query.criteria("bioguideId").equal(bioguideId),
@@ -74,9 +73,9 @@ public class PoliticianIndustryMongoRepo {
      * @param bioguideId
      * @return
      */
-    public List<PoliticianIndustryContributionTotals> getIndustryCategoryToPoliticianContributions(String bioguideId, int congress) {
+    public List<PoliticianIndustryContributionsTotals> getIndustryCategoryToPoliticianContributions(String bioguideId, int congress) {
 
-        Query<PoliticianIndustryContributionTotals> query = mongoStore.find(PoliticianIndustryContributionTotals.class);
+        Query<PoliticianIndustryContributionsTotals> query = mongoStore.find(PoliticianIndustryContributionsTotals.class);
 
         query.and(
                 query.criteria("bioguideId").equal(bioguideId),
@@ -97,10 +96,10 @@ public class PoliticianIndustryMongoRepo {
      * @param endTimestamp
      * @return
      */
-    public List<PoliticianIndustryContributionTotals> getIndustryToPoliticianContributions(
+    public List<PoliticianIndustryContributionsTotals> getIndustryToPoliticianContributions(
             String bioguideId, long beginTimestamp, long endTimestamp) {
 
-        Query<PoliticianIndustryContributionTotals> query = mongoStore.find(PoliticianIndustryContributionTotals.class);
+        Query<PoliticianIndustryContributionsTotals> query = mongoStore.find(PoliticianIndustryContributionsTotals.class);
 
         query.and(
                 query.criteria("bioguideId").equal(bioguideId),
@@ -118,10 +117,10 @@ public class PoliticianIndustryMongoRepo {
      * @param endTimestamp
      * @return
      */
-    public List<PoliticianIndustryContributionTotals> getIndustryCateogryToPoliticianContributions(
+    public List<PoliticianIndustryContributionsTotals> getIndustryCateogryToPoliticianContributions(
             String bioguideId, long beginTimestamp, long endTimestamp) {
 
-        Query<PoliticianIndustryContributionTotals> query = mongoStore.find(PoliticianIndustryContributionTotals.class);
+        Query<PoliticianIndustryContributionsTotals> query = mongoStore.find(PoliticianIndustryContributionsTotals.class);
 
         query.and(
                 query.criteria("bioguideId").equal(bioguideId),
@@ -138,9 +137,9 @@ public class PoliticianIndustryMongoRepo {
      * @param bioguideId
      * @return
      */
-    public Iterator<PoliticianIndustryContributionTotals> getIndustryToPoliticianContributionsIterator(String bioguideId) {
+    public Iterator<PoliticianIndustryContributionsTotals> getIndustryToPoliticianContributionsIterator(String bioguideId) {
 
-        Query<PoliticianIndustryContributionTotals> query = mongoStore.find(PoliticianIndustryContributionTotals.class);
+        Query<PoliticianIndustryContributionsTotals> query = mongoStore.find(PoliticianIndustryContributionsTotals.class);
 
         query.and(
                 query.criteria("bioguideId").equal(bioguideId),
@@ -159,9 +158,9 @@ public class PoliticianIndustryMongoRepo {
      * @param bioguideId
      * @return
      */
-    public List<PoliticianIndustryContributionTotals> getIndustryToPoliticianContributions(String bioguideId) {
+    public List<PoliticianIndustryContributionsTotals> getIndustryToPoliticianContributions(String bioguideId) {
 
-        Query<PoliticianIndustryContributionTotals> query = mongoStore.find(PoliticianIndustryContributionTotals.class);
+        Query<PoliticianIndustryContributionsTotals> query = mongoStore.find(PoliticianIndustryContributionsTotals.class);
 
         query.and(
                 query.criteria("bioguideId").equal(bioguideId),
@@ -180,9 +179,9 @@ public class PoliticianIndustryMongoRepo {
      * @param bioguideId
      * @return
      */
-    public List<PoliticianIndustryContributionTotals> getIndustryCategoryToPoliticianContributions(String bioguideId) {
+    public List<PoliticianIndustryContributionsTotals> getIndustryCategoryToPoliticianContributions(String bioguideId) {
 
-        Query<PoliticianIndustryContributionTotals> query = mongoStore.find(PoliticianIndustryContributionTotals.class);
+        Query<PoliticianIndustryContributionsTotals> query = mongoStore.find(PoliticianIndustryContributionsTotals.class);
 
         query.and(
                 query.criteria("bioguideId").equal(bioguideId),
@@ -202,9 +201,9 @@ public class PoliticianIndustryMongoRepo {
      * @param cycles
      * @return
      */
-    public Iterator<PoliticianIndustryContributionTotals> getIndustryToPoliticianContributionsIterator(String bioguideId, Integer... cycles) {
+    public Iterator<PoliticianIndustryContributionsTotals> getIndustryToPoliticianContributionsIterator(String bioguideId, Integer... cycles) {
 
-        Query<PoliticianIndustryContributionTotals> query = mongoStore.find(PoliticianIndustryContributionTotals.class);
+        Query<PoliticianIndustryContributionsTotals> query = mongoStore.find(PoliticianIndustryContributionsTotals.class);
 
         query.and(
                 query.criteria("bioguideId").equal(bioguideId),
@@ -221,9 +220,9 @@ public class PoliticianIndustryMongoRepo {
      * @param cycles
      * @return
      */
-    public Iterator<PoliticianIndustryContributionTotals> getIndustryCategoryToPoliticianContributionsIterator(String bioguideId, Integer... cycles) {
+    public Iterator<PoliticianIndustryContributionsTotals> getIndustryCategoryToPoliticianContributionsIterator(String bioguideId, Integer... cycles) {
 
-        Query<PoliticianIndustryContributionTotals> query = mongoStore.find(PoliticianIndustryContributionTotals.class);
+        Query<PoliticianIndustryContributionsTotals> query = mongoStore.find(PoliticianIndustryContributionsTotals.class);
 
         query.and(
                 query.criteria("bioguideId").equal(bioguideId),
@@ -242,7 +241,7 @@ public class PoliticianIndustryMongoRepo {
      */
     public long countIndustryToPoliticianContributions(String bioguideId, int congress) {
 
-        Query<PoliticianIndustryContributionTotals> query = mongoStore.find(PoliticianIndustryContributionTotals.class);
+        Query<PoliticianIndustryContributionsTotals> query = mongoStore.find(PoliticianIndustryContributionsTotals.class);
 
         query.and(
                 query.criteria("bioguideId").equal(bioguideId),
@@ -260,7 +259,7 @@ public class PoliticianIndustryMongoRepo {
      */
     public long countIndustryCategoryToPoliticianContributions(String bioguideId, int congress) {
 
-        Query<PoliticianIndustryContributionTotals> query = mongoStore.find(PoliticianIndustryContributionTotals.class);
+        Query<PoliticianIndustryContributionsTotals> query = mongoStore.find(PoliticianIndustryContributionsTotals.class);
 
         query.and(
                 query.criteria("bioguideId").equal(bioguideId),

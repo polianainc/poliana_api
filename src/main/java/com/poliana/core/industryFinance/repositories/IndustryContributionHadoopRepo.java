@@ -2,7 +2,7 @@ package com.poliana.core.industryFinance.repositories;
 
 import com.poliana.core.industryFinance.entities.IndustryContributionTotalsMap;
 import com.poliana.core.industryFinance.mapppers.IndustryContributionTotalsHashMapper;
-import com.poliana.core.politicianFinance.industries.PoliticianIndustryContributionTotals;
+import com.poliana.core.politicianFinance.industries.PoliticianIndustryContributionsTotals;
 import com.poliana.core.politicianFinance.industries.PoliticianIndustryContributionTotalsMapper;
 import com.poliana.core.time.CongressTimestamps;
 import com.poliana.core.time.TimeService;
@@ -519,7 +519,7 @@ public class IndustryContributionHadoopRepo {
      * @param industryId
      * @return
      */
-    public List<PoliticianIndustryContributionTotals> getIndustryToPoliticianContributions(String industryId) {
+    public List<PoliticianIndustryContributionsTotals> getIndustryToPoliticianContributions(String industryId) {
 
         try {
             String query =
@@ -593,7 +593,7 @@ public class IndustryContributionHadoopRepo {
      * @param categoryId
      * @return
      */
-    public List<PoliticianIndustryContributionTotals> getIndustryCategoryToPoliticianContributions(String categoryId) {
+    public List<PoliticianIndustryContributionsTotals> getIndustryCategoryToPoliticianContributions(String categoryId) {
 
         try {
             String query =
@@ -656,7 +656,7 @@ public class IndustryContributionHadoopRepo {
      * @param years
      * @return
      */
-    public List<PoliticianIndustryContributionTotals> getIndustryContributionTotals(String industryId, int... years) {
+    public List<PoliticianIndustryContributionsTotals> getIndustryContributionTotals(String industryId, int... years) {
 
         String yrs;
 

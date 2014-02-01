@@ -63,7 +63,7 @@ public class PacContributionService {
             return chamberTotals;
 
         //If not we'll use Impala to get it
-        chamberTotals = pacContributionHadoopRepo.getPacContributionTotalsMapByChamber(pacId, chamber, congress);
+        chamberTotals = pacContributionHadoopRepo.getPacContributionTotalsMap(pacId, chamber, congress);
 
         if (chamberTotals != null)
             pacContributionMongoRepo.savePacContributionTotalsMap(chamberTotals);

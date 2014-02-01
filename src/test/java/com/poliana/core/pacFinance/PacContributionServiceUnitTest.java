@@ -16,7 +16,7 @@ import static org.easymock.EasyMock.expect;
  * @author David Gilmore
  * @date 1/30/14
  */
-public class PacContributionServiceTest {
+public class PacContributionServiceUnitTest {
 
     private PacContributionService pacContributionService;
 
@@ -63,7 +63,7 @@ public class PacContributionServiceTest {
         PacContributionTotalsMap contributionMap = new PacContributionTotalsMap();
 
         expect(this.pacContributionMongoRepoMock.getPacContributionTotalsMap("K01", "s", 113)).andReturn(null);
-        expect(this.pacContributionHadoopRepoMock.getPacContributionTotalsMapByChamber("K01", "s", 113)).andReturn(contributionMap);
+        expect(this.pacContributionHadoopRepoMock.getPacContributionTotalsMap("K01", "s", 113)).andReturn(contributionMap);
         expect(this.pacContributionMongoRepoMock.savePacContributionTotalsMap(contributionMap))
                 .andReturn(new Key<>(PacContributionTotalsMap.class, new ObjectId()));
 

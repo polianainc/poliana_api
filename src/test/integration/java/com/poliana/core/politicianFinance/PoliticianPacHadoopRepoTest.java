@@ -1,6 +1,8 @@
-package com.poliana.core.politicianFinance.pacs;
+package com.poliana.core.politicianFinance;
 
 import com.poliana.config.ApplicationConfig;
+import com.poliana.core.politicianFinance.pacs.PoliticianPacContributionsTotals;
+import com.poliana.core.politicianFinance.pacs.PoliticianPacHadoopRepo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

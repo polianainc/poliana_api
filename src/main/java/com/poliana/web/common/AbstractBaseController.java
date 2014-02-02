@@ -1,4 +1,4 @@
-package com.poliana.web;
+package com.poliana.web.common;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;

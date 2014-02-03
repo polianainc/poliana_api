@@ -20,23 +20,23 @@ import org.springframework.core.env.Environment;
 @ComponentScan(basePackages = "com.poliana.core")
 @PropertySource(value={"classpath:aws.properties"})
 public class AWSConfig {
-    AWSCredentials credentials;
 
     @Autowired
     Environment env;
 
-    public AWSConfig() {
+    @Bean
+    public AWSCredentials credentials() {
 
         String key, secret;
         key = env.getProperty("awsAccessKeyId");
         secret = env.getProperty("awsSecretAccessKey");
 
-        this.credentials = new BasicAWSCredentials(key, secret);
+        return new BasicAWSCredentials(key, secret);
     }
 
     @Bean
     public AmazonS3 s3Connection() {
-        return new AmazonS3Client(credentials);
+        return new AmazonS3Client(this.credentials());
     }
 }
 

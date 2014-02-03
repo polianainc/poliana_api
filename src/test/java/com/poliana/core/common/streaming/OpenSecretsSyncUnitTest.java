@@ -17,6 +17,7 @@ import static org.easymock.EasyMock.expectLastCall;
  * @author graysoncarroll
  * @date 2/1/14
  */
+
 public class OpenSecretsSyncUnitTest {
     private OpenSecretsSync osSync;
     private JedisPool jedisPoolMock;

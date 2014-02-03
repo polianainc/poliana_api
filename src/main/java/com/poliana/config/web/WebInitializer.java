@@ -5,7 +5,6 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
-
 /**
 * @author David Gilmore
 * @date 12/15/13
@@ -14,7 +13,7 @@ public class WebInitializer extends AbstractAnnotationConfigDispatcherServletIni
 
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class<?>[0];
+        return new Class[0];
     }
 
     @Override
@@ -29,6 +28,7 @@ public class WebInitializer extends AbstractAnnotationConfigDispatcherServletIni
 
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
+
         super.onStartup(servletContext);
     }
 }

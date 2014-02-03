@@ -1,4 +1,4 @@
-package com.poliana.security;
+package com.poliana.core.clients;
 
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.query.Query;

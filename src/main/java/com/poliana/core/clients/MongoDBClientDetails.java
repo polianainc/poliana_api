@@ -1,4 +1,4 @@
-package com.poliana.security;
+package com.poliana.core.clients;
 
 import java.io.IOException;
 import java.util.ArrayList;

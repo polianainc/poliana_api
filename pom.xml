@@ -9,7 +9,7 @@
     <properties>
         <jackson-asl.version>1.9.12</jackson-asl.version>
         <jaxb-api.version>2.2.4</jaxb-api.version>
-        <spring.version>3.2.1.RELEASE</spring.version>
+        <spring.version>3.2.3.RELEASE</spring.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.hadoop.version>1.0.0.RELEASE</spring.hadoop.version>
         <spring.integration.version>2.1.5.RELEASE</spring.integration.version>
@@ -92,6 +92,24 @@
         </dependency>
 
         <!-- Security -->
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>3.2.0.RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+            <version>3.2.0.RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-javaconfig</artifactId>
+            <version>1.0.0.M1</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.security.oauth</groupId>
@@ -420,6 +438,12 @@
     </dependencies>
 
     <repositories>
+
+        <repository>
+            <id>repository.springsource.milestone</id>
+            <name>SpringSource Milestone Repository</name>
+            <url>http://repo.springsource.org/milestone</url>
+        </repository>
 
         <repository>
             <id>spring-milestone</id>

@@ -1,7 +1,9 @@
 package com.poliana.config.web;
 
-import com.poliana.config.web.WebConfig;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 
 
 /**
@@ -25,4 +27,8 @@ public class WebInitializer extends AbstractAnnotationConfigDispatcherServletIni
         return new String[]{ "/" };
     }
 
+    @Override
+    public void onStartup(ServletContext servletContext) throws ServletException {
+        super.onStartup(servletContext);
+    }
 }

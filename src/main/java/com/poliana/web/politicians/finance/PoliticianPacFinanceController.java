@@ -49,7 +49,7 @@ public class PoliticianPacFinanceController extends AbstractBaseController {
      *
      * @param bioguideId
      * @return
-     */
+     */                                                                  //TODO: instead use sum_by
     @RequestMapping(value="/{bioguide_id}/contributions/pacs", params = {"unit"}, method = RequestMethod.GET)
     public @ResponseBody HashMap<Integer, List<PoliticianPacContributionsTotals>> getPacToPoliticianTotalsPerCongress(
             @PathVariable("bioguide_id") String bioguideId) {

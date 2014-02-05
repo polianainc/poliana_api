@@ -20,7 +20,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 public class MultiSecurityConfig {
 
     @Autowired
-    public void registerSharedAuthentication(AuthenticationManagerBuilder auth) throws Exception {
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+
         auth
                 .inMemoryAuthentication()
                 .withUser("user").password("password").roles("USER").and()
@@ -55,15 +56,16 @@ public class MultiSecurityConfig {
                     .authorizeRequests()
                     .antMatchers("/").permitAll() // #4
                     .antMatchers("/admin/**").hasRole("ADMIN") // #6
-                    .anyRequest().authenticated() // 7
-                    .and()
+                    .anyRequest().authenticated();
+
+            http
                     .authorizeRequests()
-                    .anyRequest().hasRole("USER")
-                    .and()
-                    .formLogin()
-                    .loginPage("/login")
-                    .permitAll();
+                    .anyRequest().hasRole("USER");
+
+            http
+                    .formLogin();
+//                    .loginPage("/login")
+//                    .permitAll();
         }
     }
-
 }

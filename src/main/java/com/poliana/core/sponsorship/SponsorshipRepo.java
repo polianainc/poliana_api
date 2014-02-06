@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -65,6 +66,7 @@ public class SponsorshipRepo {
      * @param termChamberMap
      * @return
      */
+    @RolesAllowed("ROLE_ADMIN")
     public HashMap<Integer, List<SponsorshipCount>> getSponsorshipCounts(HashMap<Integer,String> termChamberMap) {
 
         Iterator it = termChamberMap.entrySet().iterator();
@@ -105,6 +107,7 @@ public class SponsorshipRepo {
      * @param congress
      * @return
      */
+    @RolesAllowed("ROLE_ADMIN")
     public List<SponsorshipCount> getSponsorshipCounts(String chamber, int congress) {
 
         try {

@@ -1,8 +1,12 @@
 package com.poliana.config.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.annotation.Order;
+import org.springframework.core.env.Environment;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,30 +20,51 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 */
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled=true)
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class MultiSecurityConfig {
 
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+    @Order(1)
+    @Configuration
+    @PropertySource(value={"classpath:api.properties"})
+    public static class GlobalSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
 
-        auth
-                .inMemoryAuthentication()
-                .withUser("user").password("password").roles("USER").and()
-                .withUser("admin").password("password").roles("USER", "ADMIN");
+        @Autowired
+        Environment env;
+
+        @Override
+        @Bean(name="myAuthenticationManager")
+        public AuthenticationManager authenticationManagerBean() throws Exception {
+            return super.authenticationManagerBean();
+        }
+
+        @Override
+        public void configure(AuthenticationManagerBuilder auth) throws Exception {
+
+            auth
+                    .inMemoryAuthentication()
+
+                    .withUser("user").password("password")
+                    .roles("USER")
+                    .and()
+                    .withUser(env.getProperty("api.user")).password(env.getProperty("api.pass"))
+                    .roles("USER", "ADMIN");
+        }
     }
 
+    @Order(2)
     @Configuration
-    @Order(1)
     public static class ApiWebSecurityConfigurationAdapter extends WebSecurityConfigurerAdapter {
 
 
         protected void configure(HttpSecurity http) throws Exception {
+
             http
                     .antMatcher("/api/**")
                     .httpBasic();
         }
     }
 
+    @Order(3)
     @Configuration
     public static class FormWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
 
@@ -47,25 +72,21 @@ public class MultiSecurityConfig {
 
             web
                     .ignoring()
-                    .antMatchers("/static/**","/status");
+                    .antMatchers("/", "/endpoints");
         }
 
         protected void configure(HttpSecurity http) throws Exception {
 
             http
                     .authorizeRequests()
-                    .antMatchers("/").permitAll() // #4
-                    .antMatchers("/admin/**").hasRole("ADMIN") // #6
-                    .anyRequest().authenticated();
+                        .anyRequest()
+                        .authenticated();
 
             http
-                    .authorizeRequests()
-                    .anyRequest().hasRole("USER");
+                    .exceptionHandling();
 
             http
                     .formLogin();
-//                    .loginPage("/login")
-//                    .permitAll();
         }
     }
 }

@@ -1,9 +1,12 @@
 package com.poliana.config;
 
-import org.springframework.context.annotation.*;
+import com.poliana.config.web.MultiSecurityConfig;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 
 @Configuration
-@Import({ImpalaConfig.class, RedisConfig.class, HiveConfig.class, MongoConfig.class})
 @ComponentScan("com.poliana.core")
+@Import({ImpalaConfig.class, RedisConfig.class, HiveConfig.class, MongoConfig.class, MultiSecurityConfig.class})
 public class ApplicationConfig {}

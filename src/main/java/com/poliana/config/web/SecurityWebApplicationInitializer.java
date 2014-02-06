@@ -3,9 +3,9 @@ package com.poliana.config.web;
 import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
 
 /**
- * @author David Gilmore
- * @date 2/3/14
- */
+* @author David Gilmore
+* @date 2/3/14
+*/
 public class SecurityWebApplicationInitializer extends AbstractSecurityWebApplicationInitializer {
 
     public SecurityWebApplicationInitializer() {

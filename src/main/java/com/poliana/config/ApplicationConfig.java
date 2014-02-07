@@ -8,5 +8,5 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @ComponentScan("com.poliana.core")
-@Import({ImpalaConfig.class, RedisConfig.class, HiveConfig.class, MongoConfig.class, MultiSecurityConfig.class})
+@Import({ImpalaConfig.class, RedisConfig.class, HiveConfig.class, MongoConfig.class, AWSConfig.class, MultiSecurityConfig.class})
 public class ApplicationConfig {}

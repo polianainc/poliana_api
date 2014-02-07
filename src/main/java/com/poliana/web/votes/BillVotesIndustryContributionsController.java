@@ -1,4 +1,4 @@
-package com.poliana.web;
+package com.poliana.web.votes;
 
 import com.poliana.core.voteVsContributions.VoteVsIndustryContributionTotals;
 import com.poliana.core.voteVsContributions.VoteVsIndustryContributions;

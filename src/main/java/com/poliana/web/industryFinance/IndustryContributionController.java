@@ -1,4 +1,4 @@
-package com.poliana.web;
+package com.poliana.web.industryFinance;
 
 import com.poliana.core.ideology.IdeologyMatrix;
 import com.poliana.core.ideology.IdeologyService;
@@ -7,6 +7,7 @@ import com.poliana.core.industryFinance.services.IndustryContributionService;
 import com.poliana.core.industryFinance.entities.IndustryContributionCompare;
 import com.poliana.core.industryFinance.entities.IndustryContributionTotalsMap;
 import com.poliana.views.IndustryContributionBarPlot;
+import com.poliana.web.common.AbstractBaseController;
 import org.apache.log4j.Logger;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
@@ -25,7 +26,7 @@ import static com.poliana.core.time.TimeService.CURRENT_CONGRESS;
  * @date 1/4/14
  */
 @Controller
-@RequestMapping("/industries")
+@RequestMapping("/industries/")
 public class IndustryContributionController extends AbstractBaseController {
 
     private IdeologyService ideologyService;

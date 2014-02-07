@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.HashMap;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import java.util.List;
  * @date 1/26/14
  */
 @Repository
+@RolesAllowed("ROLE_ADMIN")
 public class PoliticianPacHadoopRepo {
 
     private JdbcTemplate impalaTemplate;

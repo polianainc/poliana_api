@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.HashMap;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import java.util.List;
  * @date 1/13/14
  */
 @Repository
+@RolesAllowed("ROLE_ADMIN")
 public class PoliticianIndustryHadoopRepo {
 
     private JdbcTemplate impalaTemplate;
@@ -625,6 +627,7 @@ public class PoliticianIndustryHadoopRepo {
                 "   , real_code as category_id" +
                 "   , party" +
                 "   , religion" +
+                "   , congress" +
                 "   , industry" +
                 "   , sector" +
                 "   , sector_long" +
@@ -639,6 +642,7 @@ public class PoliticianIndustryHadoopRepo {
                 "       , real_code  " +
                 "       , party" +
                 "       , religion" +
+                "       , congress" +
                 "       , COUNT(amount) as contribution_count" +
                 "       , SUM(amount) as contribution_sum" +
                 "   FROM  " +
@@ -649,6 +653,7 @@ public class PoliticianIndustryHadoopRepo {
                 "           , real_code " +
                 "           , party" +
                 "           , religion" +
+                "           , congress" +
                 "           , amount  " +
                 "       FROM  " +
                 "           entities.legislators m  " +
@@ -662,8 +667,9 @@ public class PoliticianIndustryHadoopRepo {
                 "       , first_name " +
                 "       , last_name " +
                 "       , real_code " +
-                "       , party" +
-                "       , religion    " +
+                "       , party " +
+                "       , religion " +
+                "       , congress " +
                 "       ) sums  " +
                 "JOIN  " +
                 "   entities.industry_codes l  " +
@@ -697,6 +703,7 @@ public class PoliticianIndustryHadoopRepo {
                     "     , industry_id " +
                     "     , party " +
                     "     , religion " +
+                    "     , congress " +
                     "     , industry " +
                     "     , sector " +
                     "     , sector_long " +
@@ -710,6 +717,7 @@ public class PoliticianIndustryHadoopRepo {
                     "          , cat_order as industry_id " +
                     "          , party " +
                     "          , religion " +
+                    "          , congress " +
                     "          , COUNT(contribution_count) as contribution_count " +
                     "          , SUM(contribution_sum) as contribution_sum       " +
                     "     FROM " +
@@ -720,6 +728,7 @@ public class PoliticianIndustryHadoopRepo {
                     "               , real_code " +
                     "               , party " +
                     "               , religion " +
+                    "               , congress " +
                     "               , COUNT(amount) as contribution_count " +
                     "               , SUM(amount) as contribution_sum " +
                     "          FROM " +
@@ -741,6 +750,7 @@ public class PoliticianIndustryHadoopRepo {
                     "               , real_code " +
                     "               , party " +
                     "               , religion  " +
+                    "               , congress  " +
                     "          ) q1 " +
                     "     JOIN " +
                     "          entities.industry_codes l " +
@@ -753,6 +763,7 @@ public class PoliticianIndustryHadoopRepo {
                     "          , cat_order " +
                     "          , party " +
                     "          , religion  " +
+                    "          , congress " +
                     "     ) distinct_sums " +
                     "JOIN " +
                     "     entities.industry_codes l " +
@@ -784,6 +795,7 @@ public class PoliticianIndustryHadoopRepo {
                     "   , real_code as category_id" +
                     "   , party" +
                     "   , religion" +
+                    "   , congress" +
                     "   , industry" +
                     "   , sector" +
                     "   , sector_long" +
@@ -798,6 +810,7 @@ public class PoliticianIndustryHadoopRepo {
                     "       , real_code  " +
                     "       , party" +
                     "       , religion" +
+                    "       , congress" +
                     "       , COUNT(amount) as contribution_count" +
                     "       , SUM(amount) as contribution_sum" +
                     "   FROM  " +
@@ -808,6 +821,7 @@ public class PoliticianIndustryHadoopRepo {
                     "           , real_code " +
                     "           , party" +
                     "           , religion" +
+                    "           , congress" +
                     "           , amount  " +
                     "       FROM  " +
                     "           entities.legislators m  " +
@@ -828,7 +842,8 @@ public class PoliticianIndustryHadoopRepo {
                     "       , last_name " +
                     "       , real_code " +
                     "       , party" +
-                    "       , religion    " +
+                    "       , religion " +
+                    "       , congress " +
                     "       ) sums  " +
                     "JOIN  " +
                     "   entities.industry_codes l  " +

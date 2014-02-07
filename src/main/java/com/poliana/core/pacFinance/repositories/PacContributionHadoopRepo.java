@@ -8,11 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import javax.annotation.security.RolesAllowed;
+
 /**
  * @author David Gilmore
  * @date 1/26/14
  */
 @Repository
+@RolesAllowed("ROLE_ADMIN")
 public class PacContributionHadoopRepo {
 
     private TimeService timeService;

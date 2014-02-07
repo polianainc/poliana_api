@@ -1,7 +1,8 @@
-package com.poliana.web;
+package com.poliana.web.bills;
 
 import com.poliana.core.sponsorship.SponsorshipMatrix;
 import com.poliana.core.sponsorship.SponsorshipService;
+import com.poliana.web.common.AbstractBaseController;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,6 +30,7 @@ public class SponsorshipController extends AbstractBaseController {
             @PathVariable("congress") Integer congress) {
 
         SponsorshipMatrix sponsorshipMatrix = sponsorshipService.getSponsorshipMatrix(chamber, congress);
+
         return sponsorshipMatrix;
     }
 

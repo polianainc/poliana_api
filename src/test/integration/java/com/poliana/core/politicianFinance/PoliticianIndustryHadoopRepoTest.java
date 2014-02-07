@@ -248,8 +248,33 @@ public class PoliticianIndustryHadoopRepoTest {
     }
 
     @Test
-    public void testGetIndustryCategoryeToPoliticianTotalsPerCongress_AllTime() throws Exception {
+    public void testGetIndustryCategoryToPoliticianTotalsPerCongress_AllTime() throws Exception {
 
+        HashMap<Integer, List<PoliticianIndustryContributionsTotals>> totalsMap =
+                politicianIndustryHadoopRepo.getIndustryCategoryToPoliticianTotalsPerCongress("O000167");
+
+        assertNotNull(totalsMap);
+
+        assertNotNull(totalsMap.get(108));
+        assertNotNull(totalsMap.get(109));
+
+        List<PoliticianIndustryContributionsTotals> contributions110 = totalsMap.get(110);
+
+        PoliticianIndustryContributionsTotals contributionFrom110 = contributions110.get(0);
+
+        assertEquals("O000167", contributionFrom110.getBioguideId());
+        assertEquals("Barack", contributionFrom110.getFirstName());
+        assertEquals("Obama", contributionFrom110.getLastName());
+        assertEquals("Democrat", contributionFrom110.getParty());
+        assertEquals("United Church of Christ", contributionFrom110.getReligion());
+
+        assertEquals(new Integer(110), contributionFrom110.getCongress());
+
+        assertNotNull(contributionFrom110.getCategoryId());
+        assertNotNull(contributionFrom110.getCategoryName());
+
+        assertNotNull(contributionFrom110.getContributionCount());
+        assertNotNull(contributionFrom110.getContributionSum());
     }
 
     @Test
@@ -275,6 +300,9 @@ public class PoliticianIndustryHadoopRepoTest {
 
         assertEquals(new Integer(110), contributionFrom110.getCongress());
 
+        assertNotNull(contributionFrom110.getIndustryId());
+        assertNotNull(contributionFrom110.getIndustryName());
+
         assertNotNull(contributionFrom110.getContributionCount());
         assertNotNull(contributionFrom110.getContributionSum());
     }
@@ -282,7 +310,31 @@ public class PoliticianIndustryHadoopRepoTest {
     @Test
     public void testGetIndustryCategoryToPoliticianTotalsPerCongress__ByTimeRange() throws Exception {
 
+        HashMap<Integer, List<PoliticianIndustryContributionsTotals>> totalsMap =
+                politicianIndustryHadoopRepo.getIndustryCategoryToPoliticianTotalsPerCongress("O000167", 1075429263, 1201727289);
 
+        assertNotNull(totalsMap);
+
+        assertNotNull(totalsMap.get(108));
+        assertNotNull(totalsMap.get(109));
+        List<PoliticianIndustryContributionsTotals> contributions110 = totalsMap.get(110);
+
+        PoliticianIndustryContributionsTotals contributionFrom110 = contributions110.get(0);
+
+        assertEquals("O000167", contributionFrom110.getBioguideId());
+        assertEquals("Barack", contributionFrom110.getFirstName());
+        assertEquals("Obama", contributionFrom110.getLastName());
+
+        assertEquals("Democrat", contributionFrom110.getParty());
+        assertEquals("United Church of Christ", contributionFrom110.getReligion());
+
+        assertEquals(new Integer(110), contributionFrom110.getCongress());
+
+        assertNotNull(contributionFrom110.getCategoryId());
+        assertNotNull(contributionFrom110.getCategoryName());
+
+        assertNotNull(contributionFrom110.getContributionCount());
+        assertNotNull(contributionFrom110.getContributionSum());
     }
 
     @Autowired

@@ -1,10 +1,10 @@
 package com.poliana.core.politicianFinance.industries;
 
 import com.poliana.core.politicianFinance.financeProfile.SessionTotals;
+import org.apache.log4j.Logger;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Key;
 import org.mongodb.morphia.query.Query;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

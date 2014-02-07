@@ -1,7 +1,8 @@
-package com.poliana.web;
+package com.poliana.web.bills;
 
 import com.poliana.core.bills.BillService;
 import com.poliana.core.bills.entities.Bill;
+import com.poliana.web.common.AbstractBaseController;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

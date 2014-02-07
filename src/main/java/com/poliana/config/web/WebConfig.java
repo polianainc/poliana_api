@@ -107,6 +107,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         mapper.setPropertyNamingStrategy(PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES);
+
         return mapper;
     }
 }

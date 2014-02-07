@@ -60,7 +60,7 @@ public class IndustryContributionsPerCogressMapper implements ResultSetExtractor
             } catch (Exception e) {}
 
             try {
-                ind.setIndustryName(rs.getString("category_name"));
+                ind.setCategoryName(rs.getString("category_name"));
             } catch (Exception e) {}
 
             try {

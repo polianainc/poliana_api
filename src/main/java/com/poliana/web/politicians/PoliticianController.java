@@ -1,5 +1,6 @@
-package com.poliana.web;
+package com.poliana.web.politicians;
 
+import com.poliana.web.common.AbstractBaseController;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -10,7 +11,7 @@ import static com.poliana.core.time.TimeService.CURRENT_CONGRESS;
  * @date 1/15/14
  */
 
-@Controller
+//@Controller
 @RequestMapping("/politicians/")
 public class PoliticianController extends AbstractBaseController {
 
@@ -84,6 +85,7 @@ public class PoliticianController extends AbstractBaseController {
 
         return "expenditures for politician whose bioguide is " + bioguideId + ", in the congress " + congress;
     }
+
     /**
      * Grabs sponsorship data for a politician identified by the given bioguide and congresssional cycle.
      * @param bioguideId

@@ -1,4 +1,4 @@
-package com.poliana.web;
+package com.poliana.web.amendments;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;

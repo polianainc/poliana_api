@@ -1,7 +1,6 @@
 package com.poliana.web.common;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +15,6 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
  */
 @Controller
 @RequestMapping("/")
-@Secured("ROLE_USER")
 public class HelloController extends AbstractBaseController {
 
     private RequestMappingHandlerMapping requestMappingHandlerMapping;
@@ -30,7 +28,6 @@ public class HelloController extends AbstractBaseController {
         return "hello";
     }
 
-    @Secured("ROLE_ADMIN")
     @RequestMapping( value = "endpoints", method = RequestMethod.GET )
     public String getEndPointsInView( Model model ) {
 

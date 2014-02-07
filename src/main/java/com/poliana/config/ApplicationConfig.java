@@ -1,6 +1,6 @@
 package com.poliana.config;
 
-import com.poliana.config.web.MultiSecurityConfig;
+import com.poliana.config.web.security.MultiSecurityConfig;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;

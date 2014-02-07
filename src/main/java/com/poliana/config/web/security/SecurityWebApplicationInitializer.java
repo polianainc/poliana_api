@@ -1,4 +1,4 @@
-package com.poliana.config.web;
+package com.poliana.config.web.security;
 
 import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
 

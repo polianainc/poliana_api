@@ -1,4 +1,4 @@
-package com.poliana.config.web;
+package com.poliana.config.web.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +13,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
+import org.springframework.web.filter.GenericFilterBean;
 
 /**
 * @author David Gilmore
@@ -43,11 +45,15 @@ public class MultiSecurityConfig {
             auth
                     .inMemoryAuthentication()
 
-                    .withUser("user").password("password")
-                    .roles("USER")
+                    .withUser("user")
+                        .password("password")
+                        .roles("USER")
+
                     .and()
-                    .withUser(env.getProperty("api.user")).password(env.getProperty("api.pass"))
-                    .roles("USER", "ADMIN");
+
+                    .withUser(env.getProperty("api.user"))
+                        .password(env.getProperty("api.pass"))
+                        .roles("USER", "ADMIN");
         }
     }
 
@@ -55,11 +61,19 @@ public class MultiSecurityConfig {
     @Configuration
     public static class ApiWebSecurityConfigurationAdapter extends WebSecurityConfigurerAdapter {
 
+        @Autowired
+        public GenericFilterBean restSecurityFilter() throws Exception {
+
+            return new AuthenticationTokenProcessingFilter(authenticationManagerBean());
+        }
 
         protected void configure(HttpSecurity http) throws Exception {
 
             http
-                    .antMatcher("/api/**")
+                    .addFilterBefore(restSecurityFilter(), AbstractPreAuthenticatedProcessingFilter.class);
+
+            http
+                    .antMatcher("/**")
                     .httpBasic();
         }
     }
@@ -79,8 +93,8 @@ public class MultiSecurityConfig {
 
             http
                     .authorizeRequests()
-                        .anyRequest()
-                        .authenticated();
+                    .anyRequest()
+                    .authenticated();
 
             http
                     .exceptionHandling();

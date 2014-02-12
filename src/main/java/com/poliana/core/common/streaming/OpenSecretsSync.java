@@ -54,6 +54,7 @@ public class OpenSecretsSync {
     }
 
     public void sync() {
+
         try {
             crpXmlInput = new InputSource(this.metadataUrl.openStream());
         } catch (IOException e) {

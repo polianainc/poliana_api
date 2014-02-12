@@ -48,13 +48,16 @@ public class OpenSecretsSyncUnitTest {
         expect(this.jedisMock.exists("CampaignFin14")).andReturn(false);
         expect(this.jedisMock.set("CampaignFin14", "1383766050")).andReturn("");
         this.jedisPoolMock.returnResource(jedisMock);
+
         expectLastCall();
 
         expect(this.jedisPoolMock.getResource()).andReturn(jedisMock);
 
         expect(this.jedisMock.exists("CampaignFin12")).andReturn(false);
         expect(this.jedisMock.set("CampaignFin12", "1370102184")).andReturn("");
+
         this.jedisPoolMock.returnResource(jedisMock);
+
         expectLastCall();
 
         this.control.replay();
@@ -65,18 +68,23 @@ public class OpenSecretsSyncUnitTest {
 
     @Test
     public void testSync__FilesDoesExistNoUpdate() throws Exception {
+
         expect(this.jedisPoolMock.getResource()).andReturn(jedisMock);
 
         expect(this.jedisMock.exists("CampaignFin14")).andReturn(true);
         expect(this.jedisMock.get("CampaignFin14")).andReturn("1383766050");
+
         this.jedisPoolMock.returnResource(jedisMock);
+
         expectLastCall();
 
         expect(this.jedisPoolMock.getResource()).andReturn(jedisMock);
 
         expect(this.jedisMock.exists("CampaignFin12")).andReturn(true);
         expect(this.jedisMock.get("CampaignFin12")).andReturn("1370102184");
+
         this.jedisPoolMock.returnResource(jedisMock);
+
         expectLastCall();
 
         this.control.replay();

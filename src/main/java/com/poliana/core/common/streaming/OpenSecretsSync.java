@@ -1,7 +1,6 @@
 package com.poliana.core.common.streaming;
 
 import org.apache.log4j.Logger;
-import org.msgpack.MessagePack;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Element;
@@ -13,9 +12,12 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.exceptions.JedisConnectionException;
 
 import javax.xml.xpath.*;
-import java.io.IOException;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /**
  * @author Grayson Carroll
@@ -29,7 +31,8 @@ public class OpenSecretsSync {
     private InputSource crpXmlInput;
     private JedisPool jedisPool;
 
-    private URL url;
+    private URL metadataUrl;
+    private URL downloadUrlRoot;
 
     private static final Logger logger = Logger.getLogger(OpenSecretsSync.class);
 
@@ -38,7 +41,13 @@ public class OpenSecretsSync {
         xpath = factory.newXPath();
 
         try {
-            this.setUrl(new URL("http://www.opensecrets.org/myos/odata_meta.xml"));
+            this.setMetadataUrl(new URL("http://www.opensecrets.org/myos/odata_meta.xml"));
+        } catch (MalformedURLException e) {
+            logger.error(e);
+        }
+
+        try {
+            this.setDownloadUrlRoot(new URL("http://www.opensecrets.org/myos/download.php?f="));
         } catch (MalformedURLException e) {
             logger.error(e);
         }
@@ -46,7 +55,7 @@ public class OpenSecretsSync {
 
     public void sync() {
         try {
-            crpXmlInput = new InputSource(this.url.openStream());
+            crpXmlInput = new InputSource(this.metadataUrl.openStream());
         } catch (IOException e) {
             logger.error(e);
         }
@@ -94,7 +103,7 @@ public class OpenSecretsSync {
 
                 //If there is a differential, handle the differential and write the new value to redis
                 if(oldTimestamp != newTimestamp) {
-                    handleFileVersionConflict(filename);
+                    notifyVersionConflict(filename);
                     jedis.set(filename, timestamp);
                 } else {
                     //if no differential, there's nothing else to do. return
@@ -114,13 +123,133 @@ public class OpenSecretsSync {
 
     }
 
-    private void handleFileVersionConflict(String filename) {
-        // TODO: Implement the handling of a different version of the open secrets bulk data
+    public void notifyVersionConflict(String filename) {
+
+        //TODO: Use that one awesome SMS library that patrick found, AND redis dump of files
         return;
     }
 
-    public void setUrl(URL url) {
-        this.url = url;
+    public void handleFileVersionConflict(String filename) {
+
+        String saveTo = "./tmp/";
+        filename += ".zip";
+
+        boolean success = downloadZip(saveTo, filename);
+
+        if (success) {
+
+            boolean unzip = unzip(saveTo, filename);
+        }
+
+        return;
+    }
+
+    public boolean authenticate() {
+
+        //TODO: Authenticate
+        return false;
+    }
+
+    public boolean downloadZip(String saveTo, String filename) {
+
+        String downloadUrl = downloadUrlRoot + filename;
+
+        File file = new File(saveTo);
+        if (!file.exists()) {
+            if (file.mkdir()) {
+                logger.info("Directory is created!");
+            } else {
+                logger.error("Failed to create directory!");
+            }
+        }
+
+        try {
+
+            //TODO: If it exists, remove it!
+            URL url = new URL(downloadUrl);
+            URLConnection conn = url.openConnection();
+            InputStream in = conn.getInputStream();
+            FileOutputStream out = new FileOutputStream(saveTo + filename);
+
+            byte[] b = new byte[1024];
+
+            int count;
+            while ((count = in.read(b)) >= 0) {
+                out.write(b, 0, count);
+            }
+
+            out.flush();
+            out.close();
+            in.close();
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean unzip(String tmpDir, String filename) {
+
+        byte[] buffer = new byte[1024];
+
+        try{
+
+            //get the zip file content
+            ZipInputStream zis =
+                    new ZipInputStream(new FileInputStream(tmpDir + filename));
+            //get the zipped file list entry
+            ZipEntry ze = zis.getNextEntry();
+
+            while(ze!=null){
+
+                String fileName = ze.getName();
+                File newFile = new File(tmpDir + fileName);
+
+                logger.info("file unzip : "+ newFile.getAbsoluteFile());
+
+                //create all non exists folders
+                //else you will hit FileNotFoundException for compressed folder
+                new File(newFile.getParent()).mkdirs();
+
+                FileOutputStream fos = new FileOutputStream(newFile);
+
+                int len;
+                while ((len = zis.read(buffer)) > 0) {
+                    fos.write(buffer, 0, len);
+                }
+
+                fos.close();
+                ze = zis.getNextEntry();
+            }
+
+            zis.closeEntry();
+            zis.close();
+
+            logger.info("Finished Unzipping " + filename);
+
+        }catch(IOException ex){
+
+            ex.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean update() {
+
+        return false;
+    }
+
+    public void setMetadataUrl(URL metadataUrl) {
+        this.metadataUrl = metadataUrl;
+    }
+
+    public void setDownloadUrlRoot(URL downloadUrlRoot) {
+        this.downloadUrlRoot = downloadUrlRoot;
     }
 
     public void setCrpXmlInput(InputSource crpXmlInput) {

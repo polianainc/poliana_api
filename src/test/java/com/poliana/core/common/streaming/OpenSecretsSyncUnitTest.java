@@ -37,7 +37,7 @@ public class OpenSecretsSyncUnitTest {
 
         String fixturePath = new java.io.File( "./src/test/java/com/poliana/core/common/streaming/odata_meta.xml" ).getCanonicalPath();
         URL url = new File(fixturePath).toURI().toURL();
-        this.osSync.setUrl(url);
+        this.osSync.setMetadataUrl(url);
     }
 
     @Test
@@ -106,4 +106,5 @@ public class OpenSecretsSyncUnitTest {
         this.osSync.sync();
         this.control.verify();
     }
+
 }

@@ -5,7 +5,7 @@
     <artifactId>data_manager</artifactId>
     <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
-    <url>http://maven.apache.org</url>
+    <metadataUrl>http://maven.apache.org</metadataUrl>
     <properties>
         <jackson-asl.version>1.9.12</jackson-asl.version>
         <jaxb-api.version>2.2.4</jaxb-api.version>
@@ -459,22 +459,22 @@
         <repository>
             <id>repository.springsource.milestone</id>
             <name>SpringSource Milestone Repository</name>
-            <url>http://repo.springsource.org/milestone</url>
+            <metadataUrl>http://repo.springsource.org/milestone</metadataUrl>
         </repository>
 
         <repository>
             <id>spring-milestone</id>
-            <url>http://repo.springsource.org/libs-milestone</url>
+            <metadataUrl>http://repo.springsource.org/libs-milestone</metadataUrl>
         </repository>
 
         <repository>
             <id>spring-snapshot</id>
-            <url>http://repo.springsource.org/libs-snapshot</url>
+            <metadataUrl>http://repo.springsource.org/libs-snapshot</metadataUrl>
         </repository>
 
         <repository>
             <id>morphia</id>
-            <url>http://morphia.googlecode.com/svn/mavenrepo/</url>
+            <metadataUrl>http://morphia.googlecode.com/svn/mavenrepo/</metadataUrl>
         </repository>
 
     </repositories>

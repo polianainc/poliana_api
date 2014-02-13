@@ -1,11 +1,10 @@
 package com.poliana.core.common.streaming;
 
-
 import com.poliana.config.ApplicationConfig;
+import com.poliana.core.shared.AbstractS3Test;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -19,15 +18,18 @@ import org.springframework.test.context.support.AnnotationConfigContextLoader;
 @Profile("integration_test")
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes=ApplicationConfig.class, loader=AnnotationConfigContextLoader.class)
-public class OpenSecretsSyncTest {
+public class CrpStreamingServiceTest extends AbstractS3Test {
 
-    private OpenSecretsSync osSync;
 
     @Before
     public void setup() {
 
-    }
+        if (needsSync())
+            syncS3TestData();
 
+        osSync.setLocalTmp(localTmp);
+        osSync.setS3Bucket(s3Bucket);
+    }
 
     @Test
     public void testHandleFileVersionConflict()  {
@@ -38,11 +40,12 @@ public class OpenSecretsSyncTest {
     @Test
     public void testUnzip() {
 
-        osSync.unzip("./tmp/", "CampaignFin14.zip");
+        osSync.unzip("CampaignFin14.zip");
     }
 
-    @Autowired
-    public void setOsSync(OpenSecretsSync osSync) {
-        this.osSync = osSync;
+    @Test
+    public void testUpdate() {
+
+        osSync.update();
     }
 }

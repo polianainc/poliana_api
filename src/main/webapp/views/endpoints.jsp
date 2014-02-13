@@ -1,30 +1,29 @@
-<%@ page session="false" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 
-<html>
-<head><title>Poliana API - Endpoints</title></head>
-<body>
+<tags:template>
+    <jsp:body>
 
-<h1><c:out value="${message}"></c:out></h1>
+    <h1><c:out value="${message}"></c:out></h1>
 
-
-<table>
-    <thead>
-    <tr>
-        <th>path</th>
-        <th>methods</th>
-        <th>params</th>
-    </tr>
-    </thead>
-    <tbody>
-    <c:forEach items="${endPoints}" var="endPoint">
+    <table>
+        <thead>
         <tr>
-            <td>${endPoint.patternsCondition}</td>
-            <td>${endPoint.methodsCondition}</td>
-            <td>${endPoint.paramsCondition}</td>
+            <th>path</th>
+            <th>methods</th>
+            <th>params</th>
         </tr>
-    </c:forEach>
-    </tbody>
-</table>
-</body>
-</html>
+        </thead>
+        <tbody>
+        <c:forEach items="${endPoints}" var="endPoint">
+            <tr>
+                <td>${endPoint.patternsCondition}</td>
+                <td>${endPoint.methodsCondition}</td>
+                <td>${endPoint.paramsCondition}</td>
+            </tr>
+        </c:forEach>
+        </tbody>
+    </table>
+
+    </jsp:body>
+</tags:template>

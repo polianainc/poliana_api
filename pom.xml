@@ -452,6 +452,14 @@
             <version>7.0.25</version>
         </dependency>
 
+        <!-- Mail -->
+
+        <dependency>
+            <groupId>org.springframework.integration</groupId>
+            <artifactId>spring-integration-mail</artifactId>
+            <version>3.0.0.RELEASE</version>
+        </dependency>
+
     </dependencies>
 
     <repositories>

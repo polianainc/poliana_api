@@ -19,7 +19,7 @@ import static org.easymock.EasyMock.expectLastCall;
  */
 
 public class OpenSecretsSyncUnitTest {
-    private OpenSecretsSync osSync;
+    private CrpStreamingService osSync;
     private JedisPool jedisPoolMock;
     private Jedis jedisMock;
 
@@ -30,11 +30,11 @@ public class OpenSecretsSyncUnitTest {
 
         this.control = createStrictControl();
 
-        this.osSync = new OpenSecretsSync();
+        this.osSync = new CrpStreamingService();
         this.jedisPoolMock = this.control.createMock(JedisPool.class);
         this.jedisMock = this.control.createMock(Jedis.class);
         this.osSync.setJedisPool(jedisPoolMock);
-
+                                                //TODO: relocate fixture data for more robust testing
         String fixturePath = new java.io.File( "./src/test/java/com/poliana/core/common/streaming/odata_meta.xml" ).getCanonicalPath();
         URL url = new File(fixturePath).toURI().toURL();
         this.osSync.setMetadataUrl(url);

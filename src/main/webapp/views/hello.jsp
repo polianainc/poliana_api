@@ -1,13 +1,13 @@
-<%@ page session="false" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 
-<html>
-<head><title>Poliana API - Home</title></head>
-<body>
+<tags:template>
+    <jsp:body>
 
-<h1><c:out value="${message}"></c:out></h1>
+        <h1><c:out value="${message}"></c:out></h1>
 
-<p>Check out /endpoints for a list of endpoints currently implemented</p>
+        <p>Check out /endpoints for a list of endpoints currently implemented</p>
 
-</body>
-</html>
+    </jsp:body>
+</tags:template>
+

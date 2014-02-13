@@ -25,7 +25,7 @@ public class HelloController extends AbstractBaseController {
 
         model.addAttribute("message", "Hello World!");
 
-        return "hello";
+        return "views/hello";
     }
 
     @RequestMapping( value = "endpoints", method = RequestMethod.GET )
@@ -34,7 +34,7 @@ public class HelloController extends AbstractBaseController {
         model.addAttribute("message", "Check out our endpoints");
         model.addAttribute( "endPoints", requestMappingHandlerMapping.getHandlerMethods().keySet() );
 
-        return "endPoints";
+        return "views/endpoints";
     }
 
     @Autowired

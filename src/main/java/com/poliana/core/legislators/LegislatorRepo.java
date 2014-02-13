@@ -78,13 +78,18 @@ public class LegislatorRepo {
         String thomasKey;
         String lisKey;
         String mongoKey;
+
         MessagePack messagePack = new MessagePack();
+
         while (legislatorIterator.hasNext()) {
+
             Legislator legislator = legislatorIterator.next();
+
             bioguideKey = TERMS_BY_BIOGUIDE + legislator.getBioguideId();
             thomasKey = TERMS_BY_THOMAS + legislator.getThomasId();
             lisKey = TERMS_BY_LIS + legislator.getLisId();
             mongoKey = TERMS_BY_MONGO + legislator.getId();
+
             try {
                 if (!jedis.exists(messagePack.write(bioguideKey)))
                     jedis.lpush(messagePack.write(bioguideKey), messagePack.write(legislator));
@@ -152,14 +157,20 @@ public class LegislatorRepo {
     public List<Legislator> getLegislatorTermsByKey(String key) {
 
         Jedis jedis = jedisPool.getResource();
+
         MessagePack messagePack = new MessagePack();
+
         List<Legislator> legislators = new LinkedList<>();
         try {
+
             List<byte[]> legislatorBytes = jedis.lrange(messagePack.write(key), 0, -1);
+
             for (byte[] l : legislatorBytes) {
+
                 Legislator legislator = messagePack.read(l, Legislator.class);
                 legislators.add(legislator);
             }
+
         } catch (IOException e) {
             logger.error(e.getMessage());
         } catch (JedisConnectionException e) {

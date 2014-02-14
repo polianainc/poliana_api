@@ -10,11 +10,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * @author graysoncarroll
  * @date 2/1/14
  */
-
 @Profile("integration_test")
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes=ApplicationConfig.class, loader=AnnotationConfigContextLoader.class)
@@ -32,9 +34,23 @@ public class CrpStreamingServiceTest extends AbstractS3Test {
     }
 
     @Test
-    public void testHandleFileVersionConflict()  {
+    public void testHandleFileVersionConflicts() {
 
-        osSync.handleFileVersionConflict("CampaignFin14");
+        List<String> conflicts = new LinkedList<>();
+        conflicts.add("CampaignFin12.zip");
+
+        osSync.handleFileVersionConflicts(conflicts);
+    }
+
+    @Test
+    public void testNotifyVersionConflict() {
+
+        List<String> versionConflicts = new LinkedList<>();
+
+        versionConflicts.add("test file 1");
+        versionConflicts.add("test file 2");
+
+        osSync.notifyVersionConflict(versionConflicts);
     }
 
     @Test

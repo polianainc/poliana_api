@@ -2,8 +2,16 @@ package com.poliana.core.common.streaming;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.services.s3.AmazonS3;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.UsernamePasswordCredentials;
+import org.apache.commons.httpclient.auth.AuthScope;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
@@ -31,7 +39,11 @@ import java.util.zip.ZipInputStream;
  * @date 1/31/14
  */
 @Service
+@PropertySource(value={"classpath:crp.properties"})
 public class CrpStreamingService {
+
+    @Autowired
+    Environment env;
 
     private XPathFactory factory;
     private XPath xpath;
@@ -115,6 +127,7 @@ public class CrpStreamingService {
 
             //Send notifications to administrators that a job needs to be run
             notifyVersionConflict(versionConflicts);
+            handleFileVersionConflicts(versionConflicts);
 
         } catch (XPathExpressionException e) {
             logger.error(e);
@@ -159,6 +172,17 @@ public class CrpStreamingService {
 
         return versionConflicts;
     }
+
+    public void handleFileVersionConflicts(List<String> versionConflicts) {
+
+        authenticate();
+
+        for (String conflict : versionConflicts)
+            downloadZip(conflict);
+
+        return;
+    }
+
 
     public void notifyVersionConflict(List<String> versionConflicts) {
 
@@ -208,25 +232,64 @@ public class CrpStreamingService {
         }
     }
 
-    public void handleFileVersionConflict(String filename) {
-
-        String saveTo = "./tmp/";
-        filename += ".zip";
-
-        boolean success = downloadZip(filename);
-
-        if (success) {
-
-            boolean unzip = unzip(filename);
-        }
-
-        return;
-    }
-
     public boolean authenticate() {
 
-        //TODO: Authenticate
-        return false;
+        HttpClient client = new HttpClient();
+
+        client.getParams().setParameter(
+                HttpMethodParams.USER_AGENT,
+                env.getProperty("crp.agent")
+        );
+
+        client.getState().setCredentials(
+                new AuthScope(env.getProperty("crp.host"), 80,  AuthScope.ANY_REALM),
+                new UsernamePasswordCredentials(
+                        env.getProperty("crp.user"),
+                        env.getProperty("crp.password")
+                )
+        );
+
+        PostMethod post = new PostMethod(env.getProperty("crp.authUrl")) {
+            @Override
+            public boolean getFollowRedirects() {
+                return true;
+            }
+        };
+
+        post.setDoAuthentication(true);
+
+        post.addParameter("email", env.getProperty("crp.user"));
+        post.addParameter("password", env.getProperty("crp.password"));
+        post.addParameter("Submit", "Log In");
+
+
+
+        System.out.println(post.getFollowRedirects());
+
+        try {
+            // execute the POST
+            int status = client.executeMethod(post);
+
+            // print the status and response
+            System.out.println(status + "\n" + post.getResponseBodyAsString());
+
+        } catch (HttpException e) {
+            logger.error(e);
+        } catch (IOException e) {
+            logger.error(e);
+        } finally {
+
+            List<String> conflicts = new LinkedList<>();
+            conflicts.add("CampaignFin12.zip");
+
+            for (String conflict : conflicts)
+                downloadZip(conflict);
+
+            // release any connection resources used by the method
+            post.releaseConnection();
+        }
+
+        return true;
     }
 
     public boolean downloadZip(String filename) {

@@ -17,7 +17,10 @@ public class ApplicationConfig {
 
     @Bean
     public MailSender mailSender() {
-        return new JavaMailSenderImpl();
+
+        JavaMailSenderImpl sender =  new JavaMailSenderImpl();
+
+        return sender;
     }
 
     @Bean

@@ -3,15 +3,13 @@ package com.poliana.core.common.streaming;
 import org.easymock.IMocksControl;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.core.io.ClassPathResource;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
-import java.io.File;
 import java.net.URL;
 
-import static org.easymock.EasyMock.createStrictControl;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.*;
 
 /**
  * @author graysoncarroll
@@ -19,9 +17,11 @@ import static org.easymock.EasyMock.expectLastCall;
  */
 
 public class OpenSecretsSyncUnitTest {
+
     private CrpStreamingService osSync;
     private JedisPool jedisPoolMock;
     private Jedis jedisMock;
+    private URL metadataUrlFixture;
 
     private IMocksControl control;
 
@@ -30,14 +30,16 @@ public class OpenSecretsSyncUnitTest {
 
         this.control = createStrictControl();
 
-        this.osSync = new CrpStreamingService();
         this.jedisPoolMock = this.control.createMock(JedisPool.class);
         this.jedisMock = this.control.createMock(Jedis.class);
+
+        ClassPathResource cpr = new ClassPathResource("fixtures/odata_meta.xml");
+//        this.metadataUrlFixture = new URL();
+
+        this.osSync = new CrpStreamingService();
+
         this.osSync.setJedisPool(jedisPoolMock);
-                                                //TODO: relocate fixture data for more robust testing
-        String fixturePath = new java.io.File( "./src/test/java/com/poliana/core/common/streaming/odata_meta.xml" ).getCanonicalPath();
-        URL url = new File(fixturePath).toURI().toURL();
-        this.osSync.setMetadataUrl(url);
+        this.osSync.setMetadataUrl(cpr.getFile().toURL());
     }
 
     @Test

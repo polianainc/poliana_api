@@ -18,7 +18,7 @@ import static com.poliana.core.time.TimeService.CURRENT_CONGRESS;
  * @date 1/4/14
  */
 @Controller
-@RequestMapping("/pacs/")
+@RequestMapping(value = "/pacs/", produces = "application/json", headers = "x-requested-with=XMLHttpRequest")
 public class PacContributionsController extends AbstractBaseController {
 
     private PacContributionService pacContributionService;
@@ -32,7 +32,7 @@ public class PacContributionsController extends AbstractBaseController {
      * @param congress
      * @return
      */
-    @RequestMapping(value = "/{pac_id}/contributions", method = RequestMethod.GET)
+    @RequestMapping(value = "/{pac_id}/contributions", method = RequestMethod.GET, produces = "application/json", headers = "x-requested-with=XMLHttpRequest")
     public @ResponseBody PacContributionTotalsMap getPacContributionsByCongress(
             @PathVariable(value = "pac_id") String pacId,
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress) {
@@ -47,7 +47,7 @@ public class PacContributionsController extends AbstractBaseController {
      * @param congress
      * @return
      */
-    @RequestMapping(value = "/{pac_id}/contributions", params = {"chamber", "congress"}, method = RequestMethod.GET)
+    @RequestMapping(value = "/{pac_id}/contributions", params = {"chamber", "congress"}, method = RequestMethod.GET, produces = "application/json", headers = "x-requested-with=XMLHttpRequest")
     public @ResponseBody PacContributionTotalsMap getPacContributionsByCongressAndChamber(
             @PathVariable(value = "pac_id") String pacId,
             @RequestParam(value = "chamber", required = true) String chamber,
@@ -63,7 +63,7 @@ public class PacContributionsController extends AbstractBaseController {
      * @param end
      * @return
      */
-    @RequestMapping(value = "/{pac_id}/contributions", params = {"start", "end"}, method = RequestMethod.GET)
+    @RequestMapping(value = "/{pac_id}/contributions", params = {"start", "end"}, method = RequestMethod.GET, produces = "application/json", headers = "x-requested-with=XMLHttpRequest")
     public @ResponseBody PacContributionTotalsMap getPacContributionsByStartAndEnd(
             @PathVariable(value = "pac_id") String pacId,
             @RequestParam(value = "start", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date start,
@@ -79,7 +79,7 @@ public class PacContributionsController extends AbstractBaseController {
      * @param end
      * @return
      */
-    @RequestMapping(value = "/{pac_id}/contributions", params = {"chamber", "start", "end"}, method = RequestMethod.GET)
+    @RequestMapping(value = "/{pac_id}/contributions", params = {"chamber", "start", "end"}, method = RequestMethod.GET, produces = "application/json", headers = "x-requested-with=XMLHttpRequest")
     public @ResponseBody PacContributionTotalsMap getPacContributionsByChamberAndStartAndEnd(
             @PathVariable(value = "pac_id") String pacId,
             @RequestParam(value = "chamber", required = true) String chamber,

@@ -12,7 +12,7 @@ import static com.poliana.core.time.TimeService.CURRENT_CONGRESS;
  */
 
 //@Controller
-@RequestMapping("/politicians/")
+@RequestMapping(value = "/politicians/", method = RequestMethod.GET, produces = "application/json", headers = "x-requested-with=XMLHttpRequest")
 public class PoliticianController extends AbstractBaseController {
 
     private static final Logger logger = Logger.getLogger(PoliticianController.class);
@@ -25,7 +25,7 @@ public class PoliticianController extends AbstractBaseController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "", params={"congress, fields"}, method = RequestMethod.GET, produces = "application/json", headers = "x-requested-with=XMLHttpRequest")
+    @RequestMapping(value = "", params={"congress, fields"})
     public String getRoot (
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
             @RequestParam(value = "fields", required = false, defaultValue = "") String fields){
@@ -42,7 +42,7 @@ public class PoliticianController extends AbstractBaseController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "{bioguide_id}", params = {"congress, fields"}, method = RequestMethod.GET, produces = "application/json", headers = "x-requested-with=XMLHttpRequest")
+    @RequestMapping(value = "{bioguide_id}", params = {"congress, fields"})
     public String getPolitician (
             @PathVariable("bioguide_id") String bioguideId,
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
@@ -59,7 +59,7 @@ public class PoliticianController extends AbstractBaseController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "{bioguide_id}/votes", params = {"congress, fields"}, method = RequestMethod.GET, produces = "application/json", headers = "x-requested-with=XMLHttpRequest")
+    @RequestMapping(value = "{bioguide_id}/votes", params = {"congress, fields"})
     public String getVotes (
             @PathVariable("bioguide_id") String bioguideId,
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
@@ -76,7 +76,7 @@ public class PoliticianController extends AbstractBaseController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value="{bioguide_id}/expenditures", params = {"congress, fields"}, method = RequestMethod.GET, produces = "application/json", headers = "x-requested-with=XMLHttpRequest")
+    @RequestMapping(value="{bioguide_id}/expenditures", params = {"congress, fields"})
     public String getExpenditures (
             @PathVariable("bioguide_id") String bioguideId,
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
@@ -93,7 +93,7 @@ public class PoliticianController extends AbstractBaseController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value="{bioguide_id}/sponsorship", params = {"congress, fields"}, method = RequestMethod.GET, produces = "application/json", headers = "x-requested-with=XMLHttpRequest")
+    @RequestMapping(value="{bioguide_id}/sponsorship", params = {"congress, fields"})
     public String getSponsorship(
             @PathVariable("bioguide_id") String bioguideId,
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,

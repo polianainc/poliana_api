@@ -283,6 +283,8 @@ public class PoliticianPacHadoopRepo {
                     "         cycle = congress        " +
                     "     WHERE   " +
                     "          congress in (" + cyclesList + ") " +
+                    "     AND " +
+                    "          type = \'24K\' " +
                     "     GROUP BY    " +
                     "           cid " +
                     "         , pac_id   " +

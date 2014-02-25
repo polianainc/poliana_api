@@ -26,7 +26,7 @@ import static com.poliana.core.time.TimeService.CURRENT_CONGRESS;
  * @date 1/4/14
  */
 @Controller
-@RequestMapping("/industries/")
+@RequestMapping(value = "/industries/", produces = "application/json", headers = "x-requested-with=XMLHttpRequest", method = RequestMethod.GET)
 public class IndustryContributionController extends AbstractBaseController {
 
     private IdeologyService ideologyService;
@@ -44,7 +44,7 @@ public class IndustryContributionController extends AbstractBaseController {
      * @param congress
      * @return
      */
-    @RequestMapping(value = "/{industry_id}/contributions", method = RequestMethod.GET)
+    @RequestMapping(value = "/{industry_id}/contributions")
     public @ResponseBody IndustryContributionTotalsMap getIndustryContributionsByCongress(
             @PathVariable(value = "industry_id") String industryId,
             @RequestParam(value = "chamber", required = false) String chamber,
@@ -67,7 +67,7 @@ public class IndustryContributionController extends AbstractBaseController {
      * @param congress
      * @return
      */
-    @RequestMapping(value = "/category/{category_id}/contributions", method = RequestMethod.GET)
+    @RequestMapping(value = "/category/{category_id}/contributions")
     public @ResponseBody IndustryContributionTotalsMap getIndustryCategoryContributionsByCongress(
             @PathVariable(value = "category_id") String categoryId,
             @RequestParam(value = "chamber", required = false) String chamber,
@@ -90,7 +90,7 @@ public class IndustryContributionController extends AbstractBaseController {
      * @param congress
      * @return
      */
-    @RequestMapping(value = "/{industry_id}/contributions", params = {"plot"}, method = RequestMethod.GET)
+    @RequestMapping(value = "/{industry_id}/contributions", params = {"plot"})
     public @ResponseBody
     IndustryContributionTotalsMap plotIndustryContributionsByCongress(
             @PathVariable(value = "industry_id") String industryId,
@@ -115,7 +115,7 @@ public class IndustryContributionController extends AbstractBaseController {
      * @param congress
      * @return
      */
-    @RequestMapping(value = "/categories/{category_id}/contributions", params = {"plot"}, method = RequestMethod.GET)
+    @RequestMapping(value = "/categories/{category_id}/contributions", params = {"plot"})
     public @ResponseBody
     IndustryContributionTotalsMap plotIndustryCategoryContributionsByCongress(
             @PathVariable(value = "category_id") String categoryId,
@@ -139,7 +139,7 @@ public class IndustryContributionController extends AbstractBaseController {
      * @param congress
      * @return
      */
-    @RequestMapping(value = "/{industry_id}/contributions", params = {"compare_to"},method = RequestMethod.GET)
+    @RequestMapping(value = "/{industry_id}/contributions", params = {"compare_to"})
     public @ResponseBody
     List<IndustryContributionCompare> getIndustryContributionsVsIdeologyByCongress(
             @PathVariable(value = "industry_id") String industryId,
@@ -168,7 +168,7 @@ public class IndustryContributionController extends AbstractBaseController {
      * @param congress
      * @return
      */
-    @RequestMapping(value = "/categories/{category_id}/contributions", params = {"compare_to"},method = RequestMethod.GET)
+    @RequestMapping(value = "/categories/{category_id}/contributions", params = {"compare_to"})
     public @ResponseBody
     List<IndustryContributionCompare> getIndustryCategoryContributionsVsIdeologyByCongress(
             @PathVariable(value = "category_id") String categoryId,
@@ -197,7 +197,7 @@ public class IndustryContributionController extends AbstractBaseController {
      * @param congress
      * @return
      */
-    @RequestMapping(value = "/{industry_id}/contributions", params = {"compare_to", "plot"},method = RequestMethod.GET)
+    @RequestMapping(value = "/{industry_id}/contributions", params = {"compare_to", "plot"})
     public void plotIndustryContributionsVsIdeologyByCongress(
             OutputStream stream,
             @PathVariable(value = "industry_id") String industryId,
@@ -236,7 +236,7 @@ public class IndustryContributionController extends AbstractBaseController {
      * @param congress
      * @return
      */
-    @RequestMapping(value = "/categories/{category_id}/contributions", params = {"compare_to", "plot"},method = RequestMethod.GET)
+    @RequestMapping(value = "/categories/{category_id}/contributions", params = {"compare_to", "plot"}, produces = "application/json", headers = "x-requested-with=XMLHttpRequest")
     public void plotIndustryCategoryContributionsVsIdeologyByCongress(
             OutputStream stream,
             @PathVariable(value = "category_id") String categoryId,

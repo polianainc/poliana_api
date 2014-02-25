@@ -1,25 +1,9 @@
 package com.poliana.core.clients;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.JsonToken;
-import org.codehaus.jackson.annotate.JsonAnyGetter;
-import org.codehaus.jackson.annotate.JsonAnySetter;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.annotate.*;
 import org.codehaus.jackson.map.DeserializationContext;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
@@ -35,13 +19,16 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.util.StringUtils;
 
+import java.io.IOException;
+import java.util.*;
+
 /**
- * Base implementation of {@link org.springframework.security.oauth2.provider.ClientDetails} for MongoDB with Morphia
- *
- * @Author David Gilmore
- * @author Ryan Heaton
- * @author Dave Syer
- */
+* Base implementation of {@link org.springframework.security.oauth2.provider.ClientDetails} for MongoDB with Morphia
+*
+* @Author David Gilmore
+* @author Ryan Heaton
+* @author Dave Syer
+*/
 @Entity("client_details")
 @JsonSerialize(include = Inclusion.NON_DEFAULT)
 @JsonIgnoreProperties(ignoreUnknown = true)

@@ -2,14 +2,12 @@ package com.poliana.core.users;
 
 import com.poliana.config.ApplicationConfig;
 import org.apache.commons.io.IOUtils;
-import org.hibernate.Hibernate;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.io.*;
-import java.util.*;
 
 /**
  * Simple implementation of the {@link CrmService crmService} interface.
@@ -20,19 +18,11 @@ import java.util.*;
 @Transactional
 public class JpaCrmService implements CrmService {
 
-    private CustomerRepository customerRepository;
     private UserRepository userRepository;
 
     @Inject
-    public JpaCrmService(CustomerRepository customerRepository,
-                         UserRepository userRepository) {
-        this.customerRepository = customerRepository;
+    public JpaCrmService(UserRepository userRepository) {
         this.userRepository = userRepository;
-    }
-
-    @Override
-    public Collection<Customer> search(long userId, String token) {
-        return this.customerRepository.search(userId, "%" + token + "%");
     }
 
     @Override
@@ -104,43 +94,6 @@ public class JpaCrmService implements CrmService {
     @Override
     public User findUserByUsername(String username) {
         return userRepository.findByUsername(username);
-    }
-
-    @Override
-    public Customer removeAccount(long userId, long customerId) {
-        User user = userRepository.findOne(userId);
-        Customer customer = customerRepository.findOne(customerId);
-        user.getCustomers().remove(customer);
-        this.userRepository.save(user);
-        customer.setUser(null);
-        this.customerRepository.delete(customer);
-        return customer;
-    }
-
-    @Override
-    public Customer addAccount(long userId, String firstName, String lastName) {
-        Customer customer = new Customer(this.userRepository.findOne(userId), firstName, lastName, new Date());
-        return this.customerRepository.save(customer);
-    }
-
-    @Override
-    public Collection<Customer> loadCustomerAccounts(long userId) {
-        List<Customer> customersList = this.customerRepository.findByUserId(userId);
-        ArrayList<Customer> customers = new ArrayList<Customer>();
-        for (Customer c : customersList) {
-            Hibernate.initialize(c);
-            User user = new User(userId);
-            c.setUser(user);
-            customers.add(c);
-        }
-        return Collections.unmodifiableList(customers);
-    }
-
-    @Override
-    public Customer findCustomerById(long customerId) {
-        Customer customer = customerRepository.findOne(customerId);
-        Hibernate.initialize(customer.getUser());
-        return customer;
     }
 
     private File fileForPhoto(Long userId) {

@@ -18,6 +18,7 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -45,7 +46,6 @@ import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
-import org.springframework.web.servlet.view.JstlView;
 
 import javax.inject.Inject;
 import javax.servlet.MultipartConfigElement;
@@ -110,6 +110,7 @@ class OAuth2ServerConfiguration extends OAuth2ServerConfigurerAdapter {
       
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+
         auth
                 .userDetailsService(userDetailsService)
                 .and()
@@ -127,7 +128,6 @@ class OAuth2ServerConfiguration extends OAuth2ServerConfigurerAdapter {
                 .authorities("ROLE_USER")
                 .authorizedGrantTypes("password")
                 .secret("123456");
-
     }
      
 
@@ -162,7 +162,7 @@ class OAuth2ServerConfiguration extends OAuth2ServerConfigurerAdapter {
         // oauth is complicated
         // how do i detect when it's a browser? when it's not?
         // if a native REST client makes a call and submits a Accept: */*
-        MediaTypeRequestMatcher mediaTypeRequestMatcher = new MediaTypeRequestMatcher( this.contentNegotiationStrategy, MediaType.TEXT_HTML);
+        MediaTypeRequestMatcher mediaTypeRequestMatcher = new MediaTypeRequestMatcher( this.contentNegotiationStrategy, MediaType.ALL);
         return new NegatedRequestMatcher( mediaTypeRequestMatcher);
 
     }
@@ -181,7 +181,7 @@ class OAuth2ServerConfiguration extends OAuth2ServerConfigurerAdapter {
 
 @Configuration
 @EnableWebSecurity
-//@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Inject

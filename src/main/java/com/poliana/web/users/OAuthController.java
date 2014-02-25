@@ -30,6 +30,7 @@ public class OAuthController {
 
     @RequestMapping ("/oauth/confirm_access")
     public ModelAndView getAccessConfirmation(Map<String, Object> model, HttpServletRequest httpServletRequest) throws Exception {
+
         AuthorizationRequest clientAuth = (AuthorizationRequest) model.remove(AUTHORIZATION_REQUEST_SESSION_ATTRIBUTE);
         ClientDetails client = clientDetailsService.loadClientByClientId(clientAuth.getClientId());
         model.put("auth_request", clientAuth);

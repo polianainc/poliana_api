@@ -10,11 +10,9 @@ import org.springframework.hateoas.Identifiable;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
- * Simple object that administers all customer data.
+ * Simple user object.
  *
  * @author Josh Long
  */
@@ -29,9 +27,6 @@ public class User implements Identifiable<Long>, Serializable    {
     @GeneratedValue (strategy = GenerationType.SEQUENCE)
     @Column (name = "id", unique = true, nullable = false)
     private Long id;
-
-    @OneToMany (cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
-    private Set<Customer> customers = new HashSet<Customer>();
 
     @Column (name = "first_name")
     private String firstName;
@@ -64,15 +59,8 @@ public class User implements Identifiable<Long>, Serializable    {
         this.id = id;
     }
 
-    // by default we don't attempt to represent the customers collection since it's
-    // variable size and it might trigger Hibernate lazy-loading issues.
     public User(User usr) {
-        this(usr, new HashSet<Customer>());
-    }
-
-    public User(User usr, Set<Customer> customerCollection) {
         this(usr.id, usr.username, usr.firstName, usr.lastName);
-        this.customers = customerCollection;
         this.enabled = usr.enabled;
         this.profilePhotoMediaType = usr.profilePhotoMediaType;
         this.password = usr.password;
@@ -177,14 +165,5 @@ public class User implements Identifiable<Long>, Serializable    {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    @com.fasterxml.jackson.annotation.JsonIgnore
-    public Set<Customer> getCustomers() {
-        return customers;
-    }
-
-    public void setCustomers(Set<Customer> customers) {
-        this.customers = customers;
     }
 }

@@ -23,7 +23,7 @@ import java.util.List;
  * @date 1/27/14
  */
 @Controller
-@RequestMapping("/politicians/")
+@RequestMapping(value = "/politicians/", produces = "application/json", headers = "x-requested-with=XMLHttpRequest", method = RequestMethod.GET)
 public class PoliticianPacFinanceController extends AbstractBaseController {
 
     private PoliticianPacFinanceService politicianPacFinanceService;
@@ -36,7 +36,7 @@ public class PoliticianPacFinanceController extends AbstractBaseController {
      * @param bioguideId
      * @return
      */
-    @RequestMapping(value="/{bioguide_id}/contributions/pacs", method = RequestMethod.GET)
+    @RequestMapping(value="/{bioguide_id}/contributions/pacs")
     public @ResponseBody List<PoliticianPacContributionsTotals> getPacToPoliticianTotals(
             @PathVariable("bioguide_id") String bioguideId) {
 
@@ -50,7 +50,7 @@ public class PoliticianPacFinanceController extends AbstractBaseController {
      * @param bioguideId
      * @return
      */                                                                  //TODO: instead use sum_by
-    @RequestMapping(value="/{bioguide_id}/contributions/pacs", params = {"unit"}, method = RequestMethod.GET)
+    @RequestMapping(value="/{bioguide_id}/contributions/pacs", params = {"unit"})
     public @ResponseBody HashMap<Integer, List<PoliticianPacContributionsTotals>> getPacToPoliticianTotalsPerCongress(
             @PathVariable("bioguide_id") String bioguideId) {
 
@@ -67,7 +67,7 @@ public class PoliticianPacFinanceController extends AbstractBaseController {
      * @param end
      * @return
      */
-    @RequestMapping(value = "/{bioguide_id}/contributions/pacs", params = {"start", "end"}, method = RequestMethod.GET)
+    @RequestMapping(value = "/{bioguide_id}/contributions/pacs", params = {"start", "end"})
     public @ResponseBody List<PoliticianPacContributionsTotals> getPacToPoliticianTotals(
             @PathVariable("bioguide_id") String bioguideId,
             @RequestParam(value = "start", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date start,
@@ -79,7 +79,7 @@ public class PoliticianPacFinanceController extends AbstractBaseController {
         return totals;
     }
 
-    @RequestMapping(value="/{bioguideId}/contributions/pacs", params = {"start", "end", "unit"}, method = RequestMethod.GET)
+    @RequestMapping(value="/{bioguideId}/contributions/pacs", params = {"start", "end", "unit"})
     public @ResponseBody HashMap<Integer, List<PoliticianPacContributionsTotals>> getPacToPoliticianTotalsPerCongress(
             @PathVariable(value = "bioguideId") String bioguideId,
             @RequestParam(value = "start", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date start,
@@ -96,7 +96,7 @@ public class PoliticianPacFinanceController extends AbstractBaseController {
      * @param bioguideId
      * @return
      */
-    @RequestMapping(value="/{bioguide_id}/contributions/pacs", params = {"plot"}, method = RequestMethod.GET)
+    @RequestMapping(value="/{bioguide_id}/contributions/pacs", params = {"plot"})
     public void plotPacToPoliticianTotals (
             OutputStream stream,
             @PathVariable("bioguide_id") String bioguideId,
@@ -120,7 +120,7 @@ public class PoliticianPacFinanceController extends AbstractBaseController {
      * @param bioguideId
      * @return
      */
-    @RequestMapping(value="/{bioguide_id}/contributions/pacs", params = {"plot", "start", "end"}, method = RequestMethod.GET)
+    @RequestMapping(value="/{bioguide_id}/contributions/pacs", params = {"plot", "start", "end"})
     public void plotPacToPoliticianTotals (
             OutputStream stream,
             @PathVariable("bioguide_id") String bioguideId,

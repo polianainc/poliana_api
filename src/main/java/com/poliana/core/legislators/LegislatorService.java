@@ -1,6 +1,7 @@
 package com.poliana.core.legislators;
 
 import org.apache.log4j.Logger;
+import org.mongodb.morphia.Key;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,7 +10,9 @@ import java.util.*;
 @Service
 public class LegislatorService {
 
-    private LegislatorRepo legislatorRepo;
+    private LegislatorHadoopRepo legislatorHadoopRepo;
+    private LegislatorRedisRepo legislatorRedisRepo;
+    private LegislatorMongoRepo legislatorMongoRepo;
 
     private Map<String, List<Legislator>> lisCache;
     private Map<String, List<Legislator>> bioguideCache;
@@ -82,14 +85,14 @@ public class LegislatorService {
             }
         }
         if(idLength == 4)
-            legislators = legislatorRepo.getLegislatorTermsByLis(id);
+            legislators = legislatorRedisRepo.getLegislatorTermsByLis(id);
         else if (idLength == 7)
-            legislators = legislatorRepo.getLegislatorTermsByBioguide(id);
+            legislators = legislatorRedisRepo.getLegislatorTermsByBioguide(id);
         else if (idLength == 5)
-            legislators = legislatorRepo.getLegislatorTermsByThomas(id);
+            legislators = legislatorRedisRepo.getLegislatorTermsByThomas(id);
         else {
             legislators = new LinkedList<>();
-            Iterator<Legislator> iterator = legislatorRepo.getLegislator(id);
+            Iterator<Legislator> iterator = legislatorMongoRepo.getLegislator(id);
             while (iterator.hasNext()) {
                 Legislator legislator = iterator.next();
                 legislators.add(legislator);
@@ -136,7 +139,7 @@ public class LegislatorService {
         }
         else {
             legislators = new LinkedList<>();
-            Iterator<Legislator> iterator = legislatorRepo.getLegislator(id);
+            Iterator<Legislator> iterator = legislatorMongoRepo.getLegislator(id);
             while (iterator.hasNext()) {
                 Legislator legislator = iterator.next();
                 legislators.add(legislator);
@@ -172,9 +175,31 @@ public class LegislatorService {
         return null;
     }
 
+    /**
+     * Persist a list of legislator objects from Impala to MongoDB
+     * @return
+     */
+    public Iterable<Key<Legislator>> loadLegislatorsFromHadoopToMongo() {
+
+        List<Legislator> legislators = legislatorHadoopRepo.getAllLegistlatorTerms();
+        return legislatorMongoRepo.saveLegislators(legislators);
+    }
+
+
+    /**
+     * Using Redis, save legislator term lists with bioguide, lis, thomas, and mongo ids as keys.
+     */
+    public void loadLegislatorTermsFromMongoToRedis() {
+
+        Iterator<Legislator> legislatorIterator = legislatorMongoRepo.getAllLegislators();
+
+        legislatorRedisRepo.saveLegislatorTerms(legislatorIterator);
+    }
+
+
     public void setCacheLis() {
         Iterator<Legislator> legislators =
-                legislatorRepo.getAllLegislators();
+                legislatorMongoRepo.getAllLegislators();
 
         lisCache = new HashMap<>(43000);
 
@@ -196,7 +221,7 @@ public class LegislatorService {
 
     public void setCacheBioguide() {
         Iterator<Legislator> legislators =
-                legislatorRepo.getAllLegislators();
+                legislatorMongoRepo.getAllLegislators();
         bioguideCache = new HashMap<>(43000);
 
         String currBioguide;
@@ -216,7 +241,7 @@ public class LegislatorService {
 
     public void setCacheThomas() {
         Iterator<Legislator> legislators =
-                legislatorRepo.getAllLegislators();
+                legislatorMongoRepo.getAllLegislators();
         thomasCache = new HashMap<>(43000);
 
         String currThomas;
@@ -235,7 +260,17 @@ public class LegislatorService {
     }
 
     @Autowired
-    public void setLegislatorRepo(LegislatorRepo legislatorRepo) {
-        this.legislatorRepo = legislatorRepo;
+    public void setLegislatorHadoopRepo(LegislatorHadoopRepo legislatorHadoopRepo) {
+        this.legislatorHadoopRepo = legislatorHadoopRepo;
+    }
+
+    @Autowired
+    public void setLegislatorRedisRepo(LegislatorRedisRepo legislatorRedisRepo) {
+        this.legislatorRedisRepo = legislatorRedisRepo;
+    }
+
+    @Autowired
+    public void setLegislatorMongoRepo(LegislatorMongoRepo legislatorMongoRepo) {
+        this.legislatorMongoRepo = legislatorMongoRepo;
     }
 }

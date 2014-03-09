@@ -293,6 +293,7 @@ public class PoliticianIndustryFinanceService {
      * @param bioguideId
      * @return
      */
+    @SuppressWarnings("unchecked")
     public HashMap<Integer, List<PoliticianIndustryContributionsTotals>> getIndustryCategoryToPoliticianTotalsPerCongress(String bioguideId, long beginTimestamp, long endTimestamp) {
 
         Integer[] cycles = timeService.getCongressionalCyclesByTimeRange(beginTimestamp, endTimestamp);

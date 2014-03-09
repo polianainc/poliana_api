@@ -74,7 +74,7 @@ public class MultiSecurityConfig {
                     .addFilterBefore(restSecurityFilter(), AbstractPreAuthenticatedProcessingFilter.class);
 
             http
-                    .antMatcher("/**")
+//                    .antMatcher("/**")
                     .httpBasic();
         }
     }
@@ -87,7 +87,7 @@ public class MultiSecurityConfig {
 
             web
                     .ignoring()
-                    .antMatchers("/", "/endpoints", "/politicians/**");
+                    .antMatchers("/industries/*", "/pacs/*", "/endpoints", "/politicians/**");
         }
 
         protected void configure(HttpSecurity http) throws Exception {

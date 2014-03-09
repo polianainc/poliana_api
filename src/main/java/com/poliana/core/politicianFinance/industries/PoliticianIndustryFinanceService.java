@@ -175,6 +175,7 @@ public class PoliticianIndustryFinanceService {
      * @param bioguideId
      * @return
      */
+    @SuppressWarnings("unchecked")
     public HashMap<Integer, List<PoliticianIndustryContributionsTotals>> getIndustryToPoliticianTotalsPerCongress(String bioguideId) {
 
         HashMap<Integer, List<PoliticianIndustryContributionsTotals>> totalsHashMap = politicianIndustryHadoopRepo.getIndustryToPoliticianTotalsPerCongress(bioguideId);
@@ -189,6 +190,8 @@ public class PoliticianIndustryFinanceService {
         while (it.hasNext()) {
             pairs = (Map.Entry) it.next();
 
+            politicianIndustryRedisRepo.setIndustryContributionsExistsInCache(bioguideId, (Integer) pairs.getKey());
+
             if (politicianIndustryMongoRepo.countIndustryToPoliticianContributions(bioguideId, (Integer) pairs.getKey()) <= 0)
                 politicianIndustryMongoRepo.saveIndustryToPoliticianContributions((List<PoliticianIndustryContributionsTotals>)pairs.getValue());
         }
@@ -197,10 +200,11 @@ public class PoliticianIndustryFinanceService {
     }
 
     /**
-     * Get a HashMap of Cycle->Industry-Category contribution lists for all congressional cycles a politician has been apart of
+     * Get a HashMap of Cycle->Industry contribution lists for all congressional cycles in the given time range
      * @param bioguideId
      * @return
      */
+    @SuppressWarnings("unchecked")
     public HashMap<Integer, List<PoliticianIndustryContributionsTotals>> getIndustryToPoliticianTotalsPerCongress(String bioguideId, long beginTimestamp, long endTimestamp) {
 
         Integer[] cycles = timeService.getCongressionalCyclesByTimeRange(beginTimestamp, endTimestamp);
@@ -208,12 +212,12 @@ public class PoliticianIndustryFinanceService {
         Iterator<PoliticianIndustryContributionsTotals> totalsIterator;
         HashMap<Integer, List<PoliticianIndustryContributionsTotals>> totalsHashMap = new HashMap<>(30);
 
-        if (politicianIndustryRedisRepo.getIndustryContributionsExistsInCache(bioguideId, cycles)) {
+        if (politicianIndustryRedisRepo.getIndustryContributionsExistInCache(bioguideId, cycles)) {
 
             //Query MongoDB for industry to politician objects
             totalsIterator = politicianIndustryMongoRepo.getIndustryToPoliticianContributionsIterator(bioguideId, cycles);
 
-            //Add industry totals to the HashMap. Check the size, if it's zero, fall back to Impala.
+            //Add industry totals to the HashMap.
             while (totalsIterator != null && totalsIterator.hasNext()) {
                 PoliticianIndustryContributionsTotals industryTotals = totalsIterator.next();
 
@@ -228,16 +232,8 @@ public class PoliticianIndustryFinanceService {
                 }
             }
 
-            //Ensure that all the necessary cycles were returned from MongoDB, if not, we'll use Impala
-            if (totalsHashMap.size() > 0) {
-                boolean totalsMapContainsAllCycles = true;
+            return totalsHashMap;
 
-                for (int i = 0; i < cycles.length; i++)
-                    totalsMapContainsAllCycles = totalsHashMap.containsKey(cycles[i]) ? totalsMapContainsAllCycles : false;
-
-                if (totalsMapContainsAllCycles)
-                    return totalsHashMap;
-            }
         }
 
         //Fall back to Impala if MongoDB did not have the sums cached
@@ -252,12 +248,13 @@ public class PoliticianIndustryFinanceService {
         while (it.hasNext()) {
             pairs = (Map.Entry) it.next();
 
-            if (politicianIndustryMongoRepo.countIndustryToPoliticianContributions(bioguideId, (Integer) pairs.getKey()) <= 0) {
-
+            if (politicianIndustryMongoRepo.countIndustryToPoliticianContributions(bioguideId, (Integer) pairs.getKey()) <= 0)
                 politicianIndustryMongoRepo.saveIndustryToPoliticianContributions((List<PoliticianIndustryContributionsTotals>)pairs.getValue());
-                politicianIndustryRedisRepo.setIndustryContributionsExistsInCache(bioguideId, (Integer) pairs.getKey());
-            }
+
         }
+
+        //Update cache info in redis
+        politicianIndustryRedisRepo.setIndustryContributionsExistsInCache(bioguideId, cycles);
 
         return totalsHashMap;
     }
@@ -267,6 +264,7 @@ public class PoliticianIndustryFinanceService {
      * @param bioguideId
      * @return
      */
+    @SuppressWarnings("unchecked")
     public HashMap<Integer, List<PoliticianIndustryContributionsTotals>> getIndustryCategoryToPoliticianTotalsPerCongress(String bioguideId) {
 
         HashMap<Integer, List<PoliticianIndustryContributionsTotals>> totalsHashMap = politicianIndustryHadoopRepo.getIndustryCategoryToPoliticianTotalsPerCongress(bioguideId);
@@ -281,6 +279,8 @@ public class PoliticianIndustryFinanceService {
         while (it.hasNext()) {
             pairs = (Map.Entry) it.next();
 
+            politicianIndustryRedisRepo.setIndustryCategoryContributionsExistsInCache(bioguideId, (Integer) pairs.getKey());
+
             if (politicianIndustryMongoRepo.countIndustryCategoryToPoliticianContributions(bioguideId, (Integer) pairs.getKey()) <= 0)
                 politicianIndustryMongoRepo.saveIndustryToPoliticianContributions((List<PoliticianIndustryContributionsTotals>)pairs.getValue());
         }
@@ -289,7 +289,7 @@ public class PoliticianIndustryFinanceService {
     }
 
     /**
-     * Get a HashMap of Cycle->Industry-Category contribution lists for all congressional cycles a politician has been apart of
+     * Get a HashMap of Cycle->Industry-Category contribution lists for all congressional cycles in the given time range
      * @param bioguideId
      * @return
      */
@@ -305,7 +305,7 @@ public class PoliticianIndustryFinanceService {
             //Query MongoDB for industry to politician objects
              totalsIterator = politicianIndustryMongoRepo.getIndustryCategoryToPoliticianContributionsIterator(bioguideId, cycles);
 
-            //Add industry totals to the HashMap. Check the size, if it's zero, fall back to Impala.
+            //Add industry totals to the HashMap.
             while (totalsIterator != null && totalsIterator.hasNext()) {
                 PoliticianIndustryContributionsTotals industryTotals = totalsIterator.next();
 
@@ -320,16 +320,8 @@ public class PoliticianIndustryFinanceService {
                 }
             }
 
-            //Ensure that all the necessary cycles were returned from MongoDB, if not, we'll use Impala
-            if (totalsHashMap.size() > 0) {
-                boolean totalsMapContainsAllCycles = true;
+            return totalsHashMap;
 
-                for (int i = 0; i < cycles.length; i++)
-                    totalsMapContainsAllCycles = totalsHashMap.containsKey(cycles[i]) ? totalsMapContainsAllCycles : false;
-
-                if (totalsMapContainsAllCycles)
-                    return totalsHashMap;
-            }
         }
 
         //Fall back to Impala if MongoDB did not have the sums cached
@@ -344,12 +336,12 @@ public class PoliticianIndustryFinanceService {
         while (it.hasNext()) {
             pairs = (Map.Entry) it.next();
 
-            if (politicianIndustryMongoRepo.countIndustryCategoryToPoliticianContributions(bioguideId, (Integer) pairs.getKey()) <= 0) {
-
+            if (politicianIndustryMongoRepo.countIndustryCategoryToPoliticianContributions(bioguideId, (Integer) pairs.getKey()) <= 0)
                 politicianIndustryMongoRepo.saveIndustryToPoliticianContributions((List<PoliticianIndustryContributionsTotals>)pairs.getValue());
-                politicianIndustryRedisRepo.setIndustryCategoryContributionsExistsInCache(bioguideId, (Integer) pairs.getKey());
-            }
+
         }
+
+        politicianIndustryRedisRepo.setIndustryCategoryContributionsExistsInCache(bioguideId, cycles);
 
         return totalsHashMap;
     }

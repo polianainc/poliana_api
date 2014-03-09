@@ -18,6 +18,7 @@ public class PoliticianPacFinanceService {
 
     private PoliticianPacMongoRepo politicianPacMongoRepo;
     private PoliticianPacHadoopRepo politicianPacHadoopRepo;
+    private PoliticianPacRedisRepo politicianPacRedisRepo;
 
     private static final Logger logger = Logger.getLogger(PoliticianPacFinanceService.class);
 
@@ -80,6 +81,7 @@ public class PoliticianPacFinanceService {
      * @param bioguideId
      * @return
      */
+    @SuppressWarnings("unchecked")
     public HashMap<Integer, List<PoliticianPacContributionsTotals>> getPacToPoliticianTotalsPerCongress(String bioguideId) {
 
         HashMap<Integer, List<PoliticianPacContributionsTotals>> totalsHashMap = politicianPacHadoopRepo.getPacToPoliticianTotalsPerCongress(bioguideId);
@@ -94,6 +96,8 @@ public class PoliticianPacFinanceService {
         while (it.hasNext()) {
             pairs = (Map.Entry) it.next();
 
+            politicianPacRedisRepo.setPacContributionsExistsInCache(bioguideId, (Integer) pairs.getKey());
+
             if (politicianPacMongoRepo.countPacToPoliticianContributions(bioguideId, (Integer) pairs.getKey()) <= 0)
                 politicianPacMongoRepo.savePacToPoliticianContributions((List<PoliticianPacContributionsTotals>) pairs.getValue());
         }
@@ -102,51 +106,47 @@ public class PoliticianPacFinanceService {
     }
 
     /**
-     * Get a HashMap of Cycle->PAC contribution lists for all congressional cycles in the given time range
+     * Get a HashMap of Cycle->Pac contribution lists for all congressional cycles in the given time range
      * @param bioguideId
      * @return
      */
+    @SuppressWarnings("unchecked")
     public HashMap<Integer, List<PoliticianPacContributionsTotals>> getPacToPoliticianTotalsPerCongress(String bioguideId, long beginTimestamp, long endTimestamp) {
 
         Integer[] cycles = timeService.getCongressionalCyclesByTimeRange(beginTimestamp, endTimestamp);
 
-        //Query MongoDB for PAC to politician objects
-        Iterator<PoliticianPacContributionsTotals> totalsIterator = politicianPacMongoRepo.getPacToPoliticianContributionsIterator(bioguideId, cycles);
-
+        Iterator<PoliticianPacContributionsTotals> totalsIterator;
         HashMap<Integer, List<PoliticianPacContributionsTotals>> totalsHashMap = new HashMap<>(30);
 
-        //Add industry totals to the HashMap. Check the size, if it's zero, fall back to Impala.
-        while (totalsIterator != null && totalsIterator.hasNext()) {
-            PoliticianPacContributionsTotals pacTotals = totalsIterator.next();
+        if (politicianPacRedisRepo.getPacContributionsExistInCache(bioguideId, cycles)) {
 
-            //If the hashmap already has a list of industry totals for the object's cycle
-            if (totalsHashMap.containsKey(pacTotals.getCongress()))
-                totalsHashMap.get(pacTotals.getCongress()).add(pacTotals);
-                //If the hashmap doesn't contain a list of industry totals, make it
-            else {
-                List<PoliticianPacContributionsTotals> totalsList = new LinkedList<>();
-                totalsList.add(pacTotals);
-                totalsHashMap.put(pacTotals.getCongress(), totalsList);
+            //Query MongoDB for industry to politician objects
+            totalsIterator = politicianPacMongoRepo.getPacToPoliticianContributionsIterator(bioguideId, cycles);
+
+            //Add industry totals to the HashMap.
+            while (totalsIterator != null && totalsIterator.hasNext()) {
+                PoliticianPacContributionsTotals pacTotals = totalsIterator.next();
+
+                //If the hashmap already has a list of industry totals for the object's cycle
+                if (totalsHashMap.containsKey(pacTotals.getCongress()))
+                    totalsHashMap.get(pacTotals.getCongress()).add(pacTotals);
+                    //If the hashmap doesn't contain a list of industry totals, make it
+                else {
+                    List<PoliticianPacContributionsTotals> totalsList = new LinkedList<>();
+                    totalsList.add(pacTotals);
+                    totalsHashMap.put(pacTotals.getCongress(), totalsList);
+                }
             }
-        }
 
-        //Ensure that all the necessary cycles were returned from MongoDB, if not, we'll use Impala
-        if (totalsHashMap.size() > 0) {
-            boolean totalsMapContainsAllCycles = true;
+            return totalsHashMap;
 
-            for (int i = 0; i < cycles.length; i++)
-                totalsMapContainsAllCycles = totalsHashMap.containsKey(cycles[i]) ? totalsMapContainsAllCycles : false;
-
-            if (totalsMapContainsAllCycles)
-                return totalsHashMap;
         }
 
         //Fall back to Impala if MongoDB did not have the sums cached
         totalsHashMap = politicianPacHadoopRepo.getPacToPoliticianTotalsPerCongress(bioguideId, beginTimestamp, endTimestamp);
 
-        //Cache sums to MongoDB
-
-        //Get an iterator for the values in the hash map
+        /*Cache sums to MongoDB
+        Get an iterator for the values in the hash map */
         Iterator it = totalsHashMap.entrySet().iterator();
         Map.Entry pairs;
 
@@ -155,8 +155,12 @@ public class PoliticianPacFinanceService {
             pairs = (Map.Entry) it.next();
 
             if (politicianPacMongoRepo.countPacToPoliticianContributions(bioguideId, (Integer) pairs.getKey()) <= 0)
-                politicianPacMongoRepo.savePacToPoliticianContributions((List<PoliticianPacContributionsTotals>) pairs.getValue());
+                politicianPacMongoRepo.savePacToPoliticianContributions((List<PoliticianPacContributionsTotals>)pairs.getValue());
+
         }
+
+        //Update cache info in redis
+        politicianPacRedisRepo.setPacContributionsExistsInCache(bioguideId, cycles);
 
         return totalsHashMap;
     }
@@ -173,5 +177,10 @@ public class PoliticianPacFinanceService {
     @Autowired
     public void setPoliticianPacHadoopRepo(PoliticianPacHadoopRepo politicianPacHadoopRepo) {
         this.politicianPacHadoopRepo = politicianPacHadoopRepo;
+    }
+
+    @Autowired
+    public void setPoliticianPacRedisRepo(PoliticianPacRedisRepo politicianPacRedisRepo) {
+        this.politicianPacRedisRepo = politicianPacRedisRepo;
     }
 }

@@ -23,7 +23,7 @@ import java.util.List;
  * @date 1/27/14
  */
 @Controller
-@RequestMapping(value = "/politicians/", produces = "application/json", headers = "x-requested-with=XMLHttpRequest", method = RequestMethod.GET)
+@RequestMapping(value = "/politicians", method = RequestMethod.GET)
 public class PoliticianPacFinanceController extends AbstractBaseController {
 
     private PoliticianPacFinanceService politicianPacFinanceService;

@@ -30,7 +30,7 @@ public class PoliticianPacRedisRepo {
      * @param cycles
      * @return
      */
-    private boolean pacContributionsExistsInRedis(String bioguideId, int... cycles) {
+    public boolean getPacContributionsExistInCache(String bioguideId, Integer... cycles) {
 
         Jedis jedis = jedisPool.getResource();
 
@@ -54,6 +54,38 @@ public class PoliticianPacRedisRepo {
         }
 
         return exists;
+    }
+
+    /**
+     * Record the existence of the supplied congressional cycles in the cache
+     * @param bioguideId
+     * @param cycles
+     */
+    public void setPacContributionsExistsInCache(String bioguideId, Integer... cycles) {
+
+        if (cycles != null) {
+
+            Jedis jedis = jedisPool.getResource();
+
+            String key = PAC_TO_POLITICIAN_CONTRIBUTIONS_PER_CONGRESS + bioguideId;
+            String[] values = new String[cycles.length];
+
+            for (int i = 0; i < values.length; i++)
+                values[i] = "" + cycles[i];
+
+            try {
+                jedis.sadd(key, values);
+
+            } catch (JedisConnectionException e) {
+                if (null != jedis) {
+                    jedisPool.returnBrokenResource(jedis);
+                    jedis = null;
+                }
+            } finally {
+                if (null != jedis)
+                    jedisPool.returnResource(jedis);
+            }
+        }
     }
 
     @Autowired

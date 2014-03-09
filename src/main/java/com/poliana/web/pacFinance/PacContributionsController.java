@@ -18,7 +18,7 @@ import static com.poliana.core.time.TimeService.CURRENT_CONGRESS;
  * @date 1/4/14
  */
 @Controller
-@RequestMapping(value = "/pacs/", produces = "application/json", headers = "x-requested-with=XMLHttpRequest", method = RequestMethod.GET)
+@RequestMapping(value = "/pacs", method = RequestMethod.GET)
 public class PacContributionsController extends AbstractBaseController {
 
     private PacContributionService pacContributionService;

@@ -32,7 +32,7 @@ public class PoliticianIndustryRedisRepo {
      * @param cycles
      * @return
      */
-    public boolean getIndustryContributionsExistsInCache(String bioguideId, Integer... cycles) {
+    public boolean getIndustryContributionsExistInCache(String bioguideId, Integer... cycles) {
 
         Jedis jedis = jedisPool.getResource();
 

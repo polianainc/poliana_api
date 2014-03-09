@@ -26,7 +26,7 @@ import static com.poliana.core.time.TimeService.CURRENT_CONGRESS;
  * @date 1/4/14
  */
 @Controller
-@RequestMapping(value = "/industries/", produces = "application/json", headers = "x-requested-with=XMLHttpRequest", method = RequestMethod.GET)
+@RequestMapping(value = "/industries", method = RequestMethod.GET)
 public class IndustryContributionController extends AbstractBaseController {
 
     private IdeologyService ideologyService;

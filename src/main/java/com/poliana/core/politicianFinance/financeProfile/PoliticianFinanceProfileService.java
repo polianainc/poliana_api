@@ -118,6 +118,7 @@ public class PoliticianFinanceProfileService {
      * @param bioguideId
      * @param termTotalsMap
      */
+    @SuppressWarnings("unchecked")
     private void setPacTotals(String bioguideId, HashMap<Integer, SessionTotals> termTotalsMap) {
 
         HashMap<Integer, List<PoliticianPacContributionsTotals>> totalsHashMap = politicianPacFinanceService.getPacToPoliticianTotalsPerCongress(bioguideId);

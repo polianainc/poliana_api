@@ -125,6 +125,41 @@ public class LegislatorMongoRepo {
         return query.iterator();
     }
 
+    /**
+     * Get all legislator term objects for a given time range. Note logic in chamber specific method comments
+     *
+     * @param beginTimestamp
+     * @param endTimestamp
+     * @return
+     */
+    public Iterator<Legislator> getLegislators(long beginTimestamp, long endTimestamp) {
+
+        //If the timestamps are backward, swap 'em
+        if (endTimestamp < beginTimestamp) {
+            long tmp = endTimestamp;
+            endTimestamp = beginTimestamp;
+            beginTimestamp = tmp;
+        }
+
+        //Contruct a Legislator query
+        Query<Legislator> query = mongoStore.find(Legislator.class);
+
+        //Add our logic critieria
+        query.and(
+                query.and(
+                        query.criteria("beginTimestamp").lessThan(endTimestamp),
+                        query.criteria("endTimestamp").greaterThan(beginTimestamp)
+                ),
+                query.or(
+                        query.criteria("beginTimestamp").lessThan(beginTimestamp),
+                        query.criteria("endTimestamp").greaterThan(endTimestamp)
+                )
+
+        );
+
+        return query.iterator();
+    }
+
     @Autowired
     public void setMongoStore(Datastore mongoStore) {
         this.mongoStore = mongoStore;

@@ -20,7 +20,6 @@ public class LegislatorService {
 
     private static final Logger logger = Logger.getLogger(LegislatorService.class);
 
-
     /**
      * Given a lis, bioguide, or thomas id and a timestamp, return the corresponding legislator object.
      * Note: this method uses cached global hash maps for each type of id.

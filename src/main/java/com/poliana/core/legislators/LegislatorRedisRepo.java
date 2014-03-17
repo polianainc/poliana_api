@@ -30,6 +30,8 @@ public class LegislatorRedisRepo {
     private String TERMS_BY_THOMAS;
     private String TERMS_BY_MONGO;
 
+    private String LEGISLATOR_CONDENSED;
+
     private static final Logger logger = Logger.getLogger(LegislatorRedisRepo.class);
 
 
@@ -155,5 +157,7 @@ public class LegislatorRedisRepo {
         this.TERMS_BY_LIS = env.getProperty("terms.by.lis");
         this.TERMS_BY_THOMAS = env.getProperty("terms.by.thomas");
         this.TERMS_BY_MONGO = env.getProperty("terms.by.mongo");
+
+        this.LEGISLATOR_CONDENSED = env.getProperty("legislator.condensed");
     }
 }

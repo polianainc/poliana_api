@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 public final class RestPreconditions {
 
     private static final String BIOGUIDE_PATTERN = "[A-z]{1,2}\\d{6}";
+    private static final String INDUSTRY_PATTERN = "";
 
     private RestPreconditions() {
         throw new AssertionError();
@@ -30,6 +31,26 @@ public final class RestPreconditions {
      *             if expression is false, means value not found.
      */
     public static void checkValidBioguideId(final String bioguideId) {
+
+        Pattern pattern = Pattern.compile(BIOGUIDE_PATTERN);
+        Matcher matcher = pattern.matcher(bioguideId);
+
+        boolean valid = matcher.matches();
+
+        if (!valid) {
+            throw new ResourceNotFoundException();
+        }
+    }
+
+    /**
+     * Check if the bioguideId is valid
+     *
+     * @param bioguideId
+     *            has value true if found, otherwise false
+     * @throws ResourceNotFoundException
+     *             if expression is false, means value not found.
+     */
+    public static void checkValidIndustryId(final String bioguideId) {
 
         Pattern pattern = Pattern.compile(BIOGUIDE_PATTERN);
         Matcher matcher = pattern.matcher(bioguideId);

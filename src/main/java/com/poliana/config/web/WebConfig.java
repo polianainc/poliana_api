@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.poliana.config.ApplicationConfig;
 import com.poliana.web.aspect.ControllerLoggingAspect;
+import com.poliana.web.aspect.ControllerParameterSanitation;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.*;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
@@ -113,5 +114,11 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     public ControllerLoggingAspect controllerLoggingAspect() {
 
         return new ControllerLoggingAspect();
+    }
+
+    @Bean
+    public ControllerParameterSanitation controllerParameterSanitation() {
+
+        return new ControllerParameterSanitation();
     }
 }

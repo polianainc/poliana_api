@@ -4,7 +4,6 @@ import com.poliana.core.politicianFinance.industries.PoliticianIndustryContribut
 import com.poliana.core.politicianFinance.industries.PoliticianIndustryFinanceService;
 import com.poliana.views.politicianFinance.PoliticianIndustryBarPlot;
 import com.poliana.web.common.AbstractBaseController;
-import com.poliana.web.util.RestPreconditions;
 import org.apache.log4j.Logger;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
@@ -334,8 +333,6 @@ public class PoliticianIndustryFinanceController extends AbstractBaseController 
             @RequestParam(value = "start", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date start,
             @RequestParam(value = "end", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date end,
             @RequestParam(value = "plot", required = true) String plotType) {
-
-        RestPreconditions.checkValidBioguideId(bioguideId);
 
         List<PoliticianIndustryContributionsTotals> allTotals =
                 politicianIndustryFinanceService.getIndustryToPoliticianTotals(bioguideId, start.getTime()/1000, end.getTime()/1000);

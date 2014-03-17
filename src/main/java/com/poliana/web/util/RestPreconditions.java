@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
  */
 public final class RestPreconditions {
 
-    private static final String BIOGUIDE_PATTERN = "[A-z]{1,2}\\d{6}";
+    private static final String BIOGUIDE_PATTERN = "[A-Z]{1,2}\\d{6}";
     private static final String INDUSTRY_PATTERN = "";
 
     private RestPreconditions() {

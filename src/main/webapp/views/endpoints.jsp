@@ -17,7 +17,7 @@
     </tr>
     </thead>
     <tbody>
-    <c:forEach items="${endPoints}" var="endPoint">
+    <c:forEach items="${endpoints}" var="endPoint">
         <tr>
             <td>${endPoint.patternsCondition}</td>
             <td>${endPoint.methodsCondition}</td>

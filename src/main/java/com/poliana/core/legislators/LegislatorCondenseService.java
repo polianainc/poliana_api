@@ -2,7 +2,10 @@ package com.poliana.core.legislators;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -17,7 +20,7 @@ import java.util.List;
 public class LegislatorCondenseService {
 
     private LegislatorMongoRepo legislatorMongoRepo;
-
+    private LegislatorRedisRepo legislatorRedisRepo;
 
     /**
      * Return all legislators flattened by bioguideId
@@ -25,13 +28,25 @@ public class LegislatorCondenseService {
      */
     public List<LegislatorCondensed> getCondensedLegislators() {
 
-        legislatorMongoRepo.getAllLegislators();
+        List<LegislatorCondensed> legislatorsCondensed;
 
-        //TODO: Implement logic
-        LegislatorCondensed legislatorCondensed = new LegislatorCondensed();
-        List<LegislatorCondensed> legislatorList = new LinkedList<>();
+        if(!legislatorRedisRepo.getCondensedLegislatorsCached()) {
+            // if there aren't any condensed legislators in redis, grab the flat
+            // legislators from mongo, iterate over them, create the condensed legislators,
+            // store them in redis
 
-        return legislatorList;
+            for(Iterator<Legislator> legislator = legislatorMongoRepo.getAllLegislators(); legislator.hasNext();) {
+                Legislator leg = legislator.next();
+                legislatorRedisRepo.storeOrUpdateCondensedLegislator(leg);
+            }
+
+            legislatorRedisRepo.setCondensedLegislatorsCached(true);
+        }
+
+        legislatorsCondensed = legislatorRedisRepo.getCondensedLegislators();
+
+        // regardless of how they're created, send 'em out
+        return legislatorsCondensed;
     }
 
     /**
@@ -52,5 +67,10 @@ public class LegislatorCondenseService {
     @Autowired
     public void setLegislatorMongoRepo(LegislatorMongoRepo legislatorMongoRepo) {
         this.legislatorMongoRepo = legislatorMongoRepo;
+    }
+
+    @Autowired
+    public void setLegislatorRedisRepo(LegislatorRedisRepo legislatorRedisRepo) {
+        this.legislatorRedisRepo = legislatorRedisRepo;
     }
 }

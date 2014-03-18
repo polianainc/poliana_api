@@ -3,6 +3,7 @@ package com.poliana.web.politicians.finance;
 import com.poliana.core.politicianFinance.pacs.PoliticianPacContributionsTotals;
 import com.poliana.core.politicianFinance.pacs.PoliticianPacFinanceService;
 import com.poliana.views.politicianFinance.PoliticianPacBarPlot;
+import com.poliana.web.aspect.BioguideId;
 import com.poliana.web.common.AbstractBaseController;
 import org.apache.log4j.Logger;
 import org.jfree.chart.ChartUtilities;
@@ -30,6 +31,7 @@ public class PoliticianPacFinanceController extends AbstractBaseController {
 
     private static final Logger logger = Logger.getLogger(PoliticianPacFinanceController.class);
 
+
     /**
      * Get all PAC contribution totals for a given legislator.
      *
@@ -38,7 +40,7 @@ public class PoliticianPacFinanceController extends AbstractBaseController {
      */
     @RequestMapping(value="/{bioguide_id}/contributions/pacs")
     public @ResponseBody List<PoliticianPacContributionsTotals> getPacToPoliticianTotals(
-            @PathVariable("bioguide_id") String bioguideId) {
+            @BioguideId @PathVariable("bioguide_id") String bioguideId) {
 
         List<PoliticianPacContributionsTotals> totals = politicianPacFinanceService.getPacToPoliticianTotals(bioguideId);
         return totals;
@@ -52,7 +54,7 @@ public class PoliticianPacFinanceController extends AbstractBaseController {
      */                                                                  //TODO: instead use sum_by
     @RequestMapping(value="/{bioguide_id}/contributions/pacs", params = {"unit"})
     public @ResponseBody HashMap<Integer, List<PoliticianPacContributionsTotals>> getPacToPoliticianTotalsPerCongress(
-            @PathVariable("bioguide_id") String bioguideId) {
+            @BioguideId @PathVariable("bioguide_id") String bioguideId) {
 
         HashMap<Integer, List<PoliticianPacContributionsTotals>> totals =
                 politicianPacFinanceService.getPacToPoliticianTotalsPerCongress(bioguideId);
@@ -69,7 +71,7 @@ public class PoliticianPacFinanceController extends AbstractBaseController {
      */
     @RequestMapping(value = "/{bioguide_id}/contributions/pacs", params = {"start", "end"})
     public @ResponseBody List<PoliticianPacContributionsTotals> getPacToPoliticianTotals(
-            @PathVariable("bioguide_id") String bioguideId,
+            @BioguideId @PathVariable("bioguide_id") String bioguideId,
             @RequestParam(value = "start", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date start,
             @RequestParam(value = "end", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date end) {
 
@@ -81,7 +83,7 @@ public class PoliticianPacFinanceController extends AbstractBaseController {
 
     @RequestMapping(value="/{bioguideId}/contributions/pacs", params = {"start", "end", "unit"})
     public @ResponseBody HashMap<Integer, List<PoliticianPacContributionsTotals>> getPacToPoliticianTotalsPerCongress(
-            @PathVariable(value = "bioguideId") String bioguideId,
+            @BioguideId @PathVariable(value = "bioguideId") String bioguideId,
             @RequestParam(value = "start", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date start,
             @RequestParam(value = "end", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date end) {
 
@@ -99,7 +101,7 @@ public class PoliticianPacFinanceController extends AbstractBaseController {
     @RequestMapping(value="/{bioguide_id}/contributions/pacs", params = {"plot"})
     public void plotPacToPoliticianTotals (
             OutputStream stream,
-            @PathVariable("bioguide_id") String bioguideId,
+            @BioguideId @PathVariable("bioguide_id") String bioguideId,
             @RequestParam(value = "plot", required = true) String plotType) {
 
         List<PoliticianPacContributionsTotals> totals = politicianPacFinanceService.getPacToPoliticianTotals(bioguideId);
@@ -123,7 +125,7 @@ public class PoliticianPacFinanceController extends AbstractBaseController {
     @RequestMapping(value="/{bioguide_id}/contributions/pacs", params = {"plot", "start", "end"})
     public void plotPacToPoliticianTotals (
             OutputStream stream,
-            @PathVariable("bioguide_id") String bioguideId,
+            @BioguideId @PathVariable("bioguide_id") String bioguideId,
             @RequestParam(value = "plot", required = true) String plotType,
             @RequestParam(value = "start", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date start,
             @RequestParam(value = "end", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date end) {

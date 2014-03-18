@@ -5,11 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.poliana.config.ApplicationConfig;
+import com.poliana.web.aspect.ControllerLoggingAspect;
+import com.poliana.web.aspect.ControllerParameterSanitation;
 import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.*;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -37,6 +36,7 @@ import java.util.List;
 */
 @Configuration
 @EnableWebMvc
+@EnableAspectJAutoProxy
 @ComponentScan(basePackages = { "com.poliana.web" })
 @Import(ApplicationConfig.class)
 public class WebConfig extends WebMvcConfigurerAdapter {
@@ -108,5 +108,17 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         mapper.setPropertyNamingStrategy(PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES);
 
         return mapper;
+    }
+
+    @Bean
+    public ControllerLoggingAspect controllerLoggingAspect() {
+
+        return new ControllerLoggingAspect();
+    }
+
+    @Bean
+    public ControllerParameterSanitation controllerParameterSanitation() {
+
+        return new ControllerParameterSanitation();
     }
 }

@@ -2,6 +2,7 @@ package com.poliana.web.pacFinance;
 
 import com.poliana.core.pacFinance.PacContributionService;
 import com.poliana.core.pacFinance.entities.PacContributionTotalsMap;
+import com.poliana.web.aspect.PacId;
 import com.poliana.web.common.AbstractBaseController;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +33,9 @@ public class PacContributionsController extends AbstractBaseController {
      * @param congress
      * @return
      */
-    @RequestMapping(value = "/{pac_id}/contributions", produces = "application/json", headers = "x-requested-with=XMLHttpRequest")
+    @RequestMapping(value = "/{pac_id}/contributions")
     public @ResponseBody PacContributionTotalsMap getPacContributionsByCongress(
-            @PathVariable(value = "pac_id") String pacId,
+            @PacId @PathVariable(value = "pac_id") String pacId,
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress) {
 
             return pacContributionService.getPacContributionTotalsMap(pacId, congress);
@@ -47,9 +48,9 @@ public class PacContributionsController extends AbstractBaseController {
      * @param congress
      * @return
      */
-    @RequestMapping(value = "/{pac_id}/contributions", params = {"chamber", "congress"}, produces = "application/json", headers = "x-requested-with=XMLHttpRequest")
+    @RequestMapping(value = "/{pac_id}/contributions", params = {"chamber", "congress"})
     public @ResponseBody PacContributionTotalsMap getPacContributionsByCongressAndChamber(
-            @PathVariable(value = "pac_id") String pacId,
+            @PacId @PathVariable(value = "pac_id") String pacId,
             @RequestParam(value = "chamber", required = true) String chamber,
             @RequestParam(value = "congress", required = true) Integer congress) {
 
@@ -63,9 +64,9 @@ public class PacContributionsController extends AbstractBaseController {
      * @param end
      * @return
      */
-    @RequestMapping(value = "/{pac_id}/contributions", params = {"start", "end"}, produces = "application/json", headers = "x-requested-with=XMLHttpRequest")
+    @RequestMapping(value = "/{pac_id}/contributions", params = {"start", "end"})
     public @ResponseBody PacContributionTotalsMap getPacContributionsByStartAndEnd(
-            @PathVariable(value = "pac_id") String pacId,
+            @PacId @PathVariable(value = "pac_id") String pacId,
             @RequestParam(value = "start", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date start,
             @RequestParam(value = "end", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date end) {
 
@@ -79,9 +80,9 @@ public class PacContributionsController extends AbstractBaseController {
      * @param end
      * @return
      */
-    @RequestMapping(value = "/{pac_id}/contributions", params = {"chamber", "start", "end"}, produces = "application/json", headers = "x-requested-with=XMLHttpRequest")
+    @RequestMapping(value = "/{pac_id}/contributions", params = {"chamber", "start", "end"})
     public @ResponseBody PacContributionTotalsMap getPacContributionsByChamberAndStartAndEnd(
-            @PathVariable(value = "pac_id") String pacId,
+            @PacId @PathVariable(value = "pac_id") String pacId,
             @RequestParam(value = "chamber", required = true) String chamber,
             @RequestParam(value = "start", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date start,
             @RequestParam(value = "end", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date end) {

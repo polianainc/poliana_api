@@ -3,6 +3,7 @@ package com.poliana.web.politicians.finance;
 import com.poliana.core.politicianFinance.pacs.PoliticianPacContributionsTotals;
 import com.poliana.core.politicianFinance.pacs.PoliticianPacFinanceService;
 import com.poliana.views.politicianFinance.PoliticianPacBarPlot;
+import com.poliana.web.aspect.Bioguide;
 import com.poliana.web.common.AbstractBaseController;
 import org.apache.log4j.Logger;
 import org.jfree.chart.ChartUtilities;
@@ -81,7 +82,7 @@ public class PoliticianPacFinanceController extends AbstractBaseController {
 
     @RequestMapping(value="/{bioguideId}/contributions/pacs", params = {"start", "end", "unit"})
     public @ResponseBody HashMap<Integer, List<PoliticianPacContributionsTotals>> getPacToPoliticianTotalsPerCongress(
-            @PathVariable(value = "bioguideId") String bioguideId,
+            @Bioguide @PathVariable(value = "bioguideId") String bioguideId,
             @RequestParam(value = "start", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date start,
             @RequestParam(value = "end", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date end) {
 

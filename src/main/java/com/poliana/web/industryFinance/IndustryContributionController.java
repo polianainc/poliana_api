@@ -7,8 +7,8 @@ import com.poliana.core.industryFinance.entities.IndustryContributionTotalsMap;
 import com.poliana.core.industryFinance.services.IndustryContributionCompareService;
 import com.poliana.core.industryFinance.services.IndustryContributionService;
 import com.poliana.views.IndustryContributionBarPlot;
-import com.poliana.web.aspect.Industry;
-import com.poliana.web.aspect.IndustryCategory;
+import com.poliana.web.aspect.IndustryId;
+import com.poliana.web.aspect.IndustryCategoryId;
 import com.poliana.web.common.AbstractBaseController;
 import org.apache.log4j.Logger;
 import org.jfree.chart.ChartUtilities;
@@ -49,7 +49,7 @@ public class IndustryContributionController extends AbstractBaseController {
      */
     @RequestMapping(value = "/{industry_id}/contributions")
     public @ResponseBody IndustryContributionTotalsMap getIndustryContributionsByCongress(
-            @Industry @PathVariable(value = "industry_id") String industryId,
+            @IndustryId @PathVariable(value = "industry_id") String industryId,
             @RequestParam(value = "chamber", required = false) String chamber,
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress) {
 
@@ -72,7 +72,7 @@ public class IndustryContributionController extends AbstractBaseController {
      */
     @RequestMapping(value = "/category/{category_id}/contributions")
     public @ResponseBody IndustryContributionTotalsMap getIndustryCategoryContributionsByCongress(
-            @IndustryCategory   @PathVariable(value = "category_id") String categoryId,
+            @IndustryCategoryId @PathVariable(value = "category_id") String categoryId,
             @RequestParam(value = "chamber", required = false) String chamber,
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress) {
 
@@ -96,7 +96,7 @@ public class IndustryContributionController extends AbstractBaseController {
     @RequestMapping(value = "/{industry_id}/contributions", params = {"plot"})
     public @ResponseBody
     IndustryContributionTotalsMap plotIndustryContributionsByCongress(
-            @Industry @PathVariable(value = "industry_id") String industryId,
+            @IndustryId @PathVariable(value = "industry_id") String industryId,
             @RequestParam(value = "chamber", required = false) String chamber,
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
             @RequestParam(value = "plot") String plotType) {
@@ -121,7 +121,7 @@ public class IndustryContributionController extends AbstractBaseController {
     @RequestMapping(value = "/categories/{category_id}/contributions", params = {"plot"})
     public @ResponseBody
     IndustryContributionTotalsMap plotIndustryCategoryContributionsByCongress(
-            @IndustryCategory @PathVariable(value = "category_id") String categoryId,
+            @IndustryCategoryId @PathVariable(value = "category_id") String categoryId,
             @RequestParam(value = "chamber", required = false) String chamber,
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
             @RequestParam(value = "plot") String plotType) {
@@ -145,7 +145,7 @@ public class IndustryContributionController extends AbstractBaseController {
     @RequestMapping(value = "/{industry_id}/contributions", params = {"compare_to"})
     public @ResponseBody
     List<IndustryContributionCompare> getIndustryContributionsVsIdeologyByCongress(
-            @Industry @PathVariable(value = "industry_id") String industryId,
+            @IndustryId @PathVariable(value = "industry_id") String industryId,
             @RequestParam(value = "chamber", required = false, defaultValue = "s") String chamber,
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
             @RequestParam(value = "compare_to", required = false) String compareTo) {
@@ -174,7 +174,7 @@ public class IndustryContributionController extends AbstractBaseController {
     @RequestMapping(value = "/categories/{category_id}/contributions", params = {"compare_to"})
     public @ResponseBody
     List<IndustryContributionCompare> getIndustryCategoryContributionsVsIdeologyByCongress(
-            @IndustryCategory @PathVariable(value = "category_id") String categoryId,
+            @IndustryCategoryId @PathVariable(value = "category_id") String categoryId,
             @RequestParam(value = "chamber", required = false, defaultValue = "s") String chamber,
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
             @RequestParam(value = "compare_to", required = false) String compareTo) {
@@ -203,7 +203,7 @@ public class IndustryContributionController extends AbstractBaseController {
     @RequestMapping(value = "/{industry_id}/contributions", params = {"compare_to", "plot"})
     public void plotIndustryContributionsVsIdeologyByCongress(
             OutputStream stream,
-            @Industry @PathVariable(value = "industry_id") String industryId,
+            @IndustryId @PathVariable(value = "industry_id") String industryId,
             @RequestParam(value = "chamber", required = false, defaultValue = "s") String chamber,
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
             @RequestParam(value = "compare_to") String compareTo,
@@ -243,7 +243,7 @@ public class IndustryContributionController extends AbstractBaseController {
     @RequestMapping(value = "/categories/{category_id}/contributions", params = {"compare_to", "plot"})
     public void plotIndustryCategoryContributionsVsIdeologyByCongress(
             OutputStream stream,
-            @IndustryCategory @PathVariable(value = "category_id") String categoryId,
+            @IndustryCategoryId @PathVariable(value = "category_id") String categoryId,
             @RequestParam(value = "chamber", required = false, defaultValue = "s") String chamber,
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
             @RequestParam(value = "compare_to") String compareTo,

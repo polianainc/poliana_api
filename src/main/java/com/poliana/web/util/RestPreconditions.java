@@ -1,6 +1,6 @@
 package com.poliana.web.util;
 
-import com.poliana.web.error.ResourceNotFoundException;
+import com.poliana.web.error.InvalidMethodArgumentException;
 import org.springframework.http.HttpStatus;
 
 import java.util.regex.Matcher;
@@ -16,6 +16,7 @@ public final class RestPreconditions {
     private static final String BIOGUIDE_PATTERN = "[A-Z]{1,2}\\d{6}";
     private static final String INDUSTRY_PATTERN = "[A-Z]{1}\\d{2}";
     private static final String INDUSTRY_CATEGORY_PATTERN = "[A-Z]{1}\\d{4}";
+    private static final String PAC_PATTERN = "[A-Z]{1}\\d{8}";
 
     private RestPreconditions() {
         throw new AssertionError();
@@ -24,12 +25,9 @@ public final class RestPreconditions {
     // API
 
     /**
-     * Check if the bioguideId is valid
+     * Check if the bioguideId is valid. If not, through a 400
      *
      * @param bioguideId
-     *            has value true if found, otherwise false
-     * @throws ResourceNotFoundException
-     *             if expression is false, means value not found.
      */
     public static void checkValidBioguideId(final String bioguideId) {
 
@@ -39,17 +37,14 @@ public final class RestPreconditions {
         boolean valid = matcher.matches();
 
         if (!valid) {
-            throw new ResourceNotFoundException();
+            throw new InvalidMethodArgumentException("Malformed bioguide ID");
         }
     }
 
     /**
-     * Check if the industryId is valid
+     * Check if the industryId is valid. If not, through a 400
      *
      * @param industryId
-     *            has value true if found, otherwise false
-     * @throws ResourceNotFoundException
-     *             if expression is false, means value not found.
      */
     public static void checkValidIndustryId(final String industryId) {
 
@@ -59,17 +54,14 @@ public final class RestPreconditions {
         boolean valid = matcher.matches();
 
         if (!valid) {
-            throw new ResourceNotFoundException();
+            throw new InvalidMethodArgumentException("Malformed industry ID");
         }
     }
 
     /**
-     * Check if the categoryId is valid
+     * Check if the categoryId is valid. If not, through a 400
      *
      * @param categoryId
-     *            has value true if found, otherwise false
-     * @throws ResourceNotFoundException
-     *             if expression is false, means value not found.
      */
     public static void checkValidIndustryCategoryId(final String categoryId) {
 
@@ -79,7 +71,24 @@ public final class RestPreconditions {
         boolean valid = matcher.matches();
 
         if (!valid) {
-            throw new ResourceNotFoundException();
+            throw new InvalidMethodArgumentException("Malformed industry category ID");
+        }
+    }
+
+    /**
+     * Check if the pacId is valid. If not, through a 400
+     *
+     * @param pacId
+     */
+    public static void checkValidPacId(final String pacId) {
+
+        Pattern pattern = Pattern.compile(PAC_PATTERN);
+        Matcher matcher = pattern.matcher(pacId);
+
+        boolean valid = matcher.matches();
+
+        if (!valid) {
+            throw new InvalidMethodArgumentException("Malformed PAC ID");
         }
     }
 }

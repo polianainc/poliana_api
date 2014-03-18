@@ -21,7 +21,7 @@ public class ControllerParameterSanitation {
     @Pointcut("args(bioguideId, ..)")
     public void bioguide(String bioguideId) {}
 
-    @Pointcut("execution(@org.springframework.web.bind.annotation.RequestMapping * *(.., @com.poliana.web.aspect.Bioguide (*), ..))")
+    @Pointcut("execution(@org.springframework.web.bind.annotation.RequestMapping * *(.., @com.poliana.web.aspect.BioguideId (*), ..))")
     public void bioguideAnnotation() {}
 
     @Around("controller() && bioguideAnnotation() && bioguide(bioguideId)")
@@ -46,7 +46,7 @@ public class ControllerParameterSanitation {
     @Pointcut("args(industryId, ..)")
     public void industry(String industryId) {}
 
-    @Pointcut("execution(@org.springframework.web.bind.annotation.RequestMapping * *(.., @com.poliana.web.aspect.Industry (*), ..))")
+    @Pointcut("execution(@org.springframework.web.bind.annotation.RequestMapping * *(.., @com.poliana.web.aspect.IndustryId (*), ..))")
     public void industryAnnotation() {}
 
     @Around("controller() && industryAnnotation() && industry(industryId)")
@@ -71,7 +71,7 @@ public class ControllerParameterSanitation {
     @Pointcut("args(categoryId, ..)")
     public void industryCategory(String categoryId) {}
 
-    @Pointcut("execution(@org.springframework.web.bind.annotation.RequestMapping * *(.., @com.poliana.web.aspect.IndustryCategory (*), ..))")
+    @Pointcut("execution(@org.springframework.web.bind.annotation.RequestMapping * *(.., @com.poliana.web.aspect.IndustryCategoryId (*), ..))")
     public void industryCategoryAnnotation() {}
 
     @Around("controller() && industryCategoryAnnotation() && industryCategory(categoryId)")
@@ -86,6 +86,31 @@ public class ControllerParameterSanitation {
         for (int i = 0; i < arguments.length; i++) {
             if (arguments[i] instanceof String && arguments[i].equals(categoryId))
                 arguments[i] = newIndustryCategoryId;
+        }
+
+        Object ret = method.proceed(arguments);
+
+        return ret;
+    }
+
+    @Pointcut("args(pacId, ..)")
+    public void pac(String pacId) {}
+
+    @Pointcut("execution(@org.springframework.web.bind.annotation.RequestMapping * *(.., @com.poliana.web.aspect.PacId (*), ..))")
+    public void pacAnnotation() {}
+
+    @Around("controller() && pacAnnotation() && pac(pacId)")
+    public Object aroundControllerMethodWithPacId(ProceedingJoinPoint method, String pacId) throws Throwable {
+
+        String newPacId = pacId.toUpperCase();
+
+        RestPreconditions.checkValidPacId(newPacId);
+
+        Object[] arguments = method.getArgs();
+
+        for (int i = 0; i < arguments.length; i++) {
+            if (arguments[i] instanceof String && arguments[i].equals(pacId))
+                arguments[i] = newPacId;
         }
 
         Object ret = method.proceed(arguments);

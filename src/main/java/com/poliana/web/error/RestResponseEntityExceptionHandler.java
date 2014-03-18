@@ -31,28 +31,34 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     // 400
 
+    @ExceptionHandler(value = { InvalidMethodArgumentException.class })
+    protected ResponseEntity<Object> handleInvalid(final RuntimeException ex, final WebRequest request) {
+        final String bodyOfResponse = ex.getMessage();
+        return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
+
     @ExceptionHandler({ ConstraintViolationException.class })
     public ResponseEntity<Object> handleBadRequest(final ConstraintViolationException ex, final WebRequest request) {
-        final String bodyOfResponse = "This is the error message";
+        final String bodyOfResponse = "The request violates certain constraints";
         return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
     @ExceptionHandler({ DataIntegrityViolationException.class })
     public ResponseEntity<Object> handleBadRequest(final DataIntegrityViolationException ex, final WebRequest request) {
-        final String bodyOfResponse = "This is the error message";
+        final String bodyOfResponse = "There is an error with the integrity of the data you provided";
         return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(final HttpMessageNotReadableException ex, final HttpHeaders headers, final HttpStatus status, final WebRequest request) {
-        final String bodyOfResponse = "This is the error message";
+        final String bodyOfResponse = "We can't seem to read that HTTP message";
         // ex.getCause() instanceof JsonMappingException, JsonParseException // for additional information later on
         return handleExceptionInternal(ex, bodyOfResponse, headers, HttpStatus.BAD_REQUEST, request);
     }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(final MethodArgumentNotValidException ex, final HttpHeaders headers, final HttpStatus status, final WebRequest request) {
-        final String bodyOfResponse = "This is the error message";
+        final String bodyOfResponse = "Looks like there was a problem with your input. Did you enter the correct ID?";
         return handleExceptionInternal(ex, bodyOfResponse, headers, HttpStatus.BAD_REQUEST, request);
     }
 
@@ -62,7 +68,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     @ExceptionHandler(value = { EntityNotFoundException.class, ResourceNotFoundException.class })
     protected ResponseEntity<Object> handleNotFound(final RuntimeException ex, final WebRequest request) {
-        final String bodyOfResponse = "This is the error message";
+        final String bodyOfResponse = ex.getMessage();
         return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
@@ -70,7 +76,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     @ExceptionHandler({ InvalidDataAccessApiUsageException.class, DataAccessException.class })
     protected ResponseEntity<Object> handleConflict(final RuntimeException ex, final WebRequest request) {
-        final String bodyOfResponse = "This is the error message";
+        final String bodyOfResponse = "Invalid data access API usage error";
         return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
 
@@ -79,10 +85,9 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     // 500
 
     @ExceptionHandler({ NullPointerException.class, IllegalArgumentException.class, IllegalStateException.class })
-    /*500*/public ResponseEntity<Object> handleInternal(final RuntimeException ex, final WebRequest request) {
+    public ResponseEntity<Object> handleInternal(final RuntimeException ex, final WebRequest request) {
         logger.error("500 Status Code", ex);
-        final String bodyOfResponse = "This is the error message";
+        final String bodyOfResponse = "Oops, there seems to be a problem on our end!";
         return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
-
 }

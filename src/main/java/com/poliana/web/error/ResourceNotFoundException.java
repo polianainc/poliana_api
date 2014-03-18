@@ -7,7 +7,7 @@ package com.poliana.web.error;
 public final class ResourceNotFoundException extends RuntimeException {
 
     public ResourceNotFoundException() {
-        super();
+        super("Sorry, we couldn't find that one.");
     }
 
     public ResourceNotFoundException(final String message, final Throwable cause) {
@@ -21,5 +21,4 @@ public final class ResourceNotFoundException extends RuntimeException {
     public ResourceNotFoundException(final Throwable cause) {
         super(cause);
     }
-
 }

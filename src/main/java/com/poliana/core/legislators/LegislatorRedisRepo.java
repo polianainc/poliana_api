@@ -116,19 +116,16 @@ public class LegislatorRedisRepo {
 
     /**
      * Given a redis key, return a condensed legislator object. Assumes the id has been constructed properly
-     * @param bioguideId
+     * @param key
      * @return
      */
-    public LegislatorCondensed getCondensedLegislator(String bioguideId) {
+    public LegislatorCondensed getLegislatorCondensed(String bioguideId) {
 
         Jedis jedis = jedisPool.getResource();
         MessagePack messagePack = new MessagePack();
         LegislatorCondensed legislator = new LegislatorCondensed();
         try {
-            byte[] bioBytes = bioguideId.getBytes();
-            byte[] legislatorCondensedBytes = jedis.get(bioBytes);
-            Value legislatorCondensedValue = messagePack.read(legislatorCondensedBytes);
-            legislator = (LegislatorCondensed) legislatorCondensedValue;
+            legislator = (LegislatorCondensed) messagePack.read(jedis.get(bioguideId.getBytes()));
         } catch (IOException e) {
             logger.error(e.getMessage());
         } catch (JedisConnectionException e) {
@@ -181,8 +178,8 @@ public class LegislatorRedisRepo {
      * @param legislator the legislator to add
      */
 
-    public void saveLegislatorCondensed(LegislatorCondensed legislator) {
-
+    public void storeOrUpdateCondensedLegislator(Legislator legislator) {
+        LegislatorCondensed leg = new LegislatorCondensed();
 
         if(legislator.getBioguideId() == null) {
             return;
@@ -190,37 +187,23 @@ public class LegislatorRedisRepo {
 
     }
 
-    /**
-     * Sets the flag for whether or not the condensed legislators are cached in redis
-     * in a valid manner
-     *
-     * @param cached true if cached
-     */
+    public LegislatorCondensed getCondensedLegislator(String bioguideId) {
+        Jedis jedis = jedisPool.getResource();
+        String key = LEGISLATOR_CONDENSED + bioguideId;
+
+        LegislatorCondensed leg = jedis.get(key);
+
+        return leg;
+    }
 
     public void setCondensedLegislatorsCached(boolean cached) {
-
         Jedis jedis = jedisPool.getResource();
+
         String key = LEGISLATOR_CONDENSED + "cached";
-
-        try {
-
-            if(cached)
-                jedis.set(key, "true");
-            else
-                jedis.set(key, "false");
-
-        } catch (JedisConnectionException e) {
-
-            logger.error(e.getMessage());
-
-            if (null != jedis) {
-                jedisPool.returnBrokenResource(jedis);
-                jedis = null;
-            }
-        } finally {
-            if (null != jedis)
-                jedisPool.returnResource(jedis);
-        }
+        if(cached)
+            jedis.set(key, "true");
+        else
+            jedis.set(key, "false");
     }
 
     /**
@@ -231,33 +214,12 @@ public class LegislatorRedisRepo {
         Jedis jedis = jedisPool.getResource();
 
         String key = LEGISLATOR_CONDENSED + "cached";
-        boolean cached = false;
 
-        try {
-
-            cached = jedis.get(key).equals("true");
-
-        } catch (JedisConnectionException e) {
-
-            logger.error(e.getMessage());
-
-            if (null != jedis) {
-                jedisPool.returnBrokenResource(jedis);
-                jedis = null;
-            }
-        } finally {
-            if (null != jedis)
-                jedisPool.returnResource(jedis);
-        }
+        boolean cached = jedis.get(key).equals("true");
 
         return cached;
-
     }
 
-    /**
-     * Grabs all condensed legislators from redis
-     * @return all the condensed legislators
-     */
     public List<LegislatorCondensed> getCondensedLegislators() {
         List<LegislatorCondensed> legislators = new LinkedList<>();
         return legislators;

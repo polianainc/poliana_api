@@ -1,4 +1,4 @@
-package com.poliana.config.web;
+package com.poliana.web.rest;
 
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -16,20 +16,21 @@ import java.io.IOException;
 public class CorsFilter extends OncePerRequestFilter {
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
         response.addHeader("Access-Control-Allow-Origin", "*");
-        if (request.getHeader("Access-Control-Request-Method") != null
-                && "OPTIONS".equals(request.getMethod())) {
+
+        if (request.getHeader("Access-Control-Request-Method") != null && "OPTIONS".equals(request.getMethod())) {
+
             // CORS "pre-flight" request
             response.addHeader("Access-Control-Allow-Methods",
                     "GET, POST, PUT, DELETE");
+
             response.addHeader("Access-Control-Allow-Headers",
                     "X-Requested-With,Origin,Content-Type, Accept");
+
         }
+
         filterChain.doFilter(request, response);
     }
-
 }
-

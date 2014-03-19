@@ -2,6 +2,7 @@ package com.poliana.core.legislators;
 
 import org.apache.log4j.Logger;
 import org.msgpack.MessagePack;
+import org.msgpack.type.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Repository;
@@ -115,16 +116,19 @@ public class LegislatorRedisRepo {
 
     /**
      * Given a redis key, return a condensed legislator object. Assumes the id has been constructed properly
-     * @param key
+     * @param bioguideId
      * @return
      */
-    public LegislatorCondensed getLegislatorCondensed(String bioguideId) {
+    public LegislatorCondensed getCondensedLegislator(String bioguideId) {
 
         Jedis jedis = jedisPool.getResource();
         MessagePack messagePack = new MessagePack();
         LegislatorCondensed legislator = new LegislatorCondensed();
         try {
-            legislator = (LegislatorCondensed) messagePack.read(jedis.get(bioguideId.getBytes()));
+            byte[] bioBytes = bioguideId.getBytes();
+            byte[] legislatorCondensedBytes = jedis.get(bioBytes);
+            Value legislatorCondensedValue = messagePack.read(legislatorCondensedBytes);
+            legislator = (LegislatorCondensed) legislatorCondensedValue;
         } catch (IOException e) {
             logger.error(e.getMessage());
         } catch (JedisConnectionException e) {
@@ -177,8 +181,8 @@ public class LegislatorRedisRepo {
      * @param legislator the legislator to add
      */
 
-    public void storeOrUpdateCondensedLegislator(Legislator legislator) {
-        LegislatorCondensed leg = new LegislatorCondensed();
+    public void saveLegislatorCondensed(LegislatorCondensed legislator) {
+
 
         if(legislator.getBioguideId() == null) {
             return;
@@ -186,23 +190,37 @@ public class LegislatorRedisRepo {
 
     }
 
-    public LegislatorCondensed getCondensedLegislator(String bioguideId) {
-        Jedis jedis = jedisPool.getResource();
-        String key = LEGISLATOR_CONDENSED + bioguideId;
-
-        LegislatorCondensed leg = jedis.get(key);
-
-        return leg;
-    }
+    /**
+     * Sets the flag for whether or not the condensed legislators are cached in redis
+     * in a valid manner
+     *
+     * @param cached true if cached
+     */
 
     public void setCondensedLegislatorsCached(boolean cached) {
-        Jedis jedis = jedisPool.getResource();
 
+        Jedis jedis = jedisPool.getResource();
         String key = LEGISLATOR_CONDENSED + "cached";
-        if(cached)
-            jedis.set(key, "true");
-        else
-            jedis.set(key, "false");
+
+        try {
+
+            if(cached)
+                jedis.set(key, "true");
+            else
+                jedis.set(key, "false");
+
+        } catch (JedisConnectionException e) {
+
+            logger.error(e.getMessage());
+
+            if (null != jedis) {
+                jedisPool.returnBrokenResource(jedis);
+                jedis = null;
+            }
+        } finally {
+            if (null != jedis)
+                jedisPool.returnResource(jedis);
+        }
     }
 
     /**
@@ -213,12 +231,33 @@ public class LegislatorRedisRepo {
         Jedis jedis = jedisPool.getResource();
 
         String key = LEGISLATOR_CONDENSED + "cached";
+        boolean cached = false;
 
-        boolean cached = jedis.get(key).equals("true");
+        try {
+
+            cached = jedis.get(key).equals("true");
+
+        } catch (JedisConnectionException e) {
+
+            logger.error(e.getMessage());
+
+            if (null != jedis) {
+                jedisPool.returnBrokenResource(jedis);
+                jedis = null;
+            }
+        } finally {
+            if (null != jedis)
+                jedisPool.returnResource(jedis);
+        }
 
         return cached;
+
     }
 
+    /**
+     * Grabs all condensed legislators from redis
+     * @return all the condensed legislators
+     */
     public List<LegislatorCondensed> getCondensedLegislators() {
         List<LegislatorCondensed> legislators = new LinkedList<>();
         return legislators;

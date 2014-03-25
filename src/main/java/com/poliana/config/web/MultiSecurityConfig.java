@@ -1,5 +1,7 @@
 package com.poliana.config.web;
 
+import com.poliana.core.users.UserSecurityRepositoryImpl;
+import com.poliana.core.users.UserSecurityService;
 import com.poliana.core.users.UserSecurityServiceImpl;
 import com.poliana.web.rest.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,11 +47,21 @@ public class MultiSecurityConfig {
         }
 
         @Bean
+        public UserSecurityService userSecurityService() {
+
+            UserSecurityServiceImpl service = new UserSecurityServiceImpl();
+            service.setUserSecurityRepository(new UserSecurityRepositoryImpl());
+
+            return service;
+        }
+
+        @Bean
         public RESTDaoAuthenticationProvider daoAuthenticationProvider() {
 
             RESTDaoAuthenticationProvider provider = new RESTDaoAuthenticationProvider();
 
-            provider.setUserSecurityService(new UserSecurityServiceImpl());
+            provider.setUserSecurityService(userSecurityService());
+
             provider.setPasswordEncoder(passwordEncoder());
 
             return provider;

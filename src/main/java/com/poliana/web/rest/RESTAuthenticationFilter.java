@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
+import java.util.Map;
 
 /**
  * @author David Gilmore
@@ -33,6 +33,7 @@ public class RESTAuthenticationFilter extends AbstractAuthenticationProcessingFi
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
+
         String apiKeyValue = obtainAPIKeyValue(request);
         String requestSaltValue = obtainRequestSaltValue(request);
         String hashedSecureValue = obtainHashedSecureValue(request);
@@ -54,26 +55,44 @@ public class RESTAuthenticationFilter extends AbstractAuthenticationProcessingFi
 
     private String obtainHashedSecureValue(HttpServletRequest request) throws UnsupportedEncodingException {
 
-        return decodeParameterValue(request, SECURE_HASH_PARAMETER_NAME);
+        try {
+            return decodeParameterValue(request, SECURE_HASH_PARAMETER_NAME);
+        }
+        catch (NullPointerException e) {
+            return "";
+        }
     }
 
     private String decodeParameterValue(HttpServletRequest request, String requestParameterName) throws UnsupportedEncodingException {
         //This is basically to avoid the weird RFC spec when it comes to spaces in the URL and how they are encoded
-        return URLDecoder.decode(getParameterValue(request, requestParameterName), request.getCharacterEncoding())
-                .replaceAll(" ", "+");
+        return getParameterValue(request, requestParameterName);
     }
 
     private String getParameterValue(HttpServletRequest request, String requestParameterName) {
-        return (request.getParameter(requestParameterName) != null) ? request.getParameter(requestParameterName) : "";
+
+        Map<String, String[]> params = request.getParameterMap();
+
+        return (params.containsKey(requestParameterName)) ? params.get(requestParameterName)[0] : "";
     }
 
     private String obtainRequestSaltValue(HttpServletRequest request) throws UnsupportedEncodingException {
 
-        return decodeParameterValue(request, REQUEST_SALT_PARAMETER_NAME);
+        try {
+            return decodeParameterValue(request, REQUEST_SALT_PARAMETER_NAME);
+        }
+        catch (NullPointerException e) {
+            return "";
+        }
     }
 
     private String obtainAPIKeyValue(HttpServletRequest request) throws UnsupportedEncodingException {
-        return decodeParameterValue(request, API_KEY_PARAMETER_NAME);
+
+        try {
+            return decodeParameterValue(request, API_KEY_PARAMETER_NAME);
+        }
+        catch (NullPointerException e) {
+            return "";
+        }
     }
 
     /**

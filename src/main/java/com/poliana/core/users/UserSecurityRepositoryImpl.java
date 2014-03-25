@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * @date 3/18/14
  */
 @Repository
-public class FakeUserSecurityRepositoryImpl implements UserSecurityRepository {
+public class UserSecurityRepositoryImpl implements UserSecurityRepository {
 
     private RESTUser simulateFetchOfuser() {
         return new RESTUser("username", "password", "api-1234", new ArrayList<GrantedAuthority>());

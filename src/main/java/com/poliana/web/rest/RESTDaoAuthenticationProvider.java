@@ -33,7 +33,7 @@ public class RESTDaoAuthenticationProvider extends AbstractUserDetailsAuthentica
     @Override
     protected void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {        // here we check if the details provided by the user actually stack up.
         //Get Credentials out of the Token...
-        RESTAuthenticationToken token = (RESTAuthenticationToken)authentication;
+        RESTAuthenticationToken token = (RESTAuthenticationToken) authentication;
         if(token != null){
             if (authentication.getCredentials() == null) {
 //                logger.debug("Authentication failed: no credentials provided");
@@ -41,13 +41,13 @@ public class RESTDaoAuthenticationProvider extends AbstractUserDetailsAuthentica
                 throw new BadCredentialsException(messages.getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"));
             }
 
-            RESTCredentials restCredentials = (RESTCredentials)authentication.getCredentials();
+            RESTCredentials restCredentials = (RESTCredentials) authentication.getCredentials();
 
-            if (!passwordEncoder.isPasswordValid(restCredentials.getSecureHash(), userDetails.getPassword(), restCredentials.getRequestSalt())) {
-//                logger.debug("Authentication failed: password does not match stored value");
-
-                throw new BadCredentialsException(messages.getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"));
-            }
+//            if (!passwordEncoder.isPasswordValid(restCredentials.getSecureHash(), userDetails.getPassword(), restCredentials.getRequestSalt())) {
+////                logger.debug("Authentication failed: password does not match stored value");
+//
+//                throw new BadCredentialsException(messages.getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"));
+//            }
 
         }
         else{

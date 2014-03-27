@@ -64,7 +64,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     // 403
 
-    @ExceptionHandler(value = { SecurityException.class })
+    @ExceptionHandler(value = { ForbiddenException.class, SecurityException.class })
     protected ResponseEntity<Object> handleForbidden(final RuntimeException ex, final WebRequest request) {
         final String bodyOfResponse = ex.getMessage();
         return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.FORBIDDEN, request);

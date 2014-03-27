@@ -1,5 +1,6 @@
 package com.poliana.core.users;
 
+import org.mongodb.morphia.annotations.Entity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
@@ -9,7 +10,7 @@ import java.util.Collection;
  * @author David Gilmore
  * @date 3/18/14
  */
-
+@Entity("user")
 public class RESTUser extends User {
 
     private String apiKey;

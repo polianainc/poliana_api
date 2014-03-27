@@ -20,6 +20,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter;
+import org.springframework.security.web.util.matcher.AndRequestMatcher;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 /**
 * @author David Gilmore
@@ -30,7 +34,6 @@ import org.springframework.security.web.authentication.ui.DefaultLoginPageGenera
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class MultiSecurityConfig {
 
-
     @Order(1)
     @Configuration
     @PropertySource(value={"classpath:api.properties"})
@@ -38,7 +41,6 @@ public class MultiSecurityConfig {
 
         @Autowired
         Environment env;
-
 
         @Bean
         public HMacShaPasswordEncoder passwordEncoder() {
@@ -49,8 +51,10 @@ public class MultiSecurityConfig {
         @Bean
         public UserSecurityService userSecurityService() {
 
+            UserSecurityRepositoryImpl repository = new UserSecurityRepositoryImpl();
+
             UserSecurityServiceImpl service = new UserSecurityServiceImpl();
-            service.setUserSecurityRepository(new UserSecurityRepositoryImpl());
+            service.setUserSecurityRepository(repository);
 
             return service;
         }
@@ -94,6 +98,16 @@ public class MultiSecurityConfig {
             return filter;
         }
 
+        @Bean
+        public RequestMatcher requestMatcher() {
+
+            NegatedRequestMatcher index = new NegatedRequestMatcher(new AntPathRequestMatcher("/"));
+            NegatedRequestMatcher users = new NegatedRequestMatcher(new AntPathRequestMatcher("/users"));
+            NegatedRequestMatcher endpoints = new NegatedRequestMatcher(new AntPathRequestMatcher("/endpoints"));
+
+            return new AndRequestMatcher(index, users, endpoints);
+        }
+
         @Override
         @Bean(name="myAuthenticationManager")
         public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -115,15 +129,17 @@ public class MultiSecurityConfig {
 
             http
                     .authorizeRequests()
+                    .antMatchers("/", "/endpoints", "/users").permitAll()
                     .anyRequest()
                     .authenticated();
 
             http
-                    .addFilterBefore(restAuthenticationFilter(), DefaultLoginPageGeneratingFilter.class);
+                    .addFilterBefore(restAuthenticationFilter(), DefaultLoginPageGeneratingFilter.class)
+                        .requestMatcher(requestMatcher());
 
             http
                     .sessionManagement()
-                    .sessionCreationPolicy(SessionCreationPolicy.NEVER);
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         }
     }

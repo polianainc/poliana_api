@@ -1,5 +1,6 @@
 package com.poliana.web.rest;
 
+import com.poliana.web.error.ForbiddenException;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -35,10 +36,11 @@ public class RESTAuthenticationFilter extends AbstractAuthenticationProcessingFi
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
 
         String apiKeyValue = obtainAPIKeyValue(request);
-        String requestSaltValue = obtainRequestSaltValue(request);
-        String hashedSecureValue = obtainHashedSecureValue(request);
+//        String requestSaltValue = obtainRequestSaltValue(request);
+//        String hashedSecureValue = obtainHashedSecureValue(request);
 
-        AbstractAuthenticationToken authRequest = createAuthenticationToken(apiKeyValue, new RESTCredentials(requestSaltValue,hashedSecureValue));
+//        AbstractAuthenticationToken authRequest = createAuthenticationToken(apiKeyValue, new RESTCredentials(requestSaltValue,hashedSecureValue));
+        AbstractAuthenticationToken authRequest = createAuthenticationToken(apiKeyValue, new RESTCredentials("", ""));
 
         // Allow subclasses to set the "details" property
         setDetails(request, authRequest);
@@ -72,7 +74,10 @@ public class RESTAuthenticationFilter extends AbstractAuthenticationProcessingFi
 
         Map<String, String[]> params = request.getParameterMap();
 
-        return (params.containsKey(requestParameterName)) ? params.get(requestParameterName)[0] : "";
+        if (params.containsKey(requestParameterName))
+            return params.get(requestParameterName)[0];
+        else
+            throw new ForbiddenException();
     }
 
     private String obtainRequestSaltValue(HttpServletRequest request) throws UnsupportedEncodingException {
@@ -91,7 +96,7 @@ public class RESTAuthenticationFilter extends AbstractAuthenticationProcessingFi
             return decodeParameterValue(request, API_KEY_PARAMETER_NAME);
         }
         catch (NullPointerException e) {
-            return "";
+            throw new ForbiddenException();
         }
     }
 

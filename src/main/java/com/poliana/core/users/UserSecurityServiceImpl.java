@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
  * @author David Gilmore
  * @date 3/18/14
  */
+//@Service
 public class UserSecurityServiceImpl implements UserSecurityService {
 
     private UserSecurityRepository userSecurityRepository;

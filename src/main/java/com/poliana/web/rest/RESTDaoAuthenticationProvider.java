@@ -1,9 +1,9 @@
 package com.poliana.web.rest;
 
 import com.poliana.core.users.UserSecurityService;
+import com.poliana.web.error.ForbiddenException;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationServiceException;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
@@ -18,6 +18,7 @@ import java.text.MessageFormat;
  * @author David Gilmore
  * @date 3/18/14
  */
+//@Component
 public class RESTDaoAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
 
 
@@ -38,7 +39,7 @@ public class RESTDaoAuthenticationProvider extends AbstractUserDetailsAuthentica
             if (authentication.getCredentials() == null) {
 //                logger.debug("Authentication failed: no credentials provided");
 
-                throw new BadCredentialsException(messages.getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"));
+                throw new ForbiddenException();
             }
 
             RESTCredentials restCredentials = (RESTCredentials) authentication.getCredentials();
@@ -95,6 +96,7 @@ public class RESTDaoAuthenticationProvider extends AbstractUserDetailsAuthentica
     }
 
 
+//    @Autowired
     public UserSecurityService getUserSecurityService() {
         return userSecurityService;
     }

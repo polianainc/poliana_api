@@ -1,4 +1,4 @@
-package com.poliana.web.rest;
+package com.poliana.users;
 
 import com.poliana.web.error.ForbiddenException;
 import org.springframework.security.core.AuthenticationException;

@@ -1,7 +1,7 @@
-package com.poliana.web.rest;
+package com.poliana.users;
 
-import com.poliana.core.users.UserSecurityService;
 import com.poliana.web.error.ForbiddenException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -10,6 +10,7 @@ import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 import java.text.MessageFormat;
@@ -18,7 +19,7 @@ import java.text.MessageFormat;
  * @author David Gilmore
  * @date 3/18/14
  */
-//@Component
+@Component
 public class RESTDaoAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
 
 
@@ -95,18 +96,22 @@ public class RESTDaoAuthenticationProvider extends AbstractUserDetailsAuthentica
         Assert.notNull(this.passwordEncoder, "A PasswordEncoder must be set");
     }
 
-
-//    @Autowired
     public UserSecurityService getUserSecurityService() {
         return userSecurityService;
     }
 
+    @Autowired
     public void setUserSecurityService(UserSecurityService userSecurityService) {
         this.userSecurityService = userSecurityService;
     }
 
     public PasswordEncoder getPasswordEncoder() {
         return passwordEncoder;
+    }
+
+    @Autowired
+    public void setPasswordEncoder() {
+        this.passwordEncoder = new HMacShaPasswordEncoder(256, true);
     }
 
     public void setPasswordEncoder(PasswordEncoder passwordEncoder) {

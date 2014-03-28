@@ -1,4 +1,4 @@
-package com.poliana.core.users;
+package com.poliana.users;
 
 import org.mongodb.morphia.annotations.Entity;
 import org.springframework.security.core.GrantedAuthority;

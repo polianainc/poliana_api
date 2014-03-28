@@ -1,4 +1,4 @@
-package com.poliana.core.users;
+package com.poliana.users;
 
 import com.poliana.web.error.ForbiddenException;
 import org.apache.log4j.Logger;
@@ -6,6 +6,7 @@ import org.mongodb.morphia.Datastore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.List;
  * @author David Gilmore
  * @date 3/18/14
  */
-//@Repository
+@Repository
 public class UserSecurityRepositoryImpl implements UserSecurityRepository {
 
     private Datastore mongoStore;

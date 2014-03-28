@@ -1,13 +1,8 @@
 package com.poliana.config.web;
 
-import com.poliana.core.users.UserSecurityRepositoryImpl;
-import com.poliana.core.users.UserSecurityService;
-import com.poliana.core.users.UserSecurityServiceImpl;
-import com.poliana.web.rest.*;
+import com.poliana.users.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,44 +27,25 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
-public class MultiSecurityConfig {
+public class SecurityConfig {
 
     @Order(1)
     @Configuration
+    @Import(UserDBConfig.class)
+    @ComponentScan(basePackages = "com.poliana.users")
     @PropertySource(value={"classpath:api.properties"})
     public static class GlobalSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
 
         @Autowired
         Environment env;
 
-        @Bean
-        public HMacShaPasswordEncoder passwordEncoder() {
+        @Autowired
+        private RESTDaoAuthenticationProvider authenticationProvider;
 
-            return new HMacShaPasswordEncoder(256, true);
-        }
+//        @Autowired
+//        UserDBConfig userDBConfig;
 
-        @Bean
-        public UserSecurityService userSecurityService() {
 
-            UserSecurityRepositoryImpl repository = new UserSecurityRepositoryImpl();
-
-            UserSecurityServiceImpl service = new UserSecurityServiceImpl();
-            service.setUserSecurityRepository(repository);
-
-            return service;
-        }
-
-        @Bean
-        public RESTDaoAuthenticationProvider daoAuthenticationProvider() {
-
-            RESTDaoAuthenticationProvider provider = new RESTDaoAuthenticationProvider();
-
-            provider.setUserSecurityService(userSecurityService());
-
-            provider.setPasswordEncoder(passwordEncoder());
-
-            return provider;
-        }
 
         @Bean
         public SimpleUrlAuthenticationSuccessHandler successHandler() {
@@ -86,6 +62,42 @@ public class MultiSecurityConfig {
 
             return new AuthenticationFailure();
         }
+
+//        @Bean
+//        public UserSecurityRepository userSecurityRepository() {
+//
+//            UserSecurityRepositoryImpl securityRepository = new UserSecurityRepositoryImpl();
+//
+//            try {
+//                securityRepository.setMongoStore(userDBConfig.userStore());
+//            }
+//            catch (Exception e) {
+//                // TODO: Handle no mongo connection exception
+//            }
+//
+//            return securityRepository;
+//        }
+//
+//        @Bean
+//        public UserSecurityService userSecurityService() {
+//
+//            UserSecurityServiceImpl securityService = new UserSecurityServiceImpl();
+//
+//            securityService.setUserSecurityRepository(userSecurityRepository());
+//
+//            return securityService;
+//        }
+//
+//        @Bean
+//        public RESTDaoAuthenticationProvider authenticationProvider() {
+//
+//            RESTDaoAuthenticationProvider authenticationProvider = new RESTDaoAuthenticationProvider();
+//
+//            authenticationProvider.setUserSecurityService(userSecurityService());
+//            authenticationProvider.setPasswordEncoder(new HMacShaPasswordEncoder(256, true));
+//
+//            return authenticationProvider;
+//        }
 
         @Bean
         public RESTAuthenticationFilter restAuthenticationFilter() throws Exception {
@@ -118,7 +130,7 @@ public class MultiSecurityConfig {
         public void configure(AuthenticationManagerBuilder auth) throws Exception {
 
             auth.eraseCredentials(true);
-            auth.authenticationProvider(daoAuthenticationProvider());
+            auth.authenticationProvider(authenticationProvider);
         }
 
         @Override

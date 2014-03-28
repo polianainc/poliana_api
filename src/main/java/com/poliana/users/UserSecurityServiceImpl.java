@@ -1,14 +1,16 @@
-package com.poliana.core.users;
+package com.poliana.users;
 
 import com.poliana.web.error.ResourceNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
 /**
  * @author David Gilmore
  * @date 3/18/14
  */
-//@Service
+@Service
 public class UserSecurityServiceImpl implements UserSecurityService {
 
     private UserSecurityRepository userSecurityRepository;
@@ -37,6 +39,7 @@ public class UserSecurityServiceImpl implements UserSecurityService {
         return userDetails;
     }
 
+    @Autowired
     public void setUserSecurityRepository(UserSecurityRepository userSecurityRepository) {
         this.userSecurityRepository = userSecurityRepository;
     }

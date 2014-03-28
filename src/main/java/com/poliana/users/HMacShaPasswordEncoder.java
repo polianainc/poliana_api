@@ -1,4 +1,4 @@
-package com.poliana.web.rest;
+package com.poliana.users;
 
 import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.security.crypto.codec.Base64;

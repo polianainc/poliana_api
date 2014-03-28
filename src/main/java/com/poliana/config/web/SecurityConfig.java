@@ -33,7 +33,6 @@ public class SecurityConfig {
     @Configuration
     @Import(UserDBConfig.class)
     @ComponentScan(basePackages = "com.poliana.users")
-    @PropertySource(value={"classpath:api.properties"})
     public static class GlobalSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
 
         @Autowired
@@ -41,11 +40,6 @@ public class SecurityConfig {
 
         @Autowired
         private RESTDaoAuthenticationProvider authenticationProvider;
-
-//        @Autowired
-//        UserDBConfig userDBConfig;
-
-
 
         @Bean
         public SimpleUrlAuthenticationSuccessHandler successHandler() {
@@ -63,42 +57,6 @@ public class SecurityConfig {
             return new AuthenticationFailure();
         }
 
-//        @Bean
-//        public UserSecurityRepository userSecurityRepository() {
-//
-//            UserSecurityRepositoryImpl securityRepository = new UserSecurityRepositoryImpl();
-//
-//            try {
-//                securityRepository.setMongoStore(userDBConfig.userStore());
-//            }
-//            catch (Exception e) {
-//                // TODO: Handle no mongo connection exception
-//            }
-//
-//            return securityRepository;
-//        }
-//
-//        @Bean
-//        public UserSecurityService userSecurityService() {
-//
-//            UserSecurityServiceImpl securityService = new UserSecurityServiceImpl();
-//
-//            securityService.setUserSecurityRepository(userSecurityRepository());
-//
-//            return securityService;
-//        }
-//
-//        @Bean
-//        public RESTDaoAuthenticationProvider authenticationProvider() {
-//
-//            RESTDaoAuthenticationProvider authenticationProvider = new RESTDaoAuthenticationProvider();
-//
-//            authenticationProvider.setUserSecurityService(userSecurityService());
-//            authenticationProvider.setPasswordEncoder(new HMacShaPasswordEncoder(256, true));
-//
-//            return authenticationProvider;
-//        }
-
         @Bean
         public RESTAuthenticationFilter restAuthenticationFilter() throws Exception {
 
@@ -115,9 +73,11 @@ public class SecurityConfig {
 
             NegatedRequestMatcher index = new NegatedRequestMatcher(new AntPathRequestMatcher("/"));
             NegatedRequestMatcher users = new NegatedRequestMatcher(new AntPathRequestMatcher("/users"));
+            NegatedRequestMatcher userServices = new NegatedRequestMatcher(new AntPathRequestMatcher("/users/**"));
             NegatedRequestMatcher endpoints = new NegatedRequestMatcher(new AntPathRequestMatcher("/endpoints"));
+            NegatedRequestMatcher resources = new NegatedRequestMatcher(new AntPathRequestMatcher("/resources/**"));
 
-            return new AndRequestMatcher(index, users, endpoints);
+            return new AndRequestMatcher(index, users, userServices, endpoints, resources);
         }
 
         @Override
@@ -141,7 +101,7 @@ public class SecurityConfig {
 
             http
                     .authorizeRequests()
-                    .antMatchers("/", "/endpoints", "/users").permitAll()
+                    .antMatchers("/", "/endpoints", "/users","/users/**", "/resources/").permitAll()
                     .anyRequest()
                     .authenticated();
 

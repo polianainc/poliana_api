@@ -2,7 +2,7 @@ var urlHolder = new Object();
 
 function submitGetApiKey() {
 
-    $.post(urlHolder.key, {
+    $.get(urlHolder.key, {
             username: $('#username').val(),
             password: $('#password').val()
         },

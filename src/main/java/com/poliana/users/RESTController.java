@@ -41,9 +41,7 @@ public class RESTController {
             @RequestParam(value = "username") String username,
             @RequestParam(value = "password") String password) {
 
-        //TODO: Implement
-
-        return "";
+        return userSecurityService.getApiKeyByUsernameAndPassword(username, password);
     }
 
     /**

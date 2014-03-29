@@ -1,5 +1,6 @@
 package com.poliana.users;
 
+import com.poliana.web.error.ForbiddenException;
 import com.poliana.web.error.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,14 +22,25 @@ public class UserSecurityServiceImpl implements UserSecurityService {
     private UserSecurityRepository userSecurityRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        UserDetails userDetails = userSecurityRepository.getUserByUsername(s);
+        UserDetails userDetails = userSecurityRepository.getUserByUsername(username);
+
         if(userDetails == null) {
             throw new UsernameNotFoundException("User not found using supplied username");
         }
 
         return userDetails;
+    }
+
+    public String getApiKeyByUsernameAndPassword(String username, String password) {
+
+        RESTUser user = (RESTUser) userSecurityRepository.getUserByUsername(username);
+
+        if (password.equals(user.getPassword()))
+            return user.getApiKey();
+        else
+            throw new ForbiddenException("Wrong password");
     }
 
     public String getApiKey() {

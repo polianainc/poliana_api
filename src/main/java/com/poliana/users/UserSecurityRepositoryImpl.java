@@ -21,12 +21,11 @@ public class UserSecurityRepositoryImpl implements UserSecurityRepository {
     @Override
     public UserDetails getUserByUsername(String username) {
 
-        RESTUser exampleUser = new RESTUser();
+        Query<RESTUser> query = mongoStore.find(RESTUser.class);
 
-        if(username.equalsIgnoreCase(exampleUser.getUsername())){
-            return exampleUser;
-        }
-        return null;
+        query.criteria("username").equal(username);
+
+        return query.get();
     }
 
     @Override

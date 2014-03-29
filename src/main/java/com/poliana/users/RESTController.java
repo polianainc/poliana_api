@@ -2,8 +2,12 @@ package com.poliana.users;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 /**
  * @author David Gilmore
@@ -11,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @Controller
 @RequestMapping("/users")
+
 public class RESTController {
 
     private UserSecurityService userSecurityService;
@@ -31,9 +36,12 @@ public class RESTController {
     /**
      * @return
      */
-    @ResponseBody
-    @RequestMapping(value = "/key", method = RequestMethod.GET)
-    public String getUser(@RequestBody RESTUser user) {
+    @RequestMapping(value = "/key", params = {"username", "password"}, method = RequestMethod.GET)
+    public @ResponseBody String getKey(
+            @RequestParam(value = "username") String username,
+            @RequestParam(value = "password") String password) {
+
+        //TODO: Implement
 
         return "";
     }
@@ -41,12 +49,17 @@ public class RESTController {
     /**
      * @return
      */
-    @ResponseBody
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public String createUser(@RequestBody RESTUser user) {
+    public @ResponseBody UserDetails createUser(HttpServletRequest request) {
 
+        Map<String, String[]> params = request.getParameterMap();
 
-        return "";
+        String username = params.get("username")[0];
+        String password = params.get("password")[0];
+        String firstName = params.get("firstName")[0];
+        String lastName = params.get("lastName")[0];
+
+        return userSecurityService.createUser(username, password, firstName, lastName);
     }
 
     /**

@@ -110,10 +110,6 @@ public class RESTDaoAuthenticationProvider extends AbstractUserDetailsAuthentica
     }
 
     @Autowired
-    public void setPasswordEncoder() {
-        this.passwordEncoder = new HMacShaPasswordEncoder(256, true);
-    }
-
     public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }

@@ -10,4 +10,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 public interface UserSecurityService extends UserDetailsService {
 
     UserDetails getUserByApiKey(String apiKey);
+
+    UserDetails createUser(String username, String password, String firstName, String lastName);
+
 }

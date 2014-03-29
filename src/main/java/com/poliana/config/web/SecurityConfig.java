@@ -2,10 +2,14 @@ package com.poliana.config.web;
 
 import com.poliana.users.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -41,6 +45,21 @@ public class SecurityConfig {
         @Autowired
         private RESTDaoAuthenticationProvider authenticationProvider;
 
+        @Autowired
+        UserDBConfig userDBConfig;
+
+        @Autowired
+        UserSecurityRepositoryImpl userSecurityRepository;
+
+        @Autowired   // HACK
+        public void setRestRepositoryDB() {
+            try {
+                this.userSecurityRepository.setMongoStore(userDBConfig.userStore());
+            }
+            catch (Exception e) {}
+        }
+
+
         @Bean
         public SimpleUrlAuthenticationSuccessHandler successHandler() {
 
@@ -49,6 +68,12 @@ public class SecurityConfig {
             handler.setRedirectStrategy(new NoRedirectStrategy());
 
             return handler;
+        }
+
+        @Bean
+        public PasswordEncoder passwordEncoder() {
+
+            return new HMacShaPasswordEncoder(256, true);
         }
 
         @Bean

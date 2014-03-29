@@ -9,7 +9,7 @@
 <head><title>Poliana API - Users</title></head>
 
 
-<script type='text/javascript' src='<c:url value="/js/customUsers.js"/>'></script>
+<script type='text/javascript' src='<c:url value="/resources/js/customUsers.js"/>'></script>
 
 <title>User</title>
 
@@ -22,49 +22,16 @@
         urlHolder.edit = '${editUrl}';
         urlHolder.del = '${deleteUrl}';
 
-
-        $('#newBtn').click(function() {
-            toggleForms('new');
-            toggleCrudButtons('hide');
-        });
-
-        $('#editBtn').click(function() {
-            if (hasSelected()) {
-                toggleForms('edit');
-                toggleCrudButtons('hide');
-                fillEditForm();
-            }
-        });
-
-        $('#reloadBtn').click(function() {
-            loadTable();
-        });
-
-        $('#deleteBtn').click(function() {
-            if (hasSelected()) {
-                submitDeleteRecord();
-            }
-        });
-
-        $('#newForm').submit(function(e) {
+        $('#keyForm').submit(function(e) {
             e.preventDefault();
             submitGetApiKey();
         });
 
-        $('#editForm').submit(function(e) {
+        $('#newForm').submit(function(e) {
             e.preventDefault();
-            submitUpdateRecord();
+            submitNewUser();
         });
 
-        $('#closeNewForm').click(function() {
-            toggleForms('hide');
-            toggleCrudButtons('show');
-        });
-
-        $('#closeEditForm').click(function() {
-            toggleForms('hide');
-            toggleCrudButtons('show');
-        });
     });
 </script>
 </head>
@@ -74,7 +41,7 @@
 
 <p id="apikey"></p>
 
-<div id='loginForm'>
+<div id='keyForm'>
     <form>
         <fieldset>
             <legend>Already have an API key? Enter credentials to retrieve it!</legend>
@@ -97,7 +64,6 @@
             <label for='newFirstName'>First Name</label><input type='text' id='newFirstName'/><br/>
             <label for='newLastName'>Last Name</label><input type='text' id='newLastName'/><br/>
         </fieldset>
-        <input type='button' value='Close' id='closeNewForm' />
         <input type='submit' value='Submit'/>
     </form>
 </div>

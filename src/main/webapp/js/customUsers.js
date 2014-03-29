@@ -1,37 +1,36 @@
 var urlHolder = new Object();
 
 function submitGetApiKey() {
-    $.get(urlHolder.add, {
+
+    $.post(urlHolder.key, {
             username: $('#username').val(),
             password: $('#password').val()
         },
         function(response) {
             if (response != null) {
-                loadTable();
-                toggleForms('hide'); ;
-                toggleCrudButtons('show');
-                alert('Success! Record has been added.');
+
+                alert(response.toString());
             } else {
                 alert('Failure! An error has occurred!');
             }
-        }
+        },
+        "json"
     );
 }
 
 function submitNewUser() {
-    $.post(urlHolder.add, {
+
+    $.post(urlHolder.new, {
             username: $('#newUsername').val(),
             password: $('#newPassword').val(),
             firstName: $('#newFirstName').val(),
-            lastName: $('#newLastName').val(),
-            role: $('#newRole').val()
+            lastName: $('#newLastName').val()
         },
+
         function(response) {
             if (response != null) {
-                loadTable();
-                toggleForms('hide'); ;
-                toggleCrudButtons('show');
-                alert('Success! Record has been added.');
+
+                alert(response.toString());
             } else {
                 alert('Failure! An error has occurred!');
             }

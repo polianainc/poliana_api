@@ -88,6 +88,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
 
         converters.add(converter());
+
     }
 
     @Bean

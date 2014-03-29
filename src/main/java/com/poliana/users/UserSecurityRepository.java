@@ -10,4 +10,5 @@ public interface UserSecurityRepository {
 
     UserDetails getUserByUsername(String username);
     UserDetails getUserByApiKey(String apiKey);
+    UserDetails createUser(UserDetails user);
 }

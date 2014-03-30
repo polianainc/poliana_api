@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
@@ -37,7 +38,7 @@ public class UserSecurityServiceImpl implements UserSecurityService {
 
         RESTUser user = (RESTUser) userSecurityRepository.getUserByUsername(username);
 
-        if (password.equals(user.getPassword()))
+        if (passwordMatches(password, user.getPassword()))
             return user.getApiKey();
         else
             throw new ForbiddenException("Wrong password");
@@ -65,7 +66,7 @@ public class UserSecurityServiceImpl implements UserSecurityService {
 
         authorities.add(new RESTAuthority("user"));
 
-        RESTUser user = new RESTUser(username, password, getApiKey(), authorities);
+        RESTUser user = new RESTUser(username, encodePassword(password), getApiKey(), authorities);
 
         user.setFirstName(firstName);
         user.setLastName(lastName);
@@ -73,6 +74,14 @@ public class UserSecurityServiceImpl implements UserSecurityService {
         userSecurityRepository.createUser(user);
 
         return user;
+    }
+
+    private String encodePassword(String password) {
+        return new BCryptPasswordEncoder().encode(password);
+    }
+
+    private boolean passwordMatches(String password, String encodedPassword) {
+        return new BCryptPasswordEncoder().matches(password, encodedPassword);
     }
 
     @Autowired

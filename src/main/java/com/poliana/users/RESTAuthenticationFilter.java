@@ -22,8 +22,6 @@ public class RESTAuthenticationFilter extends AbstractAuthenticationProcessingFi
 
 
     private static final String API_KEY_PARAMETER_NAME = "apikey";
-    private static final String REQUEST_SALT_PARAMETER_NAME = "salt";
-    private static final String SECURE_HASH_PARAMETER_NAME = "signature";
 
     /**
      * @param defaultFilterProcessesUrl the default value for <tt>filterProcessesUrl</tt>.
@@ -36,11 +34,8 @@ public class RESTAuthenticationFilter extends AbstractAuthenticationProcessingFi
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
 
         String apiKeyValue = obtainAPIKeyValue(request);
-//        String requestSaltValue = obtainRequestSaltValue(request);
-//        String hashedSecureValue = obtainHashedSecureValue(request);
 
-//        AbstractAuthenticationToken authRequest = createAuthenticationToken(apiKeyValue, new RESTCredentials(requestSaltValue,hashedSecureValue));
-        AbstractAuthenticationToken authRequest = createAuthenticationToken(apiKeyValue, new RESTCredentials("", ""));
+        RESTAuthenticationToken authRequest = new RESTAuthenticationToken(apiKeyValue, null, null);
 
         // Allow subclasses to set the "details" property
         setDetails(request, authRequest);
@@ -53,16 +48,6 @@ public class RESTAuthenticationFilter extends AbstractAuthenticationProcessingFi
                                             Authentication authResult) throws IOException, ServletException {
         super.successfulAuthentication(request, response, chain, authResult);
         chain.doFilter(request, response);
-    }
-
-    private String obtainHashedSecureValue(HttpServletRequest request) throws UnsupportedEncodingException {
-
-        try {
-            return decodeParameterValue(request, SECURE_HASH_PARAMETER_NAME);
-        }
-        catch (NullPointerException e) {
-            return "";
-        }
     }
 
     private String decodeParameterValue(HttpServletRequest request, String requestParameterName) throws UnsupportedEncodingException {
@@ -80,15 +65,6 @@ public class RESTAuthenticationFilter extends AbstractAuthenticationProcessingFi
             throw new ForbiddenException();
     }
 
-    private String obtainRequestSaltValue(HttpServletRequest request) throws UnsupportedEncodingException {
-
-        try {
-            return decodeParameterValue(request, REQUEST_SALT_PARAMETER_NAME);
-        }
-        catch (NullPointerException e) {
-            return "";
-        }
-    }
 
     private String obtainAPIKeyValue(HttpServletRequest request) throws UnsupportedEncodingException {
 
@@ -105,14 +81,10 @@ public class RESTAuthenticationFilter extends AbstractAuthenticationProcessingFi
      * property.
      *
      * @param request that an authentication request is being created for
-     * @param authRequest the authentication request object that should have its details set
+
      */
     protected void setDetails(HttpServletRequest request, AbstractAuthenticationToken authRequest) {
         authRequest.setDetails(authenticationDetailsSource.buildDetails(request));
-    }
-
-    private AbstractAuthenticationToken createAuthenticationToken(String apiKeyValue, RESTCredentials restCredentials) {
-        return new RESTAuthenticationToken(apiKeyValue,restCredentials);
     }
 
     @Override

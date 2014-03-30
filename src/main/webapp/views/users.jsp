@@ -64,6 +64,7 @@
             <label for='newFirstName'>First Name</label><input type='text' id='newFirstName'/><br/>
             <label for='newLastName'>Last Name</label><input type='text' id='newLastName'/><br/>
         </fieldset>
+
         <input type='submit' value='Submit'/>
     </form>
 </div>

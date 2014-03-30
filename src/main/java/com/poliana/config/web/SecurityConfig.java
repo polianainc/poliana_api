@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -68,12 +67,6 @@ public class SecurityConfig {
             handler.setRedirectStrategy(new NoRedirectStrategy());
 
             return handler;
-        }
-
-        @Bean
-        public PasswordEncoder passwordEncoder() {
-
-            return new HMacShaPasswordEncoder(256, true);
         }
 
         @Bean

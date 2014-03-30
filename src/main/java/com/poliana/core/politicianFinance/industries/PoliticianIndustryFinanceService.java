@@ -3,8 +3,6 @@ package com.poliana.core.politicianFinance.industries;
 import com.poliana.core.time.TimeService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -208,7 +206,7 @@ public class PoliticianIndustryFinanceService {
      */
     @SuppressWarnings("unchecked")
     public HashMap<Integer, List<PoliticianIndustryContributionsTotals>> getIndustryToPoliticianTotalsPerCongress(String bioguideId, long beginTimestamp, long endTimestamp) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         Integer[] cycles = timeService.getCongressionalCyclesByTimeRange(beginTimestamp, endTimestamp);
 
         Iterator<PoliticianIndustryContributionsTotals> totalsIterator;

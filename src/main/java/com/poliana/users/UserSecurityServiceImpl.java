@@ -38,6 +38,9 @@ public class UserSecurityServiceImpl implements UserSecurityService {
 
         RESTUser user = (RESTUser) userSecurityRepository.getUserByUsername(username);
 
+        if (user == null)
+            throw new ForbiddenException("No such user");
+
         if (passwordMatches(password, user.getPassword()))
             return user.getApiKey();
         else

@@ -1,9 +1,6 @@
 <%@ include file="/WEB-INF/views/include.jsp" %>
 
-<c:url value="/users/key" var="keyUrl"/>
-<c:url value="/users/create" var="createUrl"/>
-<c:url value="/users/update" var="editUrl"/>
-<c:url value="/users/delete" var="deleteUrl"/>
+<c:url value="/user/key" var="keyUrl"/>
 
 <html>
 <head><title>Poliana API - Users</title></head>
@@ -18,7 +15,6 @@
     $(function() {
         // init
         urlHolder.key = '${keyUrl}';
-        urlHolder.new = '${createUrl}';
         urlHolder.edit = '${editUrl}';
         urlHolder.del = '${deleteUrl}';
 
@@ -38,7 +34,6 @@
 
 <body>
 
-
 <p id="apikey"></p>
 
 <div id='keyForm'>
@@ -52,23 +47,6 @@
         <input type='submit' value='Submit'/>
     </form>
 </div>
-
-<p>or</p>
-
-<div id='newForm'>
-    <form>
-        <fieldset>
-            <legend>Create New User</legend>
-            <label for='newUsername'>Username</label><input type='text' id='newUsername'/><br/>
-            <label for='newPassword'>Password</label><input type='password' id='newPassword'/><br/>
-            <label for='newFirstName'>First Name</label><input type='text' id='newFirstName'/><br/>
-            <label for='newLastName'>Last Name</label><input type='text' id='newLastName'/><br/>
-        </fieldset>
-
-        <input type='submit' value='Submit'/>
-    </form>
-</div>
-
 
 </body>
 </html>

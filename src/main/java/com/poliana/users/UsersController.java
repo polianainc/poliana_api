@@ -2,25 +2,20 @@ package com.poliana.users;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
-
 /**
  * @author David Gilmore
- * @date 3/27/14
+ * @date 3/31/14
  */
 @Controller
-@RequestMapping("/users")
-
-public class RESTController {
+@RequestMapping("/user")
+public class UsersController {
 
     private UserSecurityService userSecurityService;
 
-    private static final Logger logger = Logger.getLogger(RESTController.class);
+    private static final Logger logger = Logger.getLogger(AdminController.class);
 
 
     /**
@@ -42,22 +37,6 @@ public class RESTController {
             @RequestParam(value = "password") String password) {
 
         return userSecurityService.getApiKeyByUsernameAndPassword(username, password);
-    }
-
-    /**
-     * @return
-     */
-    @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public @ResponseBody UserDetails createUser(HttpServletRequest request) {
-
-        Map<String, String[]> params = request.getParameterMap();
-
-        String username = params.get("username")[0];
-        String password = params.get("password")[0];
-        String firstName = params.get("firstName")[0];
-        String lastName = params.get("lastName")[0];
-
-        return userSecurityService.createUser(username, password, firstName, lastName);
     }
 
     /**

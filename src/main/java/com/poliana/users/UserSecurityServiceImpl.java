@@ -62,9 +62,16 @@ public class UserSecurityServiceImpl implements UserSecurityService {
     @Override
     public UserDetails createUser(String username, String password, String firstName, String lastName) {
 
+        return createUser(username, password, firstName, lastName, "USER");
+    }
+
+    @Override
+    public UserDetails createUser(String username, String password, String firstName, String lastName, String... roles) {
+
         List<GrantedAuthority> authorities = new LinkedList<>();
 
-        authorities.add(new RESTAuthority("user"));
+        for (String role : roles)
+            authorities.add(new RESTAuthority(role));
 
         RESTUser user = new RESTUser(username, encodePassword(password), getApiKey(), authorities);
 

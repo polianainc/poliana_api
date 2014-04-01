@@ -24,7 +24,8 @@ function submitNewUser() {
             username: $('#newUsername').val(),
             password: $('#newPassword').val(),
             firstName: $('#newFirstName').val(),
-            lastName: $('#newLastName').val()
+            lastName: $('#newLastName').val(),
+            role: $('#newRole').val()
         },
 
         function(response) {

@@ -2,10 +2,7 @@ package com.poliana.config.web;
 
 import com.poliana.users.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.*;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -90,12 +87,15 @@ public class SecurityConfig {
         public RequestMatcher requestMatcher() {
 
             NegatedRequestMatcher index = new NegatedRequestMatcher(new AntPathRequestMatcher("/"));
-            NegatedRequestMatcher users = new NegatedRequestMatcher(new AntPathRequestMatcher("/users"));
-            NegatedRequestMatcher userServices = new NegatedRequestMatcher(new AntPathRequestMatcher("/users/**"));
+            NegatedRequestMatcher users = new NegatedRequestMatcher(new AntPathRequestMatcher("/user"));
+            NegatedRequestMatcher userServices = new NegatedRequestMatcher(new AntPathRequestMatcher("/user/**"));
             NegatedRequestMatcher endpoints = new NegatedRequestMatcher(new AntPathRequestMatcher("/endpoints"));
             NegatedRequestMatcher resources = new NegatedRequestMatcher(new AntPathRequestMatcher("/resources/**"));
+            NegatedRequestMatcher admin = new NegatedRequestMatcher(new AntPathRequestMatcher("/admin"));
+            NegatedRequestMatcher adminServices = new NegatedRequestMatcher(new AntPathRequestMatcher("/admin/**"));
+            NegatedRequestMatcher login = new NegatedRequestMatcher(new AntPathRequestMatcher("/login"));
 
-            return new AndRequestMatcher(index, users, userServices, endpoints, resources);
+            return new AndRequestMatcher(index, users, userServices, endpoints, resources, admin, adminServices, login);
         }
 
         @Override
@@ -119,7 +119,17 @@ public class SecurityConfig {
 
             http
                     .authorizeRequests()
-                    .antMatchers("/", "/endpoints", "/users","/users/**", "/resources/").permitAll()
+                    .antMatchers(
+                            "/",
+                            "/endpoints",
+                            "/user",
+                            "/user/**",
+                            "/resources/",
+                            "/admin",
+                            "/admin/**",
+                            "/login"
+                    )
+                    .permitAll()
                     .anyRequest()
                     .authenticated();
 
@@ -130,6 +140,46 @@ public class SecurityConfig {
             http
                     .sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+        }
+    }
+
+    @Order(2)
+    @Configuration
+    @PropertySource(value={"classpath:api.properties"})
+    public static class AdminSecurityConfigurer extends WebSecurityConfigurerAdapter {
+
+
+        @Autowired
+        Environment env;
+
+        @Override
+        public void configure(AuthenticationManagerBuilder auth) throws Exception {
+
+            auth
+                    .inMemoryAuthentication()
+                    .withUser(env.getProperty("api.user"))
+                    .password(env.getProperty("api.pass"))
+                    .roles("USER", "ADMIN");
+        }
+
+        @Override
+        protected void configure(HttpSecurity http) throws Exception {
+
+            http
+                    .csrf().disable();
+
+            http
+                    .authorizeRequests()
+                    .antMatchers("/admin", "/admin/**")
+                    .authenticated();
+
+            http
+                    .formLogin();
+
+            http
+                    .sessionManagement()
+                    .sessionCreationPolicy(SessionCreationPolicy.ALWAYS);
 
         }
     }

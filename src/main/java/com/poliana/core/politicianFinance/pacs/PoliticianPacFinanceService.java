@@ -3,6 +3,7 @@ package com.poliana.core.politicianFinance.pacs;
 import com.poliana.core.time.TimeService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -112,7 +113,7 @@ public class PoliticianPacFinanceService {
      */
     @SuppressWarnings("unchecked")
     public HashMap<Integer, List<PoliticianPacContributionsTotals>> getPacToPoliticianTotalsPerCongress(String bioguideId, long beginTimestamp, long endTimestamp) {
-
+        String user = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Integer[] cycles = timeService.getCongressionalCyclesByTimeRange(beginTimestamp, endTimestamp);
 
         Iterator<PoliticianPacContributionsTotals> totalsIterator;

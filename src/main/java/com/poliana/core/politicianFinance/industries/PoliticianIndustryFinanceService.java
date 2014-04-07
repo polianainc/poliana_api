@@ -30,6 +30,86 @@ public class PoliticianIndustryFinanceService {
     }
 
     /**
+     * Get a list of industry to politician contribution sums for all time
+     * @return
+     */
+    public List<PoliticianIndustryContributionsTotals> getAllIndustryToPoliticianTotalsAllTime() {
+
+        if (politicianIndustryRedisRepo.getAllIndustryContributionsAllTimeExistInCache())
+            //Grab totals from MongoDB
+            assert true;
+
+        else {
+            //Grab totals from Hadoop
+        }
+
+        return null;
+    }
+
+    /**
+     * Get a list of industry category to politician contribution sums for all time
+     * @return
+     */
+    public List<PoliticianIndustryContributionsTotals> getAllIndustryCategoryToPoliticianTotalsAllTime() {
+
+        if (politicianIndustryRedisRepo.getAllIndustryCategoryContributionsAllTimeExistInCache())
+            //Grab totals from MongoDB
+            assert true;
+
+        else {
+            //Grab totals from Hadoop
+        }
+
+        return null;
+    }
+
+    /**
+     * Get a list of industry to politician contribution sums for all time
+     * @param bioguideId
+     * @return
+     */
+    public List<PoliticianIndustryContributionsTotals> getIndustryToPoliticianTotals(String bioguideId) {
+
+
+
+        //Query MongoDB for industry to politician objects
+        List<PoliticianIndustryContributionsTotals> totalsList =
+                politicianIndustryMongoRepo.getIndustryToPoliticianTotals(bioguideId);
+
+        if (totalsList != null && totalsList.size() > 0)
+            return totalsList;
+
+        totalsList = politicianIndustryHadoopRepo.getIndustryToPoliticianContributions(bioguideId);
+
+        if (totalsList != null && totalsList.size() > 0)
+            politicianIndustryMongoRepo.saveIndustryToPoliticianContributions(totalsList);
+
+        return totalsList;
+    }
+
+    /**
+     * Get a list of industry category to politician contribution sums for all time
+     * @param bioguideId
+     * @return
+     */
+    public List<PoliticianIndustryContributionsTotals> getIndustryCategoryToPoliticianTotals(String bioguideId) {
+
+        //Query MongoDB for industry to politician objects
+        List<PoliticianIndustryContributionsTotals> totalsList =
+                politicianIndustryMongoRepo.getIndustryCategoryToPoliticianTotals(bioguideId);
+
+        if (totalsList != null && totalsList.size() > 0)
+            return totalsList;
+
+        totalsList = politicianIndustryHadoopRepo.getIndustryCategoryToPoliticianContributions(bioguideId);
+
+        if (totalsList != null && totalsList.size() > 0)
+            politicianIndustryMongoRepo.saveIndustryToPoliticianContributions(totalsList);
+
+        return totalsList;
+    }
+
+    /**
      * Get a list of industry to politician contributions summed over a given congressional cycle
      * @param bioguideId
      * @param congress
@@ -37,7 +117,7 @@ public class PoliticianIndustryFinanceService {
      */
     public List<PoliticianIndustryContributionsTotals> getIndustryToPoliticianTotals(String bioguideId, int congress) {
 
-        List<PoliticianIndustryContributionsTotals> totalsList = politicianIndustryMongoRepo.getIndustryToPoliticianContributions(bioguideId, congress);
+        List<PoliticianIndustryContributionsTotals> totalsList = politicianIndustryMongoRepo.getIndustryToPoliticianTotals(bioguideId, congress);
 
         if (totalsList != null && totalsList.size() > 0)
             return totalsList;
@@ -61,7 +141,7 @@ public class PoliticianIndustryFinanceService {
     public List<PoliticianIndustryContributionsTotals> getIndustryCategoryToPoliticianTotals(String bioguideId, int congress) {
 
         List<PoliticianIndustryContributionsTotals> totalsList =
-                politicianIndustryMongoRepo.getIndustryCategoryToPoliticianContributions(bioguideId, congress);
+                politicianIndustryMongoRepo.getIndustryCategoryToPoliticianTotals(bioguideId, congress);
 
         if (totalsList != null && totalsList.size() > 0)
             return totalsList;
@@ -86,7 +166,7 @@ public class PoliticianIndustryFinanceService {
     public List<PoliticianIndustryContributionsTotals> getIndustryToPoliticianTotals(String bioguideId, long beginTimestamp, long endTimestamp) {
 
         List<PoliticianIndustryContributionsTotals> totalsList =
-                politicianIndustryMongoRepo.getIndustryToPoliticianContributions(bioguideId, beginTimestamp, endTimestamp);
+                politicianIndustryMongoRepo.getIndustryToPoliticianTotals(bioguideId, beginTimestamp, endTimestamp);
 
         if (totalsList != null && totalsList.size() > 0)
             return totalsList;
@@ -111,7 +191,7 @@ public class PoliticianIndustryFinanceService {
     public List<PoliticianIndustryContributionsTotals> getIndustryCategoryToPoliticianTotals(String bioguideId, long beginTimestamp, long endTimestamp) {
 
         List<PoliticianIndustryContributionsTotals> totalsList =
-                politicianIndustryMongoRepo.getIndustryCateogryToPoliticianContributions(bioguideId, beginTimestamp, endTimestamp);
+                politicianIndustryMongoRepo.getIndustryCategoryToPoliticianTotals(bioguideId, beginTimestamp, endTimestamp);
 
         if (totalsList != null && totalsList.size() > 0)
             return totalsList;
@@ -121,50 +201,6 @@ public class PoliticianIndustryFinanceService {
 
         //If Impala had something to return, save it to MongoDB
         if (totalsList.size() > 0)
-            politicianIndustryMongoRepo.saveIndustryToPoliticianContributions(totalsList);
-
-        return totalsList;
-    }
-
-    /**
-     * Get a list of industry to politician contribution sums for all time
-     * @param bioguideId
-     * @return
-     */
-    public List<PoliticianIndustryContributionsTotals> getIndustryToPoliticianTotals(String bioguideId) {
-
-        //Query MongoDB for industry to politician objects
-        List<PoliticianIndustryContributionsTotals> totalsList =
-                politicianIndustryMongoRepo.getIndustryToPoliticianContributions(bioguideId);
-
-        if (totalsList != null && totalsList.size() > 0)
-            return totalsList;
-
-        totalsList = politicianIndustryHadoopRepo.getIndustryToPoliticianContributions(bioguideId);
-
-        if (totalsList != null && totalsList.size() > 0)
-            politicianIndustryMongoRepo.saveIndustryToPoliticianContributions(totalsList);
-
-        return totalsList;
-    }
-
-    /**
-     * Get a list of industry category to politician contribution sums for all time
-     * @param bioguideId
-     * @return
-     */
-    public List<PoliticianIndustryContributionsTotals> getIndustryCategoryToPoliticianTotals(String bioguideId) {
-
-        //Query MongoDB for industry to politician objects
-        List<PoliticianIndustryContributionsTotals> totalsList =
-                politicianIndustryMongoRepo.getIndustryCategoryToPoliticianContributions(bioguideId);
-
-        if (totalsList != null && totalsList.size() > 0)
-            return totalsList;
-
-        totalsList = politicianIndustryHadoopRepo.getIndustryCategoryToPoliticianContributions(bioguideId);
-
-        if (totalsList != null && totalsList.size() > 0)
             politicianIndustryMongoRepo.saveIndustryToPoliticianContributions(totalsList);
 
         return totalsList;
@@ -192,7 +228,7 @@ public class PoliticianIndustryFinanceService {
 
             politicianIndustryRedisRepo.setIndustryContributionsExistsInCache(bioguideId, (Integer) pairs.getKey());
 
-            if (politicianIndustryMongoRepo.countIndustryToPoliticianContributions(bioguideId, (Integer) pairs.getKey()) <= 0)
+            if (politicianIndustryMongoRepo.countIndustryToPoliticianTotals(bioguideId, (Integer) pairs.getKey()) <= 0)
                 politicianIndustryMongoRepo.saveIndustryToPoliticianContributions((List<PoliticianIndustryContributionsTotals>)pairs.getValue());
         }
 
@@ -215,7 +251,7 @@ public class PoliticianIndustryFinanceService {
         if (politicianIndustryRedisRepo.getIndustryContributionsExistInCache(bioguideId, cycles)) {
 
             //Query MongoDB for industry to politician objects
-            totalsIterator = politicianIndustryMongoRepo.getIndustryToPoliticianContributionsIterator(bioguideId, cycles);
+            totalsIterator = politicianIndustryMongoRepo.getIndustryToPoliticianTotalsIterator(bioguideId, cycles);
 
             //Add industry totals to the HashMap.
             while (totalsIterator != null && totalsIterator.hasNext()) {
@@ -248,7 +284,7 @@ public class PoliticianIndustryFinanceService {
         while (it.hasNext()) {
             pairs = (Map.Entry) it.next();
 
-            if (politicianIndustryMongoRepo.countIndustryToPoliticianContributions(bioguideId, (Integer) pairs.getKey()) <= 0)
+            if (politicianIndustryMongoRepo.countIndustryToPoliticianTotals(bioguideId, (Integer) pairs.getKey()) <= 0)
                 politicianIndustryMongoRepo.saveIndustryToPoliticianContributions((List<PoliticianIndustryContributionsTotals>)pairs.getValue());
 
         }
@@ -281,7 +317,7 @@ public class PoliticianIndustryFinanceService {
 
             politicianIndustryRedisRepo.setIndustryCategoryContributionsExistsInCache(bioguideId, (Integer) pairs.getKey());
 
-            if (politicianIndustryMongoRepo.countIndustryCategoryToPoliticianContributions(bioguideId, (Integer) pairs.getKey()) <= 0)
+            if (politicianIndustryMongoRepo.countIndustryCategoryToPoliticianTotals(bioguideId, (Integer) pairs.getKey()) <= 0)
                 politicianIndustryMongoRepo.saveIndustryToPoliticianContributions((List<PoliticianIndustryContributionsTotals>)pairs.getValue());
         }
 
@@ -304,7 +340,7 @@ public class PoliticianIndustryFinanceService {
         if (politicianIndustryRedisRepo.getIndustryCategoryContributionsExistsInCache(bioguideId, cycles)) {
 
             //Query MongoDB for industry to politician objects
-             totalsIterator = politicianIndustryMongoRepo.getIndustryCategoryToPoliticianContributionsIterator(bioguideId, cycles);
+             totalsIterator = politicianIndustryMongoRepo.getIndustryCategoryToPoliticianTotalsIterator(bioguideId, cycles);
 
             //Add industry totals to the HashMap.
             while (totalsIterator != null && totalsIterator.hasNext()) {
@@ -337,7 +373,7 @@ public class PoliticianIndustryFinanceService {
         while (it.hasNext()) {
             pairs = (Map.Entry) it.next();
 
-            if (politicianIndustryMongoRepo.countIndustryCategoryToPoliticianContributions(bioguideId, (Integer) pairs.getKey()) <= 0)
+            if (politicianIndustryMongoRepo.countIndustryCategoryToPoliticianTotals(bioguideId, (Integer) pairs.getKey()) <= 0)
                 politicianIndustryMongoRepo.saveIndustryToPoliticianContributions((List<PoliticianIndustryContributionsTotals>)pairs.getValue());
 
         }

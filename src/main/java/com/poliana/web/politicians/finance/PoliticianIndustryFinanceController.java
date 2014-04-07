@@ -35,17 +35,57 @@ public class PoliticianIndustryFinanceController extends AbstractBaseController 
 
 
     /**
-     * Get all industry contribution totals for a given congressional cycle. The default congress cycle value is
-     * the current congress.
+     * Get all industry contribution totals to all politicians for all time
      *
-     * @param bioguideId
      * @return
      */
-    @RequestMapping(value="/{bioguide_id}/contributions/industries")
+    @RequestMapping(value="/contributions/industries")
+    public @ResponseBody List<PoliticianIndustryContributionsTotals> getAllIndustryToPoliticianTotalsAllTime() {
+
+        List<PoliticianIndustryContributionsTotals> allTotals = politicianIndustryFinanceService.getAllIndustryToPoliticianTotalsAllTime();
+        return allTotals;
+    }
+
+    /**
+     * Get all industry contribution totals to all politicians for all time
+     *
+     * @return
+     */
+    @RequestMapping(value="/contributions/industries/categories")
+    public @ResponseBody List<PoliticianIndustryContributionsTotals> getAllIndustryCategoryToPoliticianTotalsAllTime() {
+
+        List<PoliticianIndustryContributionsTotals> allTotals = politicianIndustryFinanceService.getAllIndustryCategoryToPoliticianTotalsAllTime();
+        return allTotals;
+    }
+
+
+    /**
+     * Get all industry contribution totals to a given politician for all time
+     *
+     * @return
+     */
+    @RequestMapping(value="/{bioguide_id}/contributions/industries", params = {"types"})
     public @ResponseBody List<PoliticianIndustryContributionsTotals> getIndustryToPoliticianTotals(
-            @BioguideId @PathVariable("bioguide_id") String bioguideId) {
+            @BioguideId @PathVariable("bioguide_id") String bioguideId,
+            @RequestParam(value = "types") String[] types) {
+
+        String[] yo = types;
 
         List<PoliticianIndustryContributionsTotals> allTotals = politicianIndustryFinanceService.getIndustryToPoliticianTotals(bioguideId);
+        return allTotals;
+    }
+
+    /**
+     * Get all industry category contribution totals to a given politician for all time
+     *
+     * @return
+     */
+    @RequestMapping(value="/{bioguide_id}/contributions/industries/categories", params = {"types"})
+    public @ResponseBody List<PoliticianIndustryContributionsTotals> getIndustryCategoryToPoliticianTotalsAllTime(
+            @BioguideId @PathVariable("bioguide_id") String bioguideId,
+            @RequestParam(value = "types") String[] types) {
+
+        List<PoliticianIndustryContributionsTotals> allTotals = politicianIndustryFinanceService.getIndustryCategoryToPoliticianTotals(bioguideId);
         return allTotals;
     }
 
@@ -58,7 +98,8 @@ public class PoliticianIndustryFinanceController extends AbstractBaseController 
      */
     @RequestMapping(value="/{bioguide_id}/contributions/industries/categories", params = {"unit"})
     public @ResponseBody HashMap<Integer, List<PoliticianIndustryContributionsTotals>> getIndustryCategoryToPoliticianTotalsPerCongress(
-            @BioguideId @PathVariable("bioguide_id") String bioguideId) {
+            @BioguideId @PathVariable("bioguide_id") String bioguideId,
+            @RequestParam(value = "unit", required = true) String unit) {
 
         HashMap<Integer, List<PoliticianIndustryContributionsTotals>> allTotals =
                 politicianIndustryFinanceService.getIndustryCategoryToPoliticianTotalsPerCongress(bioguideId);
@@ -82,22 +123,6 @@ public class PoliticianIndustryFinanceController extends AbstractBaseController 
         return allTotals;
     }
 
-    /**
-     * Get all industry category contribution totals for a given congressional cycle. The default congress cycle value is
-     * the current congress.
-     *
-     * @param bioguideId
-     * @return
-     */
-    @RequestMapping(value="/{bioguide_id}/contributions/industries/categories")
-    public @ResponseBody List<PoliticianIndustryContributionsTotals> getIndustryCategoryToPoliticianTotals(
-            @BioguideId @PathVariable("bioguide_id") String bioguideId) {
-
-        List<PoliticianIndustryContributionsTotals> allTotals =
-                politicianIndustryFinanceService.getIndustryCategoryToPoliticianTotals(bioguideId);
-
-        return allTotals;
-    }
 
     /**
      * Get all industry contribution totals for a given congressional cycle. The default congress cycle value is

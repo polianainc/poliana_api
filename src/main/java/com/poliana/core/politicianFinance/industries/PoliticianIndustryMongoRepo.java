@@ -54,11 +54,105 @@ public class PoliticianIndustryMongoRepo {
     }
 
     /**
-     * Using MongoDB, get a list of all industry to politician contributions for a given bioguide ID.
+     * Get a list of industry to politician contribution sums for all time
+     * @return
+     */
+    public List<PoliticianIndustryContributionsTotals> getAllIndustryToPoliticianTotalsAllTime() {
+
+        Query<PoliticianIndustryContributionsTotals> query = mongoStore.find(PoliticianIndustryContributionsTotals.class);
+
+        query.and();
+
+        return query.asList();
+    }
+
+    /**
+     * Get a list of industry category to politician contribution sums for all time
+     * @return
+     */
+    public List<PoliticianIndustryContributionsTotals> getAllIndustryCategoryToPoliticianTotalsAllTime() {
+
+        Query<PoliticianIndustryContributionsTotals> query = mongoStore.find(PoliticianIndustryContributionsTotals.class);
+
+        query.and();
+
+        return query.asList();
+    }
+
+    /**
+     * Get industry to politician contribution sums for all time
+     * @return
+     */
+    public PoliticianIndustryContributionsTotals getIndustryToPoliticianTotalsAllTime(String bioguideId) {
+
+        Query<PoliticianIndustryContributionsTotals> query = mongoStore.find(PoliticianIndustryContributionsTotals.class);
+
+        query.and();
+
+        return query.get();
+    }
+
+    /**
+     * Get industry category to politician contribution sums for all time
+     * @return
+     */
+    public PoliticianIndustryContributionsTotals getIndustryCategoryToPoliticianTotalsAllTime(String bioguideId) {
+
+        Query<PoliticianIndustryContributionsTotals> query = mongoStore.find(PoliticianIndustryContributionsTotals.class);
+
+        query.and();
+
+        return query.get();
+    }
+
+    /**
+     * Get a list of all industry to politician contributions for a given bioguide ID.
      * @param bioguideId
      * @return
      */
-    public List<PoliticianIndustryContributionsTotals> getIndustryToPoliticianContributions(String bioguideId, int congress) {
+    public List<PoliticianIndustryContributionsTotals> getIndustryToPoliticianTotals(String bioguideId) {
+
+        Query<PoliticianIndustryContributionsTotals> query = mongoStore.find(PoliticianIndustryContributionsTotals.class);
+
+        query.and(
+                query.criteria("bioguideId").equal(bioguideId),
+                query.criteria("industryId").exists(),
+                query.criteria("congress").doesNotExist(),
+                query.criteria("year").doesNotExist(),
+                query.criteria("month").doesNotExist(),
+                query.criteria("beginTimestamp").doesNotExist(),
+                query.criteria("endTimestamp").doesNotExist());
+
+        return query.asList();
+    }
+
+    /**
+     * Get a list of all industry to politician contributions for a given bioguide ID.
+     * @param bioguideId
+     * @return
+     */
+    public List<PoliticianIndustryContributionsTotals> getIndustryCategoryToPoliticianTotals(String bioguideId) {
+
+        Query<PoliticianIndustryContributionsTotals> query = mongoStore.find(PoliticianIndustryContributionsTotals.class);
+
+        query.and(
+                query.criteria("bioguideId").equal(bioguideId),
+                query.criteria("categoryId").exists(),
+                query.criteria("congress").doesNotExist(),
+                query.criteria("year").doesNotExist(),
+                query.criteria("month").doesNotExist(),
+                query.criteria("beginTimestamp").doesNotExist(),
+                query.criteria("endTimestamp").doesNotExist());
+
+        return query.asList();
+    }
+
+    /**
+     * Get a list of all industry to politician contributions for a given bioguide ID.
+     * @param bioguideId
+     * @return
+     */
+    public List<PoliticianIndustryContributionsTotals> getIndustryToPoliticianTotals(String bioguideId, int congress) {
 
         Query<PoliticianIndustryContributionsTotals> query = mongoStore.find(PoliticianIndustryContributionsTotals.class);
 
@@ -70,11 +164,29 @@ public class PoliticianIndustryMongoRepo {
     }
 
     /**
-     * Using MongoDB, get a list of all industry category to politician contributions for a given bioguide ID and congress
+     * Count the industry contribution sums cached for a given politician and congressional cycle
+     * @param bioguideId
+     * @param congress
+     * @return
+     */
+    public long countIndustryToPoliticianTotals(String bioguideId, int congress) {
+
+        Query<PoliticianIndustryContributionsTotals> query = mongoStore.find(PoliticianIndustryContributionsTotals.class);
+
+        query.and(
+                query.criteria("bioguideId").equal(bioguideId),
+                query.criteria("categoryId").doesNotExist(),
+                query.criteria("congress").equal(congress));
+
+        return mongoStore.getCount(query);
+    }
+
+    /**
+     * Get a list of all industry category to politician contributions for a given bioguide ID and congress
      * @param bioguideId
      * @return
      */
-    public List<PoliticianIndustryContributionsTotals> getIndustryCategoryToPoliticianContributions(String bioguideId, int congress) {
+    public List<PoliticianIndustryContributionsTotals> getIndustryCategoryToPoliticianTotals(String bioguideId, int congress) {
 
         Query<PoliticianIndustryContributionsTotals> query = mongoStore.find(PoliticianIndustryContributionsTotals.class);
 
@@ -91,14 +203,31 @@ public class PoliticianIndustryMongoRepo {
     }
 
     /**
+     * Count the industry category contribution sums cached for a given politician and congressional cycle
+     * @param bioguideId
+     * @param congress
+     * @return
+     */
+    public long countIndustryCategoryToPoliticianTotals(String bioguideId, int congress) {
+
+        Query<PoliticianIndustryContributionsTotals> query = mongoStore.find(PoliticianIndustryContributionsTotals.class);
+
+        query.and(
+                query.criteria("bioguideId").equal(bioguideId),
+                query.criteria("industryId").doesNotExist(),
+                query.criteria("congress").equal(congress));
+
+        return mongoStore.getCount(query);
+    }
+
+    /**
      *
      * @param bioguideId
      * @param beginTimestamp
      * @param endTimestamp
      * @return
      */
-    public List<PoliticianIndustryContributionsTotals> getIndustryToPoliticianContributions(
-            String bioguideId, long beginTimestamp, long endTimestamp) {
+    public List<PoliticianIndustryContributionsTotals> getIndustryToPoliticianTotals(String bioguideId, long beginTimestamp, long endTimestamp) {
 
         Query<PoliticianIndustryContributionsTotals> query = mongoStore.find(PoliticianIndustryContributionsTotals.class);
 
@@ -118,8 +247,7 @@ public class PoliticianIndustryMongoRepo {
      * @param endTimestamp
      * @return
      */
-    public List<PoliticianIndustryContributionsTotals> getIndustryCateogryToPoliticianContributions(
-            String bioguideId, long beginTimestamp, long endTimestamp) {
+    public List<PoliticianIndustryContributionsTotals> getIndustryCategoryToPoliticianTotals(String bioguideId, long beginTimestamp, long endTimestamp) {
 
         Query<PoliticianIndustryContributionsTotals> query = mongoStore.find(PoliticianIndustryContributionsTotals.class);
 
@@ -134,11 +262,11 @@ public class PoliticianIndustryMongoRepo {
     }
 
     /**
-     * Using MongoDB, get a list of all industry to politician contributions for a given bioguide ID.
+     * Get a list of all industry to politician contributions for a given bioguide ID.
      * @param bioguideId
      * @return
      */
-    public Iterator<PoliticianIndustryContributionsTotals> getIndustryToPoliticianContributionsIterator(String bioguideId) {
+    public Iterator<PoliticianIndustryContributionsTotals> getIndustryToPoliticianTotalsIterator(String bioguideId) {
 
         Query<PoliticianIndustryContributionsTotals> query = mongoStore.find(PoliticianIndustryContributionsTotals.class);
 
@@ -155,54 +283,12 @@ public class PoliticianIndustryMongoRepo {
     }
 
     /**
-     * Using MongoDB, get a list of all industry to politician contributions for a given bioguide ID.
-     * @param bioguideId
-     * @return
-     */
-    public List<PoliticianIndustryContributionsTotals> getIndustryToPoliticianContributions(String bioguideId) {
-
-        Query<PoliticianIndustryContributionsTotals> query = mongoStore.find(PoliticianIndustryContributionsTotals.class);
-
-        query.and(
-                query.criteria("bioguideId").equal(bioguideId),
-                query.criteria("industryId").exists(),
-                query.criteria("congress").doesNotExist(),
-                query.criteria("year").doesNotExist(),
-                query.criteria("month").doesNotExist(),
-                query.criteria("beginTimestamp").doesNotExist(),
-                query.criteria("endTimestamp").doesNotExist());
-
-        return query.asList();
-    }
-
-    /**
-     * Using MongoDB, get a list of all industry to politician contributions for a given bioguide ID.
-     * @param bioguideId
-     * @return
-     */
-    public List<PoliticianIndustryContributionsTotals> getIndustryCategoryToPoliticianContributions(String bioguideId) {
-
-        Query<PoliticianIndustryContributionsTotals> query = mongoStore.find(PoliticianIndustryContributionsTotals.class);
-
-        query.and(
-                query.criteria("bioguideId").equal(bioguideId),
-                query.criteria("categoryId").exists(),
-                query.criteria("congress").doesNotExist(),
-                query.criteria("year").doesNotExist(),
-                query.criteria("month").doesNotExist(),
-                query.criteria("beginTimestamp").doesNotExist(),
-                query.criteria("endTimestamp").doesNotExist());
-
-        return query.asList();
-    }
-
-    /**
      * Get an iterator of a list of industry to politician contributions for a given time range
      * @param bioguideId
      * @param cycles
      * @return
      */
-    public Iterator<PoliticianIndustryContributionsTotals> getIndustryToPoliticianContributionsIterator(String bioguideId, Integer... cycles) {
+    public Iterator<PoliticianIndustryContributionsTotals> getIndustryToPoliticianTotalsIterator(String bioguideId, Integer... cycles) {
 
         Query<PoliticianIndustryContributionsTotals> query = mongoStore.find(PoliticianIndustryContributionsTotals.class);
 
@@ -221,7 +307,7 @@ public class PoliticianIndustryMongoRepo {
      * @param cycles
      * @return
      */
-    public Iterator<PoliticianIndustryContributionsTotals> getIndustryCategoryToPoliticianContributionsIterator(String bioguideId, Integer... cycles) {
+    public Iterator<PoliticianIndustryContributionsTotals> getIndustryCategoryToPoliticianTotalsIterator(String bioguideId, Integer... cycles) {
 
         Query<PoliticianIndustryContributionsTotals> query = mongoStore.find(PoliticianIndustryContributionsTotals.class);
 
@@ -232,42 +318,6 @@ public class PoliticianIndustryMongoRepo {
         );
 
         return query.iterator();
-    }
-
-    /**
-     * Count the industry contribution sums cached for a given politician and congressional cycle
-     * @param bioguideId
-     * @param congress
-     * @return
-     */
-    public long countIndustryToPoliticianContributions(String bioguideId, int congress) {
-
-        Query<PoliticianIndustryContributionsTotals> query = mongoStore.find(PoliticianIndustryContributionsTotals.class);
-
-        query.and(
-                query.criteria("bioguideId").equal(bioguideId),
-                query.criteria("categoryId").doesNotExist(),
-                query.criteria("congress").equal(congress));
-
-        return mongoStore.getCount(query);
-    }
-
-    /**
-     * Count the industry category contribution sums cached for a given politician and congressional cycle
-     * @param bioguideId
-     * @param congress
-     * @return
-     */
-    public long countIndustryCategoryToPoliticianContributions(String bioguideId, int congress) {
-
-        Query<PoliticianIndustryContributionsTotals> query = mongoStore.find(PoliticianIndustryContributionsTotals.class);
-
-        query.and(
-                query.criteria("bioguideId").equal(bioguideId),
-                query.criteria("industryId").doesNotExist(),
-                query.criteria("congress").equal(congress));
-
-        return mongoStore.getCount(query);
     }
 
 

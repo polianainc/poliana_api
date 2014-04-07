@@ -1,6 +1,5 @@
 package com.poliana.core.time;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -210,5 +209,17 @@ public class TimeService {
             case 3:  return "rd";
             default: return "th";
         }
+    }
+
+    /**
+     * Simply return the unix timestamp of now as a string
+     * @return
+     */
+    public String getTimeNow() {
+
+        Calendar cal = Calendar.getInstance();
+        long time = cal.getTimeInMillis()/1000;
+
+        return "" + time;
     }
 }

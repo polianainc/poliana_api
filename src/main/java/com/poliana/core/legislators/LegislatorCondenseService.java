@@ -28,13 +28,15 @@ public class LegislatorCondenseService {
 
         if(!legislatorRedisRepo.getCondensedLegislatorsCached()) {
             // if there aren't any condensed legislators in redis, grab the flat
-            // legislators from mongo, iterate over them, create the condensed legislators,
-            // store them in redis
-
+            // legislators from mongo, iterate over them
             Iterator<Legislator> legislatorIterator = legislatorMongoRepo.getAllLegislators();
+            // and create the condensed legislators,
             List<LegislatorCondensed> legislatorCondensedList = condenseLegislators(legislatorIterator);
 
-
+            // then, store them in redis
+            for(LegislatorCondensed legislator : legislatorCondensedList) {
+                legislatorRedisRepo.saveLegislatorCondensed(legislator);
+            }
             legislatorRedisRepo.setCondensedLegislatorsCached(true);
         }
 

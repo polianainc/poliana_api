@@ -1,8 +1,6 @@
 package com.poliana.config.web;
 
 import com.poliana.users.CorsFilter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import javax.servlet.ServletContext;
@@ -14,8 +12,6 @@ import javax.servlet.ServletException;
 */
 public class WebInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
-    @Autowired
-    private OncePerRequestFilter corsFilter;
 
     @Override
     protected Class<?>[] getRootConfigClasses() {

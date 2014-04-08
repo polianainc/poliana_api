@@ -5,6 +5,8 @@ import com.poliana.core.politicianFinance.pacs.PoliticianPacFinanceService;
 import com.poliana.views.politicianFinance.PoliticianPacBarPlot;
 import com.poliana.web.aspect.BioguideId;
 import com.poliana.web.common.AbstractBaseController;
+import com.poliana.web.serialize.JsonFilter;
+import com.poliana.web.serialize.PacSummaryFilter;
 import org.apache.log4j.Logger;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
@@ -81,6 +83,7 @@ public class PoliticianPacFinanceController extends AbstractBaseController {
         return totals;
     }
 
+    @JsonFilter(mixin=PacSummaryFilter.class)
     @RequestMapping(value="/{bioguideId}/contributions/pacs", params = {"start", "end", "unit"})
     public @ResponseBody HashMap<Integer, List<PoliticianPacContributionsTotals>> getPacToPoliticianTotalsPerCongress(
             @BioguideId @PathVariable(value = "bioguideId") String bioguideId,

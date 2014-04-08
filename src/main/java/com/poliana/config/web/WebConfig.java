@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.poliana.config.ApplicationConfig;
 import com.poliana.web.aspect.ControllerLoggingAspect;
 import com.poliana.web.aspect.ControllerParameterSanitation;
+import com.poliana.web.serialize.JsonFilterAspect;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.*;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
@@ -88,7 +89,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
 
         converters.add(converter());
-
     }
 
     @Bean
@@ -97,6 +97,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
         converter.setPrettyPrint(true);
         converter.setObjectMapper(objectMapper());
+
         return converter;
     }
 
@@ -121,5 +122,11 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     public ControllerParameterSanitation controllerParameterSanitation() {
 
         return new ControllerParameterSanitation();
+    }
+
+    @Bean
+    public JsonFilterAspect jsonFilterAspect() {
+
+        return new JsonFilterAspect();
     }
 }

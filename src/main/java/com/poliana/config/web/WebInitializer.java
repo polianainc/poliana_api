@@ -1,6 +1,7 @@
 package com.poliana.config.web;
 
 import com.poliana.users.CorsFilter;
+import com.poliana.web.serialize.WebContextFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import javax.servlet.ServletContext;
@@ -11,7 +12,6 @@ import javax.servlet.ServletException;
 * @date 12/15/13
 */
 public class WebInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
-
 
     @Override
     protected Class<?>[] getRootConfigClasses() {
@@ -32,6 +32,7 @@ public class WebInitializer extends AbstractAnnotationConfigDispatcherServletIni
     public void onStartup(ServletContext servletContext) throws ServletException {
 
         servletContext.addFilter("corsFilter", new CorsFilter()).addMappingForUrlPatterns(null, false, "/*");
+        servletContext.addFilter("webContextFilter", new WebContextFilter()).addMappingForUrlPatterns(null, false, "/*");
 
         super.onStartup(servletContext);
     }

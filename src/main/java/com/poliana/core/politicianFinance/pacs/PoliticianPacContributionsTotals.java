@@ -1,9 +1,15 @@
 package com.poliana.core.politicianFinance.pacs;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Property;
+
+import java.util.HashMap;
+import java.util.LinkedList;
 
 /**
  * @author David Gilmore
@@ -11,6 +17,7 @@ import org.mongodb.morphia.annotations.Property;
  */
 @Entity("pac_to_politician_contribution_totals")
 @JsonIgnoreProperties({"id"})
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public class PoliticianPacContributionsTotals {
 
     @Id
@@ -150,5 +157,16 @@ public class PoliticianPacContributionsTotals {
 
     public void setCongress(Integer congress) {
         this.congress = congress;
+    }
+
+    public static abstract class PacSummaryFilterHashMapList<Integer, PacSummaryFilterList> extends HashMap<Integer, PacSummaryFilterList> {}
+
+    public static abstract class PacSummaryFilterList<PacSummaryFilter> extends LinkedList<PacSummaryFilter> {}
+
+    public static abstract class PacSummaryFilter {
+        @JsonIgnore String pacId;
+        @JsonProperty String pacName;
+        @JsonProperty Integer contributionSum;
+        @JsonProperty Integer contributionCount;
     }
 }

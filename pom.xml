@@ -19,7 +19,7 @@
         <thrift.version>0.9.0</thrift.version>
         <apache.mahout.version>0.8</apache.mahout.version>
         <log4j.version>1.2.17</log4j.version>
-        <jackson.version>2.0</jackson.version>
+        <jackson.version>2.3</jackson.version>
         <powermock.version>1.5.2</powermock.version>
     </properties>
 

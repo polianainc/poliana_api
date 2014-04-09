@@ -1,12 +1,13 @@
 package com.poliana.web.politicians.finance;
 
 import com.poliana.core.politicianFinance.pacs.PoliticianPacContributionsTotals;
+import com.poliana.core.politicianFinance.pacs.PoliticianPacContributionsTotals.PacSummaryFilterList;
+import com.poliana.core.politicianFinance.pacs.PoliticianPacContributionsTotals.PacSummaryFilterHashMapList;
 import com.poliana.core.politicianFinance.pacs.PoliticianPacFinanceService;
 import com.poliana.views.politicianFinance.PoliticianPacBarPlot;
 import com.poliana.web.aspect.BioguideId;
 import com.poliana.web.common.AbstractBaseController;
 import com.poliana.web.serialize.JsonFilter;
-import com.poliana.web.serialize.PacSummaryFilter;
 import org.apache.log4j.Logger;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
@@ -40,6 +41,7 @@ public class PoliticianPacFinanceController extends AbstractBaseController {
      * @param bioguideId
      * @return
      */
+    @JsonFilter(mixin=PacSummaryFilterList.class)
     @RequestMapping(value="/{bioguide_id}/contributions/pacs")
     public @ResponseBody List<PoliticianPacContributionsTotals> getPacToPoliticianTotals(
             @BioguideId @PathVariable("bioguide_id") String bioguideId) {
@@ -83,7 +85,7 @@ public class PoliticianPacFinanceController extends AbstractBaseController {
         return totals;
     }
 
-    @JsonFilter(mixin=PacSummaryFilter.class)
+    @JsonFilter(mixin=PacSummaryFilterHashMapList.class)
     @RequestMapping(value="/{bioguideId}/contributions/pacs", params = {"start", "end", "unit"})
     public @ResponseBody HashMap<Integer, List<PoliticianPacContributionsTotals>> getPacToPoliticianTotalsPerCongress(
             @BioguideId @PathVariable(value = "bioguideId") String bioguideId,

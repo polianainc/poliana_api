@@ -183,9 +183,18 @@ public class LegislatorRedisRepo {
 
     public void saveLegislatorCondensed(LegislatorCondensed legislator) {
 
+        Jedis jedis = jedisPool.getResource();
+        MessagePack messagePack = new MessagePack();
 
-        if(legislator.getBioguideId() == null) {
-            return;
+        String key = LEGISLATOR_CONDENSED + legislator.getBioguideId();
+        try {
+            if (!jedis.exists(messagePack.write(key)))
+                jedis.lpush(messagePack.write(key), messagePack.write(legislator));
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        } finally {
+            if(null != jedis)
+                jedisPool.returnResource(jedis);
         }
 
     }
@@ -259,6 +268,8 @@ public class LegislatorRedisRepo {
      * @return all the condensed legislators
      */
     public List<LegislatorCondensed> getCondensedLegislators() {
+
+        // TODO: Figure out how to pull all records from redis in one query using just the prefix of the key (LEGISLATOR_CONDENSED)
         List<LegislatorCondensed> legislators = new LinkedList<>();
         return legislators;
     }

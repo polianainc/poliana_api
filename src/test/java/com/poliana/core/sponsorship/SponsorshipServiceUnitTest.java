@@ -2,7 +2,7 @@ package com.poliana.core.sponsorship;
 
 import com.poliana.core.time.CongressTimestamps;
 import com.poliana.core.legislators.Legislator;
-import com.poliana.core.legislators.LegislatorRepo;
+import com.poliana.core.legislators.LegislatorMongoRepo;
 import com.poliana.core.legislators.LegislatorService;
 import com.poliana.core.shared.AbstractSponsorshipTest;
 import com.poliana.core.time.TimeService;
@@ -25,7 +25,7 @@ public class SponsorshipServiceUnitTest extends AbstractSponsorshipTest {
 
     private SponsorshipService sponsorshipService;
 
-    private LegislatorRepo legislatorRepoMock;
+    private LegislatorMongoRepo legislatorMongoRepoMock;
     private LegislatorService legislatorServiceMock;
     private SponsorshipRepo sponsorshipRepoMock;
 
@@ -36,13 +36,13 @@ public class SponsorshipServiceUnitTest extends AbstractSponsorshipTest {
 
         this.control = createStrictControl();
 
-        this.legislatorRepoMock = this.control.createMock(LegislatorRepo.class);
+        this.legislatorMongoRepoMock = this.control.createMock(LegislatorMongoRepo.class);
         this.legislatorServiceMock = this.control.createMock(LegislatorService.class);
         this.sponsorshipRepoMock = this.control.createMock(SponsorshipRepo.class);
 
         this.sponsorshipService = new SponsorshipService();
 
-        this.sponsorshipService.setLegislatorRepo(this.legislatorRepoMock);
+        this.sponsorshipService.setLegislatorMongoRepo(this.legislatorMongoRepoMock);
         this.sponsorshipService.setLegislatorService(this.legislatorServiceMock);
         this.sponsorshipService.setSponsorshipRepo(this.sponsorshipRepoMock);
         this.sponsorshipService.setTimeService(new TimeService());
@@ -57,7 +57,7 @@ public class SponsorshipServiceUnitTest extends AbstractSponsorshipTest {
 
         expect(this.sponsorshipRepoMock.getSponsorshipMatrix("s", 110)).andReturn(null);
         expect(this.sponsorshipRepoMock.getSponsorshipCounts("s", 110)).andReturn(sponsorshipCountsMock);
-        expect(this.legislatorRepoMock.getLegislators("s", timestamps.getBegin(), timestamps.getEnd()))
+        expect(this.legislatorMongoRepoMock.getLegislators("s", timestamps.getBegin(), timestamps.getEnd()))
                 .andReturn(legislatorListMock.iterator());
         expect(this.sponsorshipRepoMock.saveSponsorshipMatrix(anyObject(SponsorshipMatrix.class)))
                 .andReturn(new Key<>(SponsorshipMatrix.class, new ObjectId()));

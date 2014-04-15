@@ -32,9 +32,9 @@ public class HelloController extends AbstractBaseController {
     public String getEndPointsInView( Model model ) {
 
         model.addAttribute("message", "Check out our endpoints");
-        model.addAttribute( "endPoints", requestMappingHandlerMapping.getHandlerMethods().keySet() );
+        model.addAttribute( "endpoints", requestMappingHandlerMapping.getHandlerMethods().keySet() );
 
-        return "views/endpoints";
+        return "endpoints";
     }
 
     @Autowired

@@ -30,6 +30,7 @@ public class PoliticianIndustryMongoRepo {
      * @param totalsList
      * @return
      */
+    @SuppressWarnings("unchecked")
     public Iterable<Key<PoliticianIndustryContributionsTotals>> saveIndustryToPoliticianContributions(List<PoliticianIndustryContributionsTotals> totalsList) {
 
         return mongoStore.save(totalsList);

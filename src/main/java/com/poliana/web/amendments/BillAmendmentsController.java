@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.*;
  * @date 1/16/14
  */
 @Controller
-@RequestMapping("/bills/amendments/")
+@RequestMapping("/bills/amendments")
 public class BillAmendmentsController {
 
     @ResponseBody
-    @RequestMapping(value="{amendment_id}", method = RequestMethod.GET)
+    @RequestMapping(value="/{amendment_id}", method = RequestMethod.GET)
     public String getBillAmendments(
             @PathVariable("amendment_id") String amendmentId) {
 

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @date 12/15/13
  */
 @Controller
-@RequestMapping("/ideologies/")
+@RequestMapping("/ideologies")
 public class IdeologyController extends AbstractBaseController {
 
     private IdeologyService ideologyService;

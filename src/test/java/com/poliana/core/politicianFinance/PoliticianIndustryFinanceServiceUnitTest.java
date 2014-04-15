@@ -1,9 +1,6 @@
 package com.poliana.core.politicianFinance;
 
-import com.poliana.core.politicianFinance.industries.PoliticianIndustryContributionsTotals;
-import com.poliana.core.politicianFinance.industries.PoliticianIndustryFinanceService;
-import com.poliana.core.politicianFinance.industries.PoliticianIndustryHadoopRepo;
-import com.poliana.core.politicianFinance.industries.PoliticianIndustryMongoRepo;
+import com.poliana.core.politicianFinance.industries.*;
 import com.poliana.core.time.TimeService;
 import org.easymock.IMocksControl;
 import org.junit.Before;
@@ -28,6 +25,7 @@ public class PoliticianIndustryFinanceServiceUnitTest {
 
     private PoliticianIndustryMongoRepo politicianIndustryMongoRepoMock;
     private PoliticianIndustryHadoopRepo politicianIndustryHadoopRepoMock;
+    private PoliticianIndustryRedisRepo politicianIndustryRedisRepoMock;
     private TimeService timeServiceMock;
 
     private IMocksControl control;
@@ -40,12 +38,14 @@ public class PoliticianIndustryFinanceServiceUnitTest {
 
         this.politicianIndustryMongoRepoMock = this.control.createMock(PoliticianIndustryMongoRepo.class);
         this.politicianIndustryHadoopRepoMock = this.control.createMock(PoliticianIndustryHadoopRepo.class);
+        this.politicianIndustryRedisRepoMock = this.control.createMock(PoliticianIndustryRedisRepo.class);
         this.timeServiceMock = this.control.createMock(TimeService.class);
 
         this.politicianIndustryFinanceService = new PoliticianIndustryFinanceService();
 
         this.politicianIndustryFinanceService.setPoliticianIndustryMongoRepo(this.politicianIndustryMongoRepoMock);
         this.politicianIndustryFinanceService.setPoliticianIndustryHadoopRepo(this.politicianIndustryHadoopRepoMock);
+        this.politicianIndustryFinanceService.setPoliticianIndustryRedisRepo(this.politicianIndustryRedisRepoMock);
         this.politicianIndustryFinanceService.setTimeService(timeServiceMock);
     }
 
@@ -174,10 +174,14 @@ public class PoliticianIndustryFinanceServiceUnitTest {
 
         expect(this.politicianIndustryHadoopRepoMock.getIndustryToPoliticianTotalsPerCongress("O000167")).andReturn(contributionsMapMock);
 
+        this.politicianIndustryRedisRepoMock.setIndustryContributionsExistsInCache("O000167", 110);
+
         expect(this.politicianIndustryMongoRepoMock.countIndustryToPoliticianContributions("O000167", 110)).andReturn(0L);
 
         expect(this.politicianIndustryMongoRepoMock.saveIndustryToPoliticianContributions(contributionsListMock))
                 .andReturn(new ArrayList<Key<PoliticianIndustryContributionsTotals>>());
+
+        this.politicianIndustryRedisRepoMock.setIndustryContributionsExistsInCache("O000167", 111);
 
         expect(this.politicianIndustryMongoRepoMock.countIndustryToPoliticianContributions("O000167", 111)).andReturn(1L);
 
@@ -204,10 +208,14 @@ public class PoliticianIndustryFinanceServiceUnitTest {
 
         expect(this.politicianIndustryHadoopRepoMock.getIndustryCategoryToPoliticianTotalsPerCongress("O000167")).andReturn(contributionsMapMock);
 
+        this.politicianIndustryRedisRepoMock.setIndustryCategoryContributionsExistsInCache("O000167", 110);
+
         expect(this.politicianIndustryMongoRepoMock.countIndustryCategoryToPoliticianContributions("O000167", 110)).andReturn(0L);
 
         expect(this.politicianIndustryMongoRepoMock.saveIndustryToPoliticianContributions(contributionsListMock))
                 .andReturn(new ArrayList<Key<PoliticianIndustryContributionsTotals>>());
+
+        this.politicianIndustryRedisRepoMock.setIndustryCategoryContributionsExistsInCache("O000167", 111);
 
         expect(this.politicianIndustryMongoRepoMock.countIndustryCategoryToPoliticianContributions("O000167", 111)).andReturn(1L);
 
@@ -219,7 +227,7 @@ public class PoliticianIndustryFinanceServiceUnitTest {
     }
 
     @Test
-    public void testGetIndustryToPoliticianTotalsPerCongress__ByTimeRange() throws Exception {
+    public void testGetIndustryToPoliticianTotalsPerCongress__ByTimeRange__NotCached() throws Exception {
 
         List<PoliticianIndustryContributionsTotals> contributionsListMock = new LinkedList<>();
         List<PoliticianIndustryContributionsTotals> contributionsListMock1 = new LinkedList<>();
@@ -233,7 +241,7 @@ public class PoliticianIndustryFinanceServiceUnitTest {
         contributionsMapMock.put(new Integer(111), contributionsListMock1);
 
         expect(this.timeServiceMock.getCongressionalCyclesByTimeRange(1290935588, 1390935588)).andReturn(new Integer[] {110, 111});
-        expect(this.politicianIndustryMongoRepoMock.getIndustryToPoliticianContributionsIterator("O000167", 110, 111)).andReturn(null);
+        expect(this.politicianIndustryRedisRepoMock.getIndustryContributionsExistInCache("O000167", 110, 111)).andReturn(false);
         expect(this.politicianIndustryHadoopRepoMock.getIndustryToPoliticianTotalsPerCongress("O000167", 1290935588, 1390935588)).andReturn(contributionsMapMock);
 
         expect(this.politicianIndustryMongoRepoMock.countIndustryToPoliticianContributions("O000167", 110)).andReturn(0L);
@@ -243,6 +251,8 @@ public class PoliticianIndustryFinanceServiceUnitTest {
 
         expect(this.politicianIndustryMongoRepoMock.countIndustryToPoliticianContributions("O000167", 111)).andReturn(1L);
 
+        this.politicianIndustryRedisRepoMock.setIndustryContributionsExistsInCache("O000167", 110, 111);
+
         this.control.replay();
 
         this.politicianIndustryFinanceService.getIndustryToPoliticianTotalsPerCongress("O000167", 1290935588, 1390935588);
@@ -251,7 +261,39 @@ public class PoliticianIndustryFinanceServiceUnitTest {
     }
 
     @Test
-    public void testGetIndustryCategoryToPoliticianTotalsPerCongress__ByTimeRange() throws Exception {
+    public void testGetIndustryToPoliticianTotalsPerCongress__ByTimeRange() throws Exception {
+
+        List<PoliticianIndustryContributionsTotals> contributionsListMock = new LinkedList<>();
+        List<PoliticianIndustryContributionsTotals> contributionsListMock1 = new LinkedList<>();
+        List<PoliticianIndustryContributionsTotals> contributionsFullList = new LinkedList<>();
+
+        contributionsFullList.addAll(contributionsListMock);
+        contributionsFullList.addAll(contributionsListMock1);
+
+
+        contributionsListMock.add(new PoliticianIndustryContributionsTotals());
+        contributionsListMock1.add(new PoliticianIndustryContributionsTotals());
+
+        HashMap<Integer, List<PoliticianIndustryContributionsTotals>> contributionsMapMock = new HashMap<>();
+
+        contributionsMapMock.put(new Integer(110), contributionsListMock);
+        contributionsMapMock.put(new Integer(111), contributionsListMock1);
+
+        expect(this.timeServiceMock.getCongressionalCyclesByTimeRange(1290935588, 1390935588)).andReturn(new Integer[] {110, 111});
+        expect(this.politicianIndustryRedisRepoMock.getIndustryContributionsExistInCache("O000167", 110, 111)).andReturn(true);
+        expect(this.politicianIndustryMongoRepoMock.getIndustryToPoliticianContributionsIterator("O000167", 110, 111)).andReturn(contributionsFullList.iterator());
+
+
+        this.control.replay();
+
+        HashMap<Integer, List<PoliticianIndustryContributionsTotals>> returnList =
+                this.politicianIndustryFinanceService.getIndustryToPoliticianTotalsPerCongress("O000167", 1290935588, 1390935588);
+
+        this.control.verify();
+    }
+
+    @Test
+    public void testGetIndustryCategoryToPoliticianTotalsPerCongress__ByTimeRange__NotCached() throws Exception {
 
         List<PoliticianIndustryContributionsTotals> contributionsListMock = new LinkedList<>();
         List<PoliticianIndustryContributionsTotals> contributionsListMock1 = new LinkedList<>();
@@ -265,7 +307,7 @@ public class PoliticianIndustryFinanceServiceUnitTest {
         contributionsMapMock.put(new Integer(111), contributionsListMock1);
 
         expect(this.timeServiceMock.getCongressionalCyclesByTimeRange(1290935588, 1390935588)).andReturn(new Integer[] {110, 111});
-        expect(this.politicianIndustryMongoRepoMock.getIndustryCategoryToPoliticianContributionsIterator("O000167", 110, 111)).andReturn(null);
+        expect(this.politicianIndustryRedisRepoMock.getIndustryCategoryContributionsExistsInCache("O000167", 110, 111)).andReturn(false);
         expect(this.politicianIndustryHadoopRepoMock.getIndustryCategoryToPoliticianTotalsPerCongress("O000167", 1290935588, 1390935588)).andReturn(contributionsMapMock);
 
         expect(this.politicianIndustryMongoRepoMock.countIndustryCategoryToPoliticianContributions("O000167", 110)).andReturn(0L);
@@ -275,9 +317,43 @@ public class PoliticianIndustryFinanceServiceUnitTest {
 
         expect(this.politicianIndustryMongoRepoMock.countIndustryCategoryToPoliticianContributions("O000167", 111)).andReturn(1L);
 
+        this.politicianIndustryRedisRepoMock.setIndustryCategoryContributionsExistsInCache("O000167", 110, 111);
+
         this.control.replay();
 
         this.politicianIndustryFinanceService.getIndustryCategoryToPoliticianTotalsPerCongress("O000167", 1290935588, 1390935588);
+
+        this.control.verify();
+    }
+
+    @Test
+    public void testGetIndustryCategoryToPoliticianTotalsPerCongress__ByTimeRange() throws Exception {
+
+        List<PoliticianIndustryContributionsTotals> contributionsListMock = new LinkedList<>();
+        List<PoliticianIndustryContributionsTotals> contributionsListMock1 = new LinkedList<>();
+        List<PoliticianIndustryContributionsTotals> contributionsFullList = new LinkedList<>();
+
+        contributionsFullList.addAll(contributionsListMock);
+        contributionsFullList.addAll(contributionsListMock1);
+
+
+        contributionsListMock.add(new PoliticianIndustryContributionsTotals());
+        contributionsListMock1.add(new PoliticianIndustryContributionsTotals());
+
+        HashMap<Integer, List<PoliticianIndustryContributionsTotals>> contributionsMapMock = new HashMap<>();
+
+        contributionsMapMock.put(new Integer(110), contributionsListMock);
+        contributionsMapMock.put(new Integer(111), contributionsListMock1);
+
+        expect(this.timeServiceMock.getCongressionalCyclesByTimeRange(1290935588, 1390935588)).andReturn(new Integer[] {110, 111});
+        expect(this.politicianIndustryRedisRepoMock.getIndustryCategoryContributionsExistsInCache("O000167", 110, 111)).andReturn(true);
+        expect(this.politicianIndustryMongoRepoMock.getIndustryCategoryToPoliticianContributionsIterator("O000167", 110, 111)).andReturn(contributionsFullList.iterator());
+
+
+        this.control.replay();
+
+        HashMap<Integer, List<PoliticianIndustryContributionsTotals>> returnList =
+                this.politicianIndustryFinanceService.getIndustryCategoryToPoliticianTotalsPerCongress("O000167", 1290935588, 1390935588);
 
         this.control.verify();
     }

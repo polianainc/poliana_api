@@ -15,7 +15,7 @@ import javax.annotation.security.RolesAllowed;
  * @date 1/26/14
  */
 @Repository
-@RolesAllowed("ROLE_ADMIN")
+@RolesAllowed(value = { "RESEARCH", "ADMIN" })
 public class PacContributionHadoopRepo {
 
     private TimeService timeService;

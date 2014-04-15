@@ -18,8 +18,8 @@ target/
 #data
 data/
 logs/
-tmp/
 test_tmp/
+tmp_test/
 
 .pem
 target/

@@ -1,13 +1,12 @@
 package com.poliana.shell.controllers;
 
-import com.poliana.core.legislators.Legislator;
-import com.poliana.core.legislators.LegislatorRepo;
+import com.google.gson.Gson;
+import com.poliana.core.legislators.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.core.CommandMarker;
 import org.springframework.shell.core.annotation.CliCommand;
 import org.springframework.shell.core.annotation.CliOption;
 import org.springframework.stereotype.Controller;
-import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -18,24 +17,29 @@ import java.util.List;
 @Controller
 public class LegislatorController implements CommandMarker {
 
-    @Autowired
-    private LegislatorRepo legislatorRepo;
+    private LegislatorService legislatorService;
 
     @CliCommand(value = "populateLegislatorsToMongo")
     public void populateLegislatorsToMongo() {
-        legislatorRepo.saveLegislatorsToMongo();
+        legislatorService.loadLegislatorsFromHadoopToMongo();
     }
 
     @CliCommand(value = "populateLegislatorsToRedis")
     public void populateLegislatorsToRedis() {
-        legislatorRepo.loadLegislatorTermsToRedis();
+        legislatorService.loadLegislatorTermsFromMongoToRedis();
     }
 
     @CliCommand(value = "getLegislatorTermsByBioguideId")
     public String getLegislatorTermsByBioguideId(
             @CliOption(key = { "id" }, mandatory = true) final String bioguideId) {
-        List<Legislator> legislators = legislatorRepo.getLegislatorTermsByBioguide(bioguideId);
+
+        List<Legislator> legislators = legislatorService.getLegislatorTermsById(bioguideId);
         Gson gson = new Gson();
         return gson.toJson(legislators);
+    }
+
+    @Autowired
+    public void setLegislatorService(LegislatorService legislatorService) {
+        this.legislatorService = legislatorService;
     }
 }

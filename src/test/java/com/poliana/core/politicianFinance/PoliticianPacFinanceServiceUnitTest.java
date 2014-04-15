@@ -1,9 +1,6 @@
 package com.poliana.core.politicianFinance;
 
-import com.poliana.core.politicianFinance.pacs.PoliticianPacContributionsTotals;
-import com.poliana.core.politicianFinance.pacs.PoliticianPacFinanceService;
-import com.poliana.core.politicianFinance.pacs.PoliticianPacHadoopRepo;
-import com.poliana.core.politicianFinance.pacs.PoliticianPacMongoRepo;
+import com.poliana.core.politicianFinance.pacs.*;
 import com.poliana.core.time.TimeService;
 import org.easymock.IMocksControl;
 import org.junit.Before;
@@ -28,6 +25,7 @@ public class PoliticianPacFinanceServiceUnitTest {
 
     private PoliticianPacMongoRepo politicianPacMongoRepoMock;
     private PoliticianPacHadoopRepo politicianPacHadoopRepoMock;
+    private PoliticianPacRedisRepo politicianPacRedisRepoMock;
     private TimeService timeServiceMock;
 
     private IMocksControl control;
@@ -40,12 +38,14 @@ public class PoliticianPacFinanceServiceUnitTest {
 
         this.politicianPacMongoRepoMock = this.control.createMock(PoliticianPacMongoRepo.class);
         this.politicianPacHadoopRepoMock = this.control.createMock(PoliticianPacHadoopRepo.class);
+        this.politicianPacRedisRepoMock = this.control.createMock(PoliticianPacRedisRepo.class);
         this.timeServiceMock = this.control.createMock(TimeService.class);
 
         this.politicianPacFinanceService = new PoliticianPacFinanceService();
 
         this.politicianPacFinanceService.setPoliticianPacMongoRepo(this.politicianPacMongoRepoMock);
         this.politicianPacFinanceService.setPoliticianPacHadoopRepo(this.politicianPacHadoopRepoMock);
+        this.politicianPacFinanceService.setPoliticianPacRedisRepo(this.politicianPacRedisRepoMock);
         this.politicianPacFinanceService.setTimeService(timeServiceMock);
     }
 
@@ -102,10 +102,14 @@ public class PoliticianPacFinanceServiceUnitTest {
 
         expect(this.politicianPacHadoopRepoMock.getPacToPoliticianTotalsPerCongress("O000167")).andReturn(contributionsMapMock);
 
+        this.politicianPacRedisRepoMock.setPacContributionsExistsInCache("O000167", 110);
+
         expect(this.politicianPacMongoRepoMock.countPacToPoliticianContributions("O000167", 110)).andReturn(0L);
 
         expect(this.politicianPacMongoRepoMock.savePacToPoliticianContributions(contributionsListMock))
                 .andReturn(new ArrayList<Key<PoliticianPacContributionsTotals>>());
+
+        this.politicianPacRedisRepoMock.setPacContributionsExistsInCache("O000167", 111);
 
         expect(this.politicianPacMongoRepoMock.countPacToPoliticianContributions("O000167", 111)).andReturn(1L);
 
@@ -117,7 +121,7 @@ public class PoliticianPacFinanceServiceUnitTest {
     }
 
     @Test
-    public void testGetPacToPoliticianTotalsPerCongress__ByTimeRange() throws Exception {
+    public void testGetPacToPoliticianTotalsPerCongress__ByTimeRange__NotCached() throws Exception {
 
         List<PoliticianPacContributionsTotals> contributionsListMock = new LinkedList<>();
         List<PoliticianPacContributionsTotals> contributionsListMock1 = new LinkedList<>();
@@ -131,7 +135,7 @@ public class PoliticianPacFinanceServiceUnitTest {
         contributionsMapMock.put(new Integer(111), contributionsListMock1);
 
         expect(this.timeServiceMock.getCongressionalCyclesByTimeRange(1290935588, 1390935588)).andReturn(new Integer[] {110, 111});
-        expect(this.politicianPacMongoRepoMock.getPacToPoliticianContributionsIterator("O000167", 110, 111)).andReturn(null);
+        expect(this.politicianPacRedisRepoMock.getPacContributionsExistInCache("O000167", 110, 111)).andReturn(false);
         expect(this.politicianPacHadoopRepoMock.getPacToPoliticianTotalsPerCongress("O000167", 1290935588, 1390935588)).andReturn(contributionsMapMock);
 
         expect(this.politicianPacMongoRepoMock.countPacToPoliticianContributions("O000167", 110)).andReturn(0L);
@@ -141,9 +145,43 @@ public class PoliticianPacFinanceServiceUnitTest {
 
         expect(this.politicianPacMongoRepoMock.countPacToPoliticianContributions("O000167", 111)).andReturn(1L);
 
+        this.politicianPacRedisRepoMock.setPacContributionsExistsInCache("O000167", 110, 111);
+
         this.control.replay();
 
         this.politicianPacFinanceService.getPacToPoliticianTotalsPerCongress("O000167", 1290935588, 1390935588);
+
+        this.control.verify();
+    }
+
+    @Test
+    public void testGetPacToPoliticianTotalsPerCongress__ByTimeRange() throws Exception {
+
+        List<PoliticianPacContributionsTotals> contributionsListMock = new LinkedList<>();
+        List<PoliticianPacContributionsTotals> contributionsListMock1 = new LinkedList<>();
+        List<PoliticianPacContributionsTotals> contributionsFullList = new LinkedList<>();
+
+        contributionsFullList.addAll(contributionsListMock);
+        contributionsFullList.addAll(contributionsListMock1);
+
+
+        contributionsListMock.add(new PoliticianPacContributionsTotals());
+        contributionsListMock1.add(new PoliticianPacContributionsTotals());
+
+        HashMap<Integer, List<PoliticianPacContributionsTotals>> contributionsMapMock = new HashMap<>();
+
+        contributionsMapMock.put(new Integer(110), contributionsListMock);
+        contributionsMapMock.put(new Integer(111), contributionsListMock1);
+
+        expect(this.timeServiceMock.getCongressionalCyclesByTimeRange(1290935588, 1390935588)).andReturn(new Integer[] {110, 111});
+        expect(this.politicianPacRedisRepoMock.getPacContributionsExistInCache("O000167", 110, 111)).andReturn(true);
+        expect(this.politicianPacMongoRepoMock.getPacToPoliticianContributionsIterator("O000167", 110, 111)).andReturn(contributionsFullList.iterator());
+
+
+        this.control.replay();
+
+        HashMap<Integer, List<PoliticianPacContributionsTotals>> returnList =
+                this.politicianPacFinanceService.getPacToPoliticianTotalsPerCongress("O000167", 1290935588, 1390935588);
 
         this.control.verify();
     }

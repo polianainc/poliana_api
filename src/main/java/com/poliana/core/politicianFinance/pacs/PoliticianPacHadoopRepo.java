@@ -15,7 +15,7 @@ import java.util.List;
  * @date 1/26/14
  */
 @Repository
-@RolesAllowed("ROLE_ADMIN")
+@RolesAllowed(value = { "RESEARCH", "ADMIN" })
 public class PoliticianPacHadoopRepo {
 
     private JdbcTemplate impalaTemplate;
@@ -231,8 +231,7 @@ public class PoliticianPacHadoopRepo {
     }
 
     /**
-     * Get a PAC to Politician contribution sums for a given timerange.
-     * Note: The committee name filed during the congressional cycle of the beginTimestamp will be used
+     * Get a PAC to Politician contribution sums for a given timerange summed by congressional cycle.
      * @param bioguideId
      * @param beginTimestamp
      * @param endTimestamp
@@ -268,8 +267,8 @@ public class PoliticianPacHadoopRepo {
                     "     entities.legislators legislators " +
                     "JOIN " +
                     "     (SELECT    " +
-                    "            cid " +
-                    "         ,  pac_id   " +
+                    "           cid " +
+                    "         , pac_id   " +
                     "         , cmte_nm AS pac_name   " +
                     "         , COUNT(amount) AS contribution_count   " +
                     "         , SUM(amount) AS contribution_sum   " +
@@ -284,6 +283,8 @@ public class PoliticianPacHadoopRepo {
                     "         cycle = congress        " +
                     "     WHERE   " +
                     "          congress in (" + cyclesList + ") " +
+                    "     AND " +
+                    "          type = \'24K\' " +
                     "     GROUP BY    " +
                     "           cid " +
                     "         , pac_id   " +

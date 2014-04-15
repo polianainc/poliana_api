@@ -19,7 +19,7 @@ import java.util.List;
  * @date 11/27/13
  */
 @Repository
-@RolesAllowed("ROLE_ADMIN")
+@RolesAllowed(value = { "RESEARCH", "ADMIN" })
 public class IndustryContributionHadoopRepo {
 
     private JdbcTemplate impalaTemplate;

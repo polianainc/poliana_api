@@ -1,5 +1,4 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
+<%@ include file="/WEB-INF/views/include.jsp" %>
 
 <tags:template>
     <jsp:body>
@@ -11,3 +10,5 @@
     </jsp:body>
 </tags:template>
 
+</body>
+</html>

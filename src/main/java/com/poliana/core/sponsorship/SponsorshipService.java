@@ -3,7 +3,7 @@ package com.poliana.core.sponsorship;
 import com.poliana.core.time.CongressTimestamps;
 import com.poliana.core.time.TimeService;
 import com.poliana.core.legislators.Legislator;
-import com.poliana.core.legislators.LegislatorRepo;
+import com.poliana.core.legislators.LegislatorMongoRepo;
 import com.poliana.core.legislators.LegislatorService;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.log4j.Logger;
@@ -23,7 +23,7 @@ import java.util.List;
 public class SponsorshipService {
 
     private SponsorshipRepo sponsorshipRepo;
-    private LegislatorRepo legislatorRepo;
+    private LegislatorMongoRepo legislatorMongoRepo;
     private LegislatorService legislatorService;
 
     private TimeService timeService;
@@ -60,7 +60,7 @@ public class SponsorshipService {
 
         //Get all legislators in the given chamber during the congress given
         Iterator<Legislator> legislatorIterator =
-                legislatorRepo.getLegislators(chamber, timestamps.getBegin(), timestamps.getEnd());
+                legislatorMongoRepo.getLegislators(chamber, timestamps.getBegin(), timestamps.getEnd());
 
         sponsorshipMatrix = getSponsorshipMatrix(chamber, sponsorships, legislatorIterator, timestamps.getBegin(), timestamps.getEnd());
 
@@ -83,7 +83,7 @@ public class SponsorshipService {
         //TODO: Need to run a hive job to properly select by timestamps in the sponsorship repo
         List<SponsorshipCount> sponsorships =
                 sponsorshipRepo.getSponsorshipCounts(chamber, timeService.getCongressByTimestamp(beginTimestamp));
-        Iterator<Legislator> legislatorIterator = legislatorRepo.getLegislators(chamber, beginTimestamp, endTimestamp);
+        Iterator<Legislator> legislatorIterator = legislatorMongoRepo.getLegislators(chamber, beginTimestamp, endTimestamp);
 
         return getSponsorshipMatrix(chamber, sponsorships, legislatorIterator, beginTimestamp, endTimestamp);
     }
@@ -173,6 +173,7 @@ public class SponsorshipService {
      * @param legislatorIterator
      * @return
      */
+    @SuppressWarnings("unchecked")
     protected SponsorshipMatrix legislatorMap(Iterator<Legislator> legislatorIterator) {
 
         SponsorshipMatrix sponsorshipData = new SponsorshipMatrix();
@@ -187,6 +188,8 @@ public class SponsorshipService {
             }
         }
         sponsorshipData.setLegislatorHashMap(legislatorMap);
+
+
         sponsorshipData.setLegislatorList(new ArrayList(legislatorMap.values()));
 
         return sponsorshipData;
@@ -219,8 +222,8 @@ public class SponsorshipService {
     }
 
     @Autowired
-    public void setLegislatorRepo(LegislatorRepo legislatorRepo) {
-        this.legislatorRepo = legislatorRepo;
+    public void setLegislatorMongoRepo(LegislatorMongoRepo legislatorMongoRepo) {
+        this.legislatorMongoRepo = legislatorMongoRepo;
     }
 
     @Autowired

@@ -3,6 +3,7 @@ package com.poliana.web.politicians.finance;
 import com.poliana.core.politicianFinance.industries.PoliticianIndustryContributionsTotals;
 import com.poliana.core.politicianFinance.industries.PoliticianIndustryFinanceService;
 import com.poliana.views.politicianFinance.PoliticianIndustryBarPlot;
+import com.poliana.web.aspect.BioguideId;
 import com.poliana.web.common.AbstractBaseController;
 import org.apache.log4j.Logger;
 import org.jfree.chart.ChartUtilities;
@@ -25,7 +26,7 @@ import static com.poliana.core.time.TimeService.CURRENT_CONGRESS;
  * @date 1/6/14
  */
 @Controller
-@RequestMapping("/politicians/") //TODO: start and end assumed if one or other is not given
+@RequestMapping(value = "/politicians", method = RequestMethod.GET)
 public class PoliticianIndustryFinanceController extends AbstractBaseController {
 
     private PoliticianIndustryFinanceService politicianIndustryFinanceService;
@@ -40,9 +41,9 @@ public class PoliticianIndustryFinanceController extends AbstractBaseController 
      * @param bioguideId
      * @return
      */
-    @RequestMapping(value="/{bioguide_id}/contributions/industries", method = RequestMethod.GET)
+    @RequestMapping(value="/{bioguide_id}/contributions/industries")
     public @ResponseBody List<PoliticianIndustryContributionsTotals> getIndustryToPoliticianTotals(
-            @PathVariable("bioguide_id") String bioguideId) {
+            @BioguideId @PathVariable("bioguide_id") String bioguideId) {
 
         List<PoliticianIndustryContributionsTotals> allTotals = politicianIndustryFinanceService.getIndustryToPoliticianTotals(bioguideId);
         return allTotals;
@@ -54,10 +55,10 @@ public class PoliticianIndustryFinanceController extends AbstractBaseController 
      *
      * @param bioguideId
      * @return
-     */                                                                                  //TODO: instead use sum_by
-    @RequestMapping(value="/{bioguide_id}/contributions/industries/categories", params = {"unit"}, method = RequestMethod.GET)
+     */
+    @RequestMapping(value="/{bioguide_id}/contributions/industries/categories", params = {"unit"})
     public @ResponseBody HashMap<Integer, List<PoliticianIndustryContributionsTotals>> getIndustryCategoryToPoliticianTotalsPerCongress(
-            @PathVariable("bioguide_id") String bioguideId) {
+            @BioguideId @PathVariable("bioguide_id") String bioguideId) {
 
         HashMap<Integer, List<PoliticianIndustryContributionsTotals>> allTotals =
                 politicianIndustryFinanceService.getIndustryCategoryToPoliticianTotalsPerCongress(bioguideId);
@@ -72,9 +73,9 @@ public class PoliticianIndustryFinanceController extends AbstractBaseController 
      * @param bioguideId
      * @return
      */
-    @RequestMapping(value="/{bioguide_id}/contributions/industries", params = {"unit"}, method = RequestMethod.GET)
+    @RequestMapping(value="/{bioguide_id}/contributions/industries", params = {"unit"})
     public @ResponseBody HashMap<Integer, List<PoliticianIndustryContributionsTotals>> getIndustryToPoliticianTotalsPerCongress(
-            @PathVariable("bioguide_id") String bioguideId) {
+            @BioguideId @PathVariable("bioguide_id") String bioguideId) {
 
         HashMap<Integer, List<PoliticianIndustryContributionsTotals>> allTotals =
                 politicianIndustryFinanceService.getIndustryToPoliticianTotalsPerCongress(bioguideId);
@@ -88,9 +89,9 @@ public class PoliticianIndustryFinanceController extends AbstractBaseController 
      * @param bioguideId
      * @return
      */
-    @RequestMapping(value="/{bioguide_id}/contributions/industries/categories", method = RequestMethod.GET)
+    @RequestMapping(value="/{bioguide_id}/contributions/industries/categories")
     public @ResponseBody List<PoliticianIndustryContributionsTotals> getIndustryCategoryToPoliticianTotals(
-            @PathVariable("bioguide_id") String bioguideId) {
+            @BioguideId @PathVariable("bioguide_id") String bioguideId) {
 
         List<PoliticianIndustryContributionsTotals> allTotals =
                 politicianIndustryFinanceService.getIndustryCategoryToPoliticianTotals(bioguideId);
@@ -106,9 +107,9 @@ public class PoliticianIndustryFinanceController extends AbstractBaseController 
      * @param congress
      * @return
      */
-    @RequestMapping(value="/{bioguide_id}/contributions/industries", params = {"congress"}, method = RequestMethod.GET)
+    @RequestMapping(value="/{bioguide_id}/contributions/industries", params = {"congress"})
     public @ResponseBody List<PoliticianIndustryContributionsTotals> getIndustryToPoliticianTotals(
-            @PathVariable("bioguide_id") String bioguideId,
+            @BioguideId @PathVariable("bioguide_id") String bioguideId,
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress) {
 
         List<PoliticianIndustryContributionsTotals> allTotals = politicianIndustryFinanceService.getIndustryToPoliticianTotals(bioguideId, congress);
@@ -123,9 +124,9 @@ public class PoliticianIndustryFinanceController extends AbstractBaseController 
      * @param congress
      * @return
      */
-    @RequestMapping(value="/{bioguide_id}/contributions/industries/categories", params = {"congress"}, method = RequestMethod.GET)
+    @RequestMapping(value="/{bioguide_id}/contributions/industries/categories", params = {"congress"})
     public @ResponseBody List<PoliticianIndustryContributionsTotals> getIndustryCategoryToPoliticianTotals(
-            @PathVariable("bioguide_id") String bioguideId,
+            @BioguideId @PathVariable("bioguide_id") String bioguideId,
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress) {
 
         List<PoliticianIndustryContributionsTotals> allTotals =
@@ -142,9 +143,9 @@ public class PoliticianIndustryFinanceController extends AbstractBaseController 
      * @param end
      * @return
      */
-    @RequestMapping(value = "/{bioguide_id}/contributions/industries", params = {"start", "end"}, method = RequestMethod.GET)
+    @RequestMapping(value = "/{bioguide_id}/contributions/industries", params = {"start", "end"})
     public @ResponseBody List<PoliticianIndustryContributionsTotals> getIndustryToPoliticianTotals(
-            @PathVariable("bioguide_id") String bioguideId,
+            @BioguideId @PathVariable("bioguide_id") String bioguideId,
             @RequestParam(value = "start", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date start,
             @RequestParam(value = "end", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date end) {
 
@@ -162,9 +163,9 @@ public class PoliticianIndustryFinanceController extends AbstractBaseController 
      * @param end
      * @return
      */
-    @RequestMapping(value = "/{bioguide_id}/contributions/industries/categories", params = {"start", "end"}, method = RequestMethod.GET)
+    @RequestMapping(value = "/{bioguide_id}/contributions/industries/categories", params = {"start", "end"})
     public @ResponseBody List<PoliticianIndustryContributionsTotals> getIndustryCategoryToPoliticianTotals(
-            @PathVariable("bioguide_id") String bioguideId,
+            @BioguideId @PathVariable("bioguide_id") String bioguideId,
             @RequestParam(value = "start", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date start,
             @RequestParam(value = "end", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date end) {
 
@@ -182,9 +183,9 @@ public class PoliticianIndustryFinanceController extends AbstractBaseController 
      * @param end
      * @return
      */
-    @RequestMapping(value = "/{bioguide_id}/contributions/industries", params = {"start", "end", "unit"}, method = RequestMethod.GET)
+    @RequestMapping(value = "/{bioguide_id}/contributions/industries", params = {"start", "end", "unit"})
     public @ResponseBody HashMap<Integer, List<PoliticianIndustryContributionsTotals>> getIndustryToPoliticianTotalsPerCongress(
-            @PathVariable("bioguide_id") String bioguideId,
+            @BioguideId @PathVariable("bioguide_id") String bioguideId,
             @RequestParam(value = "start", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date start,
             @RequestParam(value = "end", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date end) {
 
@@ -202,9 +203,9 @@ public class PoliticianIndustryFinanceController extends AbstractBaseController 
      * @param end
      * @return
      */
-    @RequestMapping(value = "/{bioguide_id}/contributions/industries/categories", params = {"start", "end", "unit"}, method = RequestMethod.GET)
+    @RequestMapping(value = "/{bioguide_id}/contributions/industries/categories", params = {"start", "end", "unit"})
     public @ResponseBody HashMap<Integer, List<PoliticianIndustryContributionsTotals>> getIndustryCategoryToPoliticianTotalsPerCongress(
-            @PathVariable("bioguide_id") String bioguideId,
+            @BioguideId @PathVariable("bioguide_id") String bioguideId,
             @RequestParam(value = "start", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date start,
             @RequestParam(value = "end", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date end) {
 
@@ -219,10 +220,10 @@ public class PoliticianIndustryFinanceController extends AbstractBaseController 
      * @param bioguideId
      * @return
      */
-    @RequestMapping(value="/{bioguide_id}/contributions/industries", params = {"plot"}, method = RequestMethod.GET)
+    @RequestMapping(value="/{bioguide_id}/contributions/industries", params = {"plot"})
     public void plotIndustryToPoliticianTotals (
             OutputStream stream,
-            @PathVariable("bioguide_id") String bioguideId,
+            @BioguideId @PathVariable("bioguide_id") String bioguideId,
             @RequestParam(value = "plot", required = true) String plotType) {
 
         List<PoliticianIndustryContributionsTotals> allTotals = politicianIndustryFinanceService.getIndustryToPoliticianTotals(bioguideId);
@@ -243,10 +244,10 @@ public class PoliticianIndustryFinanceController extends AbstractBaseController 
      * @param bioguideId
      * @return
      */
-    @RequestMapping(value="/{bioguide_id}/contributions/industries/categories", params = {"plot"}, method = RequestMethod.GET)
+    @RequestMapping(value="/{bioguide_id}/contributions/industries/categories", params = {"plot"})
     public void plotIndustryCategoryToPoliticianTotals (
             OutputStream stream,
-            @PathVariable("bioguide_id") String bioguideId,
+            @BioguideId @PathVariable("bioguide_id") String bioguideId,
             @RequestParam(value = "plot", required = true) String plotType) {
 
         List<PoliticianIndustryContributionsTotals> allTotals =
@@ -270,10 +271,10 @@ public class PoliticianIndustryFinanceController extends AbstractBaseController 
      * @param congress
      * @return
      */
-    @RequestMapping(value="/{bioguide_id}/contributions/industries", params = {"congress", "plot"}, method = RequestMethod.GET)
+    @RequestMapping(value="/{bioguide_id}/contributions/industries", params = {"congress", "plot"})
     public void plotIndustryToPoliticianTotals (
             OutputStream stream,
-            @PathVariable("bioguide_id") String bioguideId,
+            @BioguideId @PathVariable("bioguide_id") String bioguideId,
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
             @RequestParam(value = "plot", required = true) String plotType) {
 
@@ -297,10 +298,10 @@ public class PoliticianIndustryFinanceController extends AbstractBaseController 
      * @param congress
      * @return
      */
-    @RequestMapping(value="/{bioguide_id}/contributions/industries/categories", params = {"congress", "plot"}, method = RequestMethod.GET)
+    @RequestMapping(value="/{bioguide_id}/contributions/industries/categories", params = {"congress", "plot"})
     public void plotIndustryCategoryToPoliticianTotals (
             OutputStream stream,
-            @PathVariable("bioguide_id") String bioguideId,
+            @BioguideId @PathVariable("bioguide_id") String bioguideId,
             @RequestParam(value = "congress", required = false, defaultValue = CURRENT_CONGRESS) Integer congress,
             @RequestParam(value = "plot", required = true) String plotType) {
 
@@ -326,10 +327,10 @@ public class PoliticianIndustryFinanceController extends AbstractBaseController 
      * @param end
      * @param plotType
      */
-    @RequestMapping(value="/{bioguide_id}/contributions/industries", params = {"start", "end", "plot"}, method = RequestMethod.GET)
+    @RequestMapping(value="/{bioguide_id}/contributions/industries", params = {"start", "end", "plot"})
     public void plotIndustryToPoliticianTotals (
             OutputStream stream,
-            @PathVariable("bioguide_id") String bioguideId,
+            @BioguideId @PathVariable("bioguide_id") String bioguideId,
             @RequestParam(value = "start", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date start,
             @RequestParam(value = "end", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date end,
             @RequestParam(value = "plot", required = true) String plotType) {
@@ -354,10 +355,10 @@ public class PoliticianIndustryFinanceController extends AbstractBaseController 
      * @param bioguideId
      * @return
      */
-    @RequestMapping(value="/{bioguide_id}/contributions/industries/categories", params = {"start", "end", "plot"}, method = RequestMethod.GET)
+    @RequestMapping(value="/{bioguide_id}/contributions/industries/categories", params = {"start", "end", "plot"})
     public void plotIndustryCategoryToPoliticianTotals (
             OutputStream stream,
-            @PathVariable("bioguide_id") String bioguideId,
+            @BioguideId @PathVariable("bioguide_id") String bioguideId,
             @RequestParam(value = "start", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date start,
             @RequestParam(value = "end", required = true) @DateTimeFormat(pattern = "MM-dd-yyyy") Date end,
             @RequestParam(value = "plot", required = true) String plotType) {

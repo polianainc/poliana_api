@@ -1,5 +1,6 @@
 package com.poliana.core.politicianFinance.industries;
 
+import com.poliana.core.time.TimeService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,13 +15,19 @@ import java.util.List;
  * @date 1/13/14
  */
 @Repository
-@RolesAllowed("ROLE_ADMIN")
+@RolesAllowed(value = { "RESEARCH", "ADMIN" })
 public class PoliticianIndustryHadoopRepo {
+
+    private TimeService timeService;
 
     private JdbcTemplate impalaTemplate;
 
     private static final Logger logger = Logger.getLogger(PoliticianIndustryHadoopRepo.class);
 
+
+    public PoliticianIndustryHadoopRepo() {
+        this.timeService = new TimeService();
+    }
 
     /**
      * Get a list of Industry to politician contribution sums for all industries for all time
@@ -694,6 +701,17 @@ public class PoliticianIndustryHadoopRepo {
      */
     public HashMap<Integer, List<PoliticianIndustryContributionsTotals>> getIndustryToPoliticianTotalsPerCongress(String bioguideId, long beginTimestamp, long endTimestamp) {
 
+        Integer[] cycles = timeService.getCongressionalCyclesByTimeRange(beginTimestamp, endTimestamp);
+
+        String cyclesList = "";
+
+        if (cycles.length > 0) {
+            int i = 0;
+            for (; i < cycles.length-1; i++)
+                cyclesList += cycles[i] + ",";
+            cyclesList += cycles[i];
+        }
+
         try {
             String query =
                     "SELECT DISTINCT " +
@@ -740,9 +758,7 @@ public class PoliticianIndustryHadoopRepo {
                     "          WHERE  " +
                     "               bioguide_id = \'" + bioguideId + "\' " +
                     "          AND " +
-                    "               transaction_ts > " + beginTimestamp +
-                    "          AND  " +
-                    "               transaction_ts < " + endTimestamp +
+                    "               congress in (" + cyclesList + ") " +
                     "          GROUP BY " +
                     "                 bioguide_id " +
                     "               , first_name " +
@@ -785,6 +801,17 @@ public class PoliticianIndustryHadoopRepo {
      * @return
      */
     public HashMap<Integer, List<PoliticianIndustryContributionsTotals>> getIndustryCategoryToPoliticianTotalsPerCongress(String bioguideId, long beginTimestamp, long endTimestamp) {
+
+        Integer[] cycles = timeService.getCongressionalCyclesByTimeRange(beginTimestamp, endTimestamp);
+
+        String cyclesList = "";
+
+        if (cycles.length > 0) {
+            int i = 0;
+            for (; i < cycles.length-1; i++)
+                cyclesList += cycles[i] + ",";
+            cyclesList += cycles[i];
+        }
 
         try {
             String query =
@@ -830,9 +857,7 @@ public class PoliticianIndustryHadoopRepo {
                     "       ON  " +
                     "           opensecrets_id = c.recip_id " +
                     "       WHERE " +
-                    "           transaction_ts > " + beginTimestamp +
-                    "       AND  " +
-                    "           transaction_ts < " + endTimestamp +
+                    "               congress in (" + cyclesList + ") " +
                     "   ) candidate_receipts  " +
                     "       WHERE " +
                     "               bioguide_id = \'" + bioguideId + "\'" +

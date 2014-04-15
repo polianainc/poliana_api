@@ -67,6 +67,6 @@ public class MongoConfig extends AbstractMongoConfiguration {
 
     @Override
     public String getMappingBasePackage() {
-        return "com.poliana";
+        return "com.poliana.core";
     }
 }

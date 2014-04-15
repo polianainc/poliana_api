@@ -66,7 +66,7 @@ public class SponsorshipRepo {
      * @param termChamberMap
      * @return
      */
-    @RolesAllowed("ROLE_ADMIN")
+    @RolesAllowed(value = { "RESEARCH", "ADMIN" })
     public HashMap<Integer, List<SponsorshipCount>> getSponsorshipCounts(HashMap<Integer,String> termChamberMap) {
 
         Iterator it = termChamberMap.entrySet().iterator();
@@ -107,7 +107,7 @@ public class SponsorshipRepo {
      * @param congress
      * @return
      */
-    @RolesAllowed("ROLE_ADMIN")
+    @RolesAllowed(value = { "RESEARCH", "ADMIN" })
     public List<SponsorshipCount> getSponsorshipCounts(String chamber, int congress) {
 
         try {

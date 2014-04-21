@@ -31,6 +31,29 @@ public class PoliticianPacFinanceController extends AbstractBaseController {
 
     private static final Logger logger = Logger.getLogger(PoliticianPacFinanceController.class);
 
+    /**
+     * Get all pac contribution totals to all politicians for all time
+     *
+     * @return
+     */
+    @RequestMapping(value="/contributions/pacs")
+    public @ResponseBody List<PoliticianPacContributionsTotals> getAllPacToPoliticianTotalsAllTime() {
+
+        List<PoliticianPacContributionsTotals> allTotals = politicianPacFinanceService.getAllPacToPoliticianTotalsAllTime();
+        return allTotals;
+    }
+
+    /**
+     * Get all pac contribution totals to all politicians for all time
+     *
+     * @return
+     */
+    @RequestMapping(value="/contributions/pacs/categories")
+    public @ResponseBody List<PoliticianPacContributionsTotals> getAllPacCategoryToPoliticianTotalsAllTime() {
+
+        List<PoliticianPacContributionsTotals> allTotals = politicianPacFinanceService.getAllPacCategoryToPoliticianTotalsAllTime();
+        return allTotals;
+    }
 
     /**
      * Get all PAC contribution totals for a given legislator.

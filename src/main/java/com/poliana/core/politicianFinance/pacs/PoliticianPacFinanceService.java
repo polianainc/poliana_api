@@ -29,6 +29,40 @@ public class PoliticianPacFinanceService {
     }
 
     /**
+     * Get a list of pac to politician contribution sums for all time
+     * @return
+     */
+    public List<PoliticianPacContributionsTotals> getAllPacToPoliticianTotalsAllTime() {
+
+//        if (politicianPacRedisRepo.getAllPacContributionsAllTimeExistInCache())
+//            //Grab totals from MongoDB
+//            assert true;
+//
+//        else {
+//            //Grab totals from Hadoop
+//        }
+
+        return null;
+    }
+
+    /**
+     * Get a list of pac category to politician contribution sums for all time
+     * @return
+     */
+    public List<PoliticianPacContributionsTotals> getAllPacCategoryToPoliticianTotalsAllTime() {
+
+//        if (politicianPacRedisRepo.getAllPacCategoryContributionsAllTimeExistInCache())
+//            //Grab totals from MongoDB
+//            assert true;
+//
+//        else {
+//            //Grab totals from Hadoop
+//        }
+
+        return null;
+    }
+
+    /**
      * Get a list of contributing PAC totals to a given legislator
      * @param bioguideId
      * @return

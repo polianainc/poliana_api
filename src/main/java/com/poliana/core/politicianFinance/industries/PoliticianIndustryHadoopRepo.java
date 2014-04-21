@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import javax.annotation.security.RolesAllowed;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author David Gilmore
@@ -27,6 +28,89 @@ public class PoliticianIndustryHadoopRepo {
 
     public PoliticianIndustryHadoopRepo() {
         this.timeService = new TimeService();
+    }
+
+    /**
+     * Get a list of Industry to politician contribution sums for all industries for all time
+     * @param bioguideId
+     * @return
+     */
+    public List<Map<String, Object>> getIndustryToAllPoliticianContributions(String bioguideId) {
+
+        try {
+            String query =
+                    "SELECT DISTINCT" +
+                            "       bioguide_id" +
+                            "     , first_name " +
+                            "     , last_name " +
+                            "     , industry_id" +
+                            "     , party" +
+                            "     , religion" +
+                            "     , industry" +
+                            "     , sector" +
+                            "     , sector_long" +
+                            "     , contribution_count" +
+                            "     , contribution_sum " +
+                            "FROM" +
+                            "     (SELECT " +
+                            "            bioguide_id" +
+                            "          , first_name " +
+                            "          , last_name " +
+                            "          , cat_order as industry_id" +
+                            "          , party" +
+                            "          , religion" +
+                            "          , SUM(contribution_count) as contribution_count" +
+                            "          , SUM(contribution_sum) as contribution_sum      " +
+                            "     FROM" +
+                            "          (SELECT" +
+                            "                 bioguide_id" +
+                            "               , first_name " +
+                            "               , last_name " +
+                            "               , real_code" +
+                            "               , party" +
+                            "               , religion" +
+                            "               , COUNT(amount) as contribution_count" +
+                            "               , SUM(amount) as contribution_sum" +
+                            "          FROM" +
+                            "               entities.legislators m" +
+                            "          JOIN" +
+                            "               crp.individual_contributions c" +
+                            "          ON" +
+                            "               opensecrets_id = c.recip_id " +
+                            "          WHERE " +
+                            "               bioguide_id = \'" + bioguideId + "\'" +
+                            "          GROUP BY" +
+                            "                 bioguide_id" +
+                            "               , first_name " +
+                            "               , last_name " +
+                            "               , real_code" +
+                            "               , party" +
+                            "               , religion " +
+                            "          ) q1" +
+                            "     JOIN" +
+                            "          entities.industry_codes l" +
+                            "     ON" +
+                            "          real_code = cat_code " +
+                            "     GROUP BY" +
+                            "            bioguide_id" +
+                            "          , first_name " +
+                            "          , last_name " +
+                            "          , cat_order" +
+                            "          , party" +
+                            "          , religion " +
+                            "     ) distinct_sums " +
+                            "JOIN" +
+                            "     entities.industry_codes l " +
+                            "ON" +
+                            "     industry_id = cat_order";
+
+            return impalaTemplate.queryForList(query);
+        }
+        catch (Exception e) {
+            logger.error(e);
+        }
+
+        return null;
     }
 
     /**

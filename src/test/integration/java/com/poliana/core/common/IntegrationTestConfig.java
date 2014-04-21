@@ -1,19 +1,21 @@
-package com.poliana.config;
+package com.poliana.core.common;
 
-import com.poliana.config.web.SecurityConfig;
+import com.poliana.config.*;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
+/**
+ * @author David Gilmore
+ * @date 4/15/14
+ */
 @Configuration
 @ComponentScan("com.poliana.core")
 @Import({
-          RollupConfig.class
-        , ImpalaConfig.class
+        ImpalaConfig.class
         , RedisConfig.class
         , HiveConfig.class
         , MongoConfig.class
         , AWSConfig.class
-        , SecurityConfig.class
 })
-public class ApplicationConfig {}
+public class IntegrationTestConfig {}

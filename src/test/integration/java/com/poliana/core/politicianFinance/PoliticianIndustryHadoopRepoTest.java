@@ -1,8 +1,12 @@
 package com.poliana.core.politicianFinance;
 
-import com.poliana.config.ApplicationConfig;
+import com.poliana.core.common.IntegrationTestConfig;
+import com.poliana.core.common.services.SecurityHelper;
 import com.poliana.core.politicianFinance.industries.PoliticianIndustryContributionsTotals;
 import com.poliana.core.politicianFinance.industries.PoliticianIndustryHadoopRepo;
+import com.rollup.olap.models.DataNode;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +26,27 @@ import static org.junit.Assert.*;
  */
 @Profile("integration_test")
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes=ApplicationConfig.class, loader=AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes=IntegrationTestConfig.class, loader=AnnotationConfigContextLoader.class)
 public class PoliticianIndustryHadoopRepoTest {
 
     private PoliticianIndustryHadoopRepo politicianIndustryHadoopRepo;
+
+    @Before
+    public void setUp() {
+        SecurityHelper.login();
+    }
+
+    @After
+    public void tearDown() {
+        SecurityHelper.logout();
+    }
+
+    @Test
+    public void testGetIndustryToAllPoliticianContributions() throws Exception {
+
+        DataNode ret = new DataNode(politicianIndustryHadoopRepo.getIndustryToAllPoliticianContributions("O000167"));
+        ret = ret;
+    }
 
     @Test
     public void testGetIndustryToPoliticianContributions() throws Exception {

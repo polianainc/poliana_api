@@ -26,9 +26,29 @@ public class PoliticianFinanceController {
     private PoliticianFinanceService politicianFinanceService;
 
     @SuppressWarnings("unchecked")
+    @RequestMapping(value = "/contributions", method = RequestMethod.GET)
+    public @ResponseBody HttpEntity<Response> getPacAndIndustryTotals() {
+
+        Response res = new Response(politicianFinanceService.getPacAndIndustryTotals().getData());
+
+        res.add(linkTo(methodOn(PoliticianFinanceController.class).getPacAndIndustryTotals()).withSelfRel());
+
+        res.add(
+                linkTo(methodOn(PoliticianIndustryFinanceController.class).getAllIndustryToPoliticianTotalsAllTime())
+                        .withRel("industry_contributions"));
+
+        res.add(
+                linkTo(methodOn(PoliticianPacFinanceController.class).getAllPacToPoliticianTotalsAllTime())
+                        .withRel("pac_contributions")
+        );
+
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+
+    @SuppressWarnings("unchecked")
     @RequestMapping(value = "/contributions", params = {"unit"}, method = RequestMethod.GET)
     public @ResponseBody HttpEntity<Response> getPacAndIndustryTotals(
-            @RequestParam(value = "unit", required = false, defaultValue = "") String unit) {
+            @RequestParam(value = "unit", required = true) String unit) {
 
         Response res = new Response(politicianFinanceService.getPacAndIndustryTotals(unit).getData());
 

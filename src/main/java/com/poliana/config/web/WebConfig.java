@@ -95,7 +95,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     public HttpMessageConverter converter() {
 
         MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-        converter.setPrettyPrint(false);
+        converter.setPrettyPrint(true);
         converter.setObjectMapper(objectMapper());
         return converter;
     }

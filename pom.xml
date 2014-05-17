@@ -473,11 +473,11 @@
 
         <!-- OLAP -->
         <dependency>
-            <groupId>com.rollup</groupId>
-            <artifactId>RollUp</artifactId>
+            <groupId>com.locke</groupId>
+            <artifactId>Locke</artifactId>
             <version>0.1</version>
             <scope>system</scope>
-            <systemPath>${basedir}/../../rollup/target/RollUp.jar</systemPath>
+            <systemPath>${basedir}/lib/Locke.jar</systemPath>
         </dependency>
 
     </dependencies>

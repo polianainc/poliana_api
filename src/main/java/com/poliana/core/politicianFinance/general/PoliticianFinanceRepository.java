@@ -1,5 +1,6 @@
 package com.poliana.core.politicianFinance.general;
 
+import com.locke.olap.models.DataNode;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -69,7 +70,7 @@ public class PoliticianFinanceRepository {
         return new LinkedList<>();
     }
 
-    public List<Map<String, Object>> getPacAndIndustryTotalsPerCongress() {
+    public DataNode getPacAndIndustryTotalsPerCongress() {
 
         try {
             String query =
@@ -114,13 +115,13 @@ public class PoliticianFinanceRepository {
                     "ON " +
                     "    pac_contributions.bioguide_id = individual_contributions.bioguide_id";
 
-            return impalaTemplate.queryForList(query);
+            return new DataNode(impalaTemplate.queryForList(query));
         }
         catch (Exception e) {
             logger.error(e);
         }
 
-        return new LinkedList<>();
+        return new DataNode();
     }
 
     @Autowired

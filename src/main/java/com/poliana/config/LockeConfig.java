@@ -1,9 +1,9 @@
 package com.poliana.config;
 
-import com.rollup.olap.CubeDataRepo;
-import com.rollup.olap.HolapClient;
-import com.rollup.olap.impl.HolapClientImpl;
-import com.rollup.olap.impl.MongoCubeDataRepo;
+import com.locke.olap.CubeDataRepo;
+import com.locke.olap.HolapClient;
+import com.locke.olap.impl.HolapClientImpl;
+import com.locke.olap.impl.MongoCubeDataRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
  * @date 4/20/14
  */
 @Configuration
-public class RollupConfig {
+public class LockeConfig {
 
     @Autowired
     MongoConfig mongoConfig;

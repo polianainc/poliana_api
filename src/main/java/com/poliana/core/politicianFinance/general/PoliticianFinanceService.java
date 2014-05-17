@@ -1,8 +1,9 @@
 package com.poliana.core.politicianFinance.general;
 
-import com.rollup.olap.CubeDataRepo;
-import com.rollup.olap.HolapClient;
-import com.rollup.olap.models.DataNode;
+import com.locke.olap.CubeDataRepo;
+import com.locke.olap.HolapClient;
+import com.locke.olap.models.Condition;
+import com.locke.olap.models.DataNode;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,18 +60,19 @@ public class PoliticianFinanceService {
 
         unit = (unit == null) ? "": unit;
 
-        List<Map<String, Object>> contributions;
+        DataNode contributions;
 
         if (politicianRedisRepo.getIndustryAndPacContributionsExistInCache()) {
-            contributions = null; //TODO
+            Condition condition = new Condition("industry_and_pac_totals", "unit", "congress", "=");
+            contributions = cubeDataRepo.query("campaign_finance", "industry_and_pac_totals", condition);
         }
         else {
             contributions = politicianFinanceRepository.getPacAndIndustryTotalsPerCongress();
-            cubeDataRepo.save("industry_and_pac_totals", contributions);
+            cubeDataRepo.save("campaign_finance", "industry_and_pac_totals", contributions);
             politicianRedisRepo.setIndustryAndPacContributionsExistInCache();
         }
 
-        Map<Object, List<Map<String, Object>>> rolled = holapClient.rollup(unit, contributions);
+        Map<Object, List<Map<String, Object>>> rolled = holapClient.rollup(unit, (List<Map<String, Object>>) contributions.getData());
 
         ret = (rolled.size() > 0) ? new DataNode(rolled) : new DataNode(contributions);
 

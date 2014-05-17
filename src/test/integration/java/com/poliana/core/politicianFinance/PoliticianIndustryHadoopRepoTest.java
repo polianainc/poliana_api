@@ -4,7 +4,7 @@ import com.poliana.core.common.IntegrationTestConfig;
 import com.poliana.core.common.services.SecurityHelper;
 import com.poliana.core.politicianFinance.industries.PoliticianIndustryContributionsTotals;
 import com.poliana.core.politicianFinance.industries.PoliticianIndustryHadoopRepo;
-import com.rollup.olap.models.DataNode;
+import com.locke.olap.models.DataNode;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

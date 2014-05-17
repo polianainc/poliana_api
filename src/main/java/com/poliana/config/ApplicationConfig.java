@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Import;
 @Configuration
 @ComponentScan("com.poliana.core")
 @Import({
-          RollupConfig.class
+          LockeConfig.class
         , ImpalaConfig.class
         , RedisConfig.class
         , HiveConfig.class

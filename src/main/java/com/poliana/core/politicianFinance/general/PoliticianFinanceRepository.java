@@ -70,6 +70,67 @@ public class PoliticianFinanceRepository {
         return new LinkedList<>();
     }
 
+    @SuppressWarnings("unchecked")
+    public DataNode getPacAndIndustryTotalsByCongress(int congress) {
+
+        try {
+            String query =
+                    "SELECT DISTINCT          " +
+                            "      pac_contributions.bioguide_id " +
+                            "    , individual_contributions   " +
+                            "    , pac_contributions         " +
+                            "    , pac_contributions.congress as congress         " +
+                            "FROM         " +
+                            "   " +
+                            "  (SELECT         " +
+                            "        bioguide_id         " +
+                            "      , SUM(amount) as pac_contributions         " +
+                            "      , congress         " +
+                            "  FROM         " +
+                            "      crp.pac_to_candidate_contributions      " +
+                            "  JOIN         " +
+                            "        entities.legislators         " +
+                            "    ON         " +
+                            "        cid = opensecrets_id " +
+                            "  WHERE         " +
+                            "      type = '24K'                                             " +
+                            "  GROUP BY         " +
+                            "        bioguide_id         " +
+                            "      , congress         " +
+                            "  ) pac_contributions " +
+                            "FULL OUTER JOIN   " +
+                            "   " +
+                            "  (SELECT         " +
+                            "        bioguide_id         " +
+                            "      , SUM(amount) as individual_contributions         " +
+                            "      , congress         " +
+                            "  FROM         " +
+                            "      crp.individual_contributions         " +
+                            "  JOIN         " +
+                            "        entities.legislators         " +
+                            "    ON         " +
+                            "        recip_id = opensecrets_id " +
+                            "  GROUP BY         " +
+                            "        bioguide_id " +
+                            "      , congress ) individual_contributions " +
+                            "ON " +
+                            "    pac_contributions.bioguide_id = individual_contributions.bioguide_id " +
+                            "WHERE " +
+                            "   pac_contributions.congress = " + congress +
+                            " AND " +
+                            "   individual_contributions.congress = " + congress;
+
+            return new DataNode(impalaTemplate.queryForList(query));
+        }
+        catch (Exception e) {
+            logger.error(e);
+        }
+
+        return new DataNode();
+    }
+
+
+    @SuppressWarnings("unchecked")
     public DataNode getPacAndIndustryTotalsPerCongress() {
 
         try {

@@ -2,7 +2,6 @@ package com.poliana.core.politicianFinance.general;
 
 import com.locke.olap.CubeDataRepo;
 import com.locke.olap.HolapClient;
-import com.locke.olap.models.Condition;
 import com.locke.olap.models.DataNode;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +24,7 @@ public class PoliticianFinanceService {
     private CubeDataRepo cubeDataRepo;
 
     private PoliticianRedisRepo politicianRedisRepo;
+    private PoliticianMongoRepo politicianMongoRepo;
     private PoliticianFinanceRepository politicianFinanceRepository;
 
 
@@ -39,10 +39,14 @@ public class PoliticianFinanceService {
 
         DataNode ret;
 
-        List<Map<String, Object>> contributions = politicianFinanceRepository.getPacAndIndustryTotals();
-
-        ret = new DataNode(contributions);
-
+        if (politicianRedisRepo.getIndustryAndPacContributionsExistInCache()) {
+            ret = politicianMongoRepo.getPacAndIndustryTotals();
+        }
+        else {
+            ret = new DataNode(politicianFinanceRepository.getPacAndIndustryTotals());
+            politicianMongoRepo.saveIndustryAndPacContributions((List<Map<String, Object>>) ret.getData());
+            politicianRedisRepo.setIndustryAndPacContributionsExistInCache();
+        }
 
         return ret;
     }
@@ -54,30 +58,53 @@ public class PoliticianFinanceService {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public DataNode getPacAndIndustryTotals(String unit) {
+    public DataNode getPacAndIndustryTotalsByCongress(int congress) {
 
         DataNode ret;
 
-        unit = (unit == null) ? "": unit;
-
-        DataNode contributions;
-
-        if (politicianRedisRepo.getIndustryAndPacContributionsExistInCache()) {
-            Condition condition = new Condition("industry_and_pac_totals", "unit", "congress", "=");
-            contributions = cubeDataRepo.query("campaign_finance", "industry_and_pac_totals", condition);
+        if (politicianRedisRepo.getIndustryAndPacContributionsExistInCache(congress)) {
+            ret = politicianMongoRepo.getPacAndIndustryTotalsByCongress(congress);
         }
         else {
-            contributions = politicianFinanceRepository.getPacAndIndustryTotalsPerCongress();
-            cubeDataRepo.save("campaign_finance", "industry_and_pac_totals", contributions);
-            politicianRedisRepo.setIndustryAndPacContributionsExistInCache();
+            ret = politicianFinanceRepository.getPacAndIndustryTotalsByCongress(congress);
+            politicianMongoRepo.saveIndustryAndPacContributions((List<Map<String, Object>>) ret.getData());
+            politicianRedisRepo.setIndustryAndPacContributionsExistInCache(congress);
         }
-
-        Map<Object, List<Map<String, Object>>> rolled = holapClient.rollup(unit, (List<Map<String, Object>>) contributions.getData());
-
-        ret = (rolled.size() > 0) ? new DataNode(rolled) : new DataNode(contributions);
 
         return ret;
     }
+
+//    /**
+//     * Get a list of pac and industry totals per congress for all time wrapper in a DataNode.
+//     * The return will be a list of Map<String, Object>
+//     *
+//     * @return
+//     */
+//    @SuppressWarnings("unchecked")
+//    public DataNode getPacAndIndustryTotals(String unit) {
+//
+//        DataNode ret;
+//
+//        unit = (unit == null) ? "": unit;
+//
+//        DataNode contributions;
+//
+//        if (politicianRedisRepo.getIndustryAndPacContributionsExistInCache()) {
+//            Condition condition = new Condition("industry_and_pac_totals", "unit", "congress", "=");
+//            contributions = cubeDataRepo.query("campaign_finance", "industry_and_pac_totals", condition);
+//        }
+//        else {
+//            contributions = politicianFinanceRepository.getPacAndIndustryTotalsPerCongress();
+//            cubeDataRepo.save("campaign_finance", "industry_and_pac_totals", contributions);
+//            politicianRedisRepo.setIndustryAndPacContributionsExistInCache();
+//        }
+//
+//        Map<Object, List<Map<String, Object>>> rolled = holapClient.rollup(unit, (List<Map<String, Object>>) contributions.getData());
+//
+//        ret = (rolled.size() > 0) ? new DataNode(rolled) : new DataNode(contributions);
+//
+//        return ret;
+//    }
 
     @Autowired
     public void setHolapClient(HolapClient holapClient) {
@@ -92,6 +119,11 @@ public class PoliticianFinanceService {
     @Autowired
     public void setPoliticianRedisRepo(PoliticianRedisRepo politicianRedisRepo) {
         this.politicianRedisRepo = politicianRedisRepo;
+    }
+
+    @Autowired
+    public void setPoliticianMongoRepo(PoliticianMongoRepo politicianMongoRepo) {
+        this.politicianMongoRepo = politicianMongoRepo;
     }
 
     @Autowired

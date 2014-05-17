@@ -60,6 +60,34 @@ public class PoliticianRedisRepo {
     }
 
     /**
+     * Check for the existence of industry contributions over all time
+     * @return
+     */
+    public boolean getIndustryAndPacContributionsExistInCache(int congress) {
+
+        Jedis jedis = jedisPool.getResource();
+
+        String key = INDUSTRY_AND_PAC_CONTRIBUTION_TOTALS + congress;
+
+        boolean exists = true;
+
+        try {
+            exists = jedis.exists(key);
+
+        } catch (JedisConnectionException e) {
+            if (null != jedis) {
+                jedisPool.returnBrokenResource(jedis);
+                jedis = null;
+            }
+        } finally {
+            if (null != jedis)
+                jedisPool.returnResource(jedis);
+        }
+
+        return exists;
+    }
+
+    /**
      * Record the existence of industry contributions over all time
      * @return
      */
@@ -83,6 +111,29 @@ public class PoliticianRedisRepo {
         }
     }
 
+    /**
+     * Record the existence of industry contributions over all time
+     * @return
+     */
+    public void setIndustryAndPacContributionsExistInCache(int congress) {
+
+        Jedis jedis = jedisPool.getResource();
+
+        String key = INDUSTRY_AND_PAC_CONTRIBUTION_TOTALS + congress;
+
+        try {
+            jedis.set(key, this.timeService.getTimeNow());
+
+        } catch (JedisConnectionException e) {
+            if (null != jedis) {
+                jedisPool.returnBrokenResource(jedis);
+                jedis = null;
+            }
+        } finally {
+            if (null != jedis)
+                jedisPool.returnResource(jedis);
+        }
+    }
 
     @Autowired
     public void setEnvAndRedisNameSpaces(Environment env) {

@@ -45,14 +45,35 @@ public class PoliticianFinanceController {
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
+//    @SuppressWarnings("unchecked")
+//    @RequestMapping(value = "/contributions", params = {"unit"}, method = RequestMethod.GET)
+//    public @ResponseBody HttpEntity<Response> getPacAndIndustryTotals(
+//            @RequestParam(value = "unit", required = true) String unit) {
+//
+//        Response res = new Response(politicianFinanceService.getPacAndIndustryTotals(unit).getData());
+//
+//        res.add(linkTo(methodOn(PoliticianFinanceController.class).getPacAndIndustryTotals(unit)).withSelfRel());
+//
+//        res.add(
+//                linkTo(methodOn(PoliticianIndustryFinanceController.class).getAllIndustryToPoliticianTotalsAllTime())
+//                        .withRel("industry_contributions"));
+//
+//        res.add(
+//                linkTo(methodOn(PoliticianPacFinanceController.class).getAllPacToPoliticianTotalsAllTime())
+//                        .withRel("pac_contributions")
+//        );
+//
+//        return new ResponseEntity<>(res, HttpStatus.OK);
+//    }
+
     @SuppressWarnings("unchecked")
-    @RequestMapping(value = "/contributions", params = {"unit"}, method = RequestMethod.GET)
-    public @ResponseBody HttpEntity<Response> getPacAndIndustryTotals(
-            @RequestParam(value = "unit", required = true) String unit) {
+    @RequestMapping(value = "/contributions", params = {"congress"}, method = RequestMethod.GET)
+    public @ResponseBody HttpEntity<Response> getPacAndIndustryTotalsByCongress(
+            @RequestParam(value = "congress", required = true) Integer congress) {
 
-        Response res = new Response(politicianFinanceService.getPacAndIndustryTotals(unit).getData());
+        Response res = new Response(politicianFinanceService.getPacAndIndustryTotalsByCongress(congress).getData());
 
-        res.add(linkTo(methodOn(PoliticianFinanceController.class).getPacAndIndustryTotals(unit)).withSelfRel());
+        res.add(linkTo(methodOn(PoliticianFinanceController.class).getPacAndIndustryTotals()).withSelfRel());
 
         res.add(
                 linkTo(methodOn(PoliticianIndustryFinanceController.class).getAllIndustryToPoliticianTotalsAllTime())
